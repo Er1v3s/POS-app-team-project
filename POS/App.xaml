@@ -9,6 +9,7 @@
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Width" Value="225" />
             <Setter Property="Height" Value="100" />
+            <Setter Property="Margin" Value="0,22,0,22" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Top" />
@@ -21,6 +22,21 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF6077C5" />
+                    <Setter Property="Width" Value="245" />
+                    <Setter Property="Height" Value="100" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="registerSellButton">
+            <Setter Property="Background" Value="#FF7286D3"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Width" Value="225" />
+            <Setter Property="Height" Value="100" />
         </Style>
     </Application.Resources>
 </Application>
