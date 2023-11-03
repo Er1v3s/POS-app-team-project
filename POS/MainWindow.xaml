@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         Title="MainWindow" Height="768" Width="1366" WindowState="Maximized" WindowStyle="None" FontFamily="Lato" FontSize="16">
-    <Grid>
+    <Grid Background="#D8D9DA">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="5*" />
@@ -15,87 +15,87 @@
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0" Background="#8EA7E9">
-        <UniformGrid Rows="5" Columns="1"  VerticalAlignment="Center">
-            <Button Style="{StaticResource sideBarButton}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="65"/>
-                        <ColumnDefinition Width="160"/>
-                    </Grid.ColumnDefinitions>
-
-                    <fa:ImageAwesome Icon="ClockOutline" Width="30" Height="30" Foreground="White"/>
-                    <TextBlock Text="PODSUMOWANIE CZASU PRACY" Width="160" Height="40" TextAlignment="Center" TextWrapping="Wrap" Grid.ColumnSpan="2" Margin="25,0,-25,0"/>
-                </Grid>
-            </Button>
-            <Button Style="{StaticResource sideBarButton}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="65"/>
-                        <ColumnDefinition Width="160"/>
-                    </Grid.ColumnDefinitions>
-
-                    <fa:ImageAwesome Icon="User" Width="30" Height="30" Foreground="White"/>
-                    <TextBlock Text="ROZPOCZĘCIE I ZAKOŃCZENIE PRACY" Width="160" Height="60" TextAlignment="Center" TextWrapping="Wrap" Grid.ColumnSpan="2" Margin="25,0,-25,0"/>
-                </Grid>
-            </Button>
-            <Button Style="{StaticResource sideBarButton}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="65"/>
-                        <ColumnDefinition Width="160"/>
-                    </Grid.ColumnDefinitions>
-
-                    <fa:ImageAwesome Icon="Dropbox" Width="30" Height="30" Foreground="White"/>
-                    <TextBlock Text="FUNKCJE MAGAZYNOWE" Width="160" Height="40" TextAlignment="Center" TextWrapping="Wrap" Grid.ColumnSpan="2" Margin="25,0,-25,0"/>
-                </Grid>
-            </Button>
-            <Button Style="{StaticResource sideBarButton}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="65"/>
-                        <ColumnDefinition Width="160"/>
-                    </Grid.ColumnDefinitions>
-
-                    <fa:ImageAwesome Icon="BarChart"  Width="30" Height="30" Foreground="White"/>
-                    <TextBlock Text="RAPORTY I ANALIZY" Width="150" Height="40" TextAlignment="Center" TextWrapping="Wrap" Grid.ColumnSpan="2" Margin="25,0,-25,0"/>
-                </Grid>
-            </Button>
-            <Button Style="{StaticResource sideBarButton}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="65"/>
-                        <ColumnDefinition Width="160"/>
-                    </Grid.ColumnDefinitions>
-
-                    <fa:ImageAwesome Icon="Shield" Width="30" Height="30" Foreground="White"/>
-                    <TextBlock Text="FUNKCJE ADMINISTRATORA" Width="160" Height="40" TextAlignment="Center" TextWrapping="Wrap" Grid.ColumnSpan="2" Margin="25,0,-25,0"/>
-                </Grid>
-            </Button>
-        </UniformGrid>
-        </Grid>
-        
-        <Grid Grid.Column="1"></Grid>
-        
-        <Grid Grid.Column="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*" />
-                <RowDefinition Height="9*" />
-                <RowDefinition Height="4*" />
-            </Grid.RowDefinitions>
-
-            <Grid Grid.Row="0"> </Grid>
-            <Grid Grid.Row="1"></Grid>
-            
-            <Grid Grid.Row="2" >
-                <Button Style="{StaticResource registerSellButton}">
+            <UniformGrid Rows="5" Columns="1"  VerticalAlignment="Center">
+                <Button Style="{StaticResource sideBarButton}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="65"/>
                             <ColumnDefinition Width="160"/>
                         </Grid.ColumnDefinitions>
 
-                        <fa:ImageAwesome Icon="ShoppingCart" Width="30" Height="30" Foreground="White"/>
-                        <TextBlock Text="ZAREJESTRU SPRZEDAŻ" Width="160" Height="40" TextAlignment="Center" TextWrapping="Wrap" Grid.ColumnSpan="2" Margin="25,0,-25,0"/>
+                        <fa:ImageAwesome Icon="ClockOutline" Width="30" Height="30" Foreground="White"/>
+                        <TextBlock Text="PODSUMOWANIE CZASU PRACY" Width="160" Height="40" TextAlignment="Center" TextWrapping="Wrap" Grid.ColumnSpan="2" Margin="25,0,-25,0"/>
+                    </Grid>
+                </Button>
+                <Button Style="{StaticResource sideBarButton}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="65"/>
+                            <ColumnDefinition Width="160"/>
+                        </Grid.ColumnDefinitions>
+
+                        <fa:ImageAwesome Icon="User" Width="30" Height="30" Foreground="White"/>
+                        <TextBlock Text="ROZPOCZĘCIE I ZAKOŃCZENIE PRACY" Width="160" Height="60" TextAlignment="Center" TextWrapping="Wrap" Grid.ColumnSpan="2" Margin="25,0,-25,0"/>
+                    </Grid>
+                </Button>
+                <Button Style="{StaticResource sideBarButton}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="65"/>
+                            <ColumnDefinition Width="160"/>
+                        </Grid.ColumnDefinitions>
+
+                        <fa:ImageAwesome Icon="Dropbox" Width="30" Height="30" Foreground="White"/>
+                        <TextBlock Text="FUNKCJE MAGAZYNOWE" Width="160" Height="40" TextAlignment="Center" TextWrapping="Wrap" Grid.ColumnSpan="2" Margin="25,0,-25,0"/>
+                    </Grid>
+                </Button>
+                <Button Style="{StaticResource sideBarButton}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="65"/>
+                            <ColumnDefinition Width="160"/>
+                        </Grid.ColumnDefinitions>
+
+                        <fa:ImageAwesome Icon="BarChart"  Width="30" Height="30" Foreground="White"/>
+                        <TextBlock Text="RAPORTY I ANALIZY" Width="150" Height="40" TextAlignment="Center" TextWrapping="Wrap" Grid.ColumnSpan="2" Margin="25,0,-25,0"/>
+                    </Grid>
+                </Button>
+                <Button Style="{StaticResource sideBarButton}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="65"/>
+                            <ColumnDefinition Width="160"/>
+                        </Grid.ColumnDefinitions>
+
+                        <fa:ImageAwesome Icon="Shield" Width="30" Height="30" Foreground="White"/>
+                        <TextBlock Text="FUNKCJE ADMINISTRATORA" Width="160" Height="40" TextAlignment="Center" TextWrapping="Wrap" Grid.ColumnSpan="2" Margin="25,0,-25,0"/>
+                    </Grid>
+                </Button>
+            </UniformGrid>
+        </Grid>
+
+        <Grid Grid.Column="1"></Grid>
+
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="5*" />
+                <RowDefinition Height="4*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0"></Grid>
+            <Grid Grid.Row="1"></Grid>
+
+            <Grid Grid.Row="2" >
+                <Button Style="{StaticResource registerSellButton}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="100" />
+                            <RowDefinition Height="100" />
+                        </Grid.RowDefinitions>
+
+                        <fa:ImageAwesome Grid.Row="0" Icon="ShoppingBasket" Width="50" Height="50" Foreground="White" Margin="75,43,75,7"/>
+                        <TextBlock Grid.Row="1" Text="ZAREJESTRU SPRZEDAŻ" Width="200" TextWrapping="Wrap" TextAlignment="Center" FontSize="24" FontWeight="Bold"/>
                     </Grid>
                 </Button>
             </Grid>

@@ -32,11 +32,28 @@
             </Style.Triggers>
         </Style>
 
-        <Style x:Key="registerSellButton">
-            <Setter Property="Background" Value="#FF7286D3"/>
+        <Style x:Key="registerSellButton" TargetType="Button">
+            <Setter Property="Background" Value="#4BAEA0"/>
             <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Width" Value="225" />
-            <Setter Property="Height" Value="100" />
+            <Setter Property="Width" Value="300" />
+            <Setter Property="Height" Value="200" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#41A496" />
+                    <Setter Property="Width" Value="310" />
+                    <Setter Property="Height" Value="210" />
+                    <Setter Property="Cursor" Value="Hand" />
+                </Trigger>
+            </Style.Triggers>
         </Style>
     </Application.Resources>
 </Application>
