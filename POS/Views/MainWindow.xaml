@@ -152,7 +152,7 @@
 
                                     <Grid Grid.Row="2">
                                         <fa:ImageAwesome Grid.Column="0" Icon="Plus" Width="20" Height="20" Margin="10,0,0,0" Foreground="White" HorizontalAlignment="Left"/>
-                                        <TextBox Text="Wpisz coś..." Style="{StaticResource addTaskTextBox}"/>
+                                        <TextBox x:Name="addTaskTextBox" Text="Wpisz coś..." Style="{StaticResource addTaskTextBox}"/>
                                     </Grid>
                                 </Grid>
                             </Border>
