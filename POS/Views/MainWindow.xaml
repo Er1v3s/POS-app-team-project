@@ -76,7 +76,54 @@
 
         <Grid Grid.Column="1">
             <Border BorderBrush="Black" BorderThickness="1, 0, 1, 0">
-                <TextBlock Text="Some content" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="18*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="18*" />
+                            <RowDefinition Height="1*" />
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" CornerRadius="8" Background="White">
+                            <Grid Grid.Row="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="9*"/>
+                                    <RowDefinition Height="2*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border CornerRadius="8,8,0, 0" Background="#8EA7E9">
+                                    <Grid Grid.Row="0">
+                                        <TextBlock Text="PODSUMOWANIE CZASU PRACY" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="24"></TextBlock>
+                                    </Grid>
+                                </Border>
+
+
+                                <Grid Grid.Row="1">
+                                    <Border BorderThickness="0, 1, 0 ,0" BorderBrush="Black">
+                                        <ContentControl Content="ContentControl" Grid.Column="1" Grid.Row="1" Margin="20 20 20 20" Grid.RowSpan="2"/>
+
+                                    </Border>
+                                </Grid>
+
+                                <Grid Grid.Row="2">
+                                    <Button Style="{StaticResource refreshButton}">
+                                        <Grid>
+                                            <fa:ImageAwesome Icon="Refresh" Width="25" Height="25" Foreground="White" HorizontalAlignment="Left"/>
+                                            <TextBlock Text="ODŚWIEŻ" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="45,0,0,0" FontSize="16"/>
+                                        </Grid>
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Grid>
             </Border>
         </Grid>
 
@@ -91,13 +138,13 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="4*" />
                     <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="3*" />
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0">
-                    <fa:ImageAwesome Icon="Wifi" Foreground="White" Width="24" Height="24"/>
+                    <fa:ImageAwesome Icon="Wifi" Foreground="White" Width="32"/>
                 </Grid>
                 <Grid Grid.Column="1">
                     <fa:ImageAwesome Icon="Database" Foreground="White" Width="24" Height="24"/>
@@ -108,7 +155,7 @@
                         <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Text="03.11.2023" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Foreground="White"/>
-                    <TextBlock Grid.Row="1" Text="15:15" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="20" Foreground="White"/>
+                    <TextBlock Text="15:15" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Foreground="White" Margin="0,20,0,0" Grid.RowSpan="2"/>
                 </Grid>
                 <Grid Grid.Column="4">
                     <fa:ImageAwesome Icon="PowerOff" Foreground="White" Width="24" Height="24"/>
@@ -145,7 +192,7 @@
 
                                     <Grid Grid.Row="1" Background="white">
                                         <Border BorderBrush="Black" BorderThickness="0, 1, 0, 1">
-                                            <DataGrid Name="todoListDataGrid" AutoGenerateColumns="True"/>
+                                            <DataGrid />
 
                                         </Border>
                                     </Grid>

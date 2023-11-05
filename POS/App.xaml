@@ -65,5 +65,30 @@
             <Setter Property="Background" Value="#8EA7E9" />
             <Setter Property="Foreground" Value="White" />
         </Style>
+
+        <Style x:Key="refreshButton" TargetType="Button">
+            <Setter Property="Width"  Value="150" />
+            <Setter Property="Height" Value="50" />
+            <Setter Property="Background" Value="#7286D3" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF6077C5" />
+                    <Setter Property="Width" Value="165" />
+                    <Setter Property="Height" Value="55" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Application.Resources>
 </Application>
