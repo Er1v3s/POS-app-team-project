@@ -23,6 +23,8 @@ namespace POS
         public MainWindow()
         {
             InitializeComponent();
+
+            
         }
     }
 }
