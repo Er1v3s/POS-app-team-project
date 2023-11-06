@@ -24,7 +24,7 @@
                         </Grid.ColumnDefinitions>
 
                         <fa:ImageAwesome Icon="ClockOutline" Width="30" Height="30" Foreground="White"/>
-                        <TextBlock Text="PODSUMOWANIE CZASU PRACY" Width="160" Height="40" TextAlignment="Center" TextWrapping="Wrap" Grid.ColumnSpan="2" Margin="25,0,-25,0"/>
+                        <TextBlock Text="PODSUMOWANIE CZASU PRACY" Style="{StaticResource sideBarButtonTextBlock}"/>
                     </Grid>
                 </Button>
                 <Button Style="{StaticResource sideBarButton}">
@@ -35,7 +35,7 @@
                         </Grid.ColumnDefinitions>
 
                         <fa:ImageAwesome Icon="User" Width="30" Height="30" Foreground="White"/>
-                        <TextBlock Text="ROZPOCZĘCIE I ZAKOŃCZENIE PRACY" Width="160" Height="60" TextAlignment="Center" TextWrapping="Wrap" Grid.ColumnSpan="2" Margin="25,0,-25,0"/>
+                        <TextBlock Text="ROZPOCZĘCIE I ZAKOŃCZENIE PRACY" Height="60" Style="{StaticResource sideBarButtonTextBlock}"/>
                     </Grid>
                 </Button>
                 <Button Style="{StaticResource sideBarButton}">
@@ -45,8 +45,8 @@
                             <ColumnDefinition Width="160"/>
                         </Grid.ColumnDefinitions>
 
-                        <fa:ImageAwesome Icon="Dropbox" Width="30" Height="30" Foreground="White"/>
-                        <TextBlock Text="FUNKCJE MAGAZYNOWE" Width="160" Height="40" TextAlignment="Center" TextWrapping="Wrap" Grid.ColumnSpan="2" Margin="25,0,-25,0"/>
+                        <fa:ImageAwesome Icon="Dropbox" Width="30" Height="30" Foreground="White" />
+                        <TextBlock Text="FUNKCJE MAGAZYNOWE" Style="{StaticResource sideBarButtonTextBlock}"/>
                     </Grid>
                 </Button>
                 <Button Style="{StaticResource sideBarButton}">
@@ -57,7 +57,7 @@
                         </Grid.ColumnDefinitions>
 
                         <fa:ImageAwesome Icon="BarChart"  Width="30" Height="30" Foreground="White"/>
-                        <TextBlock Text="RAPORTY I ANALIZY" Width="150" Height="40" TextAlignment="Center" TextWrapping="Wrap" Grid.ColumnSpan="2" Margin="25,0,-25,0"/>
+                        <TextBlock Text="RAPORTY I ANALIZY" Width="150" Style="{StaticResource sideBarButtonTextBlock}"/>
                     </Grid>
                 </Button>
                 <Button Style="{StaticResource sideBarButton}">
@@ -68,7 +68,7 @@
                         </Grid.ColumnDefinitions>
 
                         <fa:ImageAwesome Icon="Shield" Width="30" Height="30" Foreground="White"/>
-                        <TextBlock Text="FUNKCJE ADMINISTRATORA" Width="160" Height="40" TextAlignment="Center" TextWrapping="Wrap" Grid.ColumnSpan="2" Margin="25,0,-25,0"/>
+                        <TextBlock Text="FUNKCJE ADMINISTRATORA" Style="{StaticResource sideBarButtonTextBlock}"/>
                     </Grid>
                 </Button>
             </UniformGrid>
