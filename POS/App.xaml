@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:POS"
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
+
         <Style x:Key="sideBarButton" TargetType="Button">
             <Setter Property="Background" Value="#FF7286D3"/>
             <Setter Property="Foreground" Value="White"/>
@@ -68,13 +69,14 @@
         </Style>
 
         <Style x:Key="addTaskTextBox" TargetType="TextBox">
-            <Setter Property="Grid.Column" Value="1" />
-            <Setter Property="MinWidth" Value="200" />
             <Setter Property="TextAlignment" Value="Center" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="40, 0, 10 ,0" />
             <Setter Property="Background" Value="#8EA7E9" />
             <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="0, 0, 0, 2" />
+            <Setter Property="Padding" Value="0,0,0,2" />
+            <Setter Property="BorderBrush" Value="White" />
         </Style>
 
         <Style x:Key="refreshButton" TargetType="Button">
