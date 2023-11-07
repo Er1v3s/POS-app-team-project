@@ -26,19 +26,21 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#FF6077C5" />
-                    <Setter Property="Width" Value="245" />
-                    <Setter Property="Height" Value="100" />
+                    <Setter Property="Padding" Value="10" />
+                    <Setter Property="Width" Value="242.5" />
+                    <Setter Property="Height" Value="110" />
+                    <Setter Property="Margin" Value="0,17,0,17" />
                 </Trigger>
             </Style.Triggers>
         </Style>
 
         <Style x:Key="sideBarButtonTextBlock" TargetType="TextBlock">
-            <Setter Property="Width" Value="160" />
-            <Setter Property="Height" Value="40" />
+            <Setter Property="Width" Value="150" />
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="TextAlignment" Value="Center" />
             <Setter Property="TextWrapping" Value="Wrap" />
-            <Setter Property="Grid.ColumnSpan" Value="2" />
-            <Setter Property="Margin" Value="25, 0, -25, 0" />
         </Style>
 
         <Style x:Key="registerSellButton" TargetType="Button">
@@ -99,5 +101,6 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
     </Application.Resources>
 </Application>

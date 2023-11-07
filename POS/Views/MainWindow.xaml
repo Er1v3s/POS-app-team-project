@@ -17,59 +17,34 @@
         <Grid Grid.Column="0" Background="#8EA7E9">
             <UniformGrid Rows="5" Columns="1"  VerticalAlignment="Center">
                 <Button Style="{StaticResource sideBarButton}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="65"/>
-                            <ColumnDefinition Width="160"/>
-                        </Grid.ColumnDefinitions>
-
+                    <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="ClockOutline" Width="30" Height="30" Foreground="White"/>
                         <TextBlock Text="PODSUMOWANIE CZASU PRACY" Style="{StaticResource sideBarButtonTextBlock}"/>
-                    </Grid>
+                    </StackPanel>
                 </Button>
                 <Button Style="{StaticResource sideBarButton}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="65"/>
-                            <ColumnDefinition Width="160"/>
-                        </Grid.ColumnDefinitions>
-
+                    <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="User" Width="30" Height="30" Foreground="White"/>
-                        <TextBlock Text="ROZPOCZĘCIE I ZAKOŃCZENIE PRACY" Height="60" Style="{StaticResource sideBarButtonTextBlock}"/>
-                    </Grid>
+                        <TextBlock Text="ROZPOCZĘCIE I ZAKOŃCZENIE PRACY" Style="{StaticResource sideBarButtonTextBlock}"/>
+                    </StackPanel>
                 </Button>
                 <Button Style="{StaticResource sideBarButton}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="65"/>
-                            <ColumnDefinition Width="160"/>
-                        </Grid.ColumnDefinitions>
-
+                    <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Dropbox" Width="30" Height="30" Foreground="White" />
                         <TextBlock Text="FUNKCJE MAGAZYNOWE" Style="{StaticResource sideBarButtonTextBlock}"/>
-                    </Grid>
+                    </StackPanel>
                 </Button>
                 <Button Style="{StaticResource sideBarButton}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="65"/>
-                            <ColumnDefinition Width="160"/>
-                        </Grid.ColumnDefinitions>
-
+                    <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="BarChart"  Width="30" Height="30" Foreground="White"/>
-                        <TextBlock Text="RAPORTY I ANALIZY" Width="150" Style="{StaticResource sideBarButtonTextBlock}"/>
-                    </Grid>
+                        <TextBlock Text="RAPORTY I ANALIZY" Style="{StaticResource sideBarButtonTextBlock}"/>
+                    </StackPanel>
                 </Button>
                 <Button Style="{StaticResource sideBarButton}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="65"/>
-                            <ColumnDefinition Width="160"/>
-                        </Grid.ColumnDefinitions>
-
+                    <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Shield" Width="30" Height="30" Foreground="White"/>
                         <TextBlock Text="FUNKCJE ADMINISTRATORA" Style="{StaticResource sideBarButtonTextBlock}"/>
-                    </Grid>
+                    </StackPanel>
                 </Button>
             </UniformGrid>
         </Grid>
@@ -107,17 +82,18 @@
 
                                 <Grid Grid.Row="1">
                                     <Border BorderThickness="0, 1, 0 ,0" BorderBrush="Black">
-                                        <ContentControl Content="ContentControl" Grid.Column="1" Grid.Row="1" Margin="20 20 20 20" Grid.RowSpan="2"/>
-
+                                        <DataGrid Grid.Column="1" Grid.Row="1" Margin="20 20 20 20" Grid.RowSpan="2" >
+                                            
+                                        </DataGrid>
                                     </Border>
                                 </Grid>
 
                                 <Grid Grid.Row="2">
                                     <Button Style="{StaticResource refreshButton}">
-                                        <Grid>
-                                            <fa:ImageAwesome Icon="Refresh" Width="25" Height="25" Foreground="White" HorizontalAlignment="Left"/>
-                                            <TextBlock Text="ODŚWIEŻ" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="45,0,0,0" FontSize="16"/>
-                                        </Grid>
+                                        <StackPanel Orientation="Horizontal">
+                                            <fa:ImageAwesome Icon="Refresh" Width="25" Height="25" Foreground="White"/>
+                                            <TextBlock Text="ODŚWIEŻ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16"/>
+                                        </StackPanel>
                                     </Button>
                                 </Grid>
                             </Grid>
@@ -149,14 +125,10 @@
                 <Grid Grid.Column="1">
                     <fa:ImageAwesome Icon="Database" Foreground="White" Width="24" Height="24"/>
                 </Grid>
-                <Grid Grid.Column="3">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*" />
-                        <RowDefinition Height="1*" />
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Text="03.11.2023" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" Foreground="White"/>
-                    <TextBlock Text="15:15" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Foreground="White" Margin="0,20,0,0" Grid.RowSpan="2"/>
-                </Grid>
+                <StackPanel Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="03.11.2023" FontSize="14" Foreground="White"/>
+                    <TextBlock Text="15:15" HorizontalAlignment="Center" FontSize="20" Foreground="White"/>
+                </StackPanel>
                 <Grid Grid.Column="4">
                     <fa:ImageAwesome Icon="PowerOff" Foreground="White" Width="24" Height="24"/>
                 </Grid>
@@ -211,19 +183,15 @@
 
             <Grid Grid.Row="2" >
                 <Button Style="{StaticResource registerSellButton}">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="100" />
-                            <RowDefinition Height="100" />
-                        </Grid.RowDefinitions>
-
-                        <fa:ImageAwesome Grid.Row="0" Icon="ShoppingBasket" Width="50" Height="50" Foreground="White" Margin="75,43,75,7"/>
-                        <TextBlock Grid.Row="1" Text="ZAREJESTRU SPRZEDAŻ" Width="200" TextWrapping="Wrap" TextAlignment="Center" FontSize="24" FontWeight="Bold"/>
-                    </Grid>
+                    <StackPanel Orientation="Vertical">
+                        <fa:ImageAwesome Icon="ShoppingBasket" Width="50" Height="50" Foreground="White" Margin="0, 0, 0, 10"/>
+                        <TextBlock Text="ZAREJESTRU SPRZEDAŻ" Width="200" TextWrapping="Wrap" TextAlignment="Center" FontSize="24" FontWeight="Bold"/>
+                    </StackPanel>
                 </Button>
             </Grid>
 
         </Grid>
+        <StackPanel Grid.Column="1"/>
 
     </Grid>
 </Window>
