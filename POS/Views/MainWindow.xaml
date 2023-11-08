@@ -90,10 +90,10 @@
                                     <Border BorderThickness="0, 1, 0 ,0" BorderBrush="Black">
                                         <DataGrid x:Name="workingTimeSummaryDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" RowStyle="{DynamicResource DataGridRowStyle1}">
                                             <DataGrid.Columns>
-                                                <DataGridTextColumn Header="PRACOWNIK" IsReadOnly="True" Width="4*" CanUserResize="False" CanUserReorder="False"/>
-                                                <DataGridTextColumn Header="OD" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False"/>
-                                                <DataGridTextColumn Header="DO" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False"/>
-                                                <DataGridTextColumn Header="SUMA GODZIN" IsReadOnly="True" Width="2*" CanUserResize="False" CanUserReorder="False"/>
+                                                <DataGridTextColumn Header="PRACOWNIK" IsReadOnly="True" Width="4*" CanUserResize="False" CanUserReorder="False" Binding="{Binding firstName}"/>
+                                                <DataGridTextColumn Header="OD" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False" Binding="{Binding workingTimeFrom}"/>
+                                                <DataGridTextColumn Header="DO" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False" Binding="{Binding workingTimeTo}"/>
+                                                <DataGridTextColumn Header="SUMA GODZIN" IsReadOnly="True" Width="2*" CanUserResize="False" CanUserReorder="False" Binding="{Binding workingTimeSummary}"/>
                                             </DataGrid.Columns>
                                         </DataGrid>
                                     </Border>
