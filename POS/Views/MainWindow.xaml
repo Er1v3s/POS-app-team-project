@@ -88,8 +88,13 @@
 
                                 <Grid Grid.Row="1">
                                     <Border BorderThickness="0, 1, 0 ,0" BorderBrush="Black">
-                                        <DataGrid Grid.Column="1" Grid.Row="1" Margin="20 20 20 20" Grid.RowSpan="2" >
-                                            
+                                        <DataGrid x:Name="workingTimeSummaryDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" RowStyle="{DynamicResource DataGridRowStyle1}">
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="PRACOWNIK" IsReadOnly="True" Width="4*" CanUserResize="False" CanUserReorder="False"/>
+                                                <DataGridTextColumn Header="OD" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False"/>
+                                                <DataGridTextColumn Header="DO" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False"/>
+                                                <DataGridTextColumn Header="SUMA GODZIN" IsReadOnly="True" Width="2*" CanUserResize="False" CanUserReorder="False"/>
+                                            </DataGrid.Columns>
                                         </DataGrid>
                                     </Border>
                                 </Grid>
@@ -175,13 +180,8 @@
                                         </Border>
                                     </Grid>
 
-                                    <!--<Grid Grid.Row="2">
-                                        <fa:ImageAwesome Grid.Column="0" Icon="Plus" Width="20" Height="20" Margin="10,0,0,0" Foreground="White" HorizontalAlignment="Left"/>
-                                        <TextBox x:Name="addTaskTextBox" Text="Wpisz coś..." Style="{StaticResource addTaskTextBox}"/>
-                                    </Grid>-->
-
                                     <Grid Grid.Row="2">
-                                        <TextBlock Text="Dodaj zadanie..." VerticalAlignment="Center" Foreground="#D8D9DA" Margin="40,0,0,0" IsHitTestVisible="False" Panel.ZIndex="1" TextAlignment="Left" Visibility="{Binding ElementName=addTaskTextBox, Path=Text, Converter={StaticResource EmptyToHidden}}" />
+                                        <TextBlock Text="Dodaj zadanie..." Style="{StaticResource addTaskTextBlock}" Visibility="{Binding ElementName=addTaskTextBox, Path=Text, Converter={StaticResource EmptyToHidden}}" />
                                         <TextBox x:Name="addTaskTextBox" Style="{StaticResource addTaskTextBox}"/>
                                         <fa:ImageAwesome Icon="Plus" Cursor="Hand" Width="20" Height="20" Foreground="White" HorizontalAlignment="Left" Margin="10,0,0,0" />
                                     </Grid>
