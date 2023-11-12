@@ -1,2 +1,1 @@
 # POS
-Ta jasne
