@@ -7,6 +7,8 @@
     xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
     <Application.Resources>
 
+        <!--#region MainWindow -->
+        
         <Style x:Key="sideBarButton" TargetType="Button">
             <Setter Property="Background" Value="#FF7286D3"/>
             <Setter Property="Foreground" Value="White"/>
@@ -514,6 +516,43 @@
                     <Setter Property="Background" Value="#D8D9DA" />
                 </Trigger>
             </Style.Triggers>
+        </Style>
+
+        <!--#endregion-->
+        
+        <!--#endregion-->
+        
+        <!--#region SalesPanel -->
+
+        <Style x:Key="cocktailCategoryButton" TargetType="Button">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="Background" Value="#FF4BAEA0" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="Black" />
+            <Setter Property="Padding" Value="1" />
+        </Style>
+
+        <Style x:Key="searchBar" TargetType="TextBox">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Background" Value="#FF7286D3" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="#FF7286D3" />
+            <Setter Property="SelectionBrush" Value="#FF8EA7E9" />
+            <Setter Property="Padding" Value="25,5,0,0" />
+        </Style>
+
+        <Style x:Key="payCancelRecipeButton" TargetType="Button">
+            <!--<Setter Property="Width" Value="100" />-->
+            <!--<Setter Property="Height" Value="40" />-->
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="Foreground" Value="White" />
         </Style>
 
         <!--#endregion-->

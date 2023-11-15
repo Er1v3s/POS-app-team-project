@@ -48,6 +48,14 @@ namespace POS
 
             todoListDataGrid.ItemsSource = toDoListTasks;
         }
+
+        private void Move_To_Sales_Panel(object sender, RoutedEventArgs e)
+        {
+            Views.SalesPanel salesPanel = new Views.SalesPanel();
+            salesPanel.Show();
+
+            Window.GetWindow(this).Close();
+        }
     }
 
     public class Employee
