@@ -1,0 +1,210 @@
+﻿<Page x:Class="POS.Views.SalesPanel"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:POS.Views"
+      mc:Ignorable="d" 
+      xmlns:fa="http://schemas.fontawesome.io/icons/"
+      d:DesignHeight="768" d:DesignWidth="1366"
+      Title="SalesPanel">
+
+    <Grid Background="#FFD9D9D9">
+        <Grid Width="900" Height="635" Margin="441,76,25,57">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"/>
+                <RowDefinition Height="552"/>
+                <RowDefinition Height="51"/>
+            </Grid.RowDefinitions>
+            <WrapPanel Grid.Row="1" Background="#FFD9D9D9">
+                <Button Background="#FF8EA7E9" Width="150" Height="150" Padding="0" Margin="25" FontSize="16" BorderBrush="#FF8EA7E9" Foreground="White">
+                    <StackPanel>
+                        <TextBlock TextAlignment="Center" Margin="10">Whisky Sour</TextBlock>
+                        <TextBlock TextAlignment="Center" Margin="10">31,99 zł</TextBlock>
+                    </StackPanel>
+                </Button>
+            </WrapPanel>
+            <Grid Grid.Row="0" d:IsLocked="True">
+                <Button Content="Tequila" HorizontalAlignment="Left" Height="32" Width="180" Margin="720,0,0,0" VerticalAlignment="Center"
+         Background="#FF4BAEA0" Foreground="White" FontFamily="Lato" FontSize="16" Padding="1,1,1,1" BorderBrush="Black">
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius">
+                                <Setter.Value>
+                                    <CornerRadius TopLeft="0" TopRight="8" BottomLeft="0" BottomRight="0"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <Button Content="Whisky" HorizontalAlignment="Left" Height="32" Width="180" VerticalAlignment="Center"
+         Background="#FF4BAEA0" Foreground="White" FontFamily="Lato" FontSize="16" Padding="1,1,1,1" BorderBrush="Black">
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius">
+                                <Setter.Value>
+                                    <CornerRadius TopLeft="8" TopRight="0" BottomLeft="0" BottomRight="0"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <Button Content="Gin" HorizontalAlignment="Left" Margin="180,0,0,0" VerticalAlignment="Center"
+         Height="32" Width="180" Background="#FF4BAEA0" Foreground="White" FontFamily="Lato" FontSize="16" BorderBrush="Black"/>
+                <Button Content="Wódka" HorizontalAlignment="Center" VerticalAlignment="Center"
+     Height="32" Width="180" Background="#FF4BAEA0" Foreground="White" FontFamily="Lato" FontSize="16" BorderBrush="Black"/>
+                <Button Content="Rum" HorizontalAlignment="Left" Margin="540,0,0,0" VerticalAlignment="Center"
+     Height="32" Width="180" Background="#FF4BAEA0" Foreground="White" FontFamily="Lato" FontSize="16" BorderBrush="Black"/>
+            </Grid>
+            <Border BorderBrush="Black" BorderThickness="1" CornerRadius="8" Grid.RowSpan="3" d:IsLocked="True"/>
+            <Border BorderBrush="Black" BorderThickness="1" Width="900" Height="51" Background="#FF7286D3" CornerRadius="0,0,8,8" Grid.Row="2" d:IsLocked="True"/>
+            <Button Content="Zapłać" HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Center" Width="100" Height="32"
+                    Background="#FF4BAEA0" BorderBrush="#FF4BAEA0" Foreground="White" FontFamily="Lato" FontSize="16" Margin="25,0,0,0" d:IsLocked="True">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius">
+                            <Setter.Value>
+                                <CornerRadius TopLeft="8" TopRight="8" BottomLeft="8" BottomRight="8"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Resources>
+            </Button>
+            <Button Content="Anuluj" HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Center" Width="100" Height="32"
+                    Background="#FFAE4B59" BorderBrush="#FFAE4B59" Foreground="White" FontFamily="Lato" FontSize="16" Margin="150,0,0,0" d:IsLocked="True">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius">
+                            <Setter.Value>
+                                <CornerRadius TopLeft="8" TopRight="8" BottomLeft="8" BottomRight="8"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Resources>
+            </Button>
+            <Button Content="Przepis" HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Center" Width="100" Height="32" 
+                    Background="#FF8EA7E9" BorderBrush="#FF8EA7E9" Foreground="White" FontFamily="Lato" FontSize="16" Margin="275,0,0,0" d:IsLocked="True">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius">
+                            <Setter.Value>
+                                <CornerRadius TopLeft="8" TopRight="8" BottomLeft="8" BottomRight="8"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Resources>
+            </Button>
+            <Button HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Center" Width="51" Height="51" 
+                    Background="#FF969696" BorderBrush="{x:Null}" Foreground="White" FontFamily="Lato" FontSize="16"
+                    Margin="849,0,0,0" d:IsLocked="True">
+                <fa:ImageAwesome Icon="Gear" Height="24" Foreground="White"/>
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius">
+                            <Setter.Value>
+                                <CornerRadius TopLeft="8" TopRight="0" BottomLeft="8" BottomRight="8"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Resources>
+            </Button>
+        </Grid>
+
+        <Rectangle HorizontalAlignment="Left" Height="51" Margin="416,0,0,0" VerticalAlignment="Top" Width="950" Fill="#FF8EA7E9"/>
+        <GridSplitter HorizontalAlignment="Left" Height="768" Margin="416,0,0,0" VerticalAlignment="Top" Width="1" Background="Black"/>
+        <GridSplitter HorizontalAlignment="Left" Height="1" Margin="416,51,0,0" VerticalAlignment="Top" Width="950" Background="Black"/>
+        <TextBox HorizontalAlignment="Left" Margin="441,10,0,0" TextWrapping="Wrap" Text="Szukaj" VerticalAlignment="Top" Width="360" Height="32"
+                 Background="#FF7286D3" BorderBrush="#FF7286D3" Foreground="White" SelectionBrush="#FF8EA7E9"
+                 VerticalContentAlignment="Center" Padding="25,0,0,0" FontSize="16">
+            <TextBox.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="16"/>
+                </Style>
+            </TextBox.Resources>
+        </TextBox>
+        <Border BorderBrush="#FF7286D3" BorderThickness="1" Width="180" Height="32" Margin="1161,10,25,726" Background="#FF7286D3" CornerRadius="8,8,8,8">
+            <Label Content="NazwaUżytkownika" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" Foreground="White"/>
+        </Border>
+        <Grid Grid.Column="0" Width="366" Height="718" Margin="25,25,975,25">
+            <Border BorderThickness="1" BorderBrush="Black" Grid.RowSpan="4" CornerRadius="8" d:IsLocked="True"></Border>
+            <Grid Grid.Row="0" d:IsLocked="True">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="51"/>
+                    <RowDefinition Height="565"/>
+                    <RowDefinition Height="51"/>
+                    <RowDefinition Height="51"/>
+                </Grid.RowDefinitions>
+                <Button Background="#FF8EA7E9" BorderBrush="Black" Foreground="White" FontFamily="Lato"
+                        FontSize="16" HorizontalAlignment="Left" Width="122">
+                    <fa:ImageAwesome Icon="Print" Height="24" Foreground="White"/>
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius">
+                                <Setter.Value>
+                                    <CornerRadius TopLeft="8" TopRight="0" BottomLeft="0" BottomRight="0"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <Button Background="#FF8EA7E9" BorderBrush="Black" Foreground="White" FontFamily="Lato"
+                        FontSize="16" HorizontalAlignment="Left" Width="122" Margin="122,0,0,0">
+                    <fa:ImageAwesome Icon="File" Height="24" Foreground="White"/>
+                </Button>
+                <Button Background="#FF8EA7E9" BorderBrush="Black" Foreground="White" FontFamily="Lato"
+                        FontSize="16" HorizontalAlignment="Left" Width="122" Margin="244,0,0,0">
+                    <fa:ImageAwesome Icon="Envelope" Height="24" Foreground="White"/>
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius">
+                                <Setter.Value>
+                                    <CornerRadius TopLeft="0" TopRight="8" BottomLeft="0" BottomRight="0"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </Grid>
+            <Grid Grid.Row="1" d:IsLocked="True">
+                <DataGrid Height="565" Width="366" VerticalAlignment="Top" Margin="0,51,0,0.4" BorderBrush="{x:Null}"></DataGrid>
+            </Grid>
+            <Grid Grid.Row="2" d:IsLocked="True">
+                <TextBox Text="Czy tutaj powinien być data grid?" Width="366" Height="51" Background="#FF969696" BorderBrush="{x:Null}" Foreground="White" 
+                         SelectionBrush="#FF969696" VerticalAlignment="Bottom" Margin="0,0,0,50" FontFamily="Lato" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            </Grid>
+            <Grid Grid.Row="3" d:IsLocked="True">
+                <Button Background="#FF7286D3" BorderBrush="Black" Foreground="White" FontFamily="Lato"
+                        FontSize="16" HorizontalAlignment="Left" Width="122" Height="51" VerticalAlignment="Bottom">
+                    <fa:ImageAwesome Icon="Money" Height="24" Foreground="White"/>
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius">
+                                <Setter.Value>
+                                    <CornerRadius TopLeft="0" TopRight="0" BottomLeft="8" BottomRight="0"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <Button Background="#FF7286D3" BorderBrush="Black" Foreground="White" FontFamily="Lato"
+                        FontSize="16" HorizontalAlignment="Left" Width="122" Margin="122,0,0,0" Height="51" VerticalAlignment="Bottom">
+                    <fa:ImageAwesome Icon="CreditCard" Height="24" Foreground="White"/>
+                </Button>
+                <Button Background="#FF7286D3" BorderBrush="Black" Foreground="White" FontFamily="Lato"
+                        FontSize="16" HorizontalAlignment="Left" Width="122" Margin="244,0,0,0" Height="51" VerticalAlignment="Bottom">
+                    <fa:ImageAwesome Icon="Percent" Height="24" Foreground="White"/>
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius">
+                                <Setter.Value>
+                                    <CornerRadius TopLeft="0" TopRight="0" BottomLeft="0" BottomRight="8"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>
