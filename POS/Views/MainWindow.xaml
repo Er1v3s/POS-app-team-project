@@ -177,7 +177,7 @@
                                         <Border BorderBrush="Black" BorderThickness="0, 1, 0, 1">
                                             <DataGrid IsReadOnly="True" CellStyle="{DynamicResource DataGridCellStyle2}" Style="{DynamicResource DataGridStyle2}" x:Name="todoListDataGrid" RowStyle="{DynamicResource DataGridRowStyle2}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle2}">
                                                 <DataGrid.Columns>
-                                                    <DataGridTextColumn Header="Nigga" Width="9*" Binding="{Binding content}"/>
+                                                    <DataGridTextColumn Width="9*" Binding="{Binding content}"/>
                                                     <DataGridTemplateColumn Header="" Width="1*">
                                                         <DataGridTemplateColumn.CellTemplate>
                                                             <DataTemplate>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,24 @@ namespace POS.Views
         public SalesPanel()
         {
             InitializeComponent();
+
+            ObservableCollection<OrderItem> orderList = new ObservableCollection<OrderItem>();
+
+
+            orderList.Add(new OrderItem { id = 1, name="Cuba Libre", amount=2, price=22.99 }); 
+            orderList.Add(new OrderItem { id = 1, name="Wodka & Cola", amount=1, price=12.99 }); 
+            orderList.Add(new OrderItem { id = 1, name="Margharita", amount=1, price=31.99 }); 
+            orderList.Add(new OrderItem { id = 1, name="Wodka Stock 0,7", amount=1, price=69.99 });
+
+            orderListDataGrid.ItemsSource = orderList;
         }
+    }
+
+    public class OrderItem
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+        public int amount { get; set; }
+        public double price { get; set; }
     }
 }
