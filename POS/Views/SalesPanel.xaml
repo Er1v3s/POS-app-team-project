@@ -13,7 +13,6 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="205*"/>
             <ColumnDefinition Width="478*"/>
-            <ColumnDefinition Width="0*"/>
         </Grid.ColumnDefinitions>
 
         <!--#region right bar -->
@@ -38,7 +37,7 @@
                     </Border>
                 </Grid>
 
-                <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" Margin="10, 10, 10, 25" CornerRadius="8">
+                <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" Margin="20" CornerRadius="8">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="1*" />
@@ -54,6 +53,7 @@
                                 <ColumnDefinition Width="1*" />
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
+                            
                             <Button Grid.Column="0" Content="Whisky" Style="{StaticResource cocktailCategoryButton}">
                                 <Button.Resources>
                                     <Style TargetType="{x:Type Border}">
@@ -163,17 +163,23 @@
 
         <!--#region left bar -->
         
-        <Grid Grid.Column="0" Margin="22,25,22,25">
+        <Grid Grid.Column="0" Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="7*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            
             <Border BorderThickness="1" BorderBrush="Black" Grid.RowSpan="4" CornerRadius="8" d:IsLocked="True"></Border>
             <Grid Grid.Row="0" d:IsLocked="True">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="51"/>
-                    <RowDefinition Height="565"/>
-                    <RowDefinition Height="51"/>
-                    <RowDefinition Height="51"/>
-                </Grid.RowDefinitions>
-                <Button Background="#FF8EA7E9" BorderBrush="Black" Foreground="White" FontFamily="Lato"
-                        FontSize="16" HorizontalAlignment="Left" Width="122">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Style="{StaticResource leftBarButton}">
                     <fa:ImageAwesome Icon="Print" Height="24" Foreground="White"/>
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">
@@ -185,12 +191,12 @@
                         </Style>
                     </Button.Resources>
                 </Button>
-                <Button Background="#FF8EA7E9" BorderBrush="Black" Foreground="White" FontFamily="Lato"
-                        FontSize="16" HorizontalAlignment="Left" Width="122" Margin="122,0,0,0">
+
+                <Button Grid.Column="1" Style="{StaticResource leftBarButton}">
                     <fa:ImageAwesome Icon="File" Height="24" Foreground="White"/>
                 </Button>
-                <Button Background="#FF8EA7E9" BorderBrush="Black" Foreground="White" FontFamily="Lato"
-                        FontSize="16" HorizontalAlignment="Left" Width="122" Margin="244,0,0,0">
+
+                <Button Grid.Column="2" Style="{StaticResource leftBarButton}">
                     <fa:ImageAwesome Icon="Envelope" Height="24" Foreground="White"/>
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">
@@ -203,16 +209,24 @@
                     </Button.Resources>
                 </Button>
             </Grid>
+            
             <Grid Grid.Row="1" d:IsLocked="True">
-                <DataGrid Height="565" Width="366" VerticalAlignment="Top" Margin="0,51,0,0.4" BorderBrush="{x:Null}"></DataGrid>
+                
             </Grid>
+            
             <Grid Grid.Row="2" d:IsLocked="True">
-                <TextBox Text="Czy tutaj powinien być data grid?" Width="366" Height="51" Background="#FF969696" BorderBrush="{x:Null}" Foreground="White" 
-                         SelectionBrush="#FF969696" VerticalAlignment="Bottom" Margin="0,0,0,50" FontFamily="Lato" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <TextBox Text="Czy tutaj powinien być data grid?" Background="#FF969696" BorderBrush="{x:Null}" Foreground="White" 
+                         SelectionBrush="#FF969696" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
             </Grid>
+            
             <Grid Grid.Row="3" d:IsLocked="True">
-                <Button Background="#FF7286D3" BorderBrush="Black" Foreground="White" FontFamily="Lato"
-                        FontSize="16" HorizontalAlignment="Left" Width="122" Height="51" VerticalAlignment="Bottom">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                
+                <Button Grid.Column="0" Style="{StaticResource leftBarButton}" >
                     <fa:ImageAwesome Icon="Money" Height="24" Foreground="White"/>
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">
@@ -224,12 +238,12 @@
                         </Style>
                     </Button.Resources>
                 </Button>
-                <Button Background="#FF7286D3" BorderBrush="Black" Foreground="White" FontFamily="Lato"
-                        FontSize="16" HorizontalAlignment="Left" Width="122" Margin="122,0,0,0" Height="51" VerticalAlignment="Bottom">
+                
+                <Button Grid.Column="1" Style="{StaticResource leftBarButton}">
                     <fa:ImageAwesome Icon="CreditCard" Height="24" Foreground="White"/>
                 </Button>
-                <Button Background="#FF7286D3" BorderBrush="Black" Foreground="White" FontFamily="Lato"
-                         HorizontalAlignment="Left" Width="122" Margin="244,0,0,0" Height="51" VerticalAlignment="Bottom">
+                
+                <Button Grid.Column="2" Style="{StaticResource leftBarButton}">
                     <fa:ImageAwesome Icon="Percent" Height="24" Foreground="White"/>
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">
@@ -241,6 +255,7 @@
                         </Style>
                     </Button.Resources>
                 </Button>
+                
             </Grid>
         </Grid>
         

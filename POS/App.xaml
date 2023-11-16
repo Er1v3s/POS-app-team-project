@@ -555,6 +555,18 @@
             <Setter Property="Foreground" Value="White" />
         </Style>
 
+        <Style x:Key="leftBarButton" TargetType="Button">
+            <Setter Property="Background" Value="#FF7286D3" />
+            <Setter Property="BorderBrush" Value="Black" />
+            <Setter Property="Foreground" Value="white" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+        </Style>
+        
+        <!--#region orderDataGrid -->
+        
+        
+
         <!--#endregion-->
 
     </Application.Resources>
