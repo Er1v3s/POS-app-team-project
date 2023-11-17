@@ -20,5 +20,8 @@ namespace POS.Models
         public string? job_title { get; set; }
         public required string login { get; set; }
         public required string password { get; set; }
+
+
+
     }
 }
