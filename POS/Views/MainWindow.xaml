@@ -181,10 +181,8 @@
                                                     <DataGridTemplateColumn Header="" Width="1*">
                                                         <DataGridTemplateColumn.CellTemplate>
                                                             <DataTemplate>
-                                                                <Button Style="{StaticResource deleteTaskButton}">
-                                                                    <StackPanel Orientation="Horizontal">
-                                                                        <fa:ImageAwesome Icon="Close" Width="25" Height="25" Foreground="#AE4B59"/>
-                                                                    </StackPanel>
+                                                                <Button Style="{StaticResource deleteItemButton}">
+                                                                    <fa:ImageAwesome Style="{StaticResource deleteItemIcon}" Icon="Close"/>
                                                                 </Button>
                                                             </DataTemplate>
                                                         </DataGridTemplateColumn.CellTemplate>

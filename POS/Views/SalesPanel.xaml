@@ -20,19 +20,19 @@
         <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1, 0, 0, 0">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition Height="18*"/>
+                    <RowDefinition Height="1.5*"/>
+                    <RowDefinition Height="18.5*"/>
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Background="#FF8EA7E9">
-                    <TextBox Style="{StaticResource searchBar}" Margin="10,0,0,0" Text="Szukaj" Width="360" Height="32">
+                    <TextBox Style="{StaticResource searchBar}" Margin="20,0,0,0" Text="Szukaj" Width="360" Height="42">
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="16"/>
                             </Style>
                         </TextBox.Resources>
                     </TextBox>
-                    <Border BorderBrush="#FF7286D3" BorderThickness="1" Width="200" Height="52" HorizontalAlignment="Right" Margin="0,0,10,0" Background="#FF7286D3" CornerRadius="8">
+                    <Border BorderBrush="#FF7286D3" BorderThickness="1" Width="200" Height="42" HorizontalAlignment="Right" Margin="0,0,10,0" Background="#FF7286D3" CornerRadius="8">
                         <Label Content="NazwaUżytkownika" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="White" Margin="-1,-1,0,-1"/>
                     </Border>
                 </Grid>
@@ -81,9 +81,9 @@
                             </Button>
                         </Grid>
 
-                        <Grid Grid.Row="1"  Background="#FFD9D9D9">
+                        <Grid Grid.Row="1" Background="#FFD9D9D9">
                             <WrapPanel>
-                                <Button Background="#FF8EA7E9" Width="150" Height="150" Padding="0" Margin="25" BorderBrush="#FF8EA7E9" Foreground="White">
+                                <Button Style="{StaticResource chooseProductButton}">
                                     <StackPanel>
                                         <TextBlock TextAlignment="Center" Margin="10">Whisky Sour</TextBlock>
                                         <TextBlock TextAlignment="Center" Margin="10">31,99 zł</TextBlock>
@@ -101,54 +101,14 @@
                                     <ColumnDefinition Width="9*" />
                                     <ColumnDefinition Width="2*" />
                                 </Grid.ColumnDefinitions>
-                                
-                                <Button Grid.Column="0" Content="Zapłać" Style="{StaticResource payCancelRecipeButton}" Grid.Row="2" Background="#FF4BAEA0" BorderBrush="#FF4BAEA0" d:IsLocked="True">
-                                    <Button.Resources>
-                                        <Style TargetType="{x:Type Border}">
-                                            <Setter Property="CornerRadius">
-                                                <Setter.Value>
-                                                    <CornerRadius TopLeft="8" TopRight="8" BottomLeft="8" BottomRight="8"/>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </Button.Resources>
-                                </Button>
 
-                                <Button Grid.Column="1" Content="Anuluj" Style="{StaticResource payCancelRecipeButton}" Grid.Row="2" Background="#FFAE4B59" BorderBrush="#FFAE4B59" d:IsLocked="True">
-                                    <Button.Resources>
-                                        <Style TargetType="{x:Type Border}">
-                                            <Setter Property="CornerRadius">
-                                                <Setter.Value>
-                                                    <CornerRadius TopLeft="8" TopRight="8" BottomLeft="8" BottomRight="8"/>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </Button.Resources>
-                                </Button>
+                                <Button Grid.Column="0" Content="Zapłać" Style="{StaticResource payButton}" Grid.Row="2" d:IsLocked="True" />
+                                <Button Grid.Column="1" Content="Anuluj" Style="{StaticResource cancelButton}" Grid.Row="2" d:IsLocked="True" />
+                                <Button Grid.Column="2" Content="Przepis" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
 
-                                <Button Grid.Column="2" Content="Przepis" Style="{StaticResource payCancelRecipeButton}" Grid.Row="2" Background="#FF8EA7E9" BorderBrush="#FF8EA7E9" d:IsLocked="True">
-                                    <Button.Resources>
-                                        <Style TargetType="{x:Type Border}">
-                                            <Setter Property="CornerRadius">
-                                                <Setter.Value>
-                                                    <CornerRadius TopLeft="8" TopRight="8" BottomLeft="8" BottomRight="8"/>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </Button.Resources>
-                                </Button>
 
-                                <Button Grid.Column="4" Style="{StaticResource payCancelRecipeButton}" Width="51" Height="51" Background="#FF969696" BorderBrush="{x:Null}" Foreground="White" d:IsLocked="True">
-                                    <fa:ImageAwesome Icon="Gear" Height="24" Foreground="White"/>
-                                    <Button.Resources>
-                                        <Style TargetType="{x:Type Border}">
-                                            <Setter Property="CornerRadius">
-                                                <Setter.Value>
-                                                    <CornerRadius TopLeft="8" TopRight="0" BottomLeft="8" BottomRight="8"/>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </Button.Resources>
+                                <Button Grid.Column="4" Style="{StaticResource homeButton}" d:IsLocked="True">
+                                    <fa:ImageAwesome Icon="Home" Height="24" Foreground="White"/>
                                 </Button>
 
                             </Grid>
@@ -166,7 +126,7 @@
         <Grid Grid.Column="0" Margin="20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
-                <RowDefinition Height="7*" />
+                <RowDefinition Height="12*" />
                 <RowDefinition Height="1*" />
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
@@ -219,9 +179,9 @@
                         <DataGridTemplateColumn Header="" Width="1*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Style="{StaticResource deleteOrderItemButton}">
+                                    <Button Style="{StaticResource deleteItemButton}">
                                         <StackPanel Orientation="Horizontal">
-                                            <fa:ImageAwesome Style="{StaticResource closeButtonIcon}" Icon="Close"/>
+                                            <fa:ImageAwesome Style="{StaticResource deleteItemIcon}" Icon="Close"/>
                                         </StackPanel>
                                     </Button>
                                 </DataTemplate>
@@ -231,9 +191,17 @@
                 </DataGrid>
             </Grid>
 
-            <Grid Grid.Row="2" d:IsLocked="True">
-                <TextBox Text="Czy tutaj powinien być data grid?" Background="#FF969696" BorderBrush="{x:Null}" Foreground="White" 
-                         SelectionBrush="#FF969696" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+            <Grid Grid.Row="2" d:IsLocked="True" Background="#FF969696" Margin="1,0,1,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="SUMA:" FontSize="24" Foreground="White" Margin="20,0,0,0" VerticalAlignment="Center"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock Text="139,15" FontSize="24" Foreground="White" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <TextBlock Text="zł" FontSize="24" Foreground="White" Margin="0,0,20,0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                </StackPanel>
             </Grid>
 
             <Grid Grid.Row="3" d:IsLocked="True">
