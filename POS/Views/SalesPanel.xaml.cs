@@ -20,6 +20,7 @@ namespace POS.Views
     /// </summary>
     public partial class SalesPanel : Window
     {
+        private double totalAmount = 0;
         public SalesPanel()
         {
             InitializeComponent();
@@ -29,10 +30,23 @@ namespace POS.Views
 
             orderList.Add(new OrderItem { id = 1, name="Cuba Libre", amount=2, price=22.99 }); 
             orderList.Add(new OrderItem { id = 1, name="Wodka & Cola", amount=1, price=12.99 }); 
-            orderList.Add(new OrderItem { id = 1, name="Margharita", amount=1, price=31.99 }); 
+            orderList.Add(new OrderItem { id = 1, name="Margharita", amount=5, price=31.99 }); 
             orderList.Add(new OrderItem { id = 1, name="Wodka Stock 0,7", amount=1, price=69.99 });
 
             orderListDataGrid.ItemsSource = orderList;
+
+            UpdateTotalAmount();
+        }
+
+        private void UpdateTotalAmount()
+        {
+            totalAmount = 0;
+
+            foreach (OrderItem item in orderListDataGrid.ItemsSource)
+            {
+                totalAmount += item.amount * item.price;
+            }
+            totalAmountLabel.Content = $"{totalAmount:C2}";
         }
     }
 
