@@ -4,14 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:POS"
-        xmlns:converter="clr-namespace:POS.Converter"
         mc:Ignorable="d"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         Title="MainWindow" Height="768" Width="1366" WindowState="Maximized" WindowStyle="None" FontFamily="Lato" FontSize="16">
-
-    <Window.Resources>
-        <converter:EmptyToHidden x:Key="EmptyToHidden"/>
-    </Window.Resources>
 
     <Grid Background="#D8D9DA">
         <Grid.ColumnDefinitions>
@@ -195,8 +190,7 @@
                                     </Grid>
 
                                     <Grid Grid.Row="2">
-                                        <TextBlock Text="Dodaj zadanie..." Style="{StaticResource addTaskTextBlock}" Visibility="{Binding ElementName=addTaskTextBox, Path=Text, Converter={StaticResource EmptyToHidden}}" />
-                                        <TextBox x:Name="addTaskTextBox" Style="{StaticResource addTaskTextBox}"/>
+                                        <TextBox Text="Dodaj zadanie" x:Name="addTaskTextBox" LostFocus="addTaskTextBox_LostFocus" GotFocus="addTaskTextBox_GotFocus" Style="{StaticResource addTaskTextBox}"/>
                                         <fa:ImageAwesome Icon="Plus" Cursor="Hand" Width="20" Height="20" Foreground="White" HorizontalAlignment="Left" Margin="10,0,0,0" />
                                     </Grid>
                                 </Grid>

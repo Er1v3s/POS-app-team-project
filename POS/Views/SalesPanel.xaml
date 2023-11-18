@@ -26,7 +26,7 @@
 
                 <Grid Grid.Row="0" Background="#FF8EA7E9">
                     <TextBox x:Name="searchTextBox" Style="{StaticResource searchBar}" Margin="20,0,0,0" Text="Szukaj" Width="360"
-                             Height="42" KeyUp="SearchTextBox_KeyUp">
+                             Height="42" KeyUp="SearchTextBox_KeyUp" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus">
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="16"/>
@@ -176,7 +176,7 @@
                         <DataGridTemplateColumn Header="" Width="1*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Style="{StaticResource deleteItemButton}">
+                                    <Button Style="{StaticResource deleteItemButton}" Click="DeleteProductFromOrderList">
                                         <StackPanel Orientation="Horizontal">
                                             <fa:ImageAwesome Style="{StaticResource deleteItemIcon}" Icon="Close"/>
                                         </StackPanel>
