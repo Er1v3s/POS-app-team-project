@@ -1,6 +1,8 @@
-﻿using System;
+﻿using POS.Views;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +14,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace POS
 {
@@ -25,18 +26,7 @@ namespace POS
         {
             InitializeComponent();
 
-            ObservableCollection<Employee> employee = new ObservableCollection<Employee>();
             ObservableCollection<ToDoListTask> toDoListTasks = new ObservableCollection<ToDoListTask>();
-
-            // Create working time summary DataGrid Item Info
-
-            employee.Add(new Employee { firstName = "Andrzej", workingTimeFrom = "18:00", workingTimeTo = "24:00", workingTimeSummary = "6:00" });
-            employee.Add(new Employee { firstName = "Łukasz", workingTimeFrom = "19:00", workingTimeTo = "23:00", workingTimeSummary = "4:00" });
-            employee.Add(new Employee { firstName = "Klara", workingTimeFrom = "20:00", workingTimeTo = "22:00", workingTimeSummary = "2:00" });
-            employee.Add(new Employee { firstName = "Mateusz", workingTimeFrom = "17:30", workingTimeTo = "22:30", workingTimeSummary = "5:00" });
-            employee.Add(new Employee { firstName = "Robert", workingTimeFrom = "15:00", workingTimeTo = "20:00", workingTimeSummary = "5:00" });
-
-            workingTimeSummaryDataGrid.ItemsSource = employee;
 
             // Create todo list DataGrid Item Info
 
@@ -67,24 +57,47 @@ namespace POS
 
         private void Move_To_Sales_Panel(object sender, RoutedEventArgs e)
         {
-            Views.SalesPanel salesPanel = new Views.SalesPanel();
-            salesPanel.Show();
+            LoginPanel loginPanel = new LoginPanel();
+            loginPanel.Show();
 
-            Window.GetWindow(this).Close();
+            //Views.SalesPanel salesPanel = new Views.SalesPanel();
+            //salesPanel.Show();
+
+            //Window.GetWindow(this).Close();
         }
 
         private void Turn_Off_Application(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
         }
-    }
 
-    public class Employee
-    {
-        public string firstName { get; set; }
-        public string workingTimeFrom { get; set; }
-        public string workingTimeTo { get; set; }
-        public string workingTimeSummary { get; set; }
+        private void ChangeFrameSource(Uri newSource)
+        {
+            try
+            {
+                frame.Source = newSource;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Wystąpił błąd: {ex.Message}");
+            }
+        }
+
+        private void NavigateButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is string uri)
+            {
+                try
+                {
+                    Uri newFrameSource = new Uri(uri, UriKind.RelativeOrAbsolute);
+                    ChangeFrameSource(newFrameSource);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Wystąpił błąd: {ex.Message}");
+                }
+            }
+        }
     }
 
     public class ToDoListTask
