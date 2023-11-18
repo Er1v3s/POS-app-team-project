@@ -83,7 +83,7 @@
 
                         <Grid Grid.Row="1" Background="#FFD9D9D9">
                             <WrapPanel>
-                                <Button Style="{StaticResource chooseProductButton}">
+                                <Button Style="{StaticResource chooseProductButton}" Click="Button_Click">
                                     <StackPanel>
                                         <TextBlock TextAlignment="Center" Margin="10">Whisky Sour</TextBlock>
                                         <TextBlock TextAlignment="Center" Margin="10">31,99 zł</TextBlock>
