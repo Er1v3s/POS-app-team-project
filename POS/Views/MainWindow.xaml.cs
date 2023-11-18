@@ -49,6 +49,22 @@ namespace POS
             todoListDataGrid.ItemsSource = toDoListTasks;
         }
 
+        private void addTaskTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(addTaskTextBox.Text))
+            {
+                addTaskTextBox.Text = "Dodaj zadanie";
+            }
+        }
+
+        private void addTaskTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (addTaskTextBox.Text.Length > 0)
+            {
+                addTaskTextBox.Text = "";
+            }
+        }
+
         private void Move_To_Sales_Panel(object sender, RoutedEventArgs e)
         {
             Views.SalesPanel salesPanel = new Views.SalesPanel();

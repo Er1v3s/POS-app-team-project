@@ -17,7 +17,7 @@ namespace POS.Models
         public DbSet<Ingredients> Ingredients { get; set; }
         public DbSet<Payments> Payments { get; set; }
 
-        public string databasePath = @"C:\Users\filip\Programing\C#\POS\POS\Data\barmanagement.db";
+        public string databasePath = @"C:\Users\filip\Programing\C#\POS\POS\Database\barmanagement.db";
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
