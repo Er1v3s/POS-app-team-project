@@ -30,10 +30,10 @@ namespace POS
 
             // Create working time summary DataGrid Item Info
 
-            employee.Add(new Employee { firstName = "Andrzej",  workingTimeFrom = "18:00", workingTimeTo = "24:00", workingTimeSummary = "6:00"});           
-            employee.Add(new Employee { firstName = "Łukasz", workingTimeFrom = "19:00", workingTimeTo = "23:00", workingTimeSummary = "4:00"});           
-            employee.Add(new Employee { firstName = "Klara", workingTimeFrom = "20:00", workingTimeTo = "22:00", workingTimeSummary = "2:00"});           
-            employee.Add(new Employee { firstName = "Mateusz", workingTimeFrom = "17:30", workingTimeTo = "22:30", workingTimeSummary = "5:00"});
+            employee.Add(new Employee { firstName = "Andrzej", workingTimeFrom = "18:00", workingTimeTo = "24:00", workingTimeSummary = "6:00" });
+            employee.Add(new Employee { firstName = "Łukasz", workingTimeFrom = "19:00", workingTimeTo = "23:00", workingTimeSummary = "4:00" });
+            employee.Add(new Employee { firstName = "Klara", workingTimeFrom = "20:00", workingTimeTo = "22:00", workingTimeSummary = "2:00" });
+            employee.Add(new Employee { firstName = "Mateusz", workingTimeFrom = "17:30", workingTimeTo = "22:30", workingTimeSummary = "5:00" });
             employee.Add(new Employee { firstName = "Robert", workingTimeFrom = "15:00", workingTimeTo = "20:00", workingTimeSummary = "5:00" });
 
             workingTimeSummaryDataGrid.ItemsSource = employee;
@@ -56,6 +56,11 @@ namespace POS
 
             Window.GetWindow(this).Close();
         }
+
+        private void Turn_Off_Application(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
     }
 
     public class Employee
@@ -66,7 +71,7 @@ namespace POS
         public string workingTimeSummary { get; set; }
     }
 
-    public class ToDoListTask 
+    public class ToDoListTask
     {
         public string content { get; set; }
     }

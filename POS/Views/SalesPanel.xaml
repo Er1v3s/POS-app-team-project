@@ -107,7 +107,7 @@
                                 <Button Grid.Column="2" Content="Przepis" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
 
 
-                                <Button Grid.Column="4" Style="{StaticResource homeButton}" d:IsLocked="True">
+                                <Button Grid.Column="4" Style="{StaticResource homeButton}" d:IsLocked="True" Click="MoveToMainWindow">
                                     <fa:ImageAwesome Icon="Home" Height="24" Foreground="White"/>
                                 </Button>
 
@@ -173,9 +173,9 @@
             <Grid Grid.Row="1" d:IsLocked="True">
                 <DataGrid x:Name="orderListDataGrid" Style="{DynamicResource DataGridStyle3}" RowStyle="{DynamicResource DataGridRowStyle3}" CellStyle="{DynamicResource DataGridCellStyle3}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle3}" IsReadOnly="True">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Nazwa" Width="6*" Binding="{Binding name}" />
-                        <DataGridTextColumn Header="Ilość" Width="1.5*" Binding="{Binding amount}"/>
-                        <DataGridTextColumn Header="Cena" Width="1.5*" Binding="{Binding price}"/>
+                        <DataGridTextColumn Header="Nazwa" Width="6*" Binding="{Binding Name}" />
+                        <DataGridTextColumn Header="Ilość" Width="1.5*" Binding="{Binding Amount}"/>
+                        <DataGridTextColumn Header="Cena" Width="1.5*" Binding="{Binding Price}"/>
                         <DataGridTemplateColumn Header="" Width="1*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
