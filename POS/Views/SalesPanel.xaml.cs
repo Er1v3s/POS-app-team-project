@@ -22,23 +22,19 @@ namespace POS.Views
     public partial class SalesPanel
     {
         private double totalAmount = 0;
+        ObservableCollection<OrderItem> orderList = new ObservableCollection<OrderItem>();
+
         public SalesPanel()
         {
             InitializeComponent();
 
-            ObservableCollection<OrderItem> orderList = new ObservableCollection<OrderItem>();
-
-<<<<<<< HEAD
             orderList.Add(new OrderItem { Id = 1, Name = "Wodka & Cola", Amount = 1, Price = 12.99 });
             orderList.Add(new OrderItem { Id = 1, Name = "Margharita", Amount = 1, Price = 31.99 });
             orderList.Add(new OrderItem { Id = 1, Name = "Wodka Stock 0,7", Amount = 1, Price = 69.99 });
-=======
-
-            orderList.Add(new OrderItem { id = 1, name="Cuba Libre", amount=2, price=22.99 }); 
-            orderList.Add(new OrderItem { id = 1, name="Wodka & Cola", amount=1, price=12.99 }); 
-            orderList.Add(new OrderItem { id = 1, name="Margharita", amount=5, price=31.99 }); 
-            orderList.Add(new OrderItem { id = 1, name="Wodka Stock 0,7", amount=1, price=69.99 });
->>>>>>> 65478d1e38ab398490a10c59105eefa89250bdce
+            orderList.Add(new OrderItem { Id = 1, Name = "Cuba Libre", Amount = 2, Price = 22.99 }); 
+            orderList.Add(new OrderItem { Id = 1, Name = "Wodka & Cola", Amount = 1, Price = 12.99 }); 
+            orderList.Add(new OrderItem { Id = 1, Name = "Margharita", Amount = 5, Price = 31.99 }); 
+            orderList.Add(new OrderItem { Id = 1, Name = "Wodka Stock 0,7", Amount = 1, Price = 69.99 });
 
             orderListDataGrid.ItemsSource = orderList;
 
@@ -51,13 +47,10 @@ namespace POS.Views
 
             foreach (OrderItem item in orderListDataGrid.ItemsSource)
             {
-                totalAmount += item.amount * item.price;
+                totalAmount += item.Amount * item.Price;
             }
             totalAmountLabel.Content = $"{totalAmount:C2}";
         }
-
-
-        
 
         private void MoveToMainWindow(object sender, RoutedEventArgs e)
         {
@@ -67,9 +60,9 @@ namespace POS.Views
             Window.GetWindow(this).Close();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e, ref ObservableCollection<OrderItem> orderList)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            
+            orderList.Add(new OrderItem { Id = 1, Name = "Cuba Libre", Amount = 1, Price = 18.99 });
         }
     }
 
