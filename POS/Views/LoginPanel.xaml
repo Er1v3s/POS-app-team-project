@@ -34,7 +34,7 @@
                         </Grid.RowDefinitions>
                         <TextBlock Text="Nazwa Użytkownika:" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="15" Foreground="white"/>
                         <Border Background="White" CornerRadius="5" Margin="5" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
-                            <TextBox x:Name="UsernameTextBox"  Background="Transparent" BorderThickness="0" />
+                            <TextBox x:Name="UsernameTextBox"  Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
                         </Border>
                     </Grid>
 
@@ -45,11 +45,11 @@
                         </Grid.RowDefinitions>
                         <TextBlock Text="Hasło:" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="15" Foreground="white" />
                         <Border Background="White" CornerRadius="5" Margin="5" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
-                            <PasswordBox x:Name="PasswordBox" Margin="5" Background="Transparent" BorderBrush="white"/>
+                            <PasswordBox x:Name="PasswordBox" Margin="1" Background="Transparent" BorderBrush="white" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                         </Border>
                     </Grid>
                     <Border Background="#4BAEA0" CornerRadius="10" Width="100" Margin="0,30,0,0" Padding="5" Grid.Row="2" BorderBrush="Black" BorderThickness="1">
-                        <Button Content="Zaloguj się" Click="LoginButton_Click" Background="Transparent" BorderBrush="Transparent" Foreground="White"/>
+                        <Button Style="{StaticResource loginButton}" Content="Zaloguj się" Click="LoginButton_Click" Background="#4BAEA0" BorderBrush="#4BAEA0" Foreground="White" />
                     </Border>
                 </Grid>
             </Border>
