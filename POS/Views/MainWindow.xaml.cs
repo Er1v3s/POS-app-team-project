@@ -59,11 +59,7 @@ namespace POS
         {
             LoginPanel loginPanel = new LoginPanel();
             loginPanel.Show();
-
-            //Views.SalesPanel salesPanel = new Views.SalesPanel();
-            //salesPanel.Show();
-
-            //Window.GetWindow(this).Close();
+            this.Close();
         }
 
         private void Turn_Off_Application(object sender, RoutedEventArgs e)

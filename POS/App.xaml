@@ -185,6 +185,31 @@
             </Style.Triggers>
         </Style>
         
+        <!--#endregion -->
+        
+        <!--#region loginPanel -->
+
+        <Style x:Key="loginButton" TargetType="Button">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#3c8b80" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <!--#endregion-->
+        
         <!--#region Working Time Summary DataGrid Style-->
         
         <SolidColorBrush x:Key="{x:Static DataGrid.FocusBorderBrushKey}" Color="#FF000000"/>
