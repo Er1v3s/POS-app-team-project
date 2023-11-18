@@ -34,45 +34,6 @@ namespace POS.Views
             UpdateTotalPrice();
         }
 
-        private void UpdateTotalPrice()
-        {
-            totalPrice = orderList.Sum(item => item.Amount * item.Price);
-            totalAmountLabel.Content = $"{totalPrice:C2}";
-        }
-
-
-        private void AddOrUpdateProductInList(Products product)
-        {
-            var existingProduct = orderList.FirstOrDefault(p => p.Id == product.Product_id);
-
-            if (existingProduct != null)
-            {
-                existingProduct.Amount++;
-            }
-            else
-            {
-                orderList.Add(new OrderItem { Id = product.Product_id, Name = product.Product_name, Amount = 1, Price = Convert.ToDouble(product.Price) });
-            }
-        }
-
-
-        private void Delete_Product_From_OrderList(object sender, RoutedEventArgs e)
-        {
-            if (orderListDataGrid.SelectedItem != null)
-            {
-                var selectedItem = (OrderItem)orderListDataGrid.SelectedItem;
-                selectedItem.Amount--; // Zmniejsz ilość
-
-                if (selectedItem.Amount == 0)
-                {
-                    orderList.Remove(selectedItem);
-                }
-
-                UpdateTotalPrice();
-            }
-        }
-
-
         private void MoveToMainWindow(object sender, RoutedEventArgs e)
         {
             MainWindow mainWindow = new MainWindow();
@@ -97,6 +58,43 @@ namespace POS.Views
             }
         }
 
+        private void UpdateTotalPrice()
+        {
+            totalPrice = orderList.Sum(item => item.Amount * item.Price);
+            totalAmountLabel.Content = $"{totalPrice:C2}";
+        }
+
+
+        private void AddOrUpdateProductInList(Products product)
+        {
+            var existingProduct = orderList.FirstOrDefault(p => p.Id == product.Product_id);
+
+            if (existingProduct != null)
+            {
+                existingProduct.Amount++;
+            }
+            else
+            {
+                orderList.Add(new OrderItem { Id = product.Product_id, Name = product.Product_name, Amount = 1, Price = Convert.ToDouble(product.Price) });
+            }
+        }
+
+
+        private void DeleteProductFromOrderList(object sender, RoutedEventArgs e)
+        {
+            if (orderListDataGrid.SelectedItem != null)
+            {
+                var selectedItem = (OrderItem)orderListDataGrid.SelectedItem;
+                selectedItem.Amount--;
+
+                if (selectedItem.Amount == 0)
+                {
+                    orderList.Remove(selectedItem);
+                }
+
+                UpdateTotalPrice();
+            }
+        }
         private void LoadProducts()
         {
             using (var dbContext = new AppDbContext())

@@ -176,7 +176,7 @@
                         <DataGridTemplateColumn Header="" Width="1*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Style="{StaticResource deleteItemButton}" Click="Delete_Product_From_OrderList">
+                                    <Button Style="{StaticResource deleteItemButton}" Click="DeleteProductFromOrderList">
                                         <StackPanel Orientation="Horizontal">
                                             <fa:ImageAwesome Style="{StaticResource deleteItemIcon}" Icon="Close"/>
                                         </StackPanel>
