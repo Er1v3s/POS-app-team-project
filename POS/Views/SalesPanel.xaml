@@ -25,13 +25,15 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Background="#FF8EA7E9">
-                    <TextBox x:Name="searchTextBox" Style="{StaticResource searchBar}" Margin="20,0,0,0" Text="Szukaj" Width="360" Height="42">
+                    <TextBox x:Name="searchTextBox" Style="{StaticResource searchBar}" Margin="20,0,0,0" Text="Szukaj" Width="360"
+                             Height="42" KeyUp="SearchTextBox_KeyUp">
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="16"/>
                             </Style>
                         </TextBox.Resources>
                     </TextBox>
+
                     <Border BorderBrush="#FF7286D3" BorderThickness="1" Width="200" Height="42" HorizontalAlignment="Right" Margin="0,0,10,0" Background="#FF7286D3" CornerRadius="8">
                         <Label Content="NazwaUżytkownika" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="White" Margin="-1,-1,0,-1"/>
                     </Border>
@@ -53,8 +55,8 @@
                                 <ColumnDefinition Width="1*" />
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
-                            
-                            <Button Grid.Column="0" Content="Whisky" Style="{StaticResource cocktailCategoryButton}">
+
+                            <Button Grid.Column="0" Content="Whisky" Click="CategoryButton_Click" Style="{StaticResource cocktailCategoryButton}">
                                 <Button.Resources>
                                     <Style TargetType="{x:Type Border}">
                                         <Setter Property="CornerRadius">
@@ -65,10 +67,10 @@
                                     </Style>
                                 </Button.Resources>
                             </Button>
-                            <Button Grid.Column="1" Content="Gin" Style="{StaticResource cocktailCategoryButton}"/>
-                            <Button Grid.Column="2" Content="Wódka" Style="{StaticResource cocktailCategoryButton}"/>
-                            <Button Grid.Column="3" Content="Rum" Style="{StaticResource cocktailCategoryButton}"/>
-                            <Button Grid.Column="4" Content="Tequila" Style="{StaticResource cocktailCategoryButton}">
+                            <Button Grid.Column="1" Content="Gin" Click="CategoryButton_Click" Style="{StaticResource cocktailCategoryButton}"/>
+                            <Button Grid.Column="2" Content="Wódka" Click="CategoryButton_Click" Style="{StaticResource cocktailCategoryButton}"/>
+                            <Button Grid.Column="3" Content="Rum" Click="CategoryButton_Click" Style="{StaticResource cocktailCategoryButton}"/>
+                            <Button Grid.Column="4" Content="Tequila" Click="CategoryButton_Click" Style="{StaticResource cocktailCategoryButton}">
                                 <Button.Resources>
                                     <Style TargetType="{x:Type Border}">
                                         <Setter Property="CornerRadius">
@@ -102,7 +104,7 @@
                                 <Button Grid.Column="2" Content="Przepis" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
 
 
-                                <Button Grid.Column="4" Style="{StaticResource homeButton}" Click="Move_To_Main_Window" d:IsLocked="True">
+                                <Button Grid.Column="4" Style="{StaticResource homeButton}" d:IsLocked="True" Click="MoveToMainWindow">
                                     <fa:ImageAwesome Icon="Home" Height="24" Foreground="White"/>
                                 </Button>
 
@@ -168,9 +170,9 @@
             <Grid Grid.Row="1" d:IsLocked="True">
                 <DataGrid x:Name="orderListDataGrid" Style="{DynamicResource DataGridStyle3}" RowStyle="{DynamicResource DataGridRowStyle3}" CellStyle="{DynamicResource DataGridCellStyle3}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle3}" IsReadOnly="True">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Nazwa" Width="6*" Binding="{Binding name}" />
-                        <DataGridTextColumn Header="Ilość" Width="1.5*" Binding="{Binding amount}"/>
-                        <DataGridTextColumn Header="Cena" Width="1.5*" Binding="{Binding price}"/>
+                        <DataGridTextColumn Header="Nazwa" Width="6*" Binding="{Binding Name}" />
+                        <DataGridTextColumn Header="Ilość" Width="1.5*" Binding="{Binding Amount}"/>
+                        <DataGridTextColumn Header="Cena" Width="1.5*" Binding="{Binding Price}"/>
                         <DataGridTemplateColumn Header="" Width="1*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -194,8 +196,7 @@
 
                 <TextBlock Grid.Column="0" Text="SUMA:" FontSize="24" Foreground="White" Margin="20,0,0,0" VerticalAlignment="Center"/>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <TextBlock Text="139,15" FontSize="24" Foreground="White" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                    <TextBlock Text="zł" FontSize="24" Foreground="White" Margin="0,0,20,0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                    <Label x:Name="totalAmountLabel" Content="0.00" FontSize="24" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0"/>
                 </StackPanel>
             </Grid>
 

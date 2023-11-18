@@ -8,7 +8,7 @@ namespace POS.Models
 {
     public class Ingredients
     {
-        public int Id { get; set; }
+        public int Ingredient_id { get; set; }
         public required string Name { get; set; }
         public required string Description { get; set; }
     }
