@@ -25,7 +25,7 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Background="#FF8EA7E9">
-                    <TextBox Style="{StaticResource searchBar}" Margin="20,0,0,0" Text="Szukaj" Width="360" Height="42">
+                    <TextBox x:Name="searchTextBox" Style="{StaticResource searchBar}" Margin="20,0,0,0" Text="Szukaj" Width="360" Height="42">
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="16"/>
@@ -82,14 +82,9 @@
                         </Grid>
 
                         <Grid Grid.Row="1" Background="#FFD9D9D9">
-                            <WrapPanel>
-                                <Button Style="{StaticResource chooseProductButton}">
-                                    <StackPanel>
-                                        <TextBlock TextAlignment="Center" Margin="10">Whisky Sour</TextBlock>
-                                        <TextBlock TextAlignment="Center" Margin="10">31,99 zł</TextBlock>
-                                    </StackPanel>
-                                </Button>
-                            </WrapPanel>
+                            <ScrollViewer>
+                                <WrapPanel x:Name="ProductsWrapPanel" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" />
+                            </ScrollViewer>
                         </Grid>
 
                         <Border BorderBrush="Black" Grid.Row="2" Background="#FF7286D3" CornerRadius="0,0,8,8">
@@ -107,7 +102,7 @@
                                 <Button Grid.Column="2" Content="Przepis" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
 
 
-                                <Button Grid.Column="4" Style="{StaticResource homeButton}" d:IsLocked="True">
+                                <Button Grid.Column="4" Style="{StaticResource homeButton}" Click="Move_To_Main_Window" d:IsLocked="True">
                                     <fa:ImageAwesome Icon="Home" Height="24" Foreground="White"/>
                                 </Button>
 
