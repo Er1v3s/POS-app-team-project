@@ -1,7 +1,9 @@
 ﻿using POS.Models;
+using POS.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,46 +23,17 @@ namespace POS.Views
     /// </summary>
     public partial class SalesPanel
     {
-        private double totalAmount = 0;
+        private double totalPrice = 0;
         ObservableCollection<OrderItem> orderList = new ObservableCollection<OrderItem>();
 
         public SalesPanel()
         {
             InitializeComponent();
             LoadProducts();
-
-            searchTextBox.GotFocus += SearchTextBox_GotFocus;
-            searchTextBox.LostFocus += SearchTextBox_LostFocus;
-
-            orderList.Add(new OrderItem { Id = 1, Name = "Wodka & Cola", Amount = 1, Price = 12.99 });
-            orderList.Add(new OrderItem { Id = 1, Name = "Margharita", Amount = 1, Price = 31.99 });
-            orderList.Add(new OrderItem { Id = 1, Name = "Wodka Stock 0,7", Amount = 1, Price = 69.99 });
-            orderList.Add(new OrderItem { Id = 1, Name = "Cuba Libre", Amount = 2, Price = 22.99 });
-            orderList.Add(new OrderItem { Id = 1, Name = "Wodka & Cola", Amount = 1, Price = 12.99 });
-            orderList.Add(new OrderItem { Id = 1, Name = "Margharita", Amount = 5, Price = 31.99 });
-            orderList.Add(new OrderItem { Id = 1, Name = "Wodka Stock 0,7", Amount = 1, Price = 69.99 });
-
             orderListDataGrid.ItemsSource = orderList;
-
-            UpdateTotalAmount();
+            UpdateTotalPrice();
         }
 
-        private void UpdateTotalAmount()
-        {
-            totalAmount = 0;
-
-            foreach (OrderItem item in orderListDataGrid.ItemsSource)
-            {
-                totalAmount += item.Amount * item.Price;
-            }
-            totalAmountLabel.Content = $"{totalAmount:C2}";
-        }
-
-        // onClick menuitem button method
-       /* private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            orderList.Add(new OrderItem { Id = 1, Name = "Cuba Libre", Amount = 1, Price = 18.99 });
-        } */
         private void MoveToMainWindow(object sender, RoutedEventArgs e)
         {
             MainWindow mainWindow = new MainWindow();
@@ -71,7 +44,7 @@ namespace POS.Views
 
         private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (searchTextBox.Text == "Szukaj")
+            if (searchTextBox.Text.Length > 0)
             {
                 searchTextBox.Text = "";
             }
@@ -85,6 +58,43 @@ namespace POS.Views
             }
         }
 
+        private void UpdateTotalPrice()
+        {
+            totalPrice = orderList.Sum(item => item.Amount * item.Price);
+            totalAmountLabel.Content = $"{totalPrice:C2}";
+        }
+
+
+        private void AddOrUpdateProductInList(Products product)
+        {
+            var existingProduct = orderList.FirstOrDefault(p => p.Id == product.Product_id);
+
+            if (existingProduct != null)
+            {
+                existingProduct.Amount++;
+            }
+            else
+            {
+                orderList.Add(new OrderItem { Id = product.Product_id, Name = product.Product_name, Amount = 1, Price = Convert.ToDouble(product.Price) });
+            }
+        }
+
+
+        private void DeleteProductFromOrderList(object sender, RoutedEventArgs e)
+        {
+            if (orderListDataGrid.SelectedItem != null)
+            {
+                var selectedItem = (OrderItem)orderListDataGrid.SelectedItem;
+                selectedItem.Amount--;
+
+                if (selectedItem.Amount == 0)
+                {
+                    orderList.Remove(selectedItem);
+                }
+
+                UpdateTotalPrice();
+            }
+        }
         private void LoadProducts()
         {
             using (var dbContext = new AppDbContext())
@@ -109,7 +119,8 @@ namespace POS.Views
                     // button onClick:
                     button.Click += (object sender, RoutedEventArgs e) =>
                     {
-                        orderList.Add(new OrderItem { Id = 1, Name = product.Product_name, Amount = 1, Price = Convert.ToDouble(product.Price) });
+                        AddOrUpdateProductInList(product);
+                        UpdateTotalPrice();
                     };
 
                     ProductsWrapPanel.Children.Add(button);
@@ -146,7 +157,8 @@ namespace POS.Views
 
                         button.Click += (object buttonSender, RoutedEventArgs buttonE) =>
                         {
-                            orderList.Add(new OrderItem { Id = 1, Name = product.Product_name, Amount = 1, Price = Convert.ToDouble(product.Price) });
+                            AddOrUpdateProductInList(product);
+                            UpdateTotalPrice();
                         };
 
                         ProductsWrapPanel.Children.Add(button);
@@ -187,21 +199,13 @@ namespace POS.Views
                     // button onClick:
                     button.Click += (object buttonSender, RoutedEventArgs buttonE) =>
                     {
-                        orderList.Add(new OrderItem { Id = 1, Name = product.Product_name, Amount = 1, Price = Convert.ToDouble(product.Price) });
+                        AddOrUpdateProductInList(product);
+                        UpdateTotalPrice();
                     };
 
                     ProductsWrapPanel.Children.Add(button);
                 }
             }
         }
-
-    }
-
-    public class OrderItem
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public int Amount { get; set; }
-        public double Price { get; set; }
     }
 }

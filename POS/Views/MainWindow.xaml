@@ -4,14 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:POS"
-        xmlns:converter="clr-namespace:POS.Converter"
         mc:Ignorable="d"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         Title="MainWindow" Height="768" Width="1366" WindowState="Maximized" WindowStyle="None" FontFamily="Lato" FontSize="16">
-
-    <Window.Resources>
-        <converter:EmptyToHidden x:Key="EmptyToHidden"/>
-    </Window.Resources>
 
     <Grid Background="#D8D9DA">
         <Grid.ColumnDefinitions>
@@ -22,19 +17,19 @@
 
         <Grid Grid.Column="0" Background="#8EA7E9">
             <UniformGrid Rows="5" Columns="1"  VerticalAlignment="Center">
-                <Button Style="{StaticResource sideBarButton}">
+                <Button Style="{StaticResource sideBarButton}" Click="NavigateButton_Click" Tag="./WorkTimeSummaryControl.xaml">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="ClockOutline" Width="30" Height="30" Foreground="White"/>
                         <TextBlock Text="PODSUMOWANIE CZASU PRACY" Style="{StaticResource sideBarButtonTextBlock}"/>
                     </StackPanel>
                 </Button>
-                <Button Style="{StaticResource sideBarButton}">
+                <Button Style="{StaticResource sideBarButton}" Click="NavigateButton_Click" Tag="./WorkTimeControl.xaml">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="User" Width="30" Height="30" Foreground="White"/>
                         <TextBlock Text="ROZPOCZĘCIE I ZAKOŃCZENIE PRACY" Style="{StaticResource sideBarButtonTextBlock}"/>
                     </StackPanel>
                 </Button>
-                <Button Style="{StaticResource sideBarButton}">
+                <Button Style="{StaticResource sideBarButton}" >
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Dropbox" Width="30" Height="30" Foreground="White" />
                         <TextBlock Text="FUNKCJE MAGAZYNOWE" Style="{StaticResource sideBarButtonTextBlock}"/>
@@ -55,62 +50,11 @@
             </UniformGrid>
         </Grid>
 
-        <Grid Grid.Column="1">
-            <Border BorderBrush="Black" BorderThickness="1, 0, 1, 0">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="18*" />
-                        <ColumnDefinition Width="1*" />
-                    </Grid.ColumnDefinitions>
-
-                    <Grid Grid.Column="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="1*" />
-                            <RowDefinition Height="18*" />
-                            <RowDefinition Height="1*" />
-                        </Grid.RowDefinitions>
-
-                        <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" CornerRadius="8" Background="White">
-                            <Grid Grid.Row="1">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="1*"/>
-                                    <RowDefinition Height="9*"/>
-                                    <RowDefinition Height="2*"/>
-                                </Grid.RowDefinitions>
-
-                                <Border CornerRadius="8,8,0, 0" Background="#8EA7E9">
-                                    <Grid Grid.Row="0">
-                                        <TextBlock Text="PODSUMOWANIE CZASU PRACY" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="24"></TextBlock>
-                                    </Grid>
-                                </Border>
-
-
-                                <Grid Grid.Row="1">
-                                    <Border BorderThickness="0, 1, 0 ,0" BorderBrush="Black">
-                                        <DataGrid x:Name="workingTimeSummaryDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" RowStyle="{DynamicResource DataGridRowStyle1}">
-                                            <DataGrid.Columns>
-                                                <DataGridTextColumn Header="PRACOWNIK" IsReadOnly="True" Width="3*" CanUserResize="False" CanUserReorder="False" Binding="{Binding firstName}"/>
-                                                <DataGridTextColumn Header="OD" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False" Binding="{Binding workingTimeFrom}"/>
-                                                <DataGridTextColumn Header="DO" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False" Binding="{Binding workingTimeTo}"/>
-                                                <DataGridTextColumn Header="CZAS PRACY" IsReadOnly="True" Width="2*" CanUserResize="False" CanUserReorder="False" Binding="{Binding workingTimeSummary}"/>
-                                            </DataGrid.Columns>
-                                        </DataGrid>
-                                    </Border>
-                                </Grid>
-
-                                <Grid Grid.Row="2">
-                                    <Button Style="{StaticResource refreshButton}">
-                                        <StackPanel Orientation="Horizontal">
-                                            <fa:ImageAwesome Icon="Refresh" Width="25" Height="25" Foreground="White"/>
-                                            <TextBlock Text="ODŚWIEŻ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16"/>
-                                        </StackPanel>
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                        </Border>
-                    </Grid>
-                </Grid>
+        <Grid Grid.Column="1" >
+            <Border BorderBrush="Black" BorderThickness="1, 0, 1, 0" Padding="30">
+                <ContentControl>
+                    <Frame x:Name="frame" NavigationUIVisibility="Hidden" Source="./WorkTimeSummaryControl.xaml"/>
+                </ContentControl>
             </Border>
         </Grid>
 
@@ -195,8 +139,7 @@
                                     </Grid>
 
                                     <Grid Grid.Row="2">
-                                        <TextBlock Text="Dodaj zadanie..." Style="{StaticResource addTaskTextBlock}" Visibility="{Binding ElementName=addTaskTextBox, Path=Text, Converter={StaticResource EmptyToHidden}}" />
-                                        <TextBox x:Name="addTaskTextBox" Style="{StaticResource addTaskTextBox}"/>
+                                        <TextBox Text="Dodaj zadanie" x:Name="addTaskTextBox" LostFocus="addTaskTextBox_LostFocus" GotFocus="addTaskTextBox_GotFocus" Style="{StaticResource addTaskTextBox}"/>
                                         <fa:ImageAwesome Icon="Plus" Cursor="Hand" Width="20" Height="20" Foreground="White" HorizontalAlignment="Left" Margin="10,0,0,0" />
                                     </Grid>
                                 </Grid>
