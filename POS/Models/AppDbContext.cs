@@ -16,8 +16,11 @@ namespace POS.Models
         public DbSet<Orders> Orders { get; set; }
         public DbSet<Ingredients> Ingredients { get; set; }
         public DbSet<Payments> Payments { get; set; }
+        public DbSet<RecipeIngredients> RecipeIngredients { get; set; }
+        public DbSet<Recipes> Recipes { get; set; }
 
-        public string databasePath = @"C:\Users\filip\Programing\C#\POS\POS\Database\barmanagement.db";
+
+        public string databasePath = @"C:\Users\qasvp\source\repos\POS-app-team-project\POS\Database\barmanagement.db";
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -31,6 +34,8 @@ namespace POS.Models
             modelBuilder.Entity<Orders>().HasKey(e => e.Order_id);
             modelBuilder.Entity<Ingredients>().HasKey(e => e.Ingredient_id);
             modelBuilder.Entity<Payments>().HasKey(e => e.Payment_id);
+            modelBuilder.Entity<RecipeIngredients>().HasKey(e => e.RecipeIngredient_id);
+            modelBuilder.Entity<Recipes>().HasKey(e => e.Recipe_id);
         }
     }
 }
