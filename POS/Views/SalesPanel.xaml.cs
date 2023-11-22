@@ -103,6 +103,7 @@ namespace POS.Views
 
                 foreach (var product in products)
                 {
+                    Viewbox viewbox = new Viewbox();
                     Button button = new Button
                     {
                         Style = (Style)FindResource("chooseProductButton"), // Styl przycisku zasobu z XAML
@@ -123,7 +124,8 @@ namespace POS.Views
                         UpdateTotalPrice();
                     };
 
-                    ProductsWrapPanel.Children.Add(button);
+                    ProductsUnifromGrid.Children.Add(viewbox);
+                    viewbox.Child = button;
                 }
             }
         }
@@ -138,10 +140,11 @@ namespace POS.Views
                 {
                     var products = dbContext.Products.Where(p => p.Product_name.ToLower().Contains(searchText)).ToList();
 
-                    ProductsWrapPanel.Children.Clear();
+                    ProductsUnifromGrid.Children.Clear();
 
                     foreach (var product in products)
                     {
+                        Viewbox viewbox = new Viewbox();
                         Button button = new Button
                         {
                             Style = (Style)FindResource("chooseProductButton"),
@@ -161,7 +164,8 @@ namespace POS.Views
                             UpdateTotalPrice();
                         };
 
-                        ProductsWrapPanel.Children.Add(button);
+                        ProductsUnifromGrid.Children.Add(viewbox);
+                        viewbox.Child = button;
                     }
                 }
 
@@ -179,10 +183,11 @@ namespace POS.Views
                 var products = dbContext.Products.Where(p => p.Category == category).ToList();
 
                 // Wyczyść aktualnie wyświetlone produkty
-                ProductsWrapPanel.Children.Clear();
+                ProductsUnifromGrid.Children.Clear();
 
                 foreach (var product in products)
                 {
+                    Viewbox viewbox = new Viewbox();
                     Button button = new Button
                     {
                         Style = (Style)FindResource("chooseProductButton"),
@@ -203,7 +208,8 @@ namespace POS.Views
                         UpdateTotalPrice();
                     };
 
-                    ProductsWrapPanel.Children.Add(button);
+                    ProductsUnifromGrid.Children.Add(viewbox);
+                    viewbox.Child = button;
                 }
             }
         }

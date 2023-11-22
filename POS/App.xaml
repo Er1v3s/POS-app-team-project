@@ -591,11 +591,11 @@
         </Style>
 
         <Style x:Key="chooseProductButton" TargetType="Button">
+            <Setter Property="MinWidth" Value="200px" />
+            <Setter Property="MinHeight" Value="150px" />
             <Setter Property="Background" Value="#FF8EA7E9" />
-            <Setter Property="Width" Value="150" />
-            <Setter Property="Height" Value="150" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="Margin" Value="25" />
+            <Setter Property="Padding" Value="25" />
+            <Setter Property="Margin" Value="10" />
             <Setter Property="BorderBrush" Value="#FF8EA7E9" />
             <Setter Property="Foreground" Value="White" />
             <Setter Property="Cursor" Value="Hand" />
