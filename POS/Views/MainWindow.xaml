@@ -1,0 +1,166 @@
+﻿<Window x:Class="POS.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:POS"
+        mc:Ignorable="d"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
+        Title="MainWindow" Height="768" Width="1366" WindowState="Maximized" WindowStyle="None" FontFamily="Lato" FontSize="16">
+
+    <Grid Background="#D8D9DA">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="5*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0" Background="#8EA7E9">
+            <UniformGrid Rows="5" Columns="1"  VerticalAlignment="Center">
+                <Button Style="{StaticResource sideBarButton}" Click="NavigateButton_Click" Tag="./WorkTimeSummaryControl.xaml">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:ImageAwesome Icon="ClockOutline" Width="30" Height="30" Foreground="White"/>
+                        <TextBlock Text="PODSUMOWANIE CZASU PRACY" Style="{StaticResource sideBarButtonTextBlock}"/>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource sideBarButton}" Click="NavigateButton_Click" Tag="./WorkTimeControl.xaml">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:ImageAwesome Icon="User" Width="30" Height="30" Foreground="White"/>
+                        <TextBlock Text="ROZPOCZĘCIE I ZAKOŃCZENIE PRACY" Style="{StaticResource sideBarButtonTextBlock}"/>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource sideBarButton}" >
+                    <StackPanel Orientation="Horizontal">
+                        <fa:ImageAwesome Icon="Dropbox" Width="30" Height="30" Foreground="White" />
+                        <TextBlock Text="FUNKCJE MAGAZYNOWE" Style="{StaticResource sideBarButtonTextBlock}"/>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource sideBarButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:ImageAwesome Icon="BarChart"  Width="30" Height="30" Foreground="White"/>
+                        <TextBlock Text="RAPORTY I ANALIZY" Style="{StaticResource sideBarButtonTextBlock}"/>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource sideBarButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:ImageAwesome Icon="Shield" Width="30" Height="30" Foreground="White"/>
+                        <TextBlock Text="FUNKCJE ADMINISTRATORA" Style="{StaticResource sideBarButtonTextBlock}"/>
+                    </StackPanel>
+                </Button>
+            </UniformGrid>
+        </Grid>
+
+        <Grid Grid.Column="1" >
+            <Border BorderBrush="Black" BorderThickness="1, 0, 1, 0" Padding="30">
+                <ContentControl>
+                    <Frame x:Name="frame" NavigationUIVisibility="Hidden" Source="./WorkTimeSummaryControl.xaml"/>
+                </ContentControl>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="10*" />
+                <RowDefinition Height="6*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Background="#8EA7E9">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="4*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <fa:ImageAwesome Icon="Wifi" Foreground="White" Width="32"/>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <fa:ImageAwesome Icon="Database" Foreground="White" Width="24" Height="24"/>
+                </Grid>
+                <StackPanel Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="03.11.2023" FontSize="14" Foreground="White"/>
+                    <TextBlock Text="15:15" HorizontalAlignment="Center" FontSize="20" Foreground="White"/>
+                </StackPanel>
+                <Grid Grid.Column="4">
+                    <Button Style="{StaticResource TurnOffAppButton}" Click="Turn_Off_Application">
+                        <fa:ImageAwesome Icon="PowerOff" Foreground="White" Width="24" Height="24"/>
+                    </Button>
+                </Grid>
+            </Grid>
+
+            <Border Grid.Row="1" BorderBrush="Black" BorderThickness="0, 1, 0, 0">
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="18*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="18*" />
+                            <RowDefinition Height="1*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="1">
+                            <Border BorderBrush="Black" BorderThickness="1" CornerRadius="8" Background="#8EA7E9">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*" />
+                                        <RowDefinition Height="8*" />
+                                        <RowDefinition Height="1*" />
+                                    </Grid.RowDefinitions>
+
+                                    <Grid Grid.Row="0">
+                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white">DO ZROBIENIA</TextBlock>
+                                    </Grid>
+
+                                    <Grid Grid.Row="1" Background="white">
+                                        <Border BorderBrush="Black" BorderThickness="0, 1, 0, 1">
+                                            <DataGrid IsReadOnly="True" CellStyle="{DynamicResource DataGridCellStyle2}" Style="{DynamicResource DataGridStyle2}" x:Name="todoListDataGrid" RowStyle="{DynamicResource DataGridRowStyle2}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle2}">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Width="9*" Binding="{Binding content}"/>
+                                                    <DataGridTemplateColumn Header="" Width="1*">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <Button Style="{StaticResource deleteItemButton}">
+                                                                    <fa:ImageAwesome Style="{StaticResource deleteItemIcon}" Icon="Close"/>
+                                                                </Button>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </Border>
+                                    </Grid>
+
+                                    <Grid Grid.Row="2">
+                                        <TextBox Text="Dodaj zadanie" x:Name="addTaskTextBox" LostFocus="addTaskTextBox_LostFocus" GotFocus="addTaskTextBox_GotFocus" Style="{StaticResource addTaskTextBox}"/>
+                                        <fa:ImageAwesome Icon="Plus" Cursor="Hand" Width="20" Height="20" Foreground="White" HorizontalAlignment="Left" Margin="10,0,0,0" />
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </Grid>
+
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="2" >
+                <Button Style="{StaticResource registerSellButton}" Click="Move_To_Sales_Panel">
+                    <StackPanel Orientation="Vertical">
+                        <fa:ImageAwesome Icon="ShoppingBasket" Width="50" Height="50" Foreground="White" Margin="0, 0, 0, 10"/>
+                        <TextBlock Text="ZAREJESTRUJ SPRZEDAŻ" Width="200" TextWrapping="Wrap" TextAlignment="Center" FontSize="24" FontWeight="Bold"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+        </Grid>
+        <StackPanel Grid.Column="1"/>
+
+    </Grid>
+</Window>

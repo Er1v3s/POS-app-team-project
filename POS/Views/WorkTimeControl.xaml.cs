@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace POS
+namespace POS.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Logika interakcji dla klasy WorkTimeControl.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class WorkTimeControl : UserControl
     {
-        public MainWindow()
+        public WorkTimeControl()
         {
             InitializeComponent();
         }
