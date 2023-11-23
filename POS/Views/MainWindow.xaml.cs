@@ -25,35 +25,9 @@ namespace POS
         public MainWindow()
         {
             InitializeComponent();
-
-            ObservableCollection<ToDoListTask> toDoListTasks = new ObservableCollection<ToDoListTask>();
-
-            // Create todo list DataGrid Item Info
-
-            toDoListTasks.Add(new ToDoListTask { content = "Zrobić zamówienie" });
-            toDoListTasks.Add(new ToDoListTask { content = "Wezwać serwis do nalewaka na piwo" });
-            toDoListTasks.Add(new ToDoListTask { content = "Wysłać faktury do księgowej" });
-            toDoListTasks.Add(new ToDoListTask { content = "Sprawdzić terminy ważności w lodówce" });
-            toDoListTasks.Add(new ToDoListTask { content = "Wynieść śmieci" });
-
-            todoListDataGrid.ItemsSource = toDoListTasks;
         }
 
-        private void addTaskTextBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(addTaskTextBox.Text))
-            {
-                addTaskTextBox.Text = "Dodaj zadanie";
-            }
-        }
 
-        private void addTaskTextBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            if (addTaskTextBox.Text.Length > 0)
-            {
-                addTaskTextBox.Text = "";
-            }
-        }
 
         private void Move_To_Sales_Panel(object sender, RoutedEventArgs e)
         {
@@ -94,10 +68,5 @@ namespace POS
                 }
             }
         }
-    }
-
-    public class ToDoListTask
-    {
-        public string content { get; set; }
     }
 }

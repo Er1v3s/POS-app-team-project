@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:POS"
+        xmlns:local="clr-namespace:POS.Views"
         mc:Ignorable="d"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         Title="MainWindow" Height="768" Width="1366" WindowState="Maximized" WindowStyle="None" FontFamily="Lato" FontSize="16">
@@ -107,43 +107,7 @@
                         </Grid.RowDefinitions>
 
                         <Grid Grid.Row="1">
-                            <Border BorderBrush="Black" BorderThickness="1" CornerRadius="8" Background="#8EA7E9">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="1*" />
-                                        <RowDefinition Height="8*" />
-                                        <RowDefinition Height="1*" />
-                                    </Grid.RowDefinitions>
-
-                                    <Grid Grid.Row="0">
-                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white">DO ZROBIENIA</TextBlock>
-                                    </Grid>
-
-                                    <Grid Grid.Row="1" Background="white">
-                                        <Border BorderBrush="Black" BorderThickness="0, 1, 0, 1">
-                                            <DataGrid IsReadOnly="True" CellStyle="{DynamicResource DataGridCellStyle2}" Style="{DynamicResource DataGridStyle2}" x:Name="todoListDataGrid" RowStyle="{DynamicResource DataGridRowStyle2}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle2}">
-                                                <DataGrid.Columns>
-                                                    <DataGridTextColumn Width="9*" Binding="{Binding content}"/>
-                                                    <DataGridTemplateColumn Header="" Width="1*">
-                                                        <DataGridTemplateColumn.CellTemplate>
-                                                            <DataTemplate>
-                                                                <Button Style="{StaticResource deleteItemButton}">
-                                                                    <fa:ImageAwesome Style="{StaticResource deleteItemIcon}" Icon="Close"/>
-                                                                </Button>
-                                                            </DataTemplate>
-                                                        </DataGridTemplateColumn.CellTemplate>
-                                                    </DataGridTemplateColumn>
-                                                </DataGrid.Columns>
-                                            </DataGrid>
-                                        </Border>
-                                    </Grid>
-
-                                    <Grid Grid.Row="2">
-                                        <TextBox Text="Dodaj zadanie" x:Name="addTaskTextBox" LostFocus="addTaskTextBox_LostFocus" GotFocus="addTaskTextBox_GotFocus" Style="{StaticResource addTaskTextBox}"/>
-                                        <fa:ImageAwesome Icon="Plus" Cursor="Hand" Width="20" Height="20" Foreground="White" HorizontalAlignment="Left" Margin="10,0,0,0" />
-                                    </Grid>
-                                </Grid>
-                            </Border>
+                            <local:ToDoList/>
                         </Grid>
 
                     </Grid>
@@ -158,9 +122,9 @@
                     </StackPanel>
                 </Button>
             </Grid>
-
         </Grid>
-        <StackPanel Grid.Column="1"/>
+        
+        <Grid Grid.Column="1"/>
 
     </Grid>
 </Window>

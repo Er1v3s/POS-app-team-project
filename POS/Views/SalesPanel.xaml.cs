@@ -58,6 +58,25 @@ namespace POS.Views
             }
         }
 
+        private void SearchTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                var searchText = searchTextBox.Text.ToLower();
+                LoadProductsBySearch(searchText);
+
+                e.Handled = true;
+                searchTextBox.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+            }
+        }
+
+        private void CategoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button categoryButton = sender as Button;
+            string category = categoryButton.Content.ToString();
+            LoadProductsByCategory(category);
+        }
+
         private void UpdateTotalPrice()
         {
             totalPrice = orderList.Sum(item => item.Amount * item.Price);
@@ -160,25 +179,6 @@ namespace POS.Views
                 var products = dbContext.Products.Where(p => p.Category == category).ToList();
                 LoadProducts(products);
             }
-        }
-
-        private void SearchTextBox_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                var searchText = searchTextBox.Text.ToLower();
-                LoadProductsBySearch(searchText);
-
-                e.Handled = true;
-                searchTextBox.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
-            }
-        }
-
-        private void CategoryButton_Click(object sender, RoutedEventArgs e)
-        {
-            Button categoryButton = sender as Button;
-            string category = categoryButton.Content.ToString();
-            LoadProductsByCategory(category);
         }
     }
 }
