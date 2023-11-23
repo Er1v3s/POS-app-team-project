@@ -85,7 +85,10 @@
 
                         <Grid Grid.Row="1" Background="#FFD9D9D9">
                             <ScrollViewer>
-                                <WrapPanel x:Name="ProductsWrapPanel" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Left" />
+                                <WrapPanel Margin="10">
+                                    <UniformGrid x:Name="ProductsUnifromGrid" Columns="5">
+                                    </UniformGrid>
+                                </WrapPanel>
                             </ScrollViewer>
                         </Grid>
 
