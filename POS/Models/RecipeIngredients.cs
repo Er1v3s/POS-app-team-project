@@ -10,7 +10,9 @@ namespace POS.Models
     {
         public required int RecipeIngredient_id {  get; set; }
         public required int Recipe_id { get; set; }
+        public Recipes Recipe { get; set; }
         public required int Ingredient_id { get; set; }
+        public Ingredients Ingredient { get; set; }
         public required double Quantity { get; set; }
     }
 }
