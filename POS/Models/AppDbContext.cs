@@ -19,12 +19,20 @@ namespace POS.Models
         public DbSet<RecipeIngredients> RecipeIngredients { get; set; }
         public DbSet<Recipes> Recipes { get; set; }
 
+        public static string DatabasePath { get; private set; }
 
-        public string databasePath = @"C:\Users\qasvp\source\repos\POS-app-team-project\POS\Database\barmanagement.db";
+        static AppDbContext()
+        {
+            string databaseLocation = @"..\..\..\Database\barmanagement.db";
+            string projectPath = Directory.GetCurrentDirectory();
+            string absolutePath = Path.Combine(projectPath, databaseLocation);
+
+            DatabasePath = $"Data Source=" + absolutePath;
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite($"Data Source={databasePath}");
+            optionsBuilder.UseSqlite(DatabasePath);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
