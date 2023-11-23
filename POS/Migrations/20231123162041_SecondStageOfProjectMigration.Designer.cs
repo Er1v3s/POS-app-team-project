@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using POS.Models;
 
@@ -10,9 +11,11 @@ using POS.Models;
 namespace POS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231123162041_SecondStageOfProjectMigration")]
+    partial class SecondStageOfProjectMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.13");
@@ -196,27 +199,6 @@ namespace POS.Migrations
                     b.HasKey("Recipe_id");
 
                     b.ToTable("Recipes");
-                });
-
-            modelBuilder.Entity("POS.Models.ToDoListTask", b =>
-                {
-                    b.Property<int>("TodoTask_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime?>("CompletionDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("CreationDate")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("TodoTask_Id");
-
-                    b.ToTable("ToDoListTasks");
                 });
 #pragma warning restore 612, 618
         }

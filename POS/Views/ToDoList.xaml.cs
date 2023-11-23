@@ -29,6 +29,7 @@ namespace POS.Views
 
             todoListTaskCollection = new ObservableCollection<ToDoListTask>();
             todoListDataGrid.ItemsSource = todoListTaskCollection;
+            loadTasks();
         }
 
         private void addTaskTextBox_LostFocus(object sender, RoutedEventArgs e)
@@ -49,14 +50,14 @@ namespace POS.Views
 
         private void addTask_ButtonClick(object sender, RoutedEventArgs e)
         {
-            addTask(new ToDoListTask { content = addTaskTextBox.Text });
+            addTask(new ToDoListTask { Content = addTaskTextBox.Text, CreationDate = DateTime.Now, CompletionDate = null });
         }
 
         private void addTask_KeyUp(object sender, KeyEventArgs e)
         {
             if(e.Key == Key.Enter)
             {
-                addTask(new ToDoListTask { content = addTaskTextBox.Text });
+                addTask(new ToDoListTask { Content = addTaskTextBox.Text, CreationDate = DateTime.Now, CompletionDate = null });
             }
         }
 
@@ -64,20 +65,50 @@ namespace POS.Views
         {
             if (todoListDataGrid.SelectedItem != null)
             {
-                var selectedItem = (ToDoListTask)todoListDataGrid.SelectedItem;
-                todoListTaskCollection.Remove(selectedItem);
+                var selectedTask = (ToDoListTask)todoListDataGrid.SelectedItem;
+                todoListTaskCollection.Remove(selectedTask);
+
+                using (var dbContext = new AppDbContext())
+                {
+                    var taskFromDb = dbContext.ToDoListTasks.Find(selectedTask.TodoTask_Id);
+
+                    if (taskFromDb != null)
+                    {
+                        taskFromDb.CompletionDate = DateTime.Now;
+                        dbContext.SaveChanges();
+                    }
+                }
             }
             else { return; }
         }
 
         private void addTask(ToDoListTask task)
         {
-            if (addTaskTextBox.Text != "" && addTaskTextBox.Text != null)
+            if (!string.IsNullOrEmpty(addTaskTextBox.Text))
             {
-                todoListTaskCollection.Add(task);
-                addTaskTextBox.Text = "";
+                using (var dbContext = new AppDbContext())
+                {
+                    dbContext.ToDoListTasks.Add(task);
+                    dbContext.SaveChanges();
+                }
             }
             else { return; }
+            loadTasks();
+            addTaskTextBox.Text = "";
+        }
+
+        private void loadTasks()
+        {
+            todoListTaskCollection.Clear();
+            using (var dbContext = new AppDbContext())
+            {
+                var tasks = dbContext.ToDoListTasks.Where(p => p.CompletionDate == null).ToList();
+
+                foreach (var task in tasks)
+                {
+                    todoListTaskCollection.Add(task);
+                }
+            }
         }
     }
 }

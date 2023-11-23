@@ -27,7 +27,7 @@
                             <DataGridTemplateColumn Width="8.7*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Style="{StaticResource todoListTextBlock}" Text="{Binding content}"/>
+                                        <TextBlock Style="{StaticResource todoListTextBlock}" Text="{Binding Content}"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
