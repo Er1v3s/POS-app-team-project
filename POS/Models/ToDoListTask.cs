@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace POS.ViewModel
+namespace POS.Models
 {
     public class ToDoListTask
     {
