@@ -754,7 +754,20 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        
+
+        <Style x:Key="RecipeTextStyle" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Width" Value="390"/>
+            <Setter Property="Height" Value="auto"/>
+            <Setter Property="TextAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="25"/>
+            <Setter Property="Background" Value="#FF8EA7E9"/>
+            <Setter Property="Foreground" Value="white" />
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="FontSize" Value="16"/>
+        </Style>
+
         <!--#region orderDataGrid -->
 
         <Style x:Key="DataGridStyle3" TargetType="{x:Type DataGrid}">
