@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="POS.Views.ToDoList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:POS.Views"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="8" Background="#8EA7E9">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="8*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="white">DO ZROBIENIA</TextBlock>
+            </Grid>
+
+            <Grid Grid.Row="1" Background="white">
+                <Border BorderBrush="Black" BorderThickness="0, 1, 0, 1">
+                    <DataGrid IsReadOnly="True" CellStyle="{DynamicResource DataGridCellStyle2}" Style="{DynamicResource DataGridStyle2}" x:Name="todoListDataGrid" RowStyle="{DynamicResource DataGridRowStyle2}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle2}">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Width="8.7*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Style="{StaticResource todoListTextBlock}" Text="{Binding Content}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="" Width="1.3*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Style="{StaticResource deleteItemButton}" HorizontalAlignment="Right" Click="deleteTask_ButtonClick">
+                                            <fa:ImageAwesome Style="{StaticResource deleteItemIcon}" Icon="Close"/>
+                                        </Button>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <TextBox Text="Dodaj zadanie" x:Name="addTaskTextBox" LostFocus="addTaskTextBox_LostFocus" GotFocus="addTaskTextBox_GotFocus" KeyUp="addTask_KeyUp" Style="{StaticResource addTaskTextBox}" Margin="50,0,10,0"/>
+                <Button Style="{StaticResource addTaskButton}" Click="addTask_ButtonClick">
+                    <fa:ImageAwesome Style="{StaticResource plusIcon}" Icon="Plus"  Width="25" Height="25" />
+                </Button>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

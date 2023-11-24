@@ -35,7 +35,9 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -503,6 +505,7 @@
                     <Setter Property="BorderBrush" Value="Transparent"/>
                 </Trigger>
             </Style.Triggers>
+                
         </Style>
         <Style x:Key="DataGridColumnHeaderStyle2" TargetType="{x:Type DataGridColumnHeader}">
             <Setter Property="Height" Value="0"/>
@@ -560,6 +563,49 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="todoListTextBlock" TargetType="TextBlock">
+            <Setter Property="TextWrapping" Value="NoWrap"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
+                    <Setter Property="TextWrapping" Value="Wrap"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="addTaskButton" TargetType="Button">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Width" Value="40" />
+            <Setter Property="Height" Value="40" />
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True" >
+                    <Setter Property="Background" Value="Transparent" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="plusIcon" TargetType="fa:ImageAwesome">
+            <Setter Property="Foreground" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="#FF6077C5"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <!--#endregion-->
         
         <!--#region SalesPanel -->
@@ -591,11 +637,11 @@
         </Style>
 
         <Style x:Key="chooseProductButton" TargetType="Button">
+            <Setter Property="MinWidth" Value="200px" />
+            <Setter Property="MinHeight" Value="150px" />
             <Setter Property="Background" Value="#FF8EA7E9" />
-            <Setter Property="Width" Value="150" />
-            <Setter Property="Height" Value="150" />
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="Margin" Value="25" />
+            <Setter Property="Padding" Value="25" />
+            <Setter Property="Margin" Value="10" />
             <Setter Property="BorderBrush" Value="#FF8EA7E9" />
             <Setter Property="Foreground" Value="White" />
             <Setter Property="Cursor" Value="Hand" />
@@ -767,6 +813,8 @@
             <Setter Property="Padding" Value="20"/>
             <Setter Property="FontSize" Value="16"/>
         </Style>
+        
+        <!--#endregion-->
 
         <!--#region orderDataGrid -->
 

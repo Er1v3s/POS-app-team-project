@@ -30,7 +30,7 @@ namespace POS.Views
         public SalesPanel()
         {
             InitializeComponent();
-            LoadProducts();
+            LoadAllProducts();
             orderListDataGrid.ItemsSource = orderList;
             UpdateTotalPrice();
         }
@@ -57,6 +57,25 @@ namespace POS.Views
             {
                 searchTextBox.Text = "Szukaj";
             }
+        }
+
+        private void SearchTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                var searchText = searchTextBox.Text.ToLower();
+                LoadProductsBySearch(searchText);
+
+                e.Handled = true;
+                searchTextBox.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+            }
+        }
+
+        private void CategoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button categoryButton = sender as Button;
+            string category = categoryButton.Content.ToString();
+            LoadProductsByCategory(category);
         }
 
         private void UpdateTotalPrice()
@@ -96,116 +115,70 @@ namespace POS.Views
                 UpdateTotalPrice();
             }
         }
-        private void LoadProducts()
+
+        private Button CreateProductButton(Products product)
+        {
+            Viewbox viewbox = new Viewbox();
+            Button button = new Button
+            {
+                Style = (Style)FindResource("chooseProductButton"),
+                Content = new StackPanel
+                {
+                    Children =
+            {
+                new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = product.Product_name },
+                new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = $"{product.Price} zł" }
+            }
+                }
+            };
+
+            // button onClick:
+            button.Click += (object sender, RoutedEventArgs e) =>
+            {
+                AddOrUpdateProductInList(product);
+                UpdateTotalPrice();
+            };
+
+            ProductsUnifromGrid.Children.Add(viewbox);
+            viewbox.Child = button;
+
+            return button;
+        }
+
+        private void LoadProducts(IEnumerable<Products> products)
+        {
+            ProductsUnifromGrid.Children.Clear();
+
+            foreach (var product in products)
+            {
+                CreateProductButton(product);
+            }
+        }
+
+        private void LoadAllProducts()
         {
             using (var dbContext = new AppDbContext())
             {
                 var products = dbContext.Products.ToList();
-
-                foreach (var product in products)
-                {
-                    Button button = new Button
-                    {
-                        Style = (Style)FindResource("chooseProductButton"), // Styl przycisku zasobu z XAML
-                        Content = new StackPanel
-                        {
-                            Children =
-                            {
-                                new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = product.Product_name },
-                                new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = $"{product.Price} zł" }
-                            }
-                        }
-                    };
-
-                    // button onClick:
-                    button.Click += (object sender, RoutedEventArgs e) =>
-                    {
-                        AddOrUpdateProductInList(product);
-                        UpdateTotalPrice();
-                    };
-
-                    ProductsWrapPanel.Children.Add(button);
-                }
+                LoadProducts(products);
             }
         }
 
-        private void SearchTextBox_KeyUp(object sender, KeyEventArgs e)
+        private void LoadProductsBySearch(string searchText)
         {
-            if (e.Key == Key.Enter)
+            using (var dbContext = new AppDbContext())
             {
-                var searchText = searchTextBox.Text.ToLower();
-
-                using (var dbContext = new AppDbContext())
-                {
-                    var products = dbContext.Products.Where(p => p.Product_name.ToLower().Contains(searchText)).ToList();
-
-                    ProductsWrapPanel.Children.Clear();
-
-                    foreach (var product in products)
-                    {
-                        Button button = new Button
-                        {
-                            Style = (Style)FindResource("chooseProductButton"),
-                            Content = new StackPanel
-                            {
-                                Children =
-                        {
-                            new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = product.Product_name },
-                            new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = $"{product.Price} zł" }
-                        }
-                            }
-                        };
-
-                        button.Click += (object buttonSender, RoutedEventArgs buttonE) =>
-                        {
-                            AddOrUpdateProductInList(product);
-                            UpdateTotalPrice();
-                        };
-
-                        ProductsWrapPanel.Children.Add(button);
-                    }
-                }
-
-                e.Handled = true;
-                searchTextBox.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+                var products = dbContext.Products.Where(p => p.Product_name.ToLower().Contains(searchText)).ToList();
+                LoadProducts(products);
             }
         }
-        private void CategoryButton_Click(object sender, RoutedEventArgs e)
-        {
-            Button categoryButton = sender as Button;
-            string category = categoryButton.Content.ToString();
 
+        private void LoadProductsByCategory(string category)
+        {
             using (var dbContext = new AppDbContext())
             {
                 var products = dbContext.Products.Where(p => p.Category == category).ToList();
-
-                // Wyczyść aktualnie wyświetlone produkty
-                ProductsWrapPanel.Children.Clear();
-
-                foreach (var product in products)
-                {
-                    Button button = new Button
-                    {
-                        Style = (Style)FindResource("chooseProductButton"),
-                        Content = new StackPanel
-                        {
-                            Children =
-                    {
-                        new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = product.Product_name },
-                        new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = $"{product.Price} zł" }
-                    }
-                        }
-                    };
-
-                    // button onClick:
-                    button.Click += (object buttonSender, RoutedEventArgs buttonE) =>
-                    {
-                        AddOrUpdateProductInList(product);
-                        UpdateTotalPrice();
-                    };
-
-                    ProductsWrapPanel.Children.Add(button);
-                }
+                LoadProducts(products);
             }
         }
         private void ShowRecipes(object sender, RoutedEventArgs e)

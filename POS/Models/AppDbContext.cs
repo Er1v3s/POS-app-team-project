@@ -18,13 +18,22 @@ namespace POS.Models
         public DbSet<Payments> Payments { get; set; }
         public DbSet<RecipeIngredients> RecipeIngredients { get; set; }
         public DbSet<Recipes> Recipes { get; set; }
+        public DbSet<ToDoListTask> ToDoListTasks { get; set; }
 
+        public static string DatabasePath { get; private set; }
 
-        public string databasePath = @"C:\Users\qasvp\source\repos\POS-app-team-project\POS\Database\barmanagement.db";
+        static AppDbContext()
+        {
+            string databaseLocation = @"..\..\..\Database\barmanagement.db";
+            string projectPath = Directory.GetCurrentDirectory();
+            string absolutePath = Path.Combine(projectPath, databaseLocation);
+
+            DatabasePath = $"Data Source=" + absolutePath;
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite($"Data Source={databasePath}");
+            optionsBuilder.UseSqlite(DatabasePath);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -36,6 +45,7 @@ namespace POS.Models
             modelBuilder.Entity<Payments>().HasKey(e => e.Payment_id);
             modelBuilder.Entity<RecipeIngredients>().HasKey(e => e.RecipeIngredient_id);
             modelBuilder.Entity<Recipes>().HasKey(e => e.Recipe_id);
+            modelBuilder.Entity<ToDoListTask>().HasKey(e => e.TodoTask_Id);
         }
     }
 }
