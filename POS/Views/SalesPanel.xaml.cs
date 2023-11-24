@@ -183,8 +183,7 @@ namespace POS.Views
         }
         private void ShowRecipes(object sender, RoutedEventArgs e)
         {
-            ProductsWrapPanel.Children.Clear();
-
+            ProductsUnifromGrid.Children.Clear();
             if (orderList.Count == 0)
             {
                 TextBlock emptyListTextBlock = new TextBlock
@@ -196,7 +195,7 @@ namespace POS.Views
                     Text = "Dodaj produkt do zamówienia aby podejrzeć przepis"
                 };
 
-                ProductsWrapPanel.Children.Add(emptyListTextBlock);
+                ProductsUnifromGrid.Children.Add(emptyListTextBlock);
             }
             else
             {
@@ -205,6 +204,9 @@ namespace POS.Views
                     string productName = orderItem.Name;
                     string recipeForProduct = GetRecipe(productName);
                     string recipeIngredients = GetRecipeIngredients(productName);
+
+                    Border textBlockBorder = new Border();
+                    textBlockBorder.CornerRadius = new CornerRadius(8);
 
                     TextBlock textBlock = new TextBlock
                     {
@@ -215,7 +217,7 @@ namespace POS.Views
                         Text = productName + "\n\n" + recipeIngredients + "\n" + recipeForProduct
                     };
 
-                    ProductsWrapPanel.Children.Add(textBlock);
+                    ProductsUnifromGrid.Children.Add(textBlock);
                 }
             }
         }
@@ -270,8 +272,8 @@ namespace POS.Views
         }
         private void ShowDrinks(object sender, RoutedEventArgs e)
         {
-            ProductsWrapPanel.Children.Clear();
-            LoadProducts();
+            ProductsUnifromGrid.Children.Clear();
+            LoadAllProducts();
         }
 
     }
