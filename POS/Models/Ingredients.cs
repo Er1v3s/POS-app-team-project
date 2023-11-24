@@ -12,5 +12,6 @@ namespace POS.Models
         public required string Name { get; set; }
         public required string Description { get; set; }
         public required string? Unit { get; set; }
+        public ICollection<RecipeIngredients> RecipeIngredients { get; set; }
     }
 }

@@ -98,16 +98,18 @@
                                     <ColumnDefinition Width="3*" />
                                     <ColumnDefinition Width="3*" />
                                     <ColumnDefinition Width="3*" />
-                                    <ColumnDefinition Width="9*" />
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="6*" />
                                     <ColumnDefinition Width="2*" />
                                 </Grid.ColumnDefinitions>
 
                                 <Button Grid.Column="0" Content="Zapłać" Style="{StaticResource payButton}" Grid.Row="2" d:IsLocked="True" />
                                 <Button Grid.Column="1" Content="Anuluj" Style="{StaticResource cancelButton}" Grid.Row="2" d:IsLocked="True" />
-                                <Button Grid.Column="2" Content="Przepis" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
+                                <Button Grid.Column="2" Content="Przepisy" Style="{StaticResource recipeButton}" Click="ShowRecipes" Grid.Row="2" d:IsLocked="True" />
+                                <Button Grid.Column="3" Content="Drinki" Style="{StaticResource recipeButton}" Click="ShowDrinks" Grid.Row="2" d:IsLocked="True" />
 
 
-                                <Button Grid.Column="4" Style="{StaticResource homeButton}" d:IsLocked="True" Click="MoveToMainWindow">
+                                <Button Grid.Column="5" Style="{StaticResource homeButton}" d:IsLocked="True" Click="MoveToMainWindow">
                                     <fa:ImageAwesome Icon="Home" Height="24" Foreground="White"/>
                                 </Button>
 

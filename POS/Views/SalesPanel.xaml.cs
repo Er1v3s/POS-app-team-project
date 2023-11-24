@@ -1,4 +1,5 @@
-﻿using POS.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using POS.Models;
 using POS.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -180,5 +181,98 @@ namespace POS.Views
                 LoadProducts(products);
             }
         }
+        private void ShowRecipes(object sender, RoutedEventArgs e)
+        {
+            ProductsWrapPanel.Children.Clear();
+
+            if (orderList.Count == 0)
+            {
+                TextBlock emptyListTextBlock = new TextBlock
+                {
+                    Style = (Style)FindResource("RecipeTextStyle"),
+                    TextAlignment = TextAlignment.Center,
+                    Margin = new Thickness(10),
+                    TextWrapping = TextWrapping.Wrap,
+                    Text = "Dodaj produkt do zamówienia aby podejrzeć przepis"
+                };
+
+                ProductsWrapPanel.Children.Add(emptyListTextBlock);
+            }
+            else
+            {
+                foreach (var orderItem in orderList)
+                {
+                    string productName = orderItem.Name;
+                    string recipeForProduct = GetRecipe(productName);
+                    string recipeIngredients = GetRecipeIngredients(productName);
+
+                    TextBlock textBlock = new TextBlock
+                    {
+                        Style = (Style)FindResource("RecipeTextStyle"),
+                        TextAlignment = TextAlignment.Left,
+                        Margin = new Thickness(10),
+                        TextWrapping = TextWrapping.Wrap,
+                        Text = productName + "\n\n" + recipeIngredients + "\n" + recipeForProduct
+                    };
+
+                    ProductsWrapPanel.Children.Add(textBlock);
+                }
+            }
+        }
+
+
+        private string GetRecipe(string productName)
+        {
+            string recipe = "";
+
+            using (var dbContext = new AppDbContext())
+            {
+                var queryResult = dbContext.Products
+                    .Join(dbContext.Recipes, p => p.Recipe_id, r => r.Recipe_id, (p, r) => new { p, r })
+                    .Where(join => join.p.Product_name == productName)
+                    .Select(join => join.r.Recipe)
+                    .FirstOrDefault();
+
+                if (queryResult != null)
+                {
+                    recipe = queryResult.ToString();
+                }
+            }
+
+            return recipe;
+        }
+        private string GetRecipeIngredients(string productName)
+        {
+            StringBuilder ingredientsList = new StringBuilder();
+
+            using (var dbContext = new AppDbContext())
+            {
+                var queryResult = dbContext.Products
+                    .Join(dbContext.Recipes, p => p.Recipe_id, r => r.Recipe_id, (p, r) => new { p, r })
+                    .Join(dbContext.RecipeIngredients, j => j.r.Recipe_id, ri => ri.Recipe_id, (j, ri) => new { j, ri })
+                    .Join(dbContext.Ingredients, jri => jri.ri.Ingredient_id, i => i.Ingredient_id, (jri, i) => new { jri, i })
+                    .Where(join => join.jri.j.p.Product_name == productName)
+                    .Select(join => new
+                    {
+                        IngredientName = join.i.Name,
+                        IngredientDescription = join.i.Description,
+                        IngredientUnit = join.i.Unit,
+                        IngredientQuantity = join.jri.ri.Quantity
+                    });
+
+                foreach (var ingredient in queryResult)
+                {
+                    ingredientsList.AppendLine($"{ingredient.IngredientName} - {ingredient.IngredientQuantity} {ingredient.IngredientUnit}");
+                }
+            }
+
+            return ingredientsList.ToString();
+        }
+        private void ShowDrinks(object sender, RoutedEventArgs e)
+        {
+            ProductsWrapPanel.Children.Clear();
+            LoadProducts();
+        }
+
     }
 }
