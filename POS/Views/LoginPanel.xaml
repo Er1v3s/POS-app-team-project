@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
-        Title="LoginPanel" Height="768" Width="1366" WindowState="Maximized" WindowStyle="None" FontFamily="Lato" FontSize="16">
+        Height="700" Width="600" FontFamily="Lato" FontSize="16">
     <Border Background="#8EA7E9">
 
         <Grid  VerticalAlignment="Center">

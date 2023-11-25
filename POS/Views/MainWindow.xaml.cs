@@ -32,8 +32,13 @@ namespace POS
         private void Move_To_Sales_Panel(object sender, RoutedEventArgs e)
         {
             LoginPanel loginPanel = new LoginPanel();
-            loginPanel.Show();
-            this.Close();
+            loginPanel.ShowDialog();
+            if (loginPanel.isLoginValid)
+            {
+                SalesPanel salesPanel = new SalesPanel();
+                salesPanel.Show();
+                this.Close();
+            }
         }
 
         private void Turn_Off_Application(object sender, RoutedEventArgs e)

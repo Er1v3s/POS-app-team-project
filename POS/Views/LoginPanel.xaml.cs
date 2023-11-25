@@ -17,28 +17,22 @@ using System.Windows.Shapes;
 
 namespace POS.Views
 {
-    /// <summary>
-    /// Logika interakcji dla klasy LoginPanel.xaml
-    /// </summary>
     public partial class LoginPanel : Window
     {
-        private readonly AppDbContext dbContext;
+        public bool isLoginValid;
+
         public LoginPanel()
         {
             InitializeComponent();
-            dbContext = new AppDbContext();
         }
+
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             string username = UsernameTextBox.Text;
             string password = PasswordBox.Password;
 
-            bool isValidLogin = CheckLoginInDatabase(username, password);
-
-            if (isValidLogin)
+            if (isLoginValid = AuthenticateUser(username, password))
             {
-                SalesPanel salesPanel = new SalesPanel();
-                salesPanel.Show();
                 this.Close();
             }
             else
@@ -49,11 +43,20 @@ namespace POS.Views
             }
         }
 
-        private bool CheckLoginInDatabase(string username, string password)
+        private bool AuthenticateUser(string username, string password)
         {
-            var user = dbContext.Employees.FirstOrDefault(e => e.Login == username && e.Password == password);
-
-            return user != null;
+            using (var dbContext = new AppDbContext())
+            {
+                var user = dbContext.Employees.FirstOrDefault(e => e.Login == username && e.Password == password);
+                if(user != null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
     }
 }
