@@ -26,10 +26,17 @@ namespace POS.Views
     {
         private double totalPrice = 0;
         ObservableCollection<OrderItem> orderList = new ObservableCollection<OrderItem>();
+        private Employees currentUser;
 
-        public SalesPanel()
+        public SalesPanel(int employeeId)
         {
             InitializeComponent();
+            using (var dbContext = new AppDbContext())
+            {
+                currentUser = dbContext.Employees.FirstOrDefault(e => e.Employee_id == employeeId);
+            }
+            string welcomeMessage = $"{currentUser.First_name} {currentUser.Last_name}";
+            SetWelcomeMessage(welcomeMessage);
             LoadAllProducts();
             orderListDataGrid.ItemsSource = orderList;
             UpdateTotalPrice();
@@ -276,5 +283,9 @@ namespace POS.Views
             LoadAllProducts();
         }
 
+        private void SetWelcomeMessage(string message)
+        {
+            welcomeLabel.Content = message;
+        }
     }
 }

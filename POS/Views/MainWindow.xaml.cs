@@ -35,7 +35,8 @@ namespace POS
             loginPanel.ShowDialog();
             if (loginPanel.isLoginValid)
             {
-                SalesPanel salesPanel = new SalesPanel();
+                int employeeId = loginPanel.employeeId;
+                SalesPanel salesPanel = new SalesPanel(employeeId);
                 salesPanel.Show();
                 this.Close();
             }

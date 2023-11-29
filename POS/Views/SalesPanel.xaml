@@ -35,7 +35,7 @@
                     </TextBox>
 
                     <Border BorderBrush="#FF7286D3" BorderThickness="1" Width="200" Height="42" HorizontalAlignment="Right" Margin="0,0,10,0" Background="#FF7286D3" CornerRadius="8">
-                        <Label Content="NazwaUżytkownika" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="White" Margin="-1,-1,0,-1"/>
+                        <Label x:Name="welcomeLabel"  VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="White" Margin="-1,-1,0,-1"/>
                     </Border>
                 </Grid>
 
