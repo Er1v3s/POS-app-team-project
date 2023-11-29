@@ -86,7 +86,6 @@ namespace POS.Views
             totalAmountLabel.Content = $"{totalPrice:C2}";
         }
 
-
         private void AddOrUpdateProductInList(Products product)
         {
             var existingProduct = orderListCollection[currentOrderId].FirstOrDefault(p => p.Id == product.Product_id);
@@ -100,7 +99,6 @@ namespace POS.Views
                 orderListCollection[currentOrderId].Add(new OrderItem { Id = product.Product_id, Name = product.Product_name, Amount = 1, Price = Convert.ToDouble(product.Price) });
             }
         }
-
 
         private void DeleteProductFromOrderList(object sender, RoutedEventArgs e)
         {
@@ -127,14 +125,13 @@ namespace POS.Views
                 Content = new StackPanel
                 {
                     Children =
-            {
-                new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = product.Product_name },
-                new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = $"{product.Price} zł" }
-            }
+                    {
+                        new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = product.Product_name },
+                        new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = $"{product.Price} zł" }
+                    }
                 }
             };
 
-            // button onClick:
             button.Click += (object sender, RoutedEventArgs e) =>
             {
                 AddOrUpdateProductInList(product);
@@ -184,6 +181,7 @@ namespace POS.Views
                 LoadProducts(products);
             }
         }
+
         private void ShowRecipes(object sender, RoutedEventArgs e)
         {
             ProductsUnifromGrid.Children.Clear();
@@ -226,7 +224,6 @@ namespace POS.Views
             }
         }
 
-
         private string GetRecipe(string productName)
         {
             string recipe = "";
@@ -247,6 +244,7 @@ namespace POS.Views
 
             return recipe;
         }
+
         private string GetRecipeIngredients(string productName)
         {
             StringBuilder ingredientsList = new StringBuilder();
@@ -274,6 +272,7 @@ namespace POS.Views
 
             return ingredientsList.ToString();
         }
+
         private void ShowDrinks(object sender, RoutedEventArgs e)
         {
             ProductsUnifromGrid.Children.Clear();
@@ -283,7 +282,7 @@ namespace POS.Views
         private void ShowOpenOrders(object sender, RoutedEventArgs e)
         {
             ProductsUnifromGrid.Children.Clear();
-            ProductsUnifromGrid.Columns = 3;
+            ProductsUnifromGrid.Columns = 5;
 
             CreateNewOrderButton();
 
@@ -319,14 +318,17 @@ namespace POS.Views
                 }
             }
         }
+
         private Button CreateNewOrderButton()
         {
+            Viewbox viewbox = new Viewbox();
             Button newOrderButton = new Button
             {
-                Style = (Style)FindResource("chooseProductButton"),
+                Style = (Style)FindResource("createNewOrderButton"),
                 Content = "Nowe zamówienie"
             };
-            newOrderButton.Click += (s, e) =>
+
+            newOrderButton.Click += (object sender, RoutedEventArgs e) =>
             {
                 ObservableCollection<OrderItem> newOrder = new ObservableCollection<OrderItem>();
                 orderListCollection.Add(newOrder);
@@ -336,9 +338,12 @@ namespace POS.Views
                 ShowRecipes(null, null);
                 LoadAllProducts();
             };
-            ProductsUnifromGrid.Children.Add(newOrderButton);
+
+            ProductsUnifromGrid.Children.Add(viewbox);
+            viewbox.Child = newOrderButton;
             return newOrderButton;
         }
+
         private Button CreateOrderButton(int orderId, double totalPriceForOrder)
         {
             Viewbox viewbox = new Viewbox();
@@ -348,14 +353,14 @@ namespace POS.Views
                 Content = new StackPanel
                 {
                     Children =
-            {
-                new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = $"Zamówienie {orderId + 1}" },
-                new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = $"Suma: {totalPriceForOrder:C2}" }
-            }
+                    {
+                        new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = $"Zamówienie {orderId + 1}" },
+                        new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = $"Suma: {totalPriceForOrder:C2}" }
+                    }
                 }
             };
 
-            orderButton.Click += (s, args) =>
+            orderButton.Click += (object sender, RoutedEventArgs e) =>
             {
                 currentOrderId = orderId;
                 orderListDataGrid.ItemsSource = orderListCollection[currentOrderId];
@@ -364,9 +369,11 @@ namespace POS.Views
                 LoadAllProducts();
             };
 
-            ProductsUnifromGrid.Children.Add(orderButton);
+            ProductsUnifromGrid.Children.Add(viewbox);
+            viewbox.Child = orderButton;
             return orderButton;
         }
+
         private void removeOrder()
         {
             orderListCollection.RemoveAt(currentOrderId);
