@@ -5,7 +5,9 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -14,6 +16,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using System.Windows.Threading;
 
 namespace POS
 {
@@ -22,9 +25,12 @@ namespace POS
     /// </summary>
     public partial class MainWindow : Window
     {
+        private DispatcherTimer timer;
         public MainWindow()
         {
             InitializeComponent();
+
+            Start_Timer();
         }
 
 
@@ -72,6 +78,27 @@ namespace POS
                     MessageBox.Show($"Wystąpił błąd: {ex.Message}");
                 }
             }
+        }
+
+        private void Start_Timer() 
+        {
+            timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += Timer_Tick;
+            timer.Start();
+
+            // Initialize first date render
+            UpdateDateTime(); 
+        }
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            UpdateDateTime();
+        }
+
+        private void UpdateDateTime()
+        {
+            dateTextBlock.Text = DateTime.Now.ToString("dd.MM.yyyy");
+            timeTextBlock.Text = DateTime.Now.ToString("HH:mm:ss");
         }
     }
 }
