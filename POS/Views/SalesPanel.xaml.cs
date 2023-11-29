@@ -24,14 +24,21 @@ namespace POS.Views
     /// </summary>
     public partial class SalesPanel
     {
+        private Employees currentUser;
         private double totalPrice = 0;
         private int currentOrderId = 0;
         ObservableCollection<OrderItem> orderList = new ObservableCollection<OrderItem>();
         ObservableCollection<ObservableCollection<OrderItem>> orderListCollection = new ObservableCollection<ObservableCollection<OrderItem>>();
-        public SalesPanel()
+        public SalesPanel(int employeeId)
         {
             orderListCollection.Add(orderList);
             InitializeComponent();
+            using (var dbContext = new AppDbContext())
+            {
+                currentUser = dbContext.Employees.FirstOrDefault(e => e.Employee_id == employeeId);
+            }
+            string welcomeMessage = $"{currentUser.First_name} {currentUser.Last_name}";
+            SetWelcomeMessage(welcomeMessage);
             LoadAllProducts();
             orderListDataGrid.ItemsSource = orderListCollection[currentOrderId];
             UpdateTotalPrice();
@@ -381,6 +388,10 @@ namespace POS.Views
             orderListDataGrid.ItemsSource = orderListCollection[currentOrderId];
             UpdateTotalPrice();
             LoadAllProducts();
+        }
+        private void SetWelcomeMessage(string message)
+        {
+            welcomeLabel.Content = message;
         }
     }
 }

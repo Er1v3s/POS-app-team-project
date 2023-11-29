@@ -27,15 +27,14 @@ namespace POS
             InitializeComponent();
         }
 
-
-
         private void Move_To_Sales_Panel(object sender, RoutedEventArgs e)
         {
             LoginPanel loginPanel = new LoginPanel();
             loginPanel.ShowDialog();
             if (loginPanel.isLoginValid)
             {
-                SalesPanel salesPanel = new SalesPanel();
+                int employeeId = loginPanel.employeeId;
+                SalesPanel salesPanel = new SalesPanel(employeeId);
                 salesPanel.Show();
                 this.Close();
             }
