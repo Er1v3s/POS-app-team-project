@@ -14,15 +14,20 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Xml.Serialization;
 
 namespace POS.Views
 {
     public partial class LoginPanel : Window
     {
         public bool isLoginValid;
+        public bool isUserLoggedIn;
 
-        public LoginPanel()
+        private readonly string uri;
+
+        public LoginPanel(string uri = "")
         {
+            this.uri = uri;
             InitializeComponent();
         }
 
@@ -33,6 +38,18 @@ namespace POS.Views
 
             if (isLoginValid = AuthenticateUser(username, password))
             {
+                if (isUserLoggedIn)
+                {
+                    try
+                    {
+                        Uri newFrameSource = new Uri(uri, UriKind.RelativeOrAbsolute);
+                        loginPanelWindow = newFrameSource;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Wystąpił błąd: {ex.Message}");
+                    }
+                }
                 this.Close();
             }
             else
@@ -50,6 +67,11 @@ namespace POS.Views
                 var user = dbContext.Employees.FirstOrDefault(e => e.Login == username && e.Password == password);
                 if(user != null)
                 {
+                    if(user.Is_User_LoggedIn)
+                    {
+                        isUserLoggedIn = true;
+                    }
+
                     return true;
                 }
                 else
