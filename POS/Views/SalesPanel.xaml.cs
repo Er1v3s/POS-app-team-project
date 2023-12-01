@@ -24,14 +24,23 @@ namespace POS.Views
     /// </summary>
     public partial class SalesPanel
     {
+        private Employees currentUser;
         private double totalPrice = 0;
+        private int currentOrderId = 0;
         ObservableCollection<OrderItem> orderList = new ObservableCollection<OrderItem>();
-
-        public SalesPanel()
+        ObservableCollection<ObservableCollection<OrderItem>> orderListCollection = new ObservableCollection<ObservableCollection<OrderItem>>();
+        public SalesPanel(int employeeId)
         {
+            orderListCollection.Add(orderList);
             InitializeComponent();
+            using (var dbContext = new AppDbContext())
+            {
+                currentUser = dbContext.Employees.FirstOrDefault(e => e.Employee_id == employeeId);
+            }
+            string welcomeMessage = $"{currentUser.First_name} {currentUser.Last_name}";
+            SetWelcomeMessage(welcomeMessage);
             LoadAllProducts();
-            orderListDataGrid.ItemsSource = orderList;
+            orderListDataGrid.ItemsSource = orderListCollection[currentOrderId];
             UpdateTotalPrice();
         }
 
@@ -80,14 +89,13 @@ namespace POS.Views
 
         private void UpdateTotalPrice()
         {
-            totalPrice = orderList.Sum(item => item.Amount * item.Price);
+            totalPrice = orderListCollection[currentOrderId].Sum(item => item.Amount * item.Price);
             totalAmountLabel.Content = $"{totalPrice:C2}";
         }
 
-
         private void AddOrUpdateProductInList(Products product)
         {
-            var existingProduct = orderList.FirstOrDefault(p => p.Id == product.Product_id);
+            var existingProduct = orderListCollection[currentOrderId].FirstOrDefault(p => p.Id == product.Product_id);
 
             if (existingProduct != null)
             {
@@ -95,10 +103,9 @@ namespace POS.Views
             }
             else
             {
-                orderList.Add(new OrderItem { Id = product.Product_id, Name = product.Product_name, Amount = 1, Price = Convert.ToDouble(product.Price) });
+                orderListCollection[currentOrderId].Add(new OrderItem { Id = product.Product_id, Name = product.Product_name, Amount = 1, Price = Convert.ToDouble(product.Price) });
             }
         }
-
 
         private void DeleteProductFromOrderList(object sender, RoutedEventArgs e)
         {
@@ -109,7 +116,7 @@ namespace POS.Views
 
                 if (selectedItem.Amount == 0)
                 {
-                    orderList.Remove(selectedItem);
+                    orderListCollection[currentOrderId].Remove(selectedItem);
                 }
 
                 UpdateTotalPrice();
@@ -125,14 +132,13 @@ namespace POS.Views
                 Content = new StackPanel
                 {
                     Children =
-            {
-                new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = product.Product_name },
-                new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = $"{product.Price} zł" }
-            }
+                    {
+                        new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = product.Product_name },
+                        new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = $"{product.Price} zł" }
+                    }
                 }
             };
 
-            // button onClick:
             button.Click += (object sender, RoutedEventArgs e) =>
             {
                 AddOrUpdateProductInList(product);
@@ -148,6 +154,7 @@ namespace POS.Views
         private void LoadProducts(IEnumerable<Products> products)
         {
             ProductsUnifromGrid.Children.Clear();
+            ProductsUnifromGrid.Columns = 5;
 
             foreach (var product in products)
             {
@@ -181,10 +188,12 @@ namespace POS.Views
                 LoadProducts(products);
             }
         }
+
         private void ShowRecipes(object sender, RoutedEventArgs e)
         {
             ProductsUnifromGrid.Children.Clear();
-            if (orderList.Count == 0)
+            ProductsUnifromGrid.Columns = 3;
+            if (orderListCollection[currentOrderId].Count == 0)
             {
                 TextBlock emptyListTextBlock = new TextBlock
                 {
@@ -199,7 +208,7 @@ namespace POS.Views
             }
             else
             {
-                foreach (var orderItem in orderList)
+                foreach (var orderItem in orderListCollection[currentOrderId])
                 {
                     string productName = orderItem.Name;
                     string recipeForProduct = GetRecipe(productName);
@@ -222,7 +231,6 @@ namespace POS.Views
             }
         }
 
-
         private string GetRecipe(string productName)
         {
             string recipe = "";
@@ -243,6 +251,7 @@ namespace POS.Views
 
             return recipe;
         }
+
         private string GetRecipeIngredients(string productName)
         {
             StringBuilder ingredientsList = new StringBuilder();
@@ -270,11 +279,119 @@ namespace POS.Views
 
             return ingredientsList.ToString();
         }
+
         private void ShowDrinks(object sender, RoutedEventArgs e)
         {
             ProductsUnifromGrid.Children.Clear();
             LoadAllProducts();
         }
 
+        private void ShowOpenOrders(object sender, RoutedEventArgs e)
+        {
+            ProductsUnifromGrid.Children.Clear();
+            ProductsUnifromGrid.Columns = 5;
+
+            CreateNewOrderButton();
+
+            for (int i = 0; i < orderListCollection.Count; i++)
+            {
+                int orderId = i;
+                double totalPriceForOrder = CalculateTotalPriceForOrder(orderListCollection[orderId]);
+
+                CreateOrderButton(orderId, totalPriceForOrder);
+            }
+        }
+
+        private double CalculateTotalPriceForOrder(ObservableCollection<OrderItem> order)
+        {
+            return order.Sum(item => item.Amount * item.Price);
+        }
+
+        private void DeleteCurrentOrder(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Spowoduje to utratę aktualnie wyświetlonego zamówienia.\n Czy chcesz kontynuować?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                if (orderListCollection.Count > 1)
+                {
+                    removeOrder();
+                }
+                else
+                {
+                    ObservableCollection<OrderItem> newOrder = new ObservableCollection<OrderItem>();
+                    orderListCollection.Add(newOrder);
+                    removeOrder();
+                }
+            }
+        }
+
+        private Button CreateNewOrderButton()
+        {
+            Viewbox viewbox = new Viewbox();
+            Button newOrderButton = new Button
+            {
+                Style = (Style)FindResource("createNewOrderButton"),
+                Content = "Nowe zamówienie"
+            };
+
+            newOrderButton.Click += (object sender, RoutedEventArgs e) =>
+            {
+                ObservableCollection<OrderItem> newOrder = new ObservableCollection<OrderItem>();
+                orderListCollection.Add(newOrder);
+                currentOrderId = orderListCollection.Count - 1; // Ustawienie bieżącego indeksu zamówienia na ostatnie dodane
+                orderListDataGrid.ItemsSource = orderListCollection[currentOrderId]; // Ustawienie nowej kolekcji zamówień jako źródła danych dla orderListDataGrid
+                UpdateTotalPrice();
+                ShowRecipes(null, null);
+                LoadAllProducts();
+            };
+
+            ProductsUnifromGrid.Children.Add(viewbox);
+            viewbox.Child = newOrderButton;
+            return newOrderButton;
+        }
+
+        private Button CreateOrderButton(int orderId, double totalPriceForOrder)
+        {
+            Viewbox viewbox = new Viewbox();
+            Button orderButton = new Button
+            {
+                Style = (Style)FindResource("chooseProductButton"),
+                Content = new StackPanel
+                {
+                    Children =
+                    {
+                        new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = $"Zamówienie {orderId + 1}" },
+                        new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = $"Suma: {totalPriceForOrder:C2}" }
+                    }
+                }
+            };
+
+            orderButton.Click += (object sender, RoutedEventArgs e) =>
+            {
+                currentOrderId = orderId;
+                orderListDataGrid.ItemsSource = orderListCollection[currentOrderId];
+                UpdateTotalPrice();
+                ShowRecipes(null, null);
+                LoadAllProducts();
+            };
+
+            ProductsUnifromGrid.Children.Add(viewbox);
+            viewbox.Child = orderButton;
+            return orderButton;
+        }
+
+        private void removeOrder()
+        {
+            orderListCollection.RemoveAt(currentOrderId);
+            currentOrderId = 0;
+            orderListDataGrid.ItemsSource = orderListCollection[currentOrderId];
+            UpdateTotalPrice();
+            LoadAllProducts();
+        }
+        private void SetWelcomeMessage(string message)
+        {
+            welcomeLabel.Content = message;
+        }
     }
 }

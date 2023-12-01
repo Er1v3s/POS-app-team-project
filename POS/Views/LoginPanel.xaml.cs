@@ -22,6 +22,7 @@ namespace POS.Views
     {
         public bool isLoginValid;
         public bool isUserLoggedIn;
+        public int employeeId;
 
         private readonly string uri;
 
@@ -36,7 +37,9 @@ namespace POS.Views
             string username = UsernameTextBox.Text;
             string password = PasswordBox.Password;
 
-            if (isLoginValid = AuthenticateUser(username, password))
+            employeeId = AuthenticateUserAndGetEmployeeId(username, password);
+
+            if (employeeId != 0)
             {
                 if (isUserLoggedIn)
                 {
@@ -60,12 +63,12 @@ namespace POS.Views
             }
         }
 
-        private bool AuthenticateUser(string username, string password)
+        private int AuthenticateUserAndGetEmployeeId(string username, string password)
         {
             using (var dbContext = new AppDbContext())
             {
                 var user = dbContext.Employees.FirstOrDefault(e => e.Login == username && e.Password == password);
-                if(user != null)
+                if (user != null)
                 {
                     if(user.Is_User_LoggedIn)
                     {
@@ -76,7 +79,7 @@ namespace POS.Views
                 }
                 else
                 {
-                    return false;
+                    return 0;
                 }
             }
         }

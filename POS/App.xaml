@@ -663,6 +663,32 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="createNewOrderButton" TargetType="Button">
+            <Setter Property="MinWidth" Value="200px" />
+            <Setter Property="MinHeight" Value="150px" />
+            <Setter Property="Background" Value="#FF4BAEA0" />
+            <Setter Property="Padding" Value="25" />
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="BorderBrush" Value="#FF4BAEA0" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#379A8C" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <Style x:Key="searchBar" TargetType="TextBox">
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
