@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.X509;
 using POS.Models;
 using POS.ViewModel;
 using System;
@@ -33,6 +34,12 @@ namespace POS.Views
             LoadAllProducts();
             orderListDataGrid.ItemsSource = orderList;
             UpdateTotalPrice();
+        }
+
+        private void OpenPrintWindow(object sender, RoutedEventArgs e)
+        {
+            PrintWindow printWindow = new PrintWindow(orderList);
+            printWindow.Show();
         }
 
         private void MoveToMainWindow(object sender, RoutedEventArgs e)
@@ -78,6 +85,32 @@ namespace POS.Views
             LoadProductsByCategory(category);
         }
 
+        private void PayForOrder_Click(object sender, RoutedEventArgs e)
+        {
+            
+            using (var dbContext = new AppDbContext())
+            {
+                if (sender is Button button && button.Tag is string paymentMethod)
+                {
+                    foreach (var orderItem in orderList)
+                    {
+                        Payments newPayment = new Payments
+                        {
+                            Order_id = orderItem.Id, 
+                            Payment_time = DateTime.Now, 
+                            Payment_method = paymentMethod, 
+                            Amount = orderItem.Amount
+                        };
+                        dbContext.Payments.Add(newPayment);
+                    }
+                    double totalPrice = orderList.Sum(item => item.Amount * item.Price);
+                    MessageBox.Show($"Zapłacono za zamówienie {totalPrice:C} - metoda płatności: {paymentMethod}");
+                    orderList.Clear();
+                }
+            }
+        
+        }
+
         private void UpdateTotalPrice()
         {
             totalPrice = orderList.Sum(item => item.Amount * item.Price);
@@ -92,10 +125,11 @@ namespace POS.Views
             if (existingProduct != null)
             {
                 existingProduct.Amount++;
+                existingProduct.TotalPrice = Math.Round(existingProduct.Amount * existingProduct.Price, 2);
             }
             else
             {
-                orderList.Add(new OrderItem { Id = product.Product_id, Name = product.Product_name, Amount = 1, Price = Convert.ToDouble(product.Price) });
+                orderList.Add(new OrderItem { Id = product.Product_id, Name = product.Product_name, Amount = 1, Price = Convert.ToDouble(product.Price) , TotalPrice = Convert.ToDouble(product.Price) });
             }
         }
 
@@ -106,12 +140,12 @@ namespace POS.Views
             {
                 var selectedItem = (OrderItem)orderListDataGrid.SelectedItem;
                 selectedItem.Amount--;
-
+                selectedItem.TotalPrice = Math.Round(selectedItem.Amount * selectedItem.Price, 2);
                 if (selectedItem.Amount == 0)
                 {
                     orderList.Remove(selectedItem);
                 }
-
+                
                 UpdateTotalPrice();
             }
         }
@@ -125,10 +159,10 @@ namespace POS.Views
                 Content = new StackPanel
                 {
                     Children =
-            {
-                new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = product.Product_name },
-                new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = $"{product.Price} zł" }
-            }
+                    {
+                        new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = product.Product_name },
+                        new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = $"{product.Price} zł" }
+                    }
                 }
             };
 
@@ -275,6 +309,7 @@ namespace POS.Views
             ProductsUnifromGrid.Children.Clear();
             LoadAllProducts();
         }
+
 
     }
 }

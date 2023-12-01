@@ -141,7 +141,7 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Style="{StaticResource leftBarButton}">
+                <Button Grid.Column="0" Style="{StaticResource leftBarButton}" Click="OpenPrintWindow">
                     <fa:ImageAwesome Icon="Print" Height="24" Foreground="White"/>
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">
@@ -212,7 +212,7 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Style="{StaticResource leftBarButton}" >
+                <Button Grid.Column="0" Style="{StaticResource leftBarButton}" Click="PayForOrder_Click" Tag="Gotówka">
                     <fa:ImageAwesome Icon="Money" Height="24" Foreground="White"/>
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">
@@ -225,7 +225,7 @@
                     </Button.Resources>
                 </Button>
 
-                <Button Grid.Column="1" Style="{StaticResource leftBarButton}">
+                <Button Grid.Column="1" Style="{StaticResource leftBarButton}" Click="PayForOrder_Click" Tag="Karta debetowa">
                     <fa:ImageAwesome Icon="CreditCard" Height="24" Foreground="White"/>
                 </Button>
 

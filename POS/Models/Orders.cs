@@ -8,7 +8,7 @@ namespace POS.Models
 {
     public class Orders
     {
-        public required int Order_id { get; set; }
+        public int Order_id { get; set; }
         public required int Employee_id { get; set; }
         public required int Product_id { get; set; }
         public DateTime Orider_time { get; set; }
