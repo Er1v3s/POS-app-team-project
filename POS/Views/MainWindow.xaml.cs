@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -45,11 +46,12 @@ namespace POS
             Application.Current.Shutdown();
         }
 
-        private void ChangeFrameSource(Uri newSource)
+        private void ChangeFrameSource(string uri)
         {
             try
             {
-                frame.Source = newSource;
+                Uri newFrameSource = new Uri(uri, UriKind.RelativeOrAbsolute);
+                frame.Source = newFrameSource;
             }
             catch (Exception ex)
             {
@@ -57,18 +59,23 @@ namespace POS
             }
         }
 
+        private void showLoginPanel(string uri)
+        {
+            LoginPanel loginPanel = new LoginPanel(uri);
+            loginPanel.ShowDialog();
+        }
+
         private void NavigateButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.Tag is string uri)
             {
-                try
+                if (uri == "./WorkTimeSummaryControl.xaml")
                 {
-                    Uri newFrameSource = new Uri(uri, UriKind.RelativeOrAbsolute);
-                    ChangeFrameSource(newFrameSource);
+                    ChangeFrameSource(uri);
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show($"Wystąpił błąd: {ex.Message}");
+                    showLoginPanel(uri);
                 }
             }
         }

@@ -213,6 +213,38 @@
         
         <!--#endregion-->
         
+        <!--#region StartFinishWork -->
+
+        <Style x:Key="StartFinishWorkButton" TargetType="Button">
+            <Setter Property="Background" Value="#FF7286D3"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Width" Value="230" />
+            <Setter Property="Height" Value="150" />
+            <Setter Property="Margin" Value="25"/>
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF6077C5" />
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.3"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+
+        <!-- endregion -->
+
         <!--#region Working Time Summary DataGrid Style-->
         
         <SolidColorBrush x:Key="{x:Static DataGrid.FocusBorderBrushKey}" Color="#FF000000"/>

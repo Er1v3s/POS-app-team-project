@@ -19,5 +19,6 @@ namespace POS.Models
         public DateTime? Hire_date { get; set; }
         public required string Login { get; set; }
         public required string Password { get; set; }
+        public required bool Is_User_LoggedIn { get; set; }
     }
 }
