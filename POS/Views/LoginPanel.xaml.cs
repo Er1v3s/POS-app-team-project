@@ -23,13 +23,25 @@ namespace POS.Views
         public bool isLoginValid;
         public bool isUserLoggedIn;
         public int employeeId;
-
         private readonly string uri;
 
         public LoginPanel(string uri = "")
         {
             this.uri = uri;
             InitializeComponent();
+        }
+
+        private void CloseLoginPanel(object sender, EventArgs e)
+        {
+            isUserLoggedIn = false;
+            this.Close();
+        }
+
+        private void ValidateLoginEvent(object sender, EventArgs e)
+        {
+            isLoginValid = true;
+            isUserLoggedIn = false;
+            this.Close();
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
@@ -41,19 +53,25 @@ namespace POS.Views
 
             if (employeeId != 0)
             {
-                if (isUserLoggedIn)
+                if (!isUserLoggedIn)
                 {
-                    try
-                    {
-                        Uri newFrameSource = new Uri(uri, UriKind.RelativeOrAbsolute);
-                        loginPanelWindow = newFrameSource;
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Wystąpił błąd: {ex.Message}");
-                    }
+                    StartFinishWork startFinishWork = new StartFinishWork(employeeId);
+                    loginPanelWindow.Child = startFinishWork;
+                    startFinishWork.StartWork.Click += ValidateLoginEvent;
                 }
-                this.Close();
+                else if(uri == "./StartFinishWork.xaml")
+                {
+                    StartFinishWork startFinishWork = new StartFinishWork(employeeId);
+                    loginPanelWindow.Child = startFinishWork;
+                    startFinishWork.StartWork.Click += CloseLoginPanel;
+                    startFinishWork.FinishWork.Click += CloseLoginPanel;
+                }
+                else
+                {
+                    isLoginValid = true;
+                    isUserLoggedIn = false;
+                    this.Close();
+                }
             }
             else
             {
@@ -75,7 +93,7 @@ namespace POS.Views
                         isUserLoggedIn = true;
                     }
 
-                    return true;
+                    return user.Employee_id;
                 }
                 else
                 {

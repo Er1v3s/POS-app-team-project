@@ -63,10 +63,6 @@ namespace POS
         {
             LoginPanel loginPanel = new LoginPanel(uri);
             loginPanel.ShowDialog();
-            if (loginPanel.isLoginValid)
-            {
-                ChangeFrameSource(uri);
-            }
         }
 
         private void NavigateButton_Click(object sender, RoutedEventArgs e)

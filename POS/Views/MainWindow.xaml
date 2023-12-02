@@ -23,7 +23,7 @@
                         <TextBlock Text="PODSUMOWANIE CZASU PRACY" Style="{StaticResource sideBarButtonTextBlock}"/>
                     </StackPanel>
                 </Button>
-                <Button Style="{StaticResource sideBarButton}" Click="NavigateButton_Click" Tag="./WorkTimeControl.xaml">
+                <Button Style="{StaticResource sideBarButton}" Click="NavigateButton_Click" Tag="./StartFinishWork.xaml">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="User" Width="30" Height="30" Foreground="White"/>
                         <TextBlock Text="ROZPOCZĘCIE I ZAKOŃCZENIE PRACY" Style="{StaticResource sideBarButtonTextBlock}"/>

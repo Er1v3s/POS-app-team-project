@@ -15,14 +15,14 @@
         <Grid Grid.Row="0">
             <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Stretch">
                 <TextBlock Text="Zalogowano jako:" FontSize="48" HorizontalAlignment="Center" ></TextBlock>
-                <TextBlock Text="Adam Kowalski" FontSize="48" HorizontalAlignment="Center"></TextBlock>
+                <TextBlock x:Name="employeeName" Text="" FontSize="48" HorizontalAlignment="Center"></TextBlock>
             </StackPanel>
         </Grid>
         
         <Grid Grid.Row="1">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                <Button Content="Rozpocznij pracę" Width="200" Height="150" Margin="50" Background="#FF7286D3" Foreground="White"/>
-                <Button Content="Zakończ pracę" Width="200" Height="150" Margin="50" Background="#FF7286D3" Foreground="White"/>
+                <Button Style="{StaticResource StartFinishWorkButton}" Content="Rozpocznij pracę" Click="StartWork_Button" x:Name="StartWork"/>
+                <Button Style="{StaticResource StartFinishWorkButton}" Content="Zakończ pracę" Click="FinishWork_Button" x:Name="FinishWork"/>
             </StackPanel>
         </Grid>
     </Grid>

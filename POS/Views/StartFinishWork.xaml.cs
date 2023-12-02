@@ -1,6 +1,8 @@
-﻿using System;
+﻿using POS.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,9 +22,54 @@ namespace POS.Views
     /// </summary>
     public partial class StartFinishWork : UserControl
     {
-        public StartFinishWork()
+        private readonly int employeeId;
+        public StartFinishWork(int employeeId)
         {
+            this.employeeId = employeeId;
             InitializeComponent();
+
+            using (var dbContext = new AppDbContext())
+            {
+                var user = dbContext.Employees.FirstOrDefault(e => e.Employee_id == employeeId);
+                if (user != null)
+                {
+                    employeeName.Text = user.First_name + " " + user.Last_name;
+                    if(user.Is_User_LoggedIn)
+                    {
+                        StartWork.IsEnabled = false;
+                    }
+                    else
+                    {
+                         FinishWork.IsEnabled = false;
+                    }
+                }
+            }
+        }
+
+        private async void StartWork_Button(object sender, RoutedEventArgs e)
+        {
+            await using (var dbContext = new AppDbContext())
+            {
+                var user = dbContext.Employees.FirstOrDefault(e => e.Employee_id == employeeId);
+                if (user != null)
+                {
+                    user.Is_User_LoggedIn = true;
+                    dbContext.SaveChanges();
+                }
+            }
+        }
+
+        private async void FinishWork_Button(object sender, RoutedEventArgs e)
+        {
+            await using (var dbContext = new AppDbContext())
+            {
+                var user = dbContext.Employees.FirstOrDefault(e => e.Employee_id == employeeId);
+                if (user != null)
+                {
+                    user.Is_User_LoggedIn = false;
+                    dbContext.SaveChanges();
+                }
+            }
         }
     }
 }
