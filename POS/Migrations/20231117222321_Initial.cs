@@ -53,13 +53,33 @@ namespace POS.Migrations
                     Order_id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Employee_id = table.Column<int>(type: "INTEGER", nullable: false),
+                    Orider_time = table.Column<DateTime>(type: "TEXT", nullable: false),
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Order_id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderItems",
+                columns: table => new
+                {
+                    OrderItem_id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    OrdersOrder_id = table.Column<int>(type:"INTEGER", nullable: false),
+                    Employee_id = table.Column<int>(type: "INTEGER", nullable: false),
                     Product_id = table.Column<int>(type: "INTEGER", nullable: false),
                     Orider_time = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Quantity = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orders", x => x.Order_id);
+                    table.PrimaryKey("PK_OrderItems", x => x.OrderItem_id);
+                    table.ForeignKey(
+                      name: "FK_OrderItems_Orders_OrdersOrder_id",
+                      column: x => x.OrdersOrder_id,
+                      principalTable: "Orders",
+                      principalColumn: "Order_id");
                 });
 
             migrationBuilder.CreateTable(
@@ -68,7 +88,7 @@ namespace POS.Migrations
                 {
                     Payment_id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Order_id = table.Column<int>(type: "INTEGER", nullable: false),
+                    OrdersOrder_id = table.Column<int>(type: "INTEGER", nullable: false),
                     Payment_time = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Payment_method = table.Column<string>(type: "TEXT", nullable: false),
                     Amount = table.Column<double>(type: "REAL", nullable: false)
@@ -76,6 +96,12 @@ namespace POS.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Payments", x => x.Payment_id);
+                    table.ForeignKey(
+                     name: "FK_Payments_Orders_OrdersOrder_id",
+                     column: x => x.OrdersOrder_id,
+                     principalTable: "Orders",
+                     principalColumn: "Order_id"
+                );
                 });
 
             migrationBuilder.CreateTable(
@@ -115,6 +141,9 @@ namespace POS.Migrations
 
             migrationBuilder.DropTable(
                 name: "Orders");
+
+            migrationBuilder.DropTable(
+             name: "OrderItems");
 
             migrationBuilder.DropTable(
                 name: "Payments");

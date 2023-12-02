@@ -25,6 +25,7 @@ namespace POS
     /// </summary>
     public partial class MainWindow : Window
     {
+
         private DispatcherTimer timer;
         public MainWindow()
         {
@@ -39,9 +40,10 @@ namespace POS
         {
             LoginPanel loginPanel = new LoginPanel();
             loginPanel.ShowDialog();
+            
             if (loginPanel.isLoginValid)
             {
-                SalesPanel salesPanel = new SalesPanel();
+                SalesPanel salesPanel = new SalesPanel(loginPanel.EmployeeId);
                 salesPanel.Show();
                 this.Close();
             }

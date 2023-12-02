@@ -20,6 +20,8 @@ namespace POS.Views
     public partial class LoginPanel : Window
     {
         public bool isLoginValid;
+        public int EmployeeId { get; set; }
+
 
         public LoginPanel()
         {
@@ -45,11 +47,22 @@ namespace POS.Views
 
         private bool AuthenticateUser(string username, string password)
         {
+            var defaultAdmin = new Employees
+            {
+                First_name = "Admin",
+                Last_name = "Admin",
+                Login = "admin",
+                Password = "admin"
+            };
+
             using (var dbContext = new AppDbContext())
             {
+                dbContext.Employees.Add(defaultAdmin);
+                dbContext.SaveChanges();
                 var user = dbContext.Employees.FirstOrDefault(e => e.Login == username && e.Password == password);
                 if(user != null)
                 {
+                    EmployeeId = user.Employee_id;
                     return true;
                 }
                 else

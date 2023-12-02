@@ -25,15 +25,18 @@ namespace POS.Views
     /// </summary>
     public partial class SalesPanel
     {
+        public int EmployeeId;
+
         private double totalPrice = 0;
         ObservableCollection<OrderItem> orderList = new ObservableCollection<OrderItem>();
 
-        public SalesPanel()
+        public SalesPanel(int employeeId)
         {
             InitializeComponent();
             LoadAllProducts();
             orderListDataGrid.ItemsSource = orderList;
             UpdateTotalPrice();
+            EmployeeId = employeeId;
         }
 
         private void OpenPrintWindow(object sender, RoutedEventArgs e)
@@ -88,28 +91,64 @@ namespace POS.Views
         private void PayForOrder_Click(object sender, RoutedEventArgs e)
         {
             
-            using (var dbContext = new AppDbContext())
+            if (sender is Button button && button.Tag is string paymentMethod)
             {
-                if (sender is Button button && button.Tag is string paymentMethod)
-                {
-                    foreach (var orderItem in orderList)
-                    {
-                        Payments newPayment = new Payments
-                        {
-                            Order_id = orderItem.Id, 
-                            Payment_time = DateTime.Now, 
-                            Payment_method = paymentMethod, 
-                            Amount = orderItem.Amount
-                        };
-                        dbContext.Payments.Add(newPayment);
-                    }
-                    double totalPrice = orderList.Sum(item => item.Amount * item.Price);
-                    MessageBox.Show($"Zapłacono za zamówienie {totalPrice:C} - metoda płatności: {paymentMethod}");
-                    orderList.Clear();
-                }
+                double totalPrice = Math.Round(orderList.Sum(item => item.Amount * item.Price), 2);
+                var order = SaveOrder();
+                SaveOrderItems(order);
+                SavePayment(order, paymentMethod, totalPrice);
+                MessageBox.Show($"Zapłacono za zamówienie {totalPrice:C} - metoda płatności: {paymentMethod}");
+                orderList.Clear();
             }
         
         }
+
+        private Orders SaveOrder()
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                Orders newOrder = new Orders { Orider_time = DateTime.Now, Employee_id = EmployeeId };
+                var addedOrderEntry = dbContext.Orders.Add(newOrder);
+                dbContext.SaveChanges();
+
+                return addedOrderEntry.Entity;
+            }
+        }
+
+        private void SavePayment(Orders order, string paymentMethod, double totalPrice)
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                Payments newPayment = new Payments
+                {
+                    Order_id = order.Order_id,
+                    Payment_time = DateTime.Now,
+                    Payment_method = paymentMethod,
+                    Amount = totalPrice
+                };
+                dbContext.Payments.Add(newPayment);
+                dbContext.SaveChanges();
+            }
+        }
+
+        private void SaveOrderItems(Orders order)
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                foreach (var orderListItem in orderList)
+                {
+                    OrderItems orderItem1 = new OrderItems
+                    {
+                        Product_id = orderListItem.Id,
+                        Order_id = order.Order_id,
+                        Quantity = orderListItem.Amount,
+                    };
+                    dbContext.OrderItems.Add(orderItem1);
+                }
+            }
+        }
+
+
 
         private void UpdateTotalPrice()
         {
@@ -309,7 +348,5 @@ namespace POS.Views
             ProductsUnifromGrid.Children.Clear();
             LoadAllProducts();
         }
-
-
     }
 }

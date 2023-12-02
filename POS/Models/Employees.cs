@@ -9,7 +9,7 @@ namespace POS.Models
 {
     public class Employees
     {
-        public required int Employee_id { get; set; }
+        public int Employee_id { get; set; }
         public required string First_name { get; set; }
         public required string Last_name { get; set; }
         public string? Job_title { get; set; }
