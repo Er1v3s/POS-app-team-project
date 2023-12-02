@@ -1,4 +1,5 @@
-﻿using System;
+﻿using POS.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -21,29 +22,46 @@ namespace POS.Views
     /// </summary>
     public partial class WorkTimeSummaryControl : UserControl
     {
+        ObservableCollection<EmployeeWorkSession> ActiveSessions = new ObservableCollection<EmployeeWorkSession>();
         public WorkTimeSummaryControl()
         {
             InitializeComponent();
+            ShowActiveSessions();
 
-            ObservableCollection<Employee> employee = new ObservableCollection<Employee>();
-
-            // Create working time summary DataGrid Item Info
-
-            employee.Add(new Employee { firstName = "Andrzej", workingTimeFrom = "18:00", workingTimeTo = "24:00", workingTimeSummary = "6:00" });
-            employee.Add(new Employee { firstName = "Łukasz", workingTimeFrom = "19:00", workingTimeTo = "23:00", workingTimeSummary = "4:00" });
-            employee.Add(new Employee { firstName = "Klara", workingTimeFrom = "20:00", workingTimeTo = "22:00", workingTimeSummary = "2:00" });
-            employee.Add(new Employee { firstName = "Mateusz", workingTimeFrom = "17:30", workingTimeTo = "22:30", workingTimeSummary = "5:00" });
-            employee.Add(new Employee { firstName = "Robert", workingTimeFrom = "15:00", workingTimeTo = "20:00", workingTimeSummary = "5:00" });
-
-            workingTimeSummaryDataGrid.ItemsSource = employee;
+            StartFinishWork.WorkSessionChangeStatus += EmployeeWorkSession_SessionCreated;
         }
-    }
 
-    public class Employee
-    {
-        public string firstName { get; set; }
-        public string workingTimeFrom { get; set; }
-        public string workingTimeTo { get; set; }
-        public string workingTimeSummary { get; set; }
+        private void ShowActiveSessions()
+        {
+            ActiveSessions.Clear();
+            using (var dbContext = new AppDbContext())
+            {
+                var employeeWorkSession = dbContext.EmployeeWorkSession.ToList();
+
+                if (employeeWorkSession != null)
+                {
+                    foreach (var session in employeeWorkSession)
+                    {
+                        var user = dbContext.Employees.FirstOrDefault(e => e.Employee_id == session.Employee_Id && e.Is_User_LoggedIn);
+                        if (user != null)
+                        {
+                            ActiveSessions.Add(session);
+                        }
+                    }
+                }
+            }
+
+            workingTimeSummaryDataGrid.ItemsSource = ActiveSessions;
+        }
+
+        private void Refresh_Button(object sender, RoutedEventArgs e)
+        {
+            ShowActiveSessions();
+        }
+
+        private void EmployeeWorkSession_SessionCreated(object sender, EventArgs e)
+        {
+            ShowActiveSessions();
+        }
     }
 }

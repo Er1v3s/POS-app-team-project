@@ -23,6 +23,7 @@ namespace POS.Views
     public partial class StartFinishWork : UserControl
     {
         private readonly int employeeId;
+        public static event EventHandler<EventArgs>? WorkSessionChangeStatus;
         public StartFinishWork(int employeeId)
         {
             this.employeeId = employeeId;
@@ -56,6 +57,13 @@ namespace POS.Views
                     user.Is_User_LoggedIn = true;
                     dbContext.SaveChanges();
                 }
+
+                EmployeeWorkSession newEmployeeWorkSession = createNewEmployeeWorkSession(user);
+
+                dbContext.EmployeeWorkSession.Add(newEmployeeWorkSession);
+                dbContext.SaveChanges();
+
+                OnStartFinishWork();
             }
         }
 
@@ -69,7 +77,30 @@ namespace POS.Views
                     user.Is_User_LoggedIn = false;
                     dbContext.SaveChanges();
                 }
+
+                OnStartFinishWork();
             }
+        }
+
+        private EmployeeWorkSession createNewEmployeeWorkSession(Employees user)
+        {
+            EmployeeWorkSession employeeWorkSession = (
+                new EmployeeWorkSession
+                {
+                    Employee_Name = user.First_name + " " + user.Last_name,
+                    Employee_Id = user.Employee_id,
+                    Working_Time_From = DateTime.UtcNow.ToString("HH:mm"),
+                    Working_Time_To = null,
+                    Working_Time_Summary = null,
+                }
+            );
+
+            return employeeWorkSession;
+        }
+
+        protected virtual void OnStartFinishWork()
+        {
+            WorkSessionChangeStatus?.Invoke(this, EventArgs.Empty);
         }
     }
 }

@@ -11,8 +11,8 @@ using POS.Models;
 namespace POS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231125170114_IsUserLoggedInMigration")]
-    partial class IsUserLoggedInMigration
+    [Migration("20231202161908_EmployeeWorkingTimeMigration")]
+    partial class EmployeeWorkingTimeMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

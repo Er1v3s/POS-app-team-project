@@ -20,7 +20,7 @@
         </Grid>
         
         <Grid Grid.Row="1">
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Cursor="">
                 <Button Style="{StaticResource StartFinishWorkButton}" Content="Rozpocznij pracę" Click="StartWork_Button" x:Name="StartWork"/>
                 <Button Style="{StaticResource StartFinishWorkButton}" Content="Zakończ pracę" Click="FinishWork_Button" x:Name="FinishWork"/>
             </StackPanel>

@@ -19,9 +19,9 @@ namespace POS.Models
         public DbSet<RecipeIngredients> RecipeIngredients { get; set; }
         public DbSet<Recipes> Recipes { get; set; }
         public DbSet<ToDoListTask> ToDoListTasks { get; set; }
+        public DbSet<EmployeeWorkSession> EmployeeWorkSession { get; set; }
 
         public static string DatabasePath { get; private set; }
-
         static AppDbContext()
         {
             string databaseLocation = @"..\..\..\Database\barmanagement.db";
@@ -46,6 +46,7 @@ namespace POS.Models
             modelBuilder.Entity<RecipeIngredients>().HasKey(e => e.RecipeIngredient_id);
             modelBuilder.Entity<Recipes>().HasKey(e => e.Recipe_id);
             modelBuilder.Entity<ToDoListTask>().HasKey(e => e.TodoTask_Id);
+            modelBuilder.Entity<EmployeeWorkSession>().HasKey(e => e.Work_Session_Id);
         }
     }
 }
