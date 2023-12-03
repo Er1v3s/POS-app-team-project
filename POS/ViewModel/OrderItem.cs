@@ -10,6 +10,7 @@ namespace POS.ViewModel
     public class OrderItem : INotifyPropertyChanged
     {
         private int _amount;
+        private double _totalPrice;
 
         public int Id { get; set; }
         public string Name { get; set; }
@@ -23,6 +24,19 @@ namespace POS.ViewModel
                 {
                     _amount = value;
                     OnPropertyChanged(nameof(Amount));
+                }
+            }
+        }
+
+        public double TotalPrice
+        {
+            get { return _totalPrice; }
+            set
+            {
+                if (_totalPrice != value)
+                {
+                    _totalPrice = value;
+                    OnPropertyChanged(nameof(TotalPrice));
                 }
             }
         }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.X509;
 using POS.Models;
 using POS.ViewModel;
 using System;
@@ -25,6 +26,8 @@ namespace POS.Views
     public partial class SalesPanel
     {
         private Employees currentUser;
+        public int EmployeeId;
+
         private double totalPrice = 0;
         private int currentOrderId = 0;
         ObservableCollection<OrderItem> orderList = new ObservableCollection<OrderItem>();
@@ -42,6 +45,13 @@ namespace POS.Views
             LoadAllProducts();
             orderListDataGrid.ItemsSource = orderListCollection[currentOrderId];
             UpdateTotalPrice();
+            EmployeeId = employeeId;
+        }
+
+        private void OpenPrintWindow(object sender, RoutedEventArgs e)
+        {
+            PrintWindow printWindow = new PrintWindow(orderList);
+            printWindow.Show();
         }
 
         private void MoveToMainWindow(object sender, RoutedEventArgs e)
@@ -87,6 +97,68 @@ namespace POS.Views
             LoadProductsByCategory(category);
         }
 
+        private void PayForOrder_Click(object sender, RoutedEventArgs e)
+        {
+            
+            if (sender is Button button && button.Tag is string paymentMethod)
+            {
+                double totalPrice = Math.Round(orderList.Sum(item => item.Amount * item.Price), 2);
+                var order = SaveOrder();
+                SaveOrderItems(order);
+                SavePayment(order, paymentMethod, totalPrice);
+                MessageBox.Show($"Zapłacono za zamówienie {totalPrice:C} - metoda płatności: {paymentMethod}");
+                orderList.Clear();
+            }
+        
+        }
+
+        private Orders SaveOrder()
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                Orders newOrder = new Orders { Orider_time = DateTime.Now, Employee_id = EmployeeId };
+                var addedOrderEntry = dbContext.Orders.Add(newOrder);
+                dbContext.SaveChanges();
+
+                return addedOrderEntry.Entity;
+            }
+        }
+
+        private void SavePayment(Orders order, string paymentMethod, double totalPrice)
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                Payments newPayment = new Payments
+                {
+                    Order_id = order.Order_id,
+                    Payment_time = DateTime.Now,
+                    Payment_method = paymentMethod,
+                    Amount = totalPrice
+                };
+                dbContext.Payments.Add(newPayment);
+                dbContext.SaveChanges();
+            }
+        }
+
+        private void SaveOrderItems(Orders order)
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                foreach (var orderListItem in orderList)
+                {
+                    OrderItems orderItem1 = new OrderItems
+                    {
+                        Product_id = orderListItem.Id,
+                        Order_id = order.Order_id,
+                        Quantity = orderListItem.Amount,
+                    };
+                    dbContext.OrderItems.Add(orderItem1);
+                }
+            }
+        }
+
+
+
         private void UpdateTotalPrice()
         {
             totalPrice = orderListCollection[currentOrderId].Sum(item => item.Amount * item.Price);
@@ -100,6 +172,7 @@ namespace POS.Views
             if (existingProduct != null)
             {
                 existingProduct.Amount++;
+                existingProduct.TotalPrice = Math.Round(existingProduct.Amount * existingProduct.Price, 2);
             }
             else
             {
@@ -113,12 +186,12 @@ namespace POS.Views
             {
                 var selectedItem = (OrderItem)orderListDataGrid.SelectedItem;
                 selectedItem.Amount--;
-
+                selectedItem.TotalPrice = Math.Round(selectedItem.Amount * selectedItem.Price, 2);
                 if (selectedItem.Amount == 0)
                 {
                     orderListCollection[currentOrderId].Remove(selectedItem);
                 }
-
+                
                 UpdateTotalPrice();
             }
         }
@@ -440,6 +513,5 @@ namespace POS.Views
                 orderListDataGrid.Items.Refresh();
             }
         }
-
     }
 }

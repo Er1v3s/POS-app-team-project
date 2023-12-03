@@ -96,16 +96,38 @@ namespace POS.Migrations
                     b.Property<DateTime>("Orider_time")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Product_id")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Order_id");
 
                     b.ToTable("Orders");
                 });
+
+            modelBuilder.Entity("POS.Models.OrderItems", b =>
+            {
+                b.Property<int>("OrderItem_id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("INTEGER");
+
+                b.Property<int>("OrdersOrder_id")
+                    .HasColumnType("INTEGER");
+
+                b.Property<int>("Employee_id")
+                    .HasColumnType("INTEGER");
+
+                b.Property<int>("Product_id")
+                    .HasColumnType("INTEGER");
+
+                b.Property<DateTime>("Orider_time")
+                    .HasColumnType("TEXT");
+
+                b.Property<int>("Quantity")
+                    .HasColumnType("INTEGER");
+
+                b.HasKey("OrderItem_id");
+
+                b.HasIndex("OrdersOrder_id");
+
+                b.ToTable("OrderItems");
+            });
 
             modelBuilder.Entity("POS.Models.Payments", b =>
                 {
