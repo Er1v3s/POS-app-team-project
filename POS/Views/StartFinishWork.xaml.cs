@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static System.Collections.Specialized.BitVector32;
 
 namespace POS.Views
 {
@@ -23,6 +24,7 @@ namespace POS.Views
     public partial class StartFinishWork : UserControl
     {
         private readonly int employeeId;
+        public static event EventHandler<EventArgs>? WorkSessionChangeStatus;
         public StartFinishWork(int employeeId)
         {
             this.employeeId = employeeId;
@@ -56,7 +58,14 @@ namespace POS.Views
                     user.Is_User_LoggedIn = true;
                     dbContext.SaveChanges();
                 }
+
+                EmployeeWorkSession newEmployeeWorkSession = createNewEmployeeWorkSession(user);
+
+                dbContext.EmployeeWorkSession.Add(newEmployeeWorkSession);
+                dbContext.SaveChanges();
             }
+
+                OnStartFinishWork();
         }
 
         private async void FinishWork_Button(object sender, RoutedEventArgs e)
@@ -64,12 +73,37 @@ namespace POS.Views
             await using (var dbContext = new AppDbContext())
             {
                 var user = dbContext.Employees.FirstOrDefault(e => e.Employee_id == employeeId);
+                var employeeWorkSession = dbContext.EmployeeWorkSession.FirstOrDefault(e => e.Employee_Id == user.Employee_id && user.Is_User_LoggedIn);
                 if (user != null)
                 {
+                    employeeWorkSession.Working_Time_To = DateTime.Now.ToString("HH:mm");
                     user.Is_User_LoggedIn = false;
                     dbContext.SaveChanges();
                 }
             }
+
+            OnStartFinishWork();
+        }
+
+        private EmployeeWorkSession createNewEmployeeWorkSession(Employees user)
+        {
+            EmployeeWorkSession employeeWorkSession = (
+                new EmployeeWorkSession
+                {
+                    Employee_Name = user.First_name + " " + user.Last_name,
+                    Employee_Id = user.Employee_id,
+                    Working_Time_From = DateTime.Now.ToString("HH:mm"),
+                    Working_Time_To = null,
+                    Working_Time_Summary = null,
+                }
+            );
+
+            return employeeWorkSession;
+        }
+
+        protected virtual void OnStartFinishWork()
+        {
+            WorkSessionChangeStatus?.Invoke(this, EventArgs.Empty);
         }
     }
 }
