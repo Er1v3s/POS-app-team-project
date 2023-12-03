@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,9 +43,28 @@ namespace POS.Views
                 {
                     foreach (var session in employeeWorkSession)
                     {
-                        var user = dbContext.Employees.FirstOrDefault(e => e.Employee_id == session.Employee_Id && e.Is_User_LoggedIn);
+                        var user = dbContext.Employees.FirstOrDefault(e => e.Employee_id == session.Employee_Id);
                         if (user != null)
                         {
+                            DateTime workingTimeFrom = DateTime.ParseExact(session.Working_Time_From, "HH:mm", CultureInfo.InvariantCulture);
+                            DateTime workingTimeTo;
+
+                            if (session.Working_Time_To == "" || session.Working_Time_To == null)
+                            {
+                                workingTimeTo = DateTime.Now;
+                            } 
+                            else
+                            {
+                                workingTimeTo = DateTime.ParseExact(session.Working_Time_To, "HH:mm", CultureInfo.InvariantCulture);
+                            }
+
+                            TimeSpan workingTimeDifference = (workingTimeTo - workingTimeFrom);
+                            byte hours = (byte)workingTimeDifference.TotalHours;
+                            byte minutes = (byte)workingTimeDifference.Minutes;
+                            string formattedTimeDifference = $"{hours:D2}:{minutes:D2}";
+
+                            session.Working_Time_Summary = formattedTimeDifference;
+                            dbContext.SaveChangesAsync();
                             ActiveSessions.Add(session);
                         }
                     }
