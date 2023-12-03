@@ -388,10 +388,58 @@ namespace POS.Views
             orderListDataGrid.ItemsSource = orderListCollection[currentOrderId];
             UpdateTotalPrice();
             LoadAllProducts();
+
+            discountApplied = false;
         }
         private void SetWelcomeMessage(string message)
         {
             welcomeLabel.Content = message;
         }
+        private bool discountApplied = false;
+        private void ApplyDiscount_Click(object sender, RoutedEventArgs e)
+        {
+            if (discountApplied)
+            {
+                MessageBox.Show("Rabat został już zastosowany.", "Informacja", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            DiscountWindow discountWindow = new DiscountWindow();
+            discountWindow.Owner = this;
+
+            if (discountWindow.ShowDialog() == true)
+            {
+                double discountRate = discountWindow.radioButton10.IsChecked == true ? 0.1 : 0.15;
+
+                foreach (var orderItem in orderListCollection[currentOrderId])
+                {
+                    orderItem.Price *= (1 - discountRate);
+                }
+                UpdateTotalPrice();
+                discountApplied = true;
+            }
+        }
+
+        private void InvoiceAdd_Click(object sender, RoutedEventArgs e)
+        {
+            if (orderListCollection[currentOrderId].Count == 0)
+            {
+                MessageBox.Show("Brak produktów do dodania do faktury.", "Informacja", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            InvoiceWindow invoiceWindow = new InvoiceWindow();
+            if (invoiceWindow.ShowDialog() == true)
+            {
+                string clientName = invoiceWindow.ClientName;
+                string deliveryAddress = invoiceWindow.DeliveryAddress;
+
+                MessageBox.Show($"Faktura dla: {clientName}\nAdres dostawy: {deliveryAddress}\nSuma: {totalPrice:C2}", "Faktura", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                orderListCollection[currentOrderId].Clear();
+                UpdateTotalPrice();
+                orderListDataGrid.Items.Refresh();
+            }
+        }
+
     }
 }
