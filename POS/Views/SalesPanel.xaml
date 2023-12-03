@@ -154,7 +154,7 @@
                     </Button.Resources>
                 </Button>
 
-                <Button Grid.Column="1" Style="{StaticResource leftBarButton}">
+                <Button Grid.Column="1" Style="{StaticResource leftBarButton}" Click="InvoiceAdd_Click">
                     <fa:ImageAwesome Icon="File" Height="24" Foreground="White"/>
                 </Button>
 
@@ -229,7 +229,7 @@
                     <fa:ImageAwesome Icon="CreditCard" Height="24" Foreground="White"/>
                 </Button>
 
-                <Button Grid.Column="2" Style="{StaticResource leftBarButton}">
+                <Button Grid.Column="2" Style="{StaticResource leftBarButton}" Click="ApplyDiscount_Click">
                     <fa:ImageAwesome Icon="Percent" Height="24" Foreground="White"/>
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">
