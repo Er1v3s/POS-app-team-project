@@ -24,6 +24,7 @@ namespace POS.ViewModel
                 {
                     _amount = value;
                     OnPropertyChanged(nameof(Amount));
+                    OnPropertyChanged(nameof(TotalPrice));
                 }
             }
         }

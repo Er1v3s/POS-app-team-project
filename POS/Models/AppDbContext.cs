@@ -26,6 +26,7 @@ namespace POS.Models
         static AppDbContext()
         {
             string databaseLocation = @"..\..\..\Database\barmanagement.db";
+            //string databaseLocation = "C:\\Users\\filip\\Programing\\C#\\POS-app-team-project\\POS\\Database\\barmanagement.db";
             string projectPath = Directory.GetCurrentDirectory();
             string absolutePath = Path.Combine(projectPath, databaseLocation);
 

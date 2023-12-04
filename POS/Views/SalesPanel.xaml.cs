@@ -48,12 +48,6 @@ namespace POS.Views
             EmployeeId = employeeId;
         }
 
-        private void OpenPrintWindow(object sender, RoutedEventArgs e)
-        {
-            PrintWindow printWindow = new PrintWindow(orderList);
-            printWindow.Show();
-        }
-
         private void MoveToMainWindow(object sender, RoutedEventArgs e)
         {
             MainWindow mainWindow = new MainWindow();
@@ -99,24 +93,27 @@ namespace POS.Views
 
         private void PayForOrder_Click(object sender, RoutedEventArgs e)
         {
-            
+
             if (sender is Button button && button.Tag is string paymentMethod)
             {
                 double totalPrice = Math.Round(orderList.Sum(item => item.Amount * item.Price), 2);
+                GenerateBill printWindow = new GenerateBill(orderList);
+                printWindow.ShowDialog();
                 var order = SaveOrder();
                 SaveOrderItems(order);
                 SavePayment(order, paymentMethod, totalPrice);
-                MessageBox.Show($"Zapłacono za zamówienie {totalPrice:C} - metoda płatności: {paymentMethod}");
                 orderList.Clear();
+                UpdateTotalPrice();
+                MessageBox.Show($"Zapłacono za zamówienie {totalPrice:C} - metoda płatności: {paymentMethod}");
             }
-        
+
         }
 
         private Orders SaveOrder()
         {
             using (var dbContext = new AppDbContext())
             {
-                Orders newOrder = new Orders { Orider_time = DateTime.Now, Employee_id = EmployeeId };
+                Orders newOrder = new Orders { Order_time = DateTime.Now, Employee_id = EmployeeId };
                 var addedOrderEntry = dbContext.Orders.Add(newOrder);
                 dbContext.SaveChanges();
 
@@ -156,8 +153,6 @@ namespace POS.Views
                 }
             }
         }
-
-
 
         private void UpdateTotalPrice()
         {
@@ -512,6 +507,12 @@ namespace POS.Views
                 UpdateTotalPrice();
                 orderListDataGrid.Items.Refresh();
             }
+        }
+
+        private void ShowFinishedOrders(object sender, RoutedEventArgs e)
+        {
+            FinishedOrders finishedOrders = new FinishedOrders();
+            finishedOrders.Show();
         }
     }
 }

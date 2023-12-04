@@ -56,23 +56,6 @@ namespace POS.Migrations
             migrationBuilder.DropColumn("Quantity", "Orders");
             migrationBuilder.DropColumn("Order_id", "Payments");
 
-            migrationBuilder.CreateTable(
-                name: "EmployeeWorkSession",
-                columns: table => new
-                {
-                    Work_Session_Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Employee_Id = table.Column<int>(type: "INTEGER", nullable: true),
-                    Employee_Name = table.Column<string>(type: "TEXT", nullable: true),
-                    Working_Time_From = table.Column<string>(type: "TEXT", nullable: true),
-                    Working_Time_To = table.Column<string>(type: "TEXT", nullable: true),
-                    Working_Time_Summary = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EmployeeWorkSession", x => x.Work_Session_Id);
-                });
-
         }
 
         /// <inheritdoc />
