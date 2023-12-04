@@ -42,12 +42,12 @@ namespace POS.Models
             modelBuilder.Entity<Employees>().HasKey(e => e.Employee_id);
             modelBuilder.Entity<Products>().HasKey(e => e.Product_id);
             modelBuilder.Entity<Orders>().HasKey(e => e.Order_id);
-            modelBuilder.Entity<OrderItems>().HasKey(e => e.OrderItem_id);
             modelBuilder.Entity<Ingredients>().HasKey(e => e.Ingredient_id);
             modelBuilder.Entity<Payments>().HasKey(e => e.Payment_id);
             modelBuilder.Entity<RecipeIngredients>().HasKey(e => e.RecipeIngredient_id);
             modelBuilder.Entity<Recipes>().HasKey(e => e.Recipe_id);
             modelBuilder.Entity<ToDoListTask>().HasKey(e => e.TodoTask_Id);
+            modelBuilder.Entity<OrderItems>().HasKey(e => e.OrderItem_id);
             modelBuilder.Entity<EmployeeWorkSession>().HasKey(e => e.Work_Session_Id);
         }
     }
