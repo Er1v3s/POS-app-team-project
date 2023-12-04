@@ -10,6 +10,6 @@ namespace POS.Models
     {
         public int Order_id { get; set; }
         public required int Employee_id { get; set; }
-        public DateTime Orider_time { get; set; }
+        public DateTime Order_time { get; set; }
     }
 }

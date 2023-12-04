@@ -83,18 +83,8 @@ namespace POS.Views
 
         private int AuthenticateUserAndGetEmployeeId(string username, string password)
         {
-            var defaultAdmin = new Employees
-            {
-                First_name = "Admin",
-                Last_name = "Admin",
-                Login = "admin",
-                Password = "admin",
-                Is_User_LoggedIn = true,
-            };
-
             using (var dbContext = new AppDbContext())
             {
-                dbContext.Employees.Add(defaultAdmin);
                 dbContext.SaveChanges();
                 var user = dbContext.Employees.FirstOrDefault(e => e.Login == username && e.Password == password);
                 if (user != null)

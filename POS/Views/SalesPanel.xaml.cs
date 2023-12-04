@@ -102,8 +102,9 @@ namespace POS.Views
                 var order = SaveOrder();
                 SaveOrderItems(order);
                 SavePayment(order, paymentMethod, totalPrice);
-                MessageBox.Show($"Zapłacono za zamówienie {totalPrice:C} - metoda płatności: {paymentMethod}");
                 orderList.Clear();
+                UpdateTotalPrice();
+                MessageBox.Show($"Zapłacono za zamówienie {totalPrice:C} - metoda płatności: {paymentMethod}");
             }
 
         }
@@ -112,7 +113,7 @@ namespace POS.Views
         {
             using (var dbContext = new AppDbContext())
             {
-                Orders newOrder = new Orders { Orider_time = DateTime.Now, Employee_id = EmployeeId };
+                Orders newOrder = new Orders { Order_time = DateTime.Now, Employee_id = EmployeeId };
                 var addedOrderEntry = dbContext.Orders.Add(newOrder);
                 dbContext.SaveChanges();
 
@@ -511,7 +512,7 @@ namespace POS.Views
         private void ShowFinishedOrders(object sender, RoutedEventArgs e)
         {
             FinishedOrders finishedOrders = new FinishedOrders();
-            finishedOrders.ShowDialog();
+            finishedOrders.Show();
         }
     }
 }
