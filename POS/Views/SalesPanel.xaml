@@ -141,8 +141,8 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Style="{StaticResource leftBarButton}" Click="OpenPrintWindow">
-                    <fa:ImageAwesome Icon="Print" Height="24" Foreground="White"/>
+                <Button Grid.Column="0" Style="{StaticResource leftBarButton}" Click="ShowFinishedOrders">
+                    <fa:ImageAwesome Icon="ListOl" Height="24" Foreground="White"/>
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">
                             <Setter Property="CornerRadius">
@@ -159,7 +159,7 @@
                 </Button>
 
                 <Button Grid.Column="2" Click="ShowOpenOrders" Style="{StaticResource leftBarButton}">
-                    <fa:ImageAwesome Icon="ListOl" Height="24" Foreground="White"/>
+                    <fa:ImageAwesome Icon="Save" Height="24" Foreground="White"/>
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">
                             <Setter Property="CornerRadius">

@@ -26,20 +26,20 @@ using Microsoft.Win32;
 namespace POS.Views
 {
     /// <summary>
-    /// Logika interakcji dla klasy PrintWindow.xaml
+    /// Logika interakcji dla klasy GenerateBill.xaml
     /// </summary>
-    public partial class PrintWindow
+    public partial class GenerateBill
     {
         private ObservableCollection<OrderItem> orderList;
 
-        public PrintWindow(ObservableCollection<OrderItem> orderList)
-        { 
+        public GenerateBill(ObservableCollection<OrderItem> orderList)
+        {
             InitializeComponent();
 
             this.orderList = orderList;
             orderSummaryDataGrid.ItemsSource = this.orderList;
 
-            double totalSum = CalculateTotalSum(); 
+            double totalSum = CalculateTotalSum();
             totalPriceTextBlock.Text = totalSum.ToString("C");
         }
 
