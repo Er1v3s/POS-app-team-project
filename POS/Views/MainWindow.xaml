@@ -29,7 +29,7 @@
                         <TextBlock Text="ROZPOCZĘCIE I ZAKOŃCZENIE PRACY" Style="{StaticResource sideBarButtonTextBlock}"/>
                     </StackPanel>
                 </Button>
-                <Button Style="{StaticResource sideBarButton}" >
+                <Button Style="{StaticResource sideBarButton}" Click="NavigateButton_Click" Tag="./RunningOutOfIngredients.xaml" >
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Dropbox" Width="30" Height="30" Foreground="White" />
                         <TextBlock Text="FUNKCJE MAGAZYNOWE" Style="{StaticResource sideBarButtonTextBlock}"/>
