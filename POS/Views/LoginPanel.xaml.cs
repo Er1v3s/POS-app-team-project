@@ -14,32 +14,64 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Xml.Serialization;
 
 namespace POS.Views
 {
-    /// <summary>
-    /// Logika interakcji dla klasy LoginPanel.xaml
-    /// </summary>
     public partial class LoginPanel : Window
     {
-        private readonly AppDbContext dbContext;
-        public LoginPanel()
+        public bool isLoginValid;
+        public bool isUserLoggedIn;
+        public int employeeId;
+        private readonly string uri;
+
+        public LoginPanel(string uri = "")
         {
+            this.uri = uri;
             InitializeComponent();
-            dbContext = new AppDbContext();
         }
+
+        private void CloseLoginPanel(object sender, EventArgs e)
+        {
+            isUserLoggedIn = false;
+            this.Close();
+        }
+
+        private void ValidateLoginEvent(object sender, EventArgs e)
+        {
+            isLoginValid = true;
+            isUserLoggedIn = false;
+            this.Close();
+        }
+
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             string username = UsernameTextBox.Text;
             string password = PasswordBox.Password;
 
-            bool isValidLogin = CheckLoginInDatabase(username, password);
+            employeeId = AuthenticateUserAndGetEmployeeId(username, password);
 
-            if (isValidLogin)
+            if (employeeId != 0)
             {
-                SalesPanel salesPanel = new SalesPanel();
-                salesPanel.Show();
-                this.Close();
+                if (!isUserLoggedIn)
+                {
+                    StartFinishWork startFinishWork = new StartFinishWork(employeeId);
+                    loginPanelWindow.Child = startFinishWork;
+                    startFinishWork.StartWork.Click += ValidateLoginEvent;
+                }
+                else if(uri == "./StartFinishWork.xaml")
+                {
+                    StartFinishWork startFinishWork = new StartFinishWork(employeeId);
+                    loginPanelWindow.Child = startFinishWork;
+                    startFinishWork.StartWork.Click += CloseLoginPanel;
+                    startFinishWork.FinishWork.Click += CloseLoginPanel;
+                }
+                else
+                {
+                    isLoginValid = true;
+                    isUserLoggedIn = false;
+                    this.Close();
+                }
             }
             else
             {
@@ -49,11 +81,26 @@ namespace POS.Views
             }
         }
 
-        private bool CheckLoginInDatabase(string username, string password)
+        private int AuthenticateUserAndGetEmployeeId(string username, string password)
         {
-            var user = dbContext.Employees.FirstOrDefault(e => e.Login == username && e.Password == password);
+            using (var dbContext = new AppDbContext())
+            {
+                dbContext.SaveChanges();
+                var user = dbContext.Employees.FirstOrDefault(e => e.Login == username && e.Password == password);
+                if (user != null)
+                {
+                    if(user.Is_User_LoggedIn)
+                    {
+                        isUserLoggedIn = true;
+                    }
 
-            return user != null;
+                    return user.Employee_id;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
         }
     }
 }

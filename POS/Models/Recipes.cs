@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace POS.Models
 {
-    public class Ingredients
+    public class Recipes
     {
-        public int Ingredient_id { get; set; }
-        public required string Name { get; set; }
-        public required string Description { get; set; }
-        public required string? Unit { get; set; }
+        public required int Recipe_id { get; set; }
+        public required string Recipe_name { get; set; }
+        public required string Recipe {  get; set; }
         public ICollection<RecipeIngredients> RecipeIngredients { get; set; }
     }
 }

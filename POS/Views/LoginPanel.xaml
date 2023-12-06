@@ -5,17 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
-        Title="LoginPanel" Height="768" Width="1366" WindowState="Maximized" WindowStyle="None" FontFamily="Lato" FontSize="16">
-    <Border Background="#8EA7E9">
+        Height="800" Width="600" FontFamily="Lato" FontSize="16" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterScreen">
 
-        <Grid  VerticalAlignment="Center">
+    <Border Background="#8EA7E9" x:Name="loginPanelWindow">
+        <Grid VerticalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
+
             <StackPanel Grid.Row="0" Margin="20" >
                 <fa:ImageAwesome Icon="user" Width="100" Height="100" Foreground="White"/>
             </StackPanel>
+            
             <Border Grid.Row="1" BorderThickness="2" CornerRadius="10" Background="#7286D3" Width="350" Height="250">
                 <Border.Effect>
                     <DropShadowEffect Color="Black" Direction="315" ShadowDepth="5" Opacity="0.5" />

@@ -1,0 +1,40 @@
+﻿<Window x:Class="POS.Views.GenerateBill"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:POS.Views"
+      mc:Ignorable="d" 
+      xmlns:fa="http://schemas.fontawesome.io/icons/"
+      d:DesignHeight="600" d:DesignWidth="600"
+      Title="Podsumowanie zamówienia"  WindowStyle="None" Background="#FFD9D9D9" FontFamily="Lato" FontSize="16">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Podsumowanie" FontSize="20" FontWeight="Bold" Margin="10"/>
+        <Button Content="X" Width="30" Background="Red" HorizontalAlignment="Right" Margin="10" Click="CloseButton_Click"/>
+        
+        <DataGrid x:Name="orderSummaryDataGrid" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Width="80" Header="ID" Binding="{Binding Id}"/>
+                <DataGridTextColumn Width="*" Header="Nazwa" Binding="{Binding Name}"/>
+                <DataGridTextColumn Width="*" Header="Cena/szt" Binding="{Binding Price}"/>
+                <DataGridTextColumn Width="*" Header="Ilość" Binding="{Binding Amount}"/>
+                <DataGridTextColumn Width="*" Header="Cena razem" Binding="{Binding TotalPrice}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <TextBlock Text="Podsumowanie ceny: " FontWeight="Bold"/>
+            <TextBlock x:Name="totalPriceTextBlock" FontWeight="Bold"/>
+        </StackPanel>
+
+        <Button Grid.Row="2" Content="Drukuj" Width="100" HorizontalAlignment="Left" Margin="10" Click="PrintButton_Click"/>
+
+    </Grid>
+</Window>

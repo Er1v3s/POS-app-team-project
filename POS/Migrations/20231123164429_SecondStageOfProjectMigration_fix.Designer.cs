@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using POS.Models;
 
@@ -10,38 +11,14 @@ using POS.Models;
 namespace POS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231123164429_SecondStageOfProjectMigration_fix")]
+    partial class SecondStageOfProjectMigration_fix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.13");
-
-            modelBuilder.Entity("POS.Models.EmployeeWorkSession", b =>
-                {
-                    b.Property<int>("Work_Session_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("Employee_Id")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Employee_Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Working_Time_From")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Working_Time_Summary")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Working_Time_To")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Work_Session_Id");
-
-                    b.ToTable("EmployeeWorkSession");
-                });
 
             modelBuilder.Entity("POS.Models.Employees", b =>
                 {
@@ -61,9 +38,6 @@ namespace POS.Migrations
 
                     b.Property<DateTime?>("Hire_date")
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("Is_User_LoggedIn")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Job_title")
                         .HasColumnType("TEXT");
@@ -110,26 +84,6 @@ namespace POS.Migrations
                     b.ToTable("Ingredients");
                 });
 
-            modelBuilder.Entity("POS.Models.OrderItems", b =>
-                {
-                    b.Property<int>("OrderItem_id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Order_id")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Product_id")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("OrderItem_id");
-
-                    b.ToTable("OrderItems");
-                });
-
             modelBuilder.Entity("POS.Models.Orders", b =>
                 {
                     b.Property<int>("Order_id")
@@ -141,6 +95,12 @@ namespace POS.Migrations
 
                     b.Property<DateTime>("Orider_time")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Product_id")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Order_id");
 
@@ -211,23 +171,13 @@ namespace POS.Migrations
                     b.Property<int>("Ingredient_id")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Ingredient_id1")
-                        .HasColumnType("INTEGER");
-
                     b.Property<double>("Quantity")
                         .HasColumnType("REAL");
 
                     b.Property<int>("Recipe_id")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Recipe_id1")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("RecipeIngredient_id");
-
-                    b.HasIndex("Ingredient_id1");
-
-                    b.HasIndex("Recipe_id1");
 
                     b.ToTable("RecipeIngredients");
                 });
@@ -270,35 +220,6 @@ namespace POS.Migrations
                     b.HasKey("TodoTask_Id");
 
                     b.ToTable("ToDoListTasks");
-                });
-
-            modelBuilder.Entity("POS.Models.RecipeIngredients", b =>
-                {
-                    b.HasOne("POS.Models.Ingredients", "Ingredient")
-                        .WithMany("RecipeIngredients")
-                        .HasForeignKey("Ingredient_id1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("POS.Models.Recipes", "Recipe")
-                        .WithMany("RecipeIngredients")
-                        .HasForeignKey("Recipe_id1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Ingredient");
-
-                    b.Navigation("Recipe");
-                });
-
-            modelBuilder.Entity("POS.Models.Ingredients", b =>
-                {
-                    b.Navigation("RecipeIngredients");
-                });
-
-            modelBuilder.Entity("POS.Models.Recipes", b =>
-                {
-                    b.Navigation("RecipeIngredients");
                 });
 #pragma warning restore 612, 618
         }

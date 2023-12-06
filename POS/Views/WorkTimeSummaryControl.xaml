@@ -22,16 +22,16 @@
                 <Border BorderThickness="0, 1, 0 ,0" BorderBrush="Black">
                     <DataGrid x:Name="workingTimeSummaryDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" RowStyle="{DynamicResource DataGridRowStyle1}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="PRACOWNIK" IsReadOnly="True" Width="3*" CanUserResize="False" CanUserReorder="False" Binding="{Binding firstName}"/>
-                            <DataGridTextColumn Header="OD" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False" Binding="{Binding workingTimeFrom}"/>
-                            <DataGridTextColumn Header="DO" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False" Binding="{Binding workingTimeTo}"/>
-                            <DataGridTextColumn Header="CZAS PRACY" IsReadOnly="True" Width="2*" CanUserResize="False" CanUserReorder="False" Binding="{Binding workingTimeSummary}"/>
+                            <DataGridTextColumn Header="PRACOWNIK" IsReadOnly="True" Width="3*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Employee_Name}"/>
+                            <DataGridTextColumn Header="OD" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Working_Time_From}"/>
+                            <DataGridTextColumn Header="DO" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Working_Time_To}"/>
+                            <DataGridTextColumn Header="CZAS PRACY" IsReadOnly="True" Width="2*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Working_Time_Summary}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Border>
             </Grid>
             <Grid Grid.Row="2">
-                <Button Style="{StaticResource refreshButton}">
+                <Button Style="{StaticResource refreshButton}" Click="Refresh_Button">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Refresh" Width="25" Height="25" Foreground="White"/>
                         <TextBlock Text="ODŚWIEŻ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16"/>
