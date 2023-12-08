@@ -1,5 +1,8 @@
-﻿using System;
+﻿using POS.Models;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,13 +21,38 @@ namespace POS.Views
     /// <summary>
     /// Logika interakcji dla klasy RunningOutOfIngredients.xaml
     /// </summary>
-    public partial class RunningOutOfIngredients : UserControl
+    public partial class RunningOutOfIngredients :UserControl
     {
         public RunningOutOfIngredients()
         {
             InitializeComponent();
         }
         private void Refresh_Button(object sender, RoutedEventArgs e) { }
-        private void OpenStockManagmentWindow_Button(object sender, RoutedEventArgs e) { }
+        private void OpenStockManagmentWindow_Button(object sender, RoutedEventArgs e)
+        {
+            LoginPanel loginPanel = new LoginPanel();
+            loginPanel.ShowDialog();
+
+            if (loginPanel.isLoginValid)
+            {
+                int employeeId = loginPanel.employeeId;
+                StockManagment stockManagment = new StockManagment(employeeId);
+                //stockManagment.Show();    // nie działa IDK why
+                //this.Close();             // nie działa IDK why
+            }
+        }
+        private void OpenCreateDeliveryWindow_Button(object sender, RoutedEventArgs e)
+        {
+            LoginPanel loginPanel = new LoginPanel();
+            loginPanel.ShowDialog();
+
+            if (loginPanel.isLoginValid)
+            {
+                int employeeId = loginPanel.employeeId;
+                CreateDelivery createDelivery = new CreateDelivery(employeeId);
+                //createDelivery.Show();    // nie działa IDK why
+                //this.Close();             // nie działa IDK why
+            }
+        }
     }
 }
