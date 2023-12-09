@@ -90,7 +90,7 @@ namespace POS
             {
                 if (uri == "./WorkTimeSummaryControl.xaml" || uri == "./RunningOutOfIngredients.xaml")
                 {
-                    ChangeFrameSource(uri);
+                    showLoginPanel(uri);
                 }
                 else if (uri == "./AdministratorFuncions.xaml")
                 {
