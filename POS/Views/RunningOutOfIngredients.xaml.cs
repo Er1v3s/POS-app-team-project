@@ -37,8 +37,8 @@ namespace POS.Views
             {
                 int employeeId = loginPanel.employeeId;
                 StockManagment stockManagment = new StockManagment(employeeId);
-                //stockManagment.Show();    // nie działa IDK why
-                //this.Close();             // nie działa IDK why
+                //stockManagment.Show();     // nie działa IDK why
+                //this.Close();              // nie działa IDK why       
             }
         }
         private void OpenCreateDeliveryWindow_Button(object sender, RoutedEventArgs e)

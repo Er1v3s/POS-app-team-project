@@ -1,6 +1,9 @@
 ﻿using POS.Models;
+using POS.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +14,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace POS.Views
@@ -19,7 +21,7 @@ namespace POS.Views
     /// <summary>
     /// Logika interakcji dla klasy StockManagment.xaml
     /// </summary>
-    public partial class StockManagment : Page
+    public partial class StockManagment
     {
         private Employees currentUser;
         public int EmployeeId;
@@ -33,10 +35,6 @@ namespace POS.Views
             string welcomeMessage = $"{currentUser.First_name} {currentUser.Last_name}";
             SetWelcomeMessage(welcomeMessage);
             EmployeeId = employeeId;
-        }
-        public StockManagment()
-        {
-            InitializeComponent();
         }
         private void MoveToMainWindow(object sender, RoutedEventArgs e)
         {

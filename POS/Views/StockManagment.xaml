@@ -16,103 +16,86 @@
             <ColumnDefinition Width="456*"/>
         </Grid.ColumnDefinitions>
         <!--#region left-->
-        <Border BorderThickness="0,0,1,0" BorderBrush="Black" d:IsLocked="True"/>
-        <Grid Grid.Column="0" Margin="25">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="362*"/>
-                <RowDefinition Height="406*"/>
-            </Grid.RowDefinitions>
+        <GridSplitter Width="1" Foreground="Black" Background="Black"/>
 
+        <Grid Grid.Column="0" Margin="25">
             <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" CornerRadius="8" d:IsLocked="True">
                 <Grid Grid.Row="0">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="1.5*"/>
                         <RowDefinition Height="2*"/>
-                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1.5*"/>
                         <RowDefinition Height="2*"/>
-                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1.5*"/>
                         <RowDefinition Height="2*"/>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="8*"/>
-                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1.5*"/>
                         <RowDefinition Height="2*"/>
-                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1.5*"/>
+                        <RowDefinition Height="3*"/> <!-- 10-->
+                        <RowDefinition Height="23.5*"/>
                     </Grid.RowDefinitions>
 
                     <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black" CornerRadius="8,8,0, 0" Background="#8EA7E9">
                         <Grid Grid.Row="0">
-                            <TextBlock Text="DODAJ NOWY SKŁADNIK" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"></TextBlock>
+                            <TextBlock Text="EDYTUJ SKŁADNIKI RECEPTURY" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"></TextBlock>
                         </Grid>
                     </Border>
                     
                     <Border Grid.Row="2" CornerRadius="8" Margin="25,0,25,0" Background="White">
                         <Grid Grid.Row="2">
-                            <TextBox Text="Nazwa składnika" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#969696" FontSize="16"></TextBox>
+                            <ComboBox Width="353" Text="Wybierz produkt" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#969696" FontSize="16"></ComboBox>
                         </Grid>
                     </Border>
 
-                    <Grid Grid.Row="4">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Border Grid.Column="0" CornerRadius="8" Margin="25,0,12.5,0" Background="White">
-                            <Grid Grid.Column="0">
-                                <TextBox Text="Jednostka" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#969696" FontSize="16"></TextBox>
-                            </Grid>
-                        </Border>
-
-                        <Border Grid.Column="1" CornerRadius="8" Margin="12.5,0,25,0" Background="White">
-                            <Grid Grid.Column="1">
-                                <TextBox Text="Opakowanie" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#969696" FontSize="16"></TextBox>
-                            </Grid>
-                        </Border>
-                    </Grid>
+                    <Border Grid.Row="4" CornerRadius="8" Margin="25,0,25,0" Background="White">
+                        <Grid Grid.Row="4">
+                            <ComboBox Width="353" Text="Wybierz składnik" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#969696" FontSize="16"></ComboBox>
+                        </Grid>
+                    </Border>
 
                     <Border Grid.Row="6" CornerRadius="8" Margin="25,0,25,0" Background="White">
                         <Grid Grid.Row="6">
-                            <TextBox Text="Opis składnika" Margin="10" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="#969696" FontSize="16"></TextBox>
+                            <TextBox Text="Ilość składnika w przepisie" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#969696" FontSize="16"></TextBox>
                         </Grid>
                     </Border>
 
                     <Grid Grid.Row="8">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="25*"/>
+                            <ColumnDefinition Width="165*"/>
+                            <ColumnDefinition Width="16*"/>
+                            <ColumnDefinition Width="165*"/>
+                            <ColumnDefinition Width="25*"/>
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Row="8" Grid.Column="1" Margin="0" Style="{StaticResource payButton}">
+
+                        <Button Grid.Row="8" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="STWÓRZ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
+                                <TextBlock Text="USUŃ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Grid.Row="8" Grid.Column="3" Margin="0" Style="{StaticResource payButton}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="DODAJ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                             </StackPanel>
                         </Button>
                     </Grid>
-
-                </Grid>
-            </Border>
-
-            <Border Grid.Row="1" BorderThickness="1" Margin="0,25,0,0" BorderBrush="Black" CornerRadius="8" d:IsLocked="True">
-                <Grid Grid.Row="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="32*"/>
-                        <RowDefinition Height="320*"/>
-                    </Grid.RowDefinitions>
                     
-                    <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black" CornerRadius="8,8,0, 0" Background="#8EA7E9">
+                    <Border Grid.Row="10" BorderThickness="0,1,0,1" BorderBrush="Black" CornerRadius="0" Background="#8EA7E9">
                         <Grid Grid.Row="0">
-                            <TextBlock Text="SKŁADNIKI NOWEJ RECEPTURY:" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"></TextBlock>
+                            <TextBlock Text="LISTA SKŁADNIKÓW RECEPTURY:" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"></TextBlock>
                         </Grid>
                     </Border>
 
-                    <Grid Grid.Row="1">
+                    <Grid Grid.Row="11">
                         <DataGrid x:Name="recipeIngredientsDataGrid" Style="{DynamicResource DataGridStyle3}" RowStyle="{DynamicResource DataGridRowStyle3}" CellStyle="{DynamicResource DataGridCellStyle3}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle3}" IsReadOnly="True">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="ID" Width="1*" Binding="{Binding Ingredient_id}" />
                                 <DataGridTextColumn Header="Nazwa składnika" Width="4*" Binding="{Binding Name}"/>
                                 <DataGridTextColumn Header="Ilość" Width="1*" Binding="{Binding Amount}"/>
                                 <DataGridTextColumn Header="Jednostka" Width="2*" Binding="{Binding Unit}"/>
-                                <DataGridTemplateColumn Header="" Width="1*">
-                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="" Width="1*"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
@@ -122,144 +105,131 @@
         <!--#endregion-->
         
         <!--#region middle-->
-        <Grid Grid.Column="1" Margin="25">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="556*"/>
-                <RowDefinition Height="212*"/>
+        <Grid Grid.Column="1">
+            <GridSplitter Width="1" Foreground="Black" Background="Black"/>
+            <Grid Margin="25">
+                <Grid.RowDefinitions>
+                <RowDefinition Height="677*"/>
+                <RowDefinition Height="41*"/>
             </Grid.RowDefinitions>
-
+            
             <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" CornerRadius="8" d:IsLocked="True">
                 <Grid Grid.Row="0">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="1.5*"/>
                         <RowDefinition Height="2*"/>
-                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1.5*"/>
                         <RowDefinition Height="2*"/>
-                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1.5*"/>
                         <RowDefinition Height="2*"/>
-                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1.5*"/>
                         <RowDefinition Height="8*"/>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="2*"/>
-                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1.5*"/>
+                        <RowDefinition Height="3*"/> <!--10-->
+                        <RowDefinition Height="1.5*"/>
                         <RowDefinition Height="8*"/>
-                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1.5*"/>
                         <RowDefinition Height="2*"/>
-                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1.5*"/>
                     </Grid.RowDefinitions>
 
                     <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black" CornerRadius="8,8,0, 0" Background="#8EA7E9">
                         <Grid Grid.Row="0">
-                            <TextBlock Text="STWÓRZ NOWY PRODUKT" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"></TextBlock>
+                            <TextBlock Text="DODAJ, EDYTUJ LUB USUŃ PRODUKT" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"></TextBlock>
                         </Grid>
                     </Border>
 
                     <Border Grid.Row="2" CornerRadius="8" Margin="25,0,25,0" Background="White">
                         <Grid Grid.Row="2">
-                            <TextBox Text="Nazwa produktu" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#969696" FontSize="16"></TextBox>
+                            <ComboBox Width="353" Text="Wybierz produkt" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#969696" FontSize="16"></ComboBox>
                         </Grid>
                     </Border>
 
                     <Grid Grid.Row="4">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="5*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Border Grid.Column="0" CornerRadius="8" Margin="25,0,12.5,0" Background="White">
-                            <Grid Grid.Column="0">
-                                <TextBox Text="Kategoria" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#969696" FontSize="16"></TextBox>
-                            </Grid>
-                        </Border>
+                        <Grid Grid.Column="0" Margin="25,0,0,0">
+                            <Viewbox Height="32" HorizontalAlignment="Left" >
+                                <CheckBox/>
+                            </Viewbox>
+                        </Grid>
 
-                        <Border Grid.Column="1" CornerRadius="8" Margin="12.5,0,25,0" Background="White">
+                        <Border Grid.Column="1" CornerRadius="8" Margin="24,0,25,0" Background="White">
                             <Grid Grid.Column="1">
-                                <TextBox Text="Cena" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#969696" FontSize="16"></TextBox>
+                                <TextBox Text="Nazwa nowego produktu" Margin="10,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#969696" FontSize="16"></TextBox>
                             </Grid>
                         </Border>
                     </Grid>
 
-                    <Border Grid.Row="6" CornerRadius="8" Margin="25,0,25,0" Background="White">
-                        <Grid Grid.Row="6">
+                    <Grid Grid.Row="6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <Border Grid.Row="6" Grid.Column="0" CornerRadius="8" Margin="25,0,12,0" Background="White">
+                            <Grid Grid.Row="6">
+                                <TextBox Text="Kategoria" Margin="10,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#969696" FontSize="16"></TextBox>
+                            </Grid>
+                        </Border>
+
+                        <Border Grid.Row="6" Grid.Column="1" CornerRadius="8" Margin="12,0,25,0" Background="White">
+                            <Grid Grid.Row="6">
+                                <TextBox Text="Cena" Margin="10,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#969696" FontSize="16"></TextBox>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <Border Grid.Row="8" CornerRadius="8" Margin="25,0,25,0" Background="White">
+                        <Grid Grid.Row="8">
                             <TextBox Text="Opis produktu" Margin="10" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="#969696" FontSize="16"></TextBox>
                         </Grid>
                     </Border>
 
-                    <Border Grid.Row="8" BorderThickness="0,1,0,1" BorderBrush="Black" CornerRadius="0" Background="#8EA7E9">
-                        <Grid Grid.Row="8">
+                    <Border Grid.Row="10" BorderThickness="0,1,0,1" BorderBrush="Black" CornerRadius="0" Background="#8EA7E9">
+                        <Grid Grid.Row="10">
                             <TextBlock Text="DODAJ PRZEPIS" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"></TextBlock>
                         </Grid>
                     </Border>
 
-                    <Border Grid.Row="10" CornerRadius="8" Margin="25,0,25,0" Background="White">
-                        <Grid Grid.Row="10">
-                            <TextBox Text="Przepis" Margin="10" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="#969696" FontSize="16"></TextBox>
+                    <Border Grid.Row="12" CornerRadius="8" Margin="25,0,25,0" Background="White">
+                        <Grid Grid.Row="12">
+                            <TextBox Text="Tutaj wpisz przepis na nowego drinka." Margin="10" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="#969696" FontSize="16"></TextBox>
                         </Grid>
                     </Border>
 
-                    <Grid Grid.Row="12">
+                    <Grid Grid.Row="14">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="25*"/>
+                            <ColumnDefinition Width="165*"/>
+                            <ColumnDefinition Width="16*"/>
+                            <ColumnDefinition Width="165*"/>
+                            <ColumnDefinition Width="25*"/>
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Row="12" Grid.Column="1" Margin="0" Style="{StaticResource payButton}">
+
+                        <Button Grid.Row="14" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="STWÓRZ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
+                                <TextBlock Text="USUŃ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Grid.Row="14" Grid.Column="3" Margin="0" Style="{StaticResource payButton}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="ZAPISZ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                             </StackPanel>
                         </Button>
                     </Grid>
                 </Grid>
             </Border>
-
-            <Border Grid.Row="1" BorderThickness="1" Margin="0,25,0,0" BorderBrush="Black" CornerRadius="8" d:IsLocked="True">
-                <Grid Grid.Row="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="2*"/>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="2*"/>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="2*"/>
-                        <RowDefinition Height="1*"/>
-                    </Grid.RowDefinitions>
-
-                    <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black" CornerRadius="8,8,0, 0" Background="#8EA7E9">
-                        <Grid Grid.Row="0">
-                            <TextBlock Text="DODAJ SKŁADNIKI DO RECEPTURY" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"></TextBlock>
-                        </Grid>
-                    </Border>
-
-                    <Border Grid.Row="2" CornerRadius="8" Margin="25,0,25,0" Background="White">
-                        <Grid Grid.Row="2">
-                            <TextBox Text="Nazwa lub id składnika" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#969696" FontSize="16"></TextBox>
-                        </Grid>
-                    </Border>
-
-                    <Grid Grid.Row="4">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Border Grid.Column="0" CornerRadius="8" Margin="25,0,12.5,0" Background="White">
-                            <Grid Grid.Column="0">
-                                <TextBox Text="Ilość" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#969696" FontSize="16"></TextBox>
-                            </Grid>
-                        </Border>
-
-                        <Button Grid.Column="1" Margin="12.5,0,25,0" Style="{StaticResource payButton}">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="STWÓRZ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
-                            </StackPanel>
-                        </Button>
-                    </Grid>
-                </Grid>
-            </Border>
-
+            </Grid>
         </Grid>
         <!--#endregion-->
         
         <!--#region right-->
-        <Border BorderThickness="1,0,0,0" BorderBrush="Black" d:IsLocked="True"/>
         <Grid Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
@@ -274,53 +244,116 @@
                 </Grid>
             </Border>
 
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="1" Margin="25">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="580*"/>
-                    <RowDefinition Height="124*"/>
+                    <RowDefinition Height="457*"/>
+                    <RowDefinition Height="186*"/>
+                    <RowDefinition Height="50*"/>
                 </Grid.RowDefinitions>
 
-                <Border Grid.Row="0" BorderThickness="1" Margin="0" BorderBrush="Black" CornerRadius="8" d:IsLocked="True">
-                    <Grid Grid.Row="0" Margin="25">
+                <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" CornerRadius="8" d:IsLocked="True">
+                    <Grid Grid.Row="0">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="32*"/>
-                            <RowDefinition Height="498*"/>
+                            <RowDefinition Height="3*"/>
+                            <RowDefinition Height="1.5*"/>
+                            <RowDefinition Height="2*"/>
+                            <RowDefinition Height="1.5*"/>
+                            <RowDefinition Height="2*"/>
+                            <RowDefinition Height="1.5*"/>
+                            <RowDefinition Height="2*"/>
+                            <RowDefinition Height="1.5*"/>
+                            <RowDefinition Height="8*"/>
+                            <RowDefinition Height="1.5*"/>
+                            <RowDefinition Height="2*"/>
+                            <RowDefinition Height="1.5*"/>
                         </Grid.RowDefinitions>
 
                         <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black" CornerRadius="8,8,0, 0" Background="#8EA7E9">
                             <Grid Grid.Row="0">
-                                <TextBlock Text="SKŁADNIKI NOWEJ RECEPTURY:" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"></TextBlock>
+                                <TextBlock Text="DODAJ, EDYTUJ LUB USUŃ SKŁADNIK" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"></TextBlock>
                             </Grid>
                         </Border>
 
-                        <Grid Grid.Row="1">
-                            <DataGrid x:Name="IngredientsDataGrid" Style="{DynamicResource DataGridStyle3}" RowStyle="{DynamicResource DataGridRowStyle3}" CellStyle="{DynamicResource DataGridCellStyle3}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle3}" IsReadOnly="True">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="ID" Width="1*" Binding="{Binding Ingredient_id}" />
-                                    <DataGridTextColumn Header="Nazwa składnika" Width="6*" Binding="{Binding Name}"/>
-                                    <DataGridTextColumn Header="Jednostka" Width="2*" Binding="{Binding Unit}"/>
-                                    <DataGridTemplateColumn Header="" Width="1*">
-                                    </DataGridTemplateColumn>
-                                </DataGrid.Columns>
-                            </DataGrid>
+                        <Border Grid.Row="2" CornerRadius="8" Margin="25,0,25,0" Background="White">
+                            <Grid Grid.Row="2">
+                                <ComboBox Width="353" Text="Wybierz składnik" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#969696" FontSize="16"></ComboBox>
+                            </Grid>
+                        </Border>
+
+                        <Grid Grid.Row="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="5*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid Grid.Column="0" Margin="25,0,0,0">
+                                <Viewbox Height="32" HorizontalAlignment="Left" >
+                                    <CheckBox/>
+                                </Viewbox>
+                            </Grid>
+
+                            <Border Grid.Column="1" CornerRadius="8" Margin="24,0,25,0" Background="White">
+                                <Grid Grid.Column="1">
+                                    <TextBox Text="Nazwa nowego składnika" Margin="10,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#969696" FontSize="16"></TextBox>
+                                </Grid>
+                            </Border>
+                        </Grid>
+
+                        <Grid Grid.Row="6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Row="6" Grid.Column="0" CornerRadius="8" Margin="25,0,12,0" Background="White">
+                                <Grid Grid.Row="6">
+                                    <TextBox Text="Jednostka" Margin="10,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#969696" FontSize="16"></TextBox>
+                                </Grid>
+                            </Border>
+
+                            <Border Grid.Row="6" Grid.Column="1" CornerRadius="8" Margin="12,0,25,0" Background="White">
+                                <Grid Grid.Row="6">
+                                    <TextBox Text="Opakowanie" Margin="10,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="#969696" FontSize="16"></TextBox>
+                                </Grid>
+                            </Border>
+                        </Grid>
+
+                        <Border Grid.Row="8" CornerRadius="8" Margin="25,0,25,0" Background="White">
+                            <Grid Grid.Row="8">
+                                <TextBox Text="Opis składnika" Margin="10" VerticalAlignment="Top" HorizontalAlignment="Left" Foreground="#969696" FontSize="16"></TextBox>
+                            </Grid>
+                        </Border>
+
+                        <Grid Grid.Row="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="25*"/>
+                                <ColumnDefinition Width="165*"/>
+                                <ColumnDefinition Width="16*"/>
+                                <ColumnDefinition Width="165*"/>
+                                <ColumnDefinition Width="25*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Row="10" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="USUŃ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
+                                </StackPanel>
+                            </Button>
+
+                            <Button Grid.Row="10" Grid.Column="3" Margin="0" Style="{StaticResource payButton}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="ZAPISZ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
+                                </StackPanel>
+                            </Button>
                         </Grid>
                     </Grid>
                 </Border>
 
-                <Grid Grid.Row="1" Margin="50,25,50,50">
+                <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="255*"/>
-                        <ColumnDefinition Width="50*"/>
+                        <ColumnDefinition Width="355*"/>
                         <ColumnDefinition Width="50*"/>
                     </Grid.ColumnDefinitions>
-
-                    <Button Grid.Column="0" Margin="0" Style="{StaticResource payButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="STWÓRZ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
-                        </StackPanel>
-                    </Button>
-
-                    <Button Grid.Column="2" Margin="0" Style="{StaticResource homeButton}" d:IsLocked="True" Click="MoveToMainWindow">
+                    <Button Grid.Column="1" Margin="0" Style="{StaticResource homeButton}" d:IsLocked="True" Click="MoveToMainWindow">
                         <fa:ImageAwesome Icon="Home" Height="24" Foreground="White"/>
                     </Button>
                 </Grid>
