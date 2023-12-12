@@ -1,4 +1,5 @@
 ﻿using POS.Models;
+using POS.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -37,8 +38,7 @@ namespace POS.Views
             {
                 int employeeId = loginPanel.employeeId;
                 StockManagment stockManagment = new StockManagment(employeeId);
-                //stockManagment.Show();     // nie działa IDK why
-                //this.Close();              // nie działa IDK why       
+                stockManagment.Show();
             }
         }
         private void OpenCreateDeliveryWindow_Button(object sender, RoutedEventArgs e)
@@ -50,8 +50,7 @@ namespace POS.Views
             {
                 int employeeId = loginPanel.employeeId;
                 CreateDelivery createDelivery = new CreateDelivery(employeeId);
-                //createDelivery.Show();    // nie działa IDK why
-                //this.Close();             // nie działa IDK why
+                createDelivery.Show();
             }
         }
     }
