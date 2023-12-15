@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Asn1.X509;
+using POS.Converter;
 using POS.Models;
 using POS.ViewModel;
 using System;
@@ -58,18 +59,12 @@ namespace POS.Views
 
         private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (searchTextBox.Text.Length > 0)
-            {
-                searchTextBox.Text = "";
-            }
+            PlaceholderTextBoxHelper.SetPlaceholderOnFocus(sender, e);
         }
 
         private void SearchTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(searchTextBox.Text))
-            {
-                searchTextBox.Text = "Szukaj";
-            }
+            PlaceholderTextBoxHelper.SetPlaceholderOnLostFocus(sender, e);
         }
 
         private void SearchTextBox_KeyUp(object sender, KeyEventArgs e)

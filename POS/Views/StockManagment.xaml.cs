@@ -1,4 +1,5 @@
-﻿using POS.Models;
+﻿using POS.Converter;
+using POS.Models;
 using POS.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,7 @@ namespace POS.Views
         public StockManagment(int employeeId)
         {
             InitializeComponent();
+
             using (var dbContext = new AppDbContext())
             {
                 currentUser = dbContext.Employees.FirstOrDefault(e => e.Employee_id == employeeId);
@@ -48,22 +50,14 @@ namespace POS.Views
             welcomeLabel.Content = message;
         }
 
-        private void PlaceholderTextBox_GotFocus(object sender, RoutedEventArgs e)
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            TextBox textBox = sender as TextBox;
-            if (textBox.Text.Length > 0)
-            {
-                textBox.Text = "";
-            }
+            PlaceholderTextBoxHelper.SetPlaceholderOnFocus(sender, e);
         }
 
-        private void PlaceholderTextBox_LostFocus(object sender, RoutedEventArgs e)
+        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            TextBox textBox = sender as TextBox;
-            if (string.IsNullOrWhiteSpace(textBox.Text))
-            {
-                textBox.Text = "Szukaj";
-            }
+            PlaceholderTextBoxHelper.SetPlaceholderOnLostFocus(sender, e);
         }
     }
 }
