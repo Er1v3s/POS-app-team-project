@@ -6,74 +6,35 @@
       xmlns:local="clr-namespace:POS.Views"
       mc:Ignorable="d" 
       xmlns:fa="http://schemas.fontawesome.io/icons/"
-      d:DesignHeight="600" d:DesignWidth="600" 
-      Title="Podsumowanie zamówienia"  AllowsTransparency="True" Background="Transparent" WindowStyle="None" FontFamily="Lato" FontSize="16">
+      d:DesignHeight="600" d:DesignWidth="600"
+      Title="Podsumowanie zamówienia"  WindowStyle="None" Background="#FFD9D9D9" FontFamily="Lato" FontSize="16">
 
-    <Border CornerRadius="8" Background="#FFD9D9D9">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="50*"/>
-                <RowDefinition Height="500*"/>
-                <RowDefinition Height="50*"/>
-            </Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="550*"/>
-                    <ColumnDefinition Width="50*"/>
-                </Grid.ColumnDefinitions>
+        <TextBlock Text="Podsumowanie" FontSize="20" FontWeight="Bold" Margin="10"/>
+        <Button Content="X" Width="30" Background="Red" HorizontalAlignment="Right" Margin="10" Click="CloseButton_Click"/>
+        
+        <DataGrid x:Name="orderSummaryDataGrid" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Width="80" Header="ID" Binding="{Binding Id}"/>
+                <DataGridTextColumn Width="*" Header="Nazwa" Binding="{Binding Name}"/>
+                <DataGridTextColumn Width="*" Header="Cena/szt" Binding="{Binding Price}"/>
+                <DataGridTextColumn Width="*" Header="Ilość" Binding="{Binding Amount}"/>
+                <DataGridTextColumn Width="*" Header="Cena razem" Binding="{Binding TotalPrice}"/>
+            </DataGrid.Columns>
+        </DataGrid>
 
-                <Border Grid.Row="0" CornerRadius="8,0,0,0" Grid.Column="0" Background="#FF7286D3" BorderBrush="Black" BorderThickness="0,0,0,1">
-                    <Grid Grid.Row="0" Grid.Column="0">
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Podsumowanie" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" Margin="25,0,25,0"/>
-                    </Grid>
-                </Border>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+            <TextBlock Text="Podsumowanie ceny: " FontWeight="Bold"/>
+            <TextBlock x:Name="totalPriceTextBlock" FontWeight="Bold"/>
+        </StackPanel>
 
-                <Border Grid.Row="0" CornerRadius="0,8,0,0" Grid.Column="1" Background="#FF7286D3" BorderBrush="Black" BorderThickness="0,0,0,1">
-                    <Grid Grid.Row="0" Grid.Column="1" Margin="9">
-                        <Button MaxWidth="32" MaxHeight="32" Grid.Row="0" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}" d:IsLocked="True" Click="CloseButton_Click">
-                            <fa:ImageAwesome Icon="Close" Height="16" Foreground="White"/>
-                        </Button>
-                    </Grid>
-                </Border>
-            </Grid>
+        <Button Grid.Row="2" Content="Drukuj" Width="100" HorizontalAlignment="Left" Margin="10" Click="PrintButton_Click"/>
 
-            <DataGrid x:Name="orderSummaryDataGrid" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" Style="{DynamicResource DataGridStyle3}" RowStyle="{DynamicResource DataGridRowStyle3}" CellStyle="{DynamicResource DataGridCellStyle3}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle3}" IsReadOnly="True">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Width="1.5*" Header="ID" Binding="{Binding Id}"/>
-                    <DataGridTextColumn Width="9*" Header="Nazwa" Binding="{Binding Name}"/>
-                    <DataGridTextColumn Width="4*" Header="Cena/szt" Binding="{Binding Price}"/>
-                    <DataGridTextColumn Width="1.5*" Header="Ilość" Binding="{Binding Amount}"/>
-                    <DataGridTextColumn Width="4*" Header="Cena razem" Binding="{Binding TotalPrice}"/>
-                </DataGrid.Columns>
-            </DataGrid>
-
-            <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="145*"/>
-                    <ColumnDefinition Width="455*"/>
-                </Grid.ColumnDefinitions>
-                
-                <Grid Grid.Column="1">
-                    <Border Grid.Row="2" CornerRadius="0,0,8,0" Background="#FF7286D3" BorderBrush="Black" BorderThickness="0,1,0,0">
-                        <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="25,0,25,0">
-                            <TextBlock Text="Podsumowanie ceny: " Foreground="White" FontWeight="Bold"/>
-                            <TextBlock x:Name="totalPriceTextBlock" Foreground="White" FontWeight="Bold"/>
-                        </StackPanel>
-                    </Border>
-                </Grid>
-
-                <Border Grid.Row="2" CornerRadius="0,0,0,8" Grid.Column="0" Background="#FF7286D3" BorderBrush="Black" BorderThickness="0,1,0,0">
-                    <Grid Grid.Row="2" Grid.Column="0" Margin="0,9,0,9">
-                        <Button Grid.Row="2" Grid.Column="0" MaxHeight="32" MaxWidth="120" Margin="25,0,0,0" Click="PrintButton_Click" Style="{StaticResource payButton}">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Drukuj" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
-                            </StackPanel>
-                        </Button>
-                    </Grid>
-                </Border>
-            </Grid>
-            
-        </Grid>
-    </Border>
+    </Grid>
 </Window>

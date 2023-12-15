@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace POS.Views
 {
     /// <summary>
-    /// Logika interakcji dla klasy AdministratorFuncions.xaml
+    /// Logika interakcji dla klasy WorkTimeControl.xaml
     /// </summary>
-    public partial class AdministratorFuncions : Page
+    public partial class WorkTimeControl : UserControl
     {
-        public AdministratorFuncions()
+        public WorkTimeControl()
         {
             InitializeComponent();
         }
