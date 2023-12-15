@@ -47,5 +47,23 @@ namespace POS.Views
         {
             welcomeLabel.Content = message;
         }
+
+        private void PlaceholderTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox.Text.Length > 0)
+            {
+                textBox.Text = "";
+            }
+        }
+
+        private void PlaceholderTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (string.IsNullOrWhiteSpace(textBox.Text))
+            {
+                textBox.Text = "Szukaj";
+            }
+        }
     }
 }

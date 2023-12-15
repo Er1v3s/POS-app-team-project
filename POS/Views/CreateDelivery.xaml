@@ -7,7 +7,7 @@
       mc:Ignorable="d" 
       xmlns:fa="http://schemas.fontawesome.io/icons/"
       d:DesignHeight="768" d:DesignWidth="1366"
-      Title="CreateDelivery" Background="#FFD9D9D9" WindowState="Maximized" FontFamily="Lato" FontSize="16">
+      Title="CreateDelivery" Background="#FFD9D9D9" WindowState="Maximized" WindowStyle="None" FontFamily="Lato" FontSize="16">
 
     <Grid>
         <Grid.ColumnDefinitions>
