@@ -88,7 +88,7 @@ namespace POS
         {
             if (sender is Button button && button.Tag is string uri)
             {
-                if (uri == "./WorkTimeSummaryControl.xaml")
+                if (uri == "./WorkTimeSummaryControl.xaml" || uri == "./RunningOutOfIngredients.xaml")
                 {
                     ChangeFrameSource(uri);
                 }
