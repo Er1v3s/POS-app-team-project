@@ -67,23 +67,38 @@ namespace POS
             }
         }
 
-        private void showLoginPanel(string uri)
+        private void ShowLoginPanel(string uri)
         {
             LoginPanel loginPanel = new LoginPanel(uri);
             loginPanel.ShowDialog();
+        }
+
+        private void ShowLoginPanelAndChangeSource(string uri)
+        {
+            LoginPanel loginPanel = new LoginPanel(uri);
+            loginPanel.ShowDialog();
+
+            if(loginPanel.isLoginValid)
+            {
+                ChangeFrameSource(uri);
+            } 
         }
 
         private void NavigateButton_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.Tag is string uri)
             {
-                if (uri == "./WorkTimeSummaryControl.xaml")
+                if (uri == "./WorkTimeSummaryControl.xaml" || uri == "./RunningOutOfIngredients.xaml")
                 {
                     ChangeFrameSource(uri);
                 }
+                else if (uri == "./AdministratorFuncions.xaml")
+                {
+                    ShowLoginPanelAndChangeSource(uri);
+                }
                 else
                 {
-                    showLoginPanel(uri);
+                    ShowLoginPanel(uri);
                 }
             }
         }
