@@ -67,10 +67,21 @@ namespace POS
             }
         }
 
-        private void showLoginPanel(string uri)
+        private void ShowLoginPanel(string uri)
         {
             LoginPanel loginPanel = new LoginPanel(uri);
             loginPanel.ShowDialog();
+        }
+
+        private void ShowLoginPanelAndChangeSource(string uri)
+        {
+            LoginPanel loginPanel = new LoginPanel(uri);
+            loginPanel.ShowDialog();
+
+            if(loginPanel.isLoginValid)
+            {
+                ChangeFrameSource(uri);
+            } 
         }
 
         private void NavigateButton_Click(object sender, RoutedEventArgs e)
@@ -81,9 +92,13 @@ namespace POS
                 {
                     ChangeFrameSource(uri);
                 }
+                else if (uri == "./AdministratorFuncions.xaml")
+                {
+                    ShowLoginPanelAndChangeSource(uri);
+                }
                 else
                 {
-                    showLoginPanel(uri);
+                    ShowLoginPanel(uri);
                 }
             }
         }

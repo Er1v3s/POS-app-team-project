@@ -41,7 +41,7 @@
                         <TextBlock Text="RAPORTY I ANALIZY" Style="{StaticResource sideBarButtonTextBlock}"/>
                     </StackPanel>
                 </Button>
-                <Button Style="{StaticResource sideBarButton}">
+                <Button Style="{StaticResource sideBarButton}" Click="NavigateButton_Click" Tag="./AdministratorFuncions.xaml">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Shield" Width="30" Height="30" Foreground="White"/>
                         <TextBlock Text="FUNKCJE ADMINISTRATORA" Style="{StaticResource sideBarButtonTextBlock}"/>
