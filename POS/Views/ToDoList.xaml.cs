@@ -1,4 +1,5 @@
-﻿using POS.Models;
+﻿using POS.Converter;
+using POS.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -34,18 +35,12 @@ namespace POS.Views
 
         private void addTaskTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(addTaskTextBox.Text))
-            {
-                addTaskTextBox.Text = "Dodaj zadanie";
-            }
+            PlaceholderTextBoxHelper.SetPlaceholderOnLostFocus(sender, e);
         }
 
         private void addTaskTextBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (addTaskTextBox.Text.Length > 0)
-            {
-                addTaskTextBox.Text = "";
-            }
+            PlaceholderTextBoxHelper.SetPlaceholderOnFocus(sender, e);
         }
 
         private void addTask_ButtonClick(object sender, RoutedEventArgs e)

@@ -41,7 +41,7 @@
                             <TextBlock Text="EDYTUJ SKŁADNIKI RECEPTURY" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"></TextBlock>
                         </Grid>
                     </Border>
-                    
+
                     <Border Grid.Row="2" CornerRadius="8" Margin="25,0,25,0" Background="White">
                         <Grid Grid.Row="2">
                             <ComboBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
@@ -51,7 +51,6 @@
                             </ComboBox>
                         </Grid>
                     </Border>
-
                     <Border Grid.Row="4" CornerRadius="8" Margin="25,0,25,0" Background="White">
                         <Grid Grid.Row="4">
                             <ComboBox VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
@@ -64,7 +63,7 @@
 
                     <Border Grid.Row="6" CornerRadius="8" Margin="25,0,25,0" Background="White">
                         <Grid Grid.Row="6">
-                            <TextBox Style="{StaticResource placeholderTextBox}" Text="Ilość składnika w przepisie" GotFocus="PlaceholderTextBox_GotFocus" LostFocus="PlaceholderTextBox_LostFocus">
+                            <TextBox Style="{StaticResource placeholderTextBox}" Text="Ilość składnika w przepisie" Tag="Ilość składnika w przepisie" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
                                 <TextBox.Resources>
                                     <Style TargetType="{x:Type Border}">
                                         <Setter Property="CornerRadius" Value="8"/>
@@ -178,7 +177,7 @@
 
                         <Border Grid.Column="1" CornerRadius="8" Margin="24,0,25,0" Background="White">
                             <Grid Grid.Column="1">
-                                    <TextBox Style="{StaticResource placeholderTextBox}" Text="Nazwa nowego produktu" GotFocus="PlaceholderTextBox_GotFocus" LostFocus="PlaceholderTextBox_LostFocus">
+                                    <TextBox Style="{StaticResource placeholderTextBox}" Text="Nazwa nowego produktu" Tag="Nazwa nowego produktu" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
                                         <TextBox.Resources>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="CornerRadius" Value="8"/>
@@ -197,7 +196,7 @@
                         
                         <Border Grid.Row="6" Grid.Column="0" CornerRadius="8" Margin="25,0,12,0" Background="White">
                             <Grid Grid.Row="6">
-                                    <TextBox Style="{StaticResource placeholderTextBox}" Text="Kategoria" GotFocus="PlaceholderTextBox_GotFocus" LostFocus="PlaceholderTextBox_LostFocus">
+                                    <TextBox Style="{StaticResource placeholderTextBox}" Text="Kategoria" Tag="Kategoria" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
                                         <TextBox.Resources>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="CornerRadius" Value="8"/>
@@ -209,7 +208,7 @@
 
                         <Border Grid.Row="6" Grid.Column="1" CornerRadius="8" Margin="12,0,25,0" Background="White">
                             <Grid Grid.Row="6">
-                                    <TextBox Style="{StaticResource placeholderTextBox}" Text="Cena" GotFocus="PlaceholderTextBox_GotFocus" LostFocus="PlaceholderTextBox_LostFocus">
+                                    <TextBox Style="{StaticResource placeholderTextBox}" Text="Cena" Tag="Cena" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
                                         <TextBox.Resources>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="CornerRadius" Value="8"/>
@@ -222,7 +221,7 @@
 
                     <Border Grid.Row="8" CornerRadius="8" Margin="25,0,25,0" Background="White">
                         <Grid Grid.Row="8">
-                                <TextBox Style="{StaticResource placeholderTextBox}" Text="Opis produktu" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" Padding="10" GotFocus="PlaceholderTextBox_GotFocus" LostFocus="PlaceholderTextBox_LostFocus">
+                                <TextBox Style="{StaticResource placeholderTextBox}" Text="Opis produktu" Tag="Opis produktu" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" Padding="10" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
                                     <TextBox.Resources>
                                         <Style TargetType="{x:Type Border}">
                                             <Setter Property="CornerRadius" Value="8"/>
@@ -240,7 +239,7 @@
 
                         <Border Grid.Row="12" CornerRadius="8" Margin="25,0,25,0" Background="White">
                             <Grid Grid.Row="12">
-                                <TextBox Style="{StaticResource placeholderTextBox}" Text="Tutaj wpisz przepis na nowego drinka" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" Padding="10" GotFocus="PlaceholderTextBox_GotFocus" LostFocus="PlaceholderTextBox_LostFocus">
+                                <TextBox Style="{StaticResource placeholderTextBox}" Text="Tutaj wpisz przepis na nowego drinka" Tag="Tutaj wpisz przepis na nowego drinka" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" Padding="10" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
                                     <TextBox.Resources>
                                         <Style TargetType="{x:Type Border}">
                                             <Setter Property="CornerRadius" Value="8"/>
@@ -346,7 +345,7 @@
 
                             <Border Grid.Column="1" CornerRadius="8" Margin="24,0,25,0" Background="White">
                                 <Grid Grid.Column="1">
-                                    <TextBox Style="{StaticResource placeholderTextBox}" Text="Nazwa nowego składnika" GotFocus="PlaceholderTextBox_GotFocus" LostFocus="PlaceholderTextBox_LostFocus">
+                                    <TextBox Style="{StaticResource placeholderTextBox}" Text="Nazwa nowego składnika" Tag="Nazwa nowego składnika" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
                                         <TextBox.Resources>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="CornerRadius" Value="8"/>
@@ -365,7 +364,7 @@
 
                             <Border Grid.Row="6" Grid.Column="0" CornerRadius="8" Margin="25,0,12,0" Background="White">
                                 <Grid Grid.Row="6">
-                                    <TextBox Style="{StaticResource placeholderTextBox}" Text="Jednostka" GotFocus="PlaceholderTextBox_GotFocus" LostFocus="PlaceholderTextBox_LostFocus">
+                                    <TextBox Style="{StaticResource placeholderTextBox}" Text="Jednostka" Tag="Jednostka" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
                                         <TextBox.Resources>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="CornerRadius" Value="8"/>
@@ -377,7 +376,7 @@
 
                             <Border Grid.Row="6" Grid.Column="1" CornerRadius="8" Margin="12,0,25,0" Background="White">
                                 <Grid Grid.Row="6">
-                                    <TextBox Style="{StaticResource placeholderTextBox}" Text="Opakowanie" GotFocus="PlaceholderTextBox_GotFocus" LostFocus="PlaceholderTextBox_LostFocus">
+                                    <TextBox Style="{StaticResource placeholderTextBox}" Text="Opakowanie" Tag="Opakowanie" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
                                         <TextBox.Resources>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="CornerRadius" Value="8"/>
@@ -390,7 +389,7 @@
 
                         <Border Grid.Row="8" CornerRadius="8" Margin="25,0,25,0" Background="White">
                             <Grid Grid.Row="8">
-                                <TextBox Style="{StaticResource placeholderTextBox}" Text="Opis składnika" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" Padding="10" GotFocus="PlaceholderTextBox_GotFocus" LostFocus="PlaceholderTextBox_LostFocus">
+                                <TextBox Style="{StaticResource placeholderTextBox}" Text="Opis składnika" Tag="Opis składnika" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" Padding="10" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
                                     <TextBox.Resources>
                                         <Style TargetType="{x:Type Border}">
                                             <Setter Property="CornerRadius" Value="8"/>
