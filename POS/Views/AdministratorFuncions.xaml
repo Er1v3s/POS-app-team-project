@@ -47,8 +47,8 @@
                     <DataGrid x:Name="workingTimeSummaryDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" RowStyle="{DynamicResource DataGridRowStyle1}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="PRACOWNIK" IsReadOnly="True" Width="3*" CanUserResize="False" CanUserReorder="False"/>
-                            <DataGridTextColumn Header="STANOWISKO" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False"/>
-                            <DataGridTextColumn Header="POZIOM UPRAWNIEŃ" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False"/>
+                            <DataGridTextColumn Header="STANOWISKO" IsReadOnly="True" Width="1.5*" CanUserResize="False" CanUserReorder="False"/>
+                            <DataGridTextColumn Header="UPRAWNIENIA" IsReadOnly="True" Width="1.5*" CanUserResize="False" CanUserReorder="False"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Border>
