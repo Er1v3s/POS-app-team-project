@@ -29,7 +29,7 @@
                         <TextBlock Text="ROZPOCZĘCIE I ZAKOŃCZENIE PRACY" Style="{StaticResource sideBarButtonTextBlock}"/>
                     </StackPanel>
                 </Button>
-                <Button Style="{StaticResource sideBarButton}" Click="NavigateButton_Click" Tag="./RunningOutOfIngredients.xaml" >
+                <Button Style="{StaticResource sideBarButton}" >
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Dropbox" Width="30" Height="30" Foreground="White" />
                         <TextBlock Text="FUNKCJE MAGAZYNOWE" Style="{StaticResource sideBarButtonTextBlock}"/>
@@ -41,7 +41,7 @@
                         <TextBlock Text="RAPORTY I ANALIZY" Style="{StaticResource sideBarButtonTextBlock}"/>
                     </StackPanel>
                 </Button>
-                <Button Style="{StaticResource sideBarButton}" Click="NavigateButton_Click" Tag="./AdministratorFuncions.xaml">
+                <Button Style="{StaticResource sideBarButton}">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Shield" Width="30" Height="30" Foreground="White"/>
                         <TextBlock Text="FUNKCJE ADMINISTRATORA" Style="{StaticResource sideBarButtonTextBlock}"/>
