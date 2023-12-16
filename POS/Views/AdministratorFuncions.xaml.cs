@@ -54,5 +54,11 @@ namespace POS.Views
 
             employeesInfoDataGrid.ItemsSource = employeesCollection;
         }
+
+        private void OpenAddEditEmployeeWindow_Click(object sender, RoutedEventArgs e)
+        {
+            AddEditEmployeeWindow addEditEmployeeWindow = new AddEditEmployeeWindow();
+            addEditEmployeeWindow.ShowDialog();
+        }
     }
 }
