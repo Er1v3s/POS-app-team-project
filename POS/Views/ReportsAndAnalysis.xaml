@@ -48,7 +48,7 @@
             <GroupBox Header="Wyniki raportu" Grid.Row="2" Margin="20">
                 <lvc:CartesianChart x:Name="SalesChart" >
                 </lvc:CartesianChart>
-            </GroupBox>
+            </GroupBox
         </Grid>
     </Border>
 </UserControl>
