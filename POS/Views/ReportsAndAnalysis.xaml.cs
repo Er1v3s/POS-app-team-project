@@ -149,7 +149,7 @@ namespace POS.Views
                 int ordersCount = orders.Count;
 
                 double totalQuantity = orders
-                    .Join(dbContext.OrderItems, order => order.OrdersOrder_id, orderItem => orderItem.Order_id, (order, orderItem) => orderItem)
+                    .Join(dbContext.OrderItems, order => order.Order_id, orderItem => orderItem.Order_id, (order, orderItem) => orderItem)
                     .Sum(orderItem => orderItem.Quantity);
 
                 var productsAmount = orders
