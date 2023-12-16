@@ -12,5 +12,7 @@ namespace POS.Models
         public required int Order_id { get; set; }
         public required int Product_id { get; set; }
         public required int Quantity { get; set; }
+        public required int Employee_id { get; set; }
+        public required DateTime Orider_time { get; set; }
     }
 }

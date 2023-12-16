@@ -138,13 +138,15 @@ namespace POS.Views
             {
                 foreach (var orderListItem in orderList)
                 {
-                    OrderItems orderItem1 = new OrderItems
+                    OrderItems newOrderItem = new OrderItems
                     {
                         Product_id = orderListItem.Id,
                         Order_id = order.Order_id,
                         Quantity = orderListItem.Amount,
+                        Employee_id = EmployeeId,
+                        Orider_time = DateTime.Now,
                     };
-                    dbContext.OrderItems.Add(orderItem1);
+                    dbContext.OrderItems.Add(newOrderItem);
                 }
             }
         }
