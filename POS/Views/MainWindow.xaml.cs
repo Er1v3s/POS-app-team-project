@@ -88,9 +88,9 @@ namespace POS
         {
             if (sender is Button button && button.Tag is string uri)
             {
-                if (uri == "./WorkTimeSummaryControl.xaml" || uri == "./RunningOutOfIngredients.xaml")
+                if (uri == "./WorkTimeSummaryControl.xaml" || uri == "./RunningOutOfIngredients.xaml" || uri == "./ReportsAndAnalysis.xaml")
                 {
-                    showLoginPanel(uri);
+                    ChangeFrameSource(uri);
                 }
                 else if (uri == "./AdministratorFuncions.xaml")
                 {
