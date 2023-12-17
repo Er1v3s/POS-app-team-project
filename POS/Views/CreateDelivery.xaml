@@ -116,7 +116,7 @@
                         <Button Grid.Column="1" Content="Korekta" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
                         <Button Grid.Column="2" Content="Przyjmij" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
 
-                        <Button Grid.Column="4" Style="{StaticResource homeButton}" d:IsLocked="True" Click="MoveToMainWindow">
+                        <Button Grid.Column="4" Style="{StaticResource homeButton}" d:IsLocked="True" Click="MoveToMainWindow_ButtonClick">
                             <fa:ImageAwesome Icon="Home" Height="24" Foreground="White"/>
                         </Button>
 

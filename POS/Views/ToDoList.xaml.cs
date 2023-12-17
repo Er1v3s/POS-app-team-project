@@ -30,33 +30,33 @@ namespace POS.Views
 
             todoListTaskCollection = new ObservableCollection<ToDoListTask>();
             todoListDataGrid.ItemsSource = todoListTaskCollection;
-            loadTasks();
+            LoadTasks();
         }
 
-        private void addTaskTextBox_LostFocus(object sender, RoutedEventArgs e)
+        private void AddTask_TextBoxLostFocus(object sender, RoutedEventArgs e)
         {
             PlaceholderTextBoxHelper.SetPlaceholderOnLostFocus(sender, e);
         }
 
-        private void addTaskTextBox_GotFocus(object sender, RoutedEventArgs e)
+        private void AddTask_TextBoxGotFocus(object sender, RoutedEventArgs e)
         {
             PlaceholderTextBoxHelper.SetPlaceholderOnFocus(sender, e);
         }
 
-        private void addTask_ButtonClick(object sender, RoutedEventArgs e)
+        private void AddTask_ButtonClick(object sender, RoutedEventArgs e)
         {
-            addTask(new ToDoListTask { Content = addTaskTextBox.Text, CreationDate = DateTime.Now, CompletionDate = null });
+            AddTask(new ToDoListTask { Content = addTaskTextBox.Text, CreationDate = DateTime.Now, CompletionDate = null });
         }
 
-        private void addTask_KeyUp(object sender, KeyEventArgs e)
+        private void AddTask_KeyUp(object sender, KeyEventArgs e)
         {
             if(e.Key == Key.Enter)
             {
-                addTask(new ToDoListTask { Content = addTaskTextBox.Text, CreationDate = DateTime.Now, CompletionDate = null });
+                AddTask(new ToDoListTask { Content = addTaskTextBox.Text, CreationDate = DateTime.Now, CompletionDate = null });
             }
         }
 
-        private void deleteTask_ButtonClick(object sender, RoutedEventArgs e)
+        private void DeleteTask_ButtonClick(object sender, RoutedEventArgs e)
         {
             if (todoListDataGrid.SelectedItem != null)
             {
@@ -77,7 +77,7 @@ namespace POS.Views
             else { return; }
         }
 
-        private void addTask(ToDoListTask task)
+        private void AddTask(ToDoListTask task)
         {
             if (!string.IsNullOrEmpty(addTaskTextBox.Text))
             {
@@ -88,11 +88,11 @@ namespace POS.Views
                 }
             }
             else { return; }
-            loadTasks();
+            LoadTasks();
             addTaskTextBox.Text = "";
         }
 
-        private void loadTasks()
+        private void LoadTasks()
         {
             todoListTaskCollection.Clear();
             using (var dbContext = new AppDbContext())

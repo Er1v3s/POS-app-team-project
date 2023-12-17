@@ -74,7 +74,7 @@ namespace POS.Views
             workingTimeSummaryDataGrid.ItemsSource = ActiveSessions;
         }
 
-        private void Refresh_Button(object sender, RoutedEventArgs e)
+        private void Refresh_ButtonClick(object sender, RoutedEventArgs e)
         {
             ShowActiveSessions();
         }

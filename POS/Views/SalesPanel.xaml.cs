@@ -49,7 +49,7 @@ namespace POS.Views
             EmployeeId = employeeId;
         }
 
-        private void MoveToMainWindow(object sender, RoutedEventArgs e)
+        private void MoveToMainWindow_ButtonClick(object sender, RoutedEventArgs e)
         {
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
@@ -79,14 +79,14 @@ namespace POS.Views
             }
         }
 
-        private void CategoryButton_Click(object sender, RoutedEventArgs e)
+        private void FilterByCategory_ButtonClick(object sender, RoutedEventArgs e)
         {
             Button categoryButton = sender as Button;
             string category = categoryButton.Content.ToString();
             LoadProductsByCategory(category);
         }
 
-        private void PayForOrder_Click(object sender, RoutedEventArgs e)
+        private void PayForOrder_ButtonClick(object sender, RoutedEventArgs e)
         {
 
             if (sender is Button button && button.Tag is string paymentMethod)
@@ -172,7 +172,7 @@ namespace POS.Views
             }
         }
 
-        private void DeleteProductFromOrderList(object sender, RoutedEventArgs e)
+        private void DeleteProductFromOrderList_ButtonClick(object sender, RoutedEventArgs e)
         {
             if (orderListDataGrid.SelectedItem != null)
             {
@@ -254,7 +254,7 @@ namespace POS.Views
             }
         }
 
-        private void ShowRecipes(object sender, RoutedEventArgs e)
+        private void ShowRecipes_ButtonClick(object sender, RoutedEventArgs e)
         {
             ProductsUnifromGrid.Children.Clear();
             ProductsUnifromGrid.Columns = 3;
@@ -345,13 +345,13 @@ namespace POS.Views
             return ingredientsList.ToString();
         }
 
-        private void ShowDrinks(object sender, RoutedEventArgs e)
+        private void ShowDrinks_ButtonClick(object sender, RoutedEventArgs e)
         {
             ProductsUnifromGrid.Children.Clear();
             LoadAllProducts();
         }
 
-        private void ShowOpenOrders(object sender, RoutedEventArgs e)
+        private void ShowOpenOrders_ButtonClick(object sender, RoutedEventArgs e)
         {
             ProductsUnifromGrid.Children.Clear();
             ProductsUnifromGrid.Columns = 5;
@@ -372,7 +372,7 @@ namespace POS.Views
             return order.Sum(item => item.Amount * item.Price);
         }
 
-        private void DeleteCurrentOrder(object sender, RoutedEventArgs e)
+        private void DeleteCurrentOrder_ButtonClick(object sender, RoutedEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show("Spowoduje to utratę aktualnie wyświetlonego zamówienia.\n Czy chcesz kontynuować?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
@@ -407,7 +407,7 @@ namespace POS.Views
                 currentOrderId = orderListCollection.Count - 1; // Ustawienie bieżącego indeksu zamówienia na ostatnie dodane
                 orderListDataGrid.ItemsSource = orderListCollection[currentOrderId]; // Ustawienie nowej kolekcji zamówień jako źródła danych dla orderListDataGrid
                 UpdateTotalPrice();
-                ShowRecipes(null, null);
+                ShowRecipes_ButtonClick(null, null);
                 LoadAllProducts();
             };
 
@@ -437,7 +437,7 @@ namespace POS.Views
                 currentOrderId = orderId;
                 orderListDataGrid.ItemsSource = orderListCollection[currentOrderId];
                 UpdateTotalPrice();
-                ShowRecipes(null, null);
+                ShowRecipes_ButtonClick(null, null);
                 LoadAllProducts();
             };
 
@@ -461,7 +461,7 @@ namespace POS.Views
             welcomeLabel.Content = message;
         }
         private bool discountApplied = false;
-        private void ApplyDiscount_Click(object sender, RoutedEventArgs e)
+        private void ApplyDiscount_ButtonClick(object sender, RoutedEventArgs e)
         {
             if (discountApplied)
             {
@@ -484,7 +484,7 @@ namespace POS.Views
             }
         }
 
-        private void InvoiceAdd_Click(object sender, RoutedEventArgs e)
+        private void AddInvoice_ButtonClick(object sender, RoutedEventArgs e)
         {
             if (orderListCollection[currentOrderId].Count == 0)
             {
@@ -506,7 +506,7 @@ namespace POS.Views
             }
         }
 
-        private void ShowFinishedOrders(object sender, RoutedEventArgs e)
+        private void ShowFinishedOrders_ButtonClick(object sender, RoutedEventArgs e)
         {
             FinishedOrders finishedOrders = new FinishedOrders();
             finishedOrders.Show();

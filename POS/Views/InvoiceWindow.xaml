@@ -21,6 +21,6 @@
         <Label Content="Adres dostawy:" Grid.Row="2"/>
         <TextBox x:Name="deliveryAddressTextBox" Grid.Row="3"/>
 
-        <Button Content="Zapisz" Grid.Row="4" Click="InvoiceSave_Click"/>
+        <Button Content="Zapisz" Grid.Row="4" Click="SaveInvoice_ButtonClick"/>
     </Grid>
 </Window>

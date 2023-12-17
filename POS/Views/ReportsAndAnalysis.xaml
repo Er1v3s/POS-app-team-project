@@ -42,7 +42,7 @@
                     </StackPanel>
                 </StackPanel>
 
-                <Button Content="Generuj raport" Grid.Column="2" Click="GenerateRaport_Click" HorizontalAlignment="Center" Margin="5 5 20 5" Padding="10"/>
+                <Button Content="Generuj raport" Grid.Column="2" Click="GenerateRaport_ButtonClick" HorizontalAlignment="Center" Margin="5 5 20 5" Padding="10"/>
             </Grid>
 
             <GroupBox Header="Wyniki raportu" Grid.Row="2" Margin="20">

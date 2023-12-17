@@ -42,7 +42,7 @@ namespace POS.Views
             SetWelcomeMessage(welcomeMessage);
             EmployeeId = employeeId;
         }
-        private void MoveToMainWindow(object sender, RoutedEventArgs e)
+        private void MoveToMainWindow_ButtonClick(object sender, RoutedEventArgs e)
         {
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
@@ -65,7 +65,7 @@ namespace POS.Views
         }
 
         // left side
-        private void EditRecipeOfProduct_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void EditRecipeOfProduct_ComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (EditRecipeOfProduct_ComboBox.SelectedItem != null)
             {
@@ -99,7 +99,7 @@ namespace POS.Views
             }
         }
         
-        private void EditRecipeIngredient_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void EditRecipeIngredient_ComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if(EditRecipeIngredient_ComboBox != null)
             {
@@ -117,7 +117,7 @@ namespace POS.Views
             }
         }
 
-        private void DeleteRecipeIngredient_Button_Click(object sender, RoutedEventArgs e)
+        private void DeleteRecipeIngredient_ButtonClick(object sender, RoutedEventArgs e)
         {
             int IngredientId = 0, RecipeId = 0;
             string selectedIngredient = EditRecipeIngredient_ComboBox.SelectedItem.ToString();
@@ -151,7 +151,7 @@ namespace POS.Views
                 }
             }
         }
-        private void AddRecipeIngredient_Button_Click(object sender, RoutedEventArgs e)
+        private void AddRecipeIngredient_ButtonClick(object sender, RoutedEventArgs e)
         {
             int IngredientId = 0, RecipeId = 0;
             string selectedIngredient = EditRecipeIngredient_ComboBox.SelectedItem.ToString();
@@ -200,7 +200,7 @@ namespace POS.Views
                 }
             }
         }
-        private void EditProduct_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void EditProduct_ComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (EditProduct_ComboBox.SelectedItem != null)
             {
@@ -263,7 +263,7 @@ namespace POS.Views
             NewProductName.IsEnabled = true;
             ProductPrice.IsEnabled = true;
         }
-        private void CreateNewProduct_CheckBox_Checked(object sender, RoutedEventArgs e)
+        private void CreateNewProduct_CheckBoxChecked(object sender, RoutedEventArgs e)
         {
             if (CreateNewProduct_CheckBox.IsChecked == true)
             {
@@ -271,7 +271,7 @@ namespace POS.Views
                 EditProduct_ComboBox.IsEnabled = false;
             }
         }
-        private void CreateNewProduct_CheckBox_UnChecked(object sender, RoutedEventArgs e)
+        private void CreateNewProduct_CheckBoxUnChecked(object sender, RoutedEventArgs e)
         {
             EditProduct_ComboBox.IsEnabled = true;
             DeleteIngredient_Button.IsEnabled = true;
@@ -282,7 +282,7 @@ namespace POS.Views
             Recipe.IsEnabled = false;
         }
 
-        private void SaveProduct_Button_Click(object sender, RoutedEventArgs e)
+        private void SaveProduct_ButtonClick(object sender, RoutedEventArgs e)
         {
             if (CreateNewProduct_CheckBox.IsChecked == true)
             {
@@ -363,7 +363,7 @@ namespace POS.Views
             }
         }
 
-        private void EditIngredient_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void EditIngredient_ComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (EditIngredient_ComboBox.SelectedItem != null)
             {
@@ -405,7 +405,7 @@ namespace POS.Views
             IngredientUnit.IsEnabled = true;
             DeleteIngredient_Button.IsEnabled = false;
         }
-        private void CreateNewIngredient_CheckBox_Checked(object sender, RoutedEventArgs e)
+        private void CreateNewIngredient_CheckBoxChecked(object sender, RoutedEventArgs e)
         {
             if(CreateNewIngredient_CheckBox.IsChecked == true)
             {
@@ -413,7 +413,7 @@ namespace POS.Views
                 EditIngredient_ComboBox.IsEnabled = false;
             }
         }
-        private void CreateNewIngredient_CheckBox_UnChecked(object sender, RoutedEventArgs e)
+        private void CreateNewIngredient_CheckBoxUnChecked(object sender, RoutedEventArgs e)
         {
             EditIngredient_ComboBox.IsEnabled = true;
             DeleteIngredient_Button.IsEnabled = true;
@@ -426,7 +426,7 @@ namespace POS.Views
             DeleteIngredient_Button.IsEnabled = false;
         }
 
-        private void SaveIngredient_Button_Click(object sender, RoutedEventArgs e)
+        private void SaveIngredient_ButtonClick(object sender, RoutedEventArgs e)
         {
             if (CreateNewIngredient_CheckBox.IsChecked == true)
             {

@@ -37,7 +37,7 @@ namespace POS.Views
             InitializeComponent();
         }
 
-        private void GenerateRaport_Click(object sender, RoutedEventArgs e)
+        private void GenerateRaport_ButtonClick(object sender, RoutedEventArgs e)
         {
             ComboBoxItem selectedComboBoxItem = (ComboBoxItem)reportTypeComboBox.SelectedItem;
             string selectedReport = selectedComboBoxItem.Content.ToString();
@@ -57,11 +57,11 @@ namespace POS.Views
                 MessageBox.Show("Data 'Do' nie może być wcześniejsza niż data 'Od'");
             } else
             {
-                generateChoosenReport(selectedReport, fromDate, toDate);
+                GenerateChoosenReport(selectedReport, fromDate, toDate);
             }
         }
 
-        private void generateChoosenReport(string selectedReport , DateTime fromDate, DateTime toDate )
+        private void GenerateChoosenReport(string selectedReport , DateTime fromDate, DateTime toDate )
         {
             SalesChart.Series.Clear();
 
@@ -71,7 +71,7 @@ namespace POS.Views
             }
             else if (selectedReport == "Raport zamówień")
             {
-                generateOrdersReport(fromDate, toDate);
+                GenerateOrdersReport(fromDate, toDate);
             }
             else if (selectedReport == "Raport czasu pracy pracowników")
             {
@@ -97,14 +97,14 @@ namespace POS.Views
                                 };
 
                 var salesByProduct = salesData.GroupBy(s => s.ProductName)
-                                              .Select(g => new
-                                              {
-                                                  ProductName = g.Key,
-                                                  TotalQuantitySold = g.Sum(s => s.QuantitySold),
-                                                  TotalRevenue = g.Sum(s => s.TotalAmount)
-                                              })
-                                              .OrderByDescending(s => s.TotalRevenue)
-                                              .ToList();
+                .Select(g => new
+                    {
+                        ProductName = g.Key,
+                        TotalQuantitySold = g.Sum(s => s.QuantitySold),
+                        TotalRevenue = g.Sum(s => s.TotalAmount)
+                    })
+                    .OrderByDescending(s => s.TotalRevenue)
+                    .ToList();
 
                 SeriesCollection series = new SeriesCollection();
                 List<string> labels = new List<string>();
@@ -138,7 +138,7 @@ namespace POS.Views
                 SalesChart.LegendLocation = LegendLocation.Right;
             }
         }
-        private void generateOrdersReport(DateTime fromDate, DateTime toDate)
+        private void GenerateOrdersReport(DateTime fromDate, DateTime toDate)
         {
             using (var dbContext = new AppDbContext())
             {
@@ -250,7 +250,5 @@ namespace POS.Views
 
             return TimeSpan.Zero.Ticks;
         }
-
-
     }
 }

@@ -44,7 +44,7 @@ namespace POS.Views
             this.Close();
         }
 
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        private void LogIn_ButtonClick(object sender, RoutedEventArgs e)
         {
             string username = UsernameTextBox.Text;
             string password = PasswordBox.Password;

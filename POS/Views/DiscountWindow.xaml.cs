@@ -23,15 +23,14 @@ namespace POS.Views
         {
             InitializeComponent();
         }
-        private void ApplyDiscount_Click(object sender, RoutedEventArgs e)
+        private void ApplyDiscount_ButtonClick(object sender, RoutedEventArgs e)
         {
             DialogResult = true;
             Close();
         }
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        private void CloseWindow_ButtonClick(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
-
     }
 }

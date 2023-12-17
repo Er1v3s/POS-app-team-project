@@ -43,7 +43,7 @@ namespace POS.Views
             InitializeComponent();
         }
 
-        private void MoveToMainWindow(object sender, RoutedEventArgs e)
+        private void MoveToMainWindow_ButtonClick(object sender, RoutedEventArgs e)
         {
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
@@ -53,18 +53,12 @@ namespace POS.Views
 
         private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            if (searchTextBox.Text.Length > 0)
-            {
-                searchTextBox.Text = "";
-            }
+            PlaceholderTextBoxHelper.SetPlaceholderOnFocus(sender, e);
         }
 
         private void SearchTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(searchTextBox.Text))
-            {
-                searchTextBox.Text = "Szukaj";
-            }
+            PlaceholderTextBoxHelper.SetPlaceholderOnLostFocus(sender, e);
         }
         private void SetWelcomeMessage(string message)
         {
