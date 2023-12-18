@@ -28,8 +28,8 @@ namespace POS.Views
         {
             InitializeComponent();
         }
-        private void Refresh_Button(object sender, RoutedEventArgs e) { }
-        private void OpenStockManagmentWindow_Button(object sender, RoutedEventArgs e)
+        private void Refresh_ButtonClick(object sender, RoutedEventArgs e) { }
+        private void OpenStockManagmentWindow_ButtonClick(object sender, RoutedEventArgs e)
         {
             LoginPanel loginPanel = new LoginPanel();
             loginPanel.ShowDialog();
@@ -41,7 +41,7 @@ namespace POS.Views
                 stockManagment.Show();
             }
         }
-        private void OpenCreateDeliveryWindow_Button(object sender, RoutedEventArgs e)
+        private void OpenCreateDeliveryWindow_ButtonClick(object sender, RoutedEventArgs e)
         {
             LoginPanel loginPanel = new LoginPanel();
             loginPanel.ShowDialog();

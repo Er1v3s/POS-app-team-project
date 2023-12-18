@@ -42,13 +42,13 @@ namespace POS.Views
                     }
                     else
                     {
-                         FinishWork.IsEnabled = false;
+                        FinishWork.IsEnabled = false;
                     }
                 }
             }
         }
 
-        private async void StartWork_Button(object sender, RoutedEventArgs e)
+        private async void StartWork_ButtonClick(object sender, RoutedEventArgs e)
         {
             await using (var dbContext = new AppDbContext())
             {
@@ -59,16 +59,16 @@ namespace POS.Views
                     dbContext.SaveChanges();
                 }
 
-                EmployeeWorkSession newEmployeeWorkSession = createNewEmployeeWorkSession(user);
+                EmployeeWorkSession newEmployeeWorkSession = CreateNewEmployeeWorkSession(user);
 
                 dbContext.EmployeeWorkSession.Add(newEmployeeWorkSession);
                 dbContext.SaveChanges();
             }
 
-                OnStartFinishWork();
+            OnStartFinishWork();
         }
 
-        private async void FinishWork_Button(object sender, RoutedEventArgs e)
+        private async void FinishWork_ButtonClick(object sender, RoutedEventArgs e)
         {
             await using (var dbContext = new AppDbContext())
             {
@@ -85,7 +85,7 @@ namespace POS.Views
             OnStartFinishWork();
         }
 
-        private EmployeeWorkSession createNewEmployeeWorkSession(Employees user)
+        private EmployeeWorkSession CreateNewEmployeeWorkSession(Employees user)
         {
             EmployeeWorkSession employeeWorkSession = (
                 new EmployeeWorkSession

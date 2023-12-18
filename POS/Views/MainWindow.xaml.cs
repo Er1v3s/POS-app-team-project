@@ -26,16 +26,14 @@ namespace POS
     /// </summary>
     public partial class MainWindow : Window
     {
-
         private DispatcherTimer timer;
         public MainWindow()
         {
             InitializeComponent();
-
-            Start_Timer();
+            StartTimer();
         }
 
-        private void Move_To_Sales_Panel(object sender, RoutedEventArgs e)
+        private void MoveToSalesPanel_ButtonClick(object sender, RoutedEventArgs e)
         {
             LoginPanel loginPanel = new LoginPanel();
             loginPanel.ShowDialog();
@@ -49,7 +47,7 @@ namespace POS
             }
         }
 
-        private void Turn_Off_Application(object sender, RoutedEventArgs e)
+        private void TurnOffApplication_ButtonClick(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
         }
@@ -84,7 +82,7 @@ namespace POS
             } 
         }
 
-        private void NavigateButton_Click(object sender, RoutedEventArgs e)
+        private void ChangeSource_ButtonClick(object sender, RoutedEventArgs e)
         {
             if (sender is Button button && button.Tag is string uri)
             {
@@ -103,17 +101,17 @@ namespace POS
             }
         }
 
-        private void Start_Timer() 
+        private void StartTimer() 
         {
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1);
-            timer.Tick += Timer_Tick;
+            timer.Tick += TimerTick;
             timer.Start();
 
             // Initialize first date render
             UpdateDateTime(); 
         }
-        private void Timer_Tick(object sender, EventArgs e)
+        private void TimerTick(object sender, EventArgs e)
         {
             UpdateDateTime();
         }

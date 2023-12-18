@@ -43,11 +43,6 @@ namespace POS.Views
             totalPriceTextBlock.Text = totalSum.ToString("C");
         }
 
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close(); 
-        }
-
         private double CalculateTotalSum()
         {
             double totalSum = 0;
@@ -58,7 +53,7 @@ namespace POS.Views
             return Math.Round(totalSum, 2);
         }
 
-        private void PrintButton_Click(object sender, RoutedEventArgs e)
+        private void PrintDocument_ButtonClick(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -126,6 +121,10 @@ namespace POS.Views
             }
         }
 
+        private void CloseWindow_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.Close(); 
+        }
     }
 }
 

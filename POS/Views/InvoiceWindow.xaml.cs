@@ -27,7 +27,7 @@ namespace POS.Views
             InitializeComponent();
         }
 
-        private void InvoiceSave_Click(object sender, RoutedEventArgs e)
+        private void SaveInvoice_ButtonClick(object sender, RoutedEventArgs e)
         {
             ClientName = clientNameTextBox.Text;
             DeliveryAddress = deliveryAddressTextBox.Text;
