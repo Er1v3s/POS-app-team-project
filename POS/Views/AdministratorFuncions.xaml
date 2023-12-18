@@ -44,11 +44,11 @@
 
             <Grid Grid.Row="3">
                 <Border BorderThickness="0, 1, 0 ,0" BorderBrush="Black">
-                    <DataGrid x:Name="workingTimeSummaryDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" RowStyle="{DynamicResource DataGridRowStyle1}">
+                    <DataGrid x:Name="employeesInfoDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" RowStyle="{DynamicResource DataGridRowStyle1}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="PRACOWNIK" IsReadOnly="True" Width="3*" CanUserResize="False" CanUserReorder="False"/>
-                            <DataGridTextColumn Header="STANOWISKO" IsReadOnly="True" Width="1.5*" CanUserResize="False" CanUserReorder="False"/>
-                            <DataGridTextColumn Header="UPRAWNIENIA" IsReadOnly="True" Width="1.5*" CanUserResize="False" CanUserReorder="False"/>
+                            <DataGridTextColumn Header="PRACOWNIK" IsReadOnly="True" Width="3*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Employee_name}"  />
+                            <DataGridTextColumn Header="STANOWISKO" IsReadOnly="True" Width="1.5*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Job_title}" />
+                            <DataGridTextColumn Header="UPRAWNIENIA" IsReadOnly="True" Width="1.5*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Permission_level}" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </Border>
@@ -56,7 +56,7 @@
 
             <Grid Grid.Row="4">
                 <UniformGrid Rows="1" Columns="3"  VerticalAlignment="Stretch" Margin="10, 0, 10, 10">
-                    <Button Style="{StaticResource bottomButton}">
+                    <Button Style="{StaticResource bottomButton}" Click="OpenAddEditEmployeeWindow_Click">
                         <TextBlock Text="DODAJ PRACOWNIKA" Style="{StaticResource topButtonTextBlock}"/>
                     </Button>
                     <Button Style="{StaticResource bottomButton}">
