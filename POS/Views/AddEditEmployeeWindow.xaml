@@ -20,7 +20,7 @@
 
             <Border CornerRadius="8,8,0,0" Background="#FF7286D3">
                 <Grid Grid.Row="0">
-                    <Button Width="26" Height="26" Margin="0, 0, 3, 0" HorizontalAlignment="Right" Style="{StaticResource cancelButton}" d:IsLocked="True" Click="CloseButton_Click">
+                    <Button Width="26" Height="26" Margin="0, 0, 3, 0" HorizontalAlignment="Right" Style="{StaticResource cancelButton}" d:IsLocked="True" Click="CloseWindow_ButtonClick">
                         <fa:ImageAwesome Icon="Close" Height="13" Foreground="White"/>
                     </Button>
                 </Grid>
@@ -71,7 +71,7 @@
             </Grid>
 
             <Grid Grid.Row="2">
-                <Button Click="AddNewEmployee_Click" Style="{StaticResource payButton}">
+                <Button Click="AddNewEmployee_ButtonClick" Style="{StaticResource payButton}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Dodaj" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                     </StackPanel>

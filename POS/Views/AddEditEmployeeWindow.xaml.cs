@@ -24,12 +24,12 @@ namespace POS.Views
             InitializeComponent();
         }
 
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        private void CloseWindow_ButtonClick(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
 
-        private void AddNewEmployee_Click(object sender, RoutedEventArgs e)
+        private void AddNewEmployee_ButtonClick(object sender, RoutedEventArgs e)
         {
 
         }
