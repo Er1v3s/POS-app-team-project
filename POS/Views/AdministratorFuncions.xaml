@@ -1,0 +1,72 @@
+﻿<Page x:Class="POS.Views.AdministratorFuncions"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:POS.Views"
+      mc:Ignorable="d" 
+      d:DesignHeight="800" d:DesignWidth="800"
+      Title="AdministratorFuncions"
+      xmlns:fa="http://schemas.fontawesome.io/icons/"
+      FontSize="16" FontFamily="Lato">
+
+    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="8" Background="White">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="6*"/>
+                <RowDefinition Height="2*"/>
+            </Grid.RowDefinitions>
+            
+            <Border Grid.Row="0" CornerRadius="8,8,0, 0" Background="#8EA7E9" BorderThickness="0,0,0,1" BorderBrush="Black">
+                <TextBlock Text="FUNKCJE ADMINISTRATORA" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="24"></TextBlock>
+            </Border>
+
+            <Grid Grid.Row="1">
+                <UniformGrid Rows="1" Columns="3"  VerticalAlignment="Stretch" Margin="10">
+                    <Button Style="{StaticResource topButton}" Background="#4BAEA0">
+                        <TextBlock Text="ROZPOCZNIJ DZIEŃ" Style="{StaticResource topButtonTextBlock}"/>
+                    </Button>
+                    <Button Style="{StaticResource topButton}" Background="#FF7286D3">
+                        <TextBlock Text="KONTROLA GOTÓWKI" Style="{StaticResource topButtonTextBlock}"/>
+                    </Button>
+                    <Button Style="{StaticResource topButton}" Background="#AE4B59">
+                        <TextBlock Text="KONIEC DNIA" Style="{StaticResource topButtonTextBlock}"/>
+                    </Button>
+                </UniformGrid>
+            </Grid>
+
+            <Border Grid.Row="2" Background="#8EA7E9" BorderThickness="0, 1, 0, 0" BorderBrush="Black">
+                <TextBlock Text="ZARZĄDZANIE KADRĄ PRACOWNICZĄ" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="24"></TextBlock>
+            </Border>
+
+            <Grid Grid.Row="3">
+                <Border BorderThickness="0, 1, 0 ,0" BorderBrush="Black">
+                    <DataGrid x:Name="employeesInfoDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" RowStyle="{DynamicResource DataGridRowStyle1}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="PRACOWNIK" IsReadOnly="True" Width="3*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Employee_name}"  />
+                            <DataGridTextColumn Header="STANOWISKO" IsReadOnly="True" Width="1.5*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Job_title}" />
+                            <DataGridTextColumn Header="UPRAWNIENIA" IsReadOnly="True" Width="1.5*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Permission_level}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+            </Grid>
+
+            <Grid Grid.Row="4">
+                <UniformGrid Rows="1" Columns="3"  VerticalAlignment="Stretch" Margin="10, 0, 10, 10">
+                    <Button Style="{StaticResource bottomButton}" Click="OpenAddEditEmployeeWindow_ButtonClick">
+                        <TextBlock Text="DODAJ PRACOWNIKA" Style="{StaticResource topButtonTextBlock}"/>
+                    </Button>
+                    <Button Style="{StaticResource bottomButton}">
+                        <TextBlock Text="EDYTUJ PRACOWNIKA" Style="{StaticResource topButtonTextBlock}"/>
+                    </Button>
+                    <Button Style="{StaticResource bottomButton}">
+                        <TextBlock Text="USUŃ PRACOWNIKA" Style="{StaticResource topButtonTextBlock}" Width="120"/>
+                    </Button>
+                </UniformGrid>
+            </Grid>
+        </Grid>
+    </Border>
+</Page>

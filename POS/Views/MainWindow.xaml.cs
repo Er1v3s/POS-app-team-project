@@ -1,9 +1,14 @@
-﻿using System;
+﻿using POS.Views;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -12,7 +17,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace POS
 {
@@ -21,45 +26,100 @@ namespace POS
     /// </summary>
     public partial class MainWindow : Window
     {
+        private DispatcherTimer timer;
         public MainWindow()
         {
             InitializeComponent();
-
-            ObservableCollection<Employee> employee = new ObservableCollection<Employee>();
-            ObservableCollection<ToDoListTask> toDoListTasks = new ObservableCollection<ToDoListTask>();
-
-            // Create working time summary DataGrid Item Info
-
-            employee.Add(new Employee { firstName = "Andrzej",  workingTimeFrom = "18:00", workingTimeTo = "24:00", workingTimeSummary = "6:00"});           
-            employee.Add(new Employee { firstName = "Łukasz", workingTimeFrom = "19:00", workingTimeTo = "23:00", workingTimeSummary = "4:00"});           
-            employee.Add(new Employee { firstName = "Klara", workingTimeFrom = "20:00", workingTimeTo = "22:00", workingTimeSummary = "2:00"});           
-            employee.Add(new Employee { firstName = "Mateusz", workingTimeFrom = "17:30", workingTimeTo = "22:30", workingTimeSummary = "5:00"});
-            employee.Add(new Employee { firstName = "Robert", workingTimeFrom = "15:00", workingTimeTo = "20:00", workingTimeSummary = "5:00" });
-
-            workingTimeSummaryDataGrid.ItemsSource = employee;
-
-            // Create todo list DataGrid Item Info
-
-            toDoListTasks.Add(new ToDoListTask { content = "Zrobić zamówienie" });
-            toDoListTasks.Add(new ToDoListTask { content = "Wezwać serwis do nalewaka na piwo" });
-            toDoListTasks.Add(new ToDoListTask { content = "Wysłać faktury do księgowej" });
-            toDoListTasks.Add(new ToDoListTask { content = "Sprawdzić terminy ważności w lodówce" });
-            toDoListTasks.Add(new ToDoListTask { content = "Wynieść śmieci" });
-
-            todoListDataGrid.ItemsSource = toDoListTasks;
+            StartTimer();
         }
-    }
 
-    public class Employee
-    {
-        public string firstName { get; set; }
-        public string workingTimeFrom { get; set; }
-        public string workingTimeTo { get; set; }
-        public string workingTimeSummary { get; set; }
-    }
+        private void MoveToSalesPanel_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            LoginPanel loginPanel = new LoginPanel();
+            loginPanel.ShowDialog();
+            
+            if (loginPanel.isLoginValid)
+            {
+                int employeeId = loginPanel.employeeId;
+                SalesPanel salesPanel = new SalesPanel(employeeId);
+                salesPanel.Show();
+                this.Close();
+            }
+        }
 
-    public class ToDoListTask 
-    {
-        public string content { get; set; }
+        private void TurnOffApplication_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void ChangeFrameSource(string uri)
+        {
+            try
+            {
+                Uri newFrameSource = new Uri(uri, UriKind.RelativeOrAbsolute);
+                frame.Source = newFrameSource;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Wystąpił błąd: {ex.Message}");
+            }
+        }
+
+        private void ShowLoginPanel(string uri)
+        {
+            LoginPanel loginPanel = new LoginPanel(uri);
+            loginPanel.ShowDialog();
+        }
+
+        private void ShowLoginPanelAndChangeSource(string uri)
+        {
+            LoginPanel loginPanel = new LoginPanel(uri);
+            loginPanel.ShowDialog();
+
+            if(loginPanel.isLoginValid)
+            {
+                ChangeFrameSource(uri);
+            } 
+        }
+
+        private void ChangeSource_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is string uri)
+            {
+                if (uri == "./WorkTimeSummaryControl.xaml" || uri == "./RunningOutOfIngredients.xaml" || uri == "./ReportsAndAnalysis.xaml")
+                {
+                    ChangeFrameSource(uri);
+                }
+                else if (uri == "./AdministratorFuncions.xaml")
+                {
+                    ShowLoginPanelAndChangeSource(uri);
+                }
+                else
+                {
+                    ShowLoginPanel(uri);
+                }
+            }
+        }
+
+        private void StartTimer() 
+        {
+            timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += TimerTick;
+            timer.Start();
+
+            // Initialize first date render
+            UpdateDateTime(); 
+        }
+        private void TimerTick(object sender, EventArgs e)
+        {
+            UpdateDateTime();
+        }
+
+        private void UpdateDateTime()
+        {
+            dateTextBlock.Text = DateTime.Now.ToString("dd.MM.yyyy");
+            timeTextBlock.Text = DateTime.Now.ToString("HH:mm:ss");
+        }
     }
 }
