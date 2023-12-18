@@ -28,6 +28,10 @@ namespace POS.Views
             DialogResult = true;
             Close();
         }
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
 
     }
 }

@@ -56,6 +56,17 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="placeholderTextBox" TargetType="TextBox">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="BorderBrush" Value="White" />
+            <Setter Property="SelectionBrush" Value="Transparent" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+
         <!--#endregion-->
 
         <!--#region MainWindow -->
@@ -187,8 +198,96 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        
+<!--#region RunningOutOfIngredients-->
+        <Style x:Key="OpenStockManagmentWindowButton" TargetType="Button">
+            <Setter Property="Width"  Value="150" />
+            <Setter Property="Height" Value="50" />
+            <Setter Property="Background" Value="#7286D3" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF6077C5" />
+                    <Setter Property="Width" Value="165" />
+                    <Setter Property="Height" Value="55" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <!--#endregion -->
+        
+        <!--#region Administraotr Funcions -->
+
+        <Style x:Key="topButton" TargetType="Button">
+            <Setter Property="Background" Value="#FF7286D3"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Margin" Value="15"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Margin" Value="12.5" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="topButtonTextBlock" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Width" Value="150" />
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <Style x:Key="bottomButton" TargetType="Button">
+            <Setter Property="Background" Value="#FF7286D3"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Margin" Value="7.5" />
+                    <Setter Property="Background" Value="#FF6077C5" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!--#endregion-->
         
         <!--#region loginPanel -->
 

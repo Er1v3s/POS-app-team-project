@@ -25,7 +25,7 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Background="#FF8EA7E9">
-                    <TextBox x:Name="searchTextBox" Style="{StaticResource searchBar}" Margin="20,0,0,0" Text="Szukaj" Width="360"
+                    <TextBox x:Name="searchTextBox" Style="{StaticResource searchBar}" Margin="20,0,0,0" Text="Szukaj" Tag="Szukaj" Width="360"
                              Height="42" KeyUp="SearchTextBox_KeyUp" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus">
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">

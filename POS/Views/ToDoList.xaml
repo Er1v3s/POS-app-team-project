@@ -46,7 +46,7 @@
             </Grid>
 
             <Grid Grid.Row="2">
-                <TextBox Text="Dodaj zadanie" x:Name="addTaskTextBox" LostFocus="addTaskTextBox_LostFocus" GotFocus="addTaskTextBox_GotFocus" KeyUp="addTask_KeyUp" Style="{StaticResource addTaskTextBox}" Margin="50,0,10,0"/>
+                <TextBox Text="Dodaj zadanie" Tag="Dodaj zadanie" x:Name="addTaskTextBox" LostFocus="addTaskTextBox_LostFocus" GotFocus="addTaskTextBox_GotFocus" KeyUp="addTask_KeyUp" Style="{StaticResource addTaskTextBox}" Margin="50,0,10,0"/>
                 <Button Style="{StaticResource addTaskButton}" Click="addTask_ButtonClick">
                     <fa:ImageAwesome Style="{StaticResource plusIcon}" Icon="Plus"  Width="25" Height="25" />
                 </Button>
