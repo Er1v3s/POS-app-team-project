@@ -67,7 +67,7 @@
                     </StackPanel>
                 </Button>
 
-                <Button Grid.Column="1" Style="{StaticResource OpenStockManagmentWindowButton}" Click="OpenCreateDeliveryWindow_Button">
+                <Button Grid.Column="1" Style="{StaticResource OpenStockManagmentWindowButton}" Click="OpenCreateDeliveryWindow_ButtonClick">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Truck" Width="25" Height="25" Foreground="White"/>
                         <TextBlock Text="ZAMÓW" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16"/>

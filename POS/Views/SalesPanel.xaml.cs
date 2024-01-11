@@ -24,7 +24,7 @@ namespace POS.Views
     /// <summary>
     /// Logika interakcji dla klasy SalesPanel.xaml
     /// </summary>
-    public partial class SalesPanel
+    public partial class SalesPanel : Window
     {
         private Employees currentUser;
         public int EmployeeId;

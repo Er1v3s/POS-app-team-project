@@ -34,7 +34,7 @@
                             <DataGridTemplateColumn Header="" Width="1.3*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Style="{StaticResource deleteItemButton}" HorizontalAlignment="Right" Click="deleteTask_ButtonClick">
+                                        <Button Style="{StaticResource deleteItemButton}" HorizontalAlignment="Right" Click="DeleteTask_ButtonClick">
                                             <fa:ImageAwesome Style="{StaticResource deleteItemIcon}" Icon="Close"/>
                                         </Button>
                                     </DataTemplate>

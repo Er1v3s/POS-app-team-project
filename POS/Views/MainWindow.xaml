@@ -17,7 +17,7 @@
 
         <Grid Grid.Column="0" Background="#8EA7E9">
             <UniformGrid Rows="5" Columns="1"  VerticalAlignment="Stretch" Margin="0, 12.5, 0, 12.5" >
-                <Button Style="{StaticResource sideBarButton}" Click="NavigateButton_Click" Tag="./WorkTimeSummaryControl.xaml">
+                <Button Style="{StaticResource sideBarButton}" Click="ChangeSource_ButtonClick" Tag="./WorkTimeSummaryControl.xaml">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="ClockOutline" Width="30" Height="30" Foreground="White"/>
                         <TextBlock Text="PODSUMOWANIE CZASU PRACY" Style="{StaticResource sideBarButtonTextBlock}"/>
