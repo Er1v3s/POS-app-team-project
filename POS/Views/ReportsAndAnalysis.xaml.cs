@@ -2,28 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using LiveCharts.Defaults;
-using System.Collections.ObjectModel;
-using POS.Migrations;
-using POS.ViewModel;
-using Microsoft.EntityFrameworkCore;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using LiveCharts.Wpf;
 using LiveCharts;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using LiveCharts.Definitions.Charts;
-using Org.BouncyCastle.Asn1.X509;
+using POS.ViewModel.Raports;
 
 namespace POS.Views
 {
@@ -34,8 +17,6 @@ namespace POS.Views
     {
         List<string> employeeNames = new List<string>();
         List<long> totalWorkTimes = new List<long>();
-
-        //string[] raports = {"", "", "", "" };
 
         Dictionary<int, string> raports = new Dictionary<int, string>()
         {
@@ -55,8 +36,9 @@ namespace POS.Views
         {
             ComboBoxItem selectedComboBoxItem = (ComboBoxItem)reportTypeComboBox.SelectedItem;
             string selectedReport = selectedComboBoxItem.Content.ToString();
+
             DateTime startDate = datePickerFrom.SelectedDate.GetValueOrDefault();
-            DateTime endDate = datePickerTo.SelectedDate.GetValueOrDefault();
+            DateTime endDate = datePickerTo.SelectedDate.GetValueOrDefault().Date.AddHours(23).AddMinutes(59).AddSeconds(59);
 
             if (selectedReport == null)
             {
@@ -92,16 +74,18 @@ namespace POS.Views
             }
             else if (selectedReport == raports[2])
             {
-                GenerateEmployeesWorkTimeReportChart(GenerateWorkingTimeData(startDate, endDate));
-                return;
+                List<EmployeeWorkingTime> workingTimeData = GenerateWorkingTimeData(startDate, endDate);
+                GenerateEmployeesWorkTimeReportChart(workingTimeData);
             }
             else if (selectedReport == raports[3])
             {
-                GenerateEmployeeProductivityChart(GenerateEmployeeProductivityData(startDate, endDate));
+                List <EmployeeProductivity> employeeProductivityData = GenerateEmployeeProductivityData(startDate, endDate);
+                GenerateEmployeeProductivityChart(employeeProductivityData);
             }
             else if (selectedReport == raports[4])
             {
-                GenerateProductPopularityChart(GenerateProductPopularityData(startDate, endDate));
+                List<ProductPopularity> productPopularityData = GenerateProductPopularityData(startDate, endDate);
+                GenerateProductPopularityChart(productPopularityData);
             }
         }
 
@@ -319,14 +303,19 @@ namespace POS.Views
 
             popularityOfProductsChart.AxisY.Add(new Axis
             {
-                LabelFormatter = value => Math.Floor(value).ToString(),
+                Title = "Ilość sprzedanych produktów",
+                Separator = new LiveCharts.Wpf.Separator
+                {
+                    Step = 1,
+                    IsEnabled = true
+                }
             });
 
             popularityOfProductsChart.Series = new SeriesCollection
             {
                 new ColumnSeries
                 {
-                    Title = "Ilość sprzedanego produktu",
+                    Title = "Ilość sprzedanych produktów: ",
                     Values = new ChartValues<int>(popularityOfProductsData.Select(p => (p.Quantity))),
                     DataLabels = true,
                 }
@@ -334,10 +323,9 @@ namespace POS.Views
 
             popularityOfProductsChart.AxisX.Add(new Axis
             {
+                Title = "Produkt",
                 Labels = popularityOfProductsData.Select(p => p.ProductName).ToList(),
             });
-
-            popularityOfProductsChart.LegendLocation = LegendLocation.Bottom;
 
             liveChart.Children.Add(popularityOfProductsChart);
         }
@@ -371,14 +359,19 @@ namespace POS.Views
 
             productivityChart.AxisY.Add(new Axis
             {
-                LabelFormatter = value => Math.Floor(value).ToString(),
+                Title = "Ilość zrealizowanych zamówień",
+                Separator = new LiveCharts.Wpf.Separator
+                {
+                    Step = 1,
+                    IsEnabled = true
+                }
             });
 
             productivityChart.Series = new SeriesCollection
             {
                 new ColumnSeries
                 {
-                    Title = "Ilość zrealizowanych zamówień",
+                    Title = "Ilość zrealizowanych zamówień: ",
                     Values = new ChartValues<int>(productivityData.Select(p => p.OrderCount)),
                     DataLabels = true,
                 }
@@ -386,33 +379,13 @@ namespace POS.Views
 
             productivityChart.AxisX.Add(new Axis
             {
+                Title = "Pracownik",
                 Labels = productivityData.Select(p => p.EmployeeName).ToList()
             });
 
-            productivityChart.LegendLocation = LegendLocation.Bottom;
-
             liveChart.Children.Add(productivityChart);
-
         }
 
         #endregion
-
-        public class ProductPopularity
-        {
-            public string ProductName { get; set; }
-            public int Quantity { get; set; }
-        }
-
-        public class EmployeeProductivity
-        {
-            public string EmployeeName { get; set; }
-            public int OrderCount { get; set; }
-        }
-
-        public class EmployeeWorkingTime
-        {
-            public string EmployeeName { get; set; }
-            public double TotalWorkTime { get; set; }
-        }
     }
 }
