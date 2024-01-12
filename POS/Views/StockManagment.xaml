@@ -252,7 +252,7 @@
                             <ColumnDefinition Width="25*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Button x:Name="DeleteProduct_Button" Grid.Row="14" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}">
+                        <Button x:Name="DeleteProduct_Button" Click="DeleteProduct_ButtonClick" Grid.Row="14" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="USUŃ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                             </StackPanel>
@@ -400,7 +400,7 @@
                                 <ColumnDefinition Width="25*"/>
                             </Grid.ColumnDefinitions>
 
-                            <Button x:Name="DeleteIngredient_Button" Grid.Row="10" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}">
+                            <Button x:Name="DeleteIngredient_Button" Click="DeleteIngredient_ButtonClick" Grid.Row="10" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="USUŃ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                                 </StackPanel>

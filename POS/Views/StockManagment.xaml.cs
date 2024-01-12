@@ -1,4 +1,5 @@
-﻿using POS.Converter;
+﻿using Microsoft.EntityFrameworkCore;
+using POS.Converter;
 using POS.Models;
 using POS.ViewModel;
 using System;
@@ -71,30 +72,35 @@ namespace POS.Views
             {
                 string selectedProduct = EditRecipeOfProduct_ComboBox.SelectedItem.ToString();
 
-                using (var dbContext = new AppDbContext())
+                LoadIngredientsToDataGrid(selectedProduct);
+            }
+        }
+
+        private void LoadIngredientsToDataGrid(string SelectedProduct)
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                var product = dbContext.Products.FirstOrDefault(i => i.Product_name == SelectedProduct);
+
+                if (product != null)
                 {
-                    var product = dbContext.Products.FirstOrDefault(i => i.Product_name == selectedProduct);
+                    var ingredients = dbContext.RecipeIngredients
+                        .Where(ri => ri.Recipe_id == product.Recipe_id)
+                        .Join(dbContext.Ingredients,
+                            ri => ri.Ingredient_id,
+                            i => i.Ingredient_id,
+                            (ri, i) => new
+                            {
+                                ri.RecipeIngredient_id,
+                                ri.Ingredient_id,
+                                ri.Quantity,
+                                i.Name,
+                                i.Unit
+                            })
+                        .ToList();
 
-                    if (product != null)
-                    {
-                        var ingredients = dbContext.RecipeIngredients
-                            .Where(ri => ri.Recipe_id == product.Recipe_id)
-                            .Join(dbContext.Ingredients,
-                                ri => ri.Ingredient_id,
-                                i => i.Ingredient_id,
-                                (ri, i) => new
-                                {
-                                    ri.RecipeIngredient_id,
-                                    ri.Ingredient_id,
-                                    ri.Quantity,
-                                    i.Name,
-                                    i.Unit
-                                })
-                            .ToList();
-
-                        recipeIngredientsDataGrid.ItemsSource = ingredients;
-                        EditRecipeIngredient_ComboBox.IsEnabled = true;
-                    }
+                    recipeIngredientsDataGrid.ItemsSource = ingredients;
+                    EditRecipeIngredient_ComboBox.IsEnabled = true;
                 }
             }
         }
@@ -111,7 +117,6 @@ namespace POS.Views
                     if(recipeIngredient != null)
                     {
                         RecipeIngredientQuantity.IsEnabled = true;
-                        EditRecipeOfProduct_ComboBox.IsEnabled = false;
                     }
                 }
             }
@@ -120,8 +125,14 @@ namespace POS.Views
         private void DeleteRecipeIngredient_ButtonClick(object sender, RoutedEventArgs e)
         {
             int IngredientId = 0, RecipeId = 0;
-            string selectedIngredient = EditRecipeIngredient_ComboBox.SelectedItem.ToString();
-            string selectedProduct = EditRecipeOfProduct_ComboBox.SelectedItem.ToString();
+            string selectedIngredient = EditRecipeIngredient_ComboBox.SelectedItem?.ToString();
+            string selectedProduct = EditRecipeOfProduct_ComboBox.SelectedItem?.ToString();
+
+            if (string.IsNullOrEmpty(selectedIngredient) || string.IsNullOrEmpty(selectedProduct))
+            {
+                MessageBox.Show("Wybierz składnik i produkt przed usunięciem.");
+                return;
+            }
 
             using (var dbContext = new AppDbContext())
             {
@@ -137,20 +148,19 @@ namespace POS.Views
                     RecipeId = product.Recipe_id;
                 }
 
-                // błąd tabela RecipeIngredients nie zawiera kolumny "Ingredient_id1"
-                var recipeIngredient = dbContext.RecipeIngredients.FirstOrDefault(ri => ri.Ingredient_id == IngredientId && ri.Recipe_id == RecipeId);
-                if (recipeIngredient != null)
+                try
                 {
-                    dbContext.RecipeIngredients.Remove(recipeIngredient);
+                    dbContext.Database.ExecuteSqlRaw("DELETE FROM RecipeIngredients WHERE Ingredient_id = {0} AND Recipe_id = {1}", IngredientId, RecipeId);
                     dbContext.SaveChanges();
                     MessageBox.Show("Rekord usunięty pomyślnie.");
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Nie znaleziono rekordu do usunięcia.");
+                    MessageBox.Show($"Wystąpił błąd: {ex.Message}");
                 }
             }
         }
+
         private void AddRecipeIngredient_ButtonClick(object sender, RoutedEventArgs e)
         {
             int IngredientId = 0, RecipeId = 0;
@@ -166,23 +176,31 @@ namespace POS.Views
                     RecipeId = product.Recipe_id;
                 }
 
-                var recipe = dbContext.Recipes.FirstOrDefault(r => r.Recipe_id == RecipeId);
                 var ingredient = dbContext.Ingredients.FirstOrDefault(i => i.Name == selectedIngredient);
+                if (ingredient != null)
+                {
+                    IngredientId = ingredient.Ingredient_id;
+                }
+
+                var recipe = dbContext.Recipes.FirstOrDefault(r => r.Recipe_id == RecipeId);
                 if (ingredient != null && recipe != null)
                 {
 
                     var recipeIngredient = new RecipeIngredients
                     {
-                        Recipe = recipe,
-                        Ingredient = ingredient,
+                        Recipe_id = RecipeId,
+                        Ingredient_id = IngredientId,
                         Quantity = Quantity
                     };
 
-                    dbContext.RecipeIngredients.Add(recipeIngredient);
+                    dbContext.Database.ExecuteSqlRaw("INSERT INTO RecipeIngredients (Recipe_id, Ingredient_id, Quantity) VALUES ({0}, {1}, {2})", RecipeId, ingredient.Ingredient_id, Quantity);
                     dbContext.SaveChanges();
 
                     MessageBox.Show("Rekord dodany pomyślnie.");
                 }
+                LoadIngredientsToDataGrid(selectedProduct);
+                EditRecipeIngredient_ComboBox.SelectedIndex = 0;
+                RecipeIngredientQuantity.Text = "Ilość składnika w przepisie";
             }
         }
 
@@ -348,6 +366,52 @@ namespace POS.Views
             FillEditProductComboBox(EditProduct_ComboBox);
         }
 
+        private void DeleteProduct_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (EditProduct_ComboBox.SelectedItem != null)
+            {
+                string selectedProduct = EditProduct_ComboBox.SelectedItem.ToString();
+
+                using (var dbContext = new AppDbContext())
+                {
+                    var product = dbContext.Products.FirstOrDefault(p => p.Product_name == selectedProduct);
+
+                    if (product != null)
+                    {
+                        int recipeId = product.Recipe_id;
+                        int productId = product.Product_id;
+
+                       try
+                        {
+                            // Usuń RecipeIngredients dla danego przepisu (Recipe_id)
+                            string deleteRecipeIngredientsSql = $"DELETE FROM RecipeIngredients WHERE Recipe_id = {recipeId}";
+                            dbContext.Database.ExecuteSqlRaw(deleteRecipeIngredientsSql);
+
+                            // Usuń produkt (Product) dla danego produktu (Product_id)
+                            string deleteProductSql = $"DELETE FROM Products WHERE Product_id = {productId}";
+                            dbContext.Database.ExecuteSqlRaw(deleteProductSql);
+
+                            // Usuń przepis (Recipe) dla danego przepisu (Recipe_id)
+                            string deleteRecipeSql = $"DELETE FROM Recipes WHERE Recipe_id = {recipeId}";
+                            dbContext.Database.ExecuteSqlRaw(deleteRecipeSql);
+                            dbContext.SaveChanges();
+
+                            MessageBox.Show("Produkt usunięty pomyślnie.");
+                        }
+                        catch (Exception ex)
+                        {
+                           MessageBox.Show($"Wystąpił błąd: {ex.Message}");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Wybierz produkt do usunięcia.");
+            }
+        }
+
+
 
         // right side
         private void FillEditIngredientComboBox(ComboBox ComboBoxName)
@@ -421,9 +485,6 @@ namespace POS.Views
             IngredientUnit.IsEnabled = false;
             IngredientPackage.IsEnabled = false;
             IngredientDescription.IsEnabled = false;
-
-            // temporary not enabled
-            DeleteIngredient_Button.IsEnabled = false;
         }
 
         private void SaveIngredient_ButtonClick(object sender, RoutedEventArgs e)
@@ -477,5 +538,46 @@ namespace POS.Views
             }
             FillEditIngredientComboBox(EditIngredient_ComboBox);
         }
+
+        private void DeleteIngredient_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (EditIngredient_ComboBox.SelectedItem != null)
+            {
+                string selectedIngredient = EditIngredient_ComboBox.SelectedItem.ToString();
+
+                using (var dbContext = new AppDbContext())
+                {
+                    var ingredient = dbContext.Ingredients.FirstOrDefault(i => i.Name == selectedIngredient);
+
+                    if (ingredient != null)
+                    {
+                        int ingredientId = ingredient.Ingredient_id;
+
+                        try
+                        {
+                            // Usuń wszystkie RecipeIngredients dla danego składnika
+                            string deleteRecipeIngredientsSql = $"DELETE FROM RecipeIngredients WHERE Ingredient_id = {ingredientId}";
+                            dbContext.Database.ExecuteSqlRaw(deleteRecipeIngredientsSql);
+
+                            // Usuń składnik z tabeli Ingredients
+                            string deleteIngredientSql = $"DELETE FROM Ingredients WHERE Ingredient_id = {ingredientId}";
+                            dbContext.Database.ExecuteSqlRaw(deleteIngredientSql);
+
+                            MessageBox.Show("Składnik usunięty pomyślnie.");
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Wystąpił błąd: {ex.Message}");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Wybierz składnik do usunięcia.");
+            }
+        }
+
+
     }
 }
