@@ -140,13 +140,14 @@ namespace POS.Views
                 {
                     OrderItems newOrderItem = new OrderItems
                     {
-                        Product_id = orderListItem.Id,
-                        Order_id = order.Order_id,
-                        Quantity = orderListItem.Amount,
+                        OrdersOrder_id = order.Order_id,
                         Employee_id = EmployeeId,
+                        Product_id = orderListItem.Id,
                         Orider_time = DateTime.Now,
+                        Quantity = orderListItem.Amount,
                     };
                     dbContext.OrderItems.Add(newOrderItem);
+                    dbContext.SaveChanges();
                 }
             }
         }
