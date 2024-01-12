@@ -32,6 +32,7 @@
                     <ComboBoxItem Content="Raport zamówień"/>
                     <ComboBoxItem Content="Czas pracy pracowników"/>
                     <ComboBoxItem Content="Produktywność pracowników"/>
+                    <ComboBoxItem Content="Popularność produktów"/>
                 </ComboBox>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">

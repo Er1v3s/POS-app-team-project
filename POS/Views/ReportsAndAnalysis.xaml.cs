@@ -22,6 +22,8 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using LiveCharts.Wpf;
 using LiveCharts;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using LiveCharts.Definitions.Charts;
+using Org.BouncyCastle.Asn1.X509;
 
 namespace POS.Views
 {
@@ -40,7 +42,8 @@ namespace POS.Views
             { 0, "Raport sprzedaży produktów" },
             { 1, "Raport zamówień" },
             { 2, "Czas pracy pracowników" },
-            { 3, "Produktywność pracowników" }
+            { 3, "Produktywność pracowników" },
+            { 4, "Popularność produktów" }
         };
 
         public ReportsAndAnalysis()
@@ -95,6 +98,10 @@ namespace POS.Views
             else if (selectedReport == raports[3])
             {
                 GenerateEmployeeProductivityChart(GenerateEmployeeProductivityData(startDate, endDate));
+            }
+            else if (selectedReport == raports[4])
+            {
+                GenerateProductPopularityChart(GenerateProductPopularityData(startDate, endDate));
             }
         }
 
@@ -284,6 +291,58 @@ namespace POS.Views
 
         #endregion
 
+        #region Popularity of products
+
+        private List<ProductPopularity> GenerateProductPopularityData(DateTime startDate, DateTime endDate)
+        {
+            List<ProductPopularity> productPopularityData;
+            using (var dbContext = new AppDbContext())
+            {
+                productPopularityData = (from orderItems in dbContext.OrderItems
+                                         join products in dbContext.Products on orderItems.Product_id equals products.Product_id
+                                         join order in dbContext.Orders on orderItems.OrdersOrder_id equals order.Order_id
+                                         where order.Order_time >= startDate && order.Order_time <= endDate
+                                         group orderItems by products.Product_name into groupedItems
+                                         select new ProductPopularity
+                                         {
+                                             ProductName = groupedItems.Key,
+                                             Quantity = groupedItems.Sum(item => item.Quantity)
+                                         }).ToList();
+            }
+
+            return productPopularityData;
+        }
+
+        private void GenerateProductPopularityChart(List<ProductPopularity> popularityOfProductsData)
+        {
+            var popularityOfProductsChart = new CartesianChart();
+
+            popularityOfProductsChart.AxisY.Add(new Axis
+            {
+                LabelFormatter = value => Math.Floor(value).ToString(),
+            });
+
+            popularityOfProductsChart.Series = new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Title = "Ilość sprzedanego produktu",
+                    Values = new ChartValues<int>(popularityOfProductsData.Select(p => (p.Quantity))),
+                    DataLabels = true,
+                }
+            };
+
+            popularityOfProductsChart.AxisX.Add(new Axis
+            {
+                Labels = popularityOfProductsData.Select(p => p.ProductName).ToList(),
+            });
+
+            popularityOfProductsChart.LegendLocation = LegendLocation.Bottom;
+
+            liveChart.Children.Add(popularityOfProductsChart);
+        }
+
+        #endregion
 
         #region Employee Productivity
 
@@ -309,12 +368,19 @@ namespace POS.Views
         private void GenerateEmployeeProductivityChart(List<EmployeeProductivity> productivityData)
         {
             var productivityChart = new CartesianChart();
+
+            productivityChart.AxisY.Add(new Axis
+            {
+                LabelFormatter = value => Math.Floor(value).ToString(),
+            });
+
             productivityChart.Series = new SeriesCollection
             {
                 new ColumnSeries
                 {
                     Title = "Ilość zrealizowanych zamówień",
-                    Values = new ChartValues<int>(productivityData.Select(p => p.OrderCount))
+                    Values = new ChartValues<int>(productivityData.Select(p => p.OrderCount)),
+                    DataLabels = true,
                 }
             };
 
@@ -329,14 +395,19 @@ namespace POS.Views
 
         }
 
+        #endregion
+
+        public class ProductPopularity
+        {
+            public string ProductName { get; set; }
+            public int Quantity { get; set; }
+        }
+
         public class EmployeeProductivity
         {
             public string EmployeeName { get; set; }
             public int OrderCount { get; set; }
         }
-
-        #endregion
-
 
         public class EmployeeWorkingTime
         {
