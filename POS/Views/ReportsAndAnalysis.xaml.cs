@@ -2,26 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using LiveCharts.Defaults;
-using System.Collections.ObjectModel;
-using POS.Migrations;
-using POS.ViewModel;
-using Microsoft.EntityFrameworkCore;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using LiveCharts.Wpf;
 using LiveCharts;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using POS.ViewModel.Raports;
 
 namespace POS.Views
 {
@@ -33,14 +18,13 @@ namespace POS.Views
         List<string> employeeNames = new List<string>();
         List<long> totalWorkTimes = new List<long>();
 
-        //string[] raports = {"", "", "", "" };
-
         Dictionary<int, string> raports = new Dictionary<int, string>()
         {
             { 0, "Raport sprzedaży produktów" },
-            { 1, "Raport zamówień" },
+            { 1, "Raport zużycia materiałów" },
             { 2, "Czas pracy pracowników" },
-            { 3, "Produktywność pracowników" }
+            { 3, "Produktywność pracowników" },
+            { 4, "Popularność produktów" }
         };
 
         public ReportsAndAnalysis()
@@ -52,8 +36,9 @@ namespace POS.Views
         {
             ComboBoxItem selectedComboBoxItem = (ComboBoxItem)reportTypeComboBox.SelectedItem;
             string selectedReport = selectedComboBoxItem.Content.ToString();
+
             DateTime startDate = datePickerFrom.SelectedDate.GetValueOrDefault();
-            DateTime endDate = datePickerTo.SelectedDate.GetValueOrDefault();
+            DateTime endDate = datePickerTo.SelectedDate.GetValueOrDefault().Date.AddHours(23).AddMinutes(59).AddSeconds(59);
 
             if (selectedReport == null)
             {
@@ -79,147 +64,91 @@ namespace POS.Views
 
             if (selectedReport == raports[0])
             {
-                //GenerateSalesByProductReport(startDate, endDate);
-                return;
+                GenerateSalesReport(startDate, endDate);
             }
             else if (selectedReport == raports[1])
             {
-                //GenerateOrdersReport(startDate, endDate);
-                return;
+                GenerateConsumptionReport(startDate, endDate);
             }
             else if (selectedReport == raports[2])
             {
-                GenerateEmployeesWorkTimeReportChart(GenerateWorkingTimeData(startDate, endDate));
-                return;
+                List<EmployeeWorkingTime> workingTimeData = GenerateWorkingTimeData(startDate, endDate);
+                GenerateEmployeesWorkTimeReportChart(workingTimeData);
             }
             else if (selectedReport == raports[3])
             {
-                GenerateEmployeeProductivityChart(GenerateEmployeeProductivityData(startDate, endDate));
+                List <EmployeeProductivity> employeeProductivityData = GenerateEmployeeProductivityData(startDate, endDate);
+                GenerateEmployeeProductivityChart(employeeProductivityData);
+            }
+            else if (selectedReport == raports[4])
+            {
+                List<ProductPopularity> productPopularityData = GenerateProductPopularityData(startDate, endDate);
+                GenerateProductPopularityChart(productPopularityData);
             }
         }
 
-        // Nie działa
-        #region Sales by Product
+        #region Sales raport
 
-        //private void GenerateSalesByProductReport(DateTime startDate, DateTime endDate)
-        //{
-        //    using (var dbContext = new AppDbContext())
-        //    {
-        //        var salesData = from o in dbContext.Orders
-        //                        join oi in dbContext.OrderItems on o.Order_id equals oi.Order_id
-        //                        join p in dbContext.Products on oi.Product_id equals p.Product_id
-        //                        where o.Order_time >= startDate && o.Order_time <= endDate
-        //                        select new
-        //                        {
-        //                            OrderId = o.Order_id,
-        //                            ProductName = p.Product_name,
-        //                            QuantitySold = oi.Quantity,
-        //                            PricePerUnit = p.Price,
-        //                            TotalAmount = oi.Quantity * (p.Price ?? 0)
-        //                        };
+        private void GenerateSalesReport(DateTime startDate, DateTime endDate)
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                var salesReport = dbContext.Products
+                .Select(product => new
+                {
+                    ProductId = product.Product_id,
+                    ProductName = product.Product_name,
+                    TotalSales = dbContext.OrderItems
+                        .Where(orderItem => orderItem.Product_id == product.Product_id
+                                           && orderItem.Orider_time >= startDate
+                                           && orderItem.Orider_time <= endDate)
+                        .Sum(orderItem => orderItem.Quantity * product.Price),
+                    TotalAmount = dbContext.OrderItems
+                        .Where(orderItem => orderItem.Product_id == product.Product_id
+                                           && orderItem.Orider_time >= startDate
+                                           && orderItem.Orider_time <= endDate)
+                        .Sum(o => o.Quantity)
+                });
 
-        //        var salesByProduct = salesData.GroupBy(s => s.ProductName)
-        //        .Select(g => new
-        //            {
-        //                ProductName = g.Key,
-        //                TotalQuantitySold = g.Sum(s => s.QuantitySold),
-        //                TotalRevenue = g.Sum(s => s.TotalAmount)
-        //            })
-        //            .OrderByDescending(s => s.TotalRevenue)
-        //            .ToList();
+                DataGrid salesRaportDataGrid = new DataGrid();
+                salesRaportDataGrid.ItemsSource = salesReport.ToList();
 
-        //        SeriesCollection series = new SeriesCollection();
-        //        List<string> labels = new List<string>();
-        //        ChartValues<double> chartValues = new ChartValues<double>();
+                liveChart.Children.Add(salesRaportDataGrid);
+            }
+        }
 
-        //        foreach (var sale in salesByProduct)
-        //        {
-        //            labels.Add(sale.ProductName);
-        //            chartValues.Add(sale.TotalQuantitySold);
-        //        }
+        #endregion
 
-        //        series.Add(new ColumnSeries
-        //        {
-        //            Title = "Sales by Product",
-        //            Values = chartValues
-        //        });
+        #region Consumption raport
+        private void GenerateConsumptionReport(DateTime startDate, DateTime endDate)
+        {
+            using (var dbContext = new AppDbContext())
+            {
 
-        //        SalesChart.Series = series;
+                var consumptionReport = from orderItem in dbContext.OrderItems
+                                        where orderItem.Orider_time >= startDate && orderItem.Orider_time <= endDate
+                                        join product in dbContext.Products on orderItem.Product_id equals product.Product_id
+                                        join recipeIngredient in dbContext.RecipeIngredients on product.Recipe_id equals recipeIngredient.Recipe_id
+                                        join ingredient in dbContext.Ingredients on recipeIngredient.Ingredient_id equals ingredient.Ingredient_id
+                                        group new { orderItem, recipeIngredient } by new { ingredient.Name, ingredient.Unit } into grouped
+                                        select new
+                                        {
+                                            IngredientName = grouped.Key.Name,
+                                            Unit = grouped.Key.Unit,
+                                            TotalConsumedQuantity = grouped.Sum(g => g.recipeIngredient.Quantity * g.orderItem.Quantity)
+                                        };
 
-        //        SalesChart.AxisX.Add(new Axis
-        //        {
-        //            Title = "Products",
-        //            Labels = labels
-        //        });
+                DataGrid consumptionReportDataGrid = new DataGrid();
+                consumptionReportDataGrid.ItemsSource = consumptionReport.ToList();
 
-        //        SalesChart.AxisY.Add(new Axis
-        //        {
-        //            Title = "Quantity"
-        //        });
-
-        //        SalesChart.LegendLocation = LegendLocation.Right;
-        //    }
-        //}
+                liveChart.Children.Add(consumptionReportDataGrid);
+            }
+        }
 
         #endregion
 
         // Nie działa
-        #region Orders
-
-        //private void GenerateOrdersReport(DateTime startDate, DateTime endDate)
-        //{
-        //    using (var dbContext = new AppDbContext())
-        //    {
-        //        var orders = dbContext.Orders
-        //            .Where(order => order.Order_time >= startDate && order.Order_time <= endDate)
-        //            .ToList();
-
-        //        int ordersCount = orders.Count;
-
-        //        double totalQuantity = orders
-        //            .Join(dbContext.OrderItems, order => order.Order_id, orderItem => orderItem.Order_id, (order, orderItem) => orderItem)
-        //            .Sum(orderItem => orderItem.Quantity);
-
-        //        var productsAmount = orders
-        //            .Join(dbContext.OrderItems, order => order.Order_id, orderItem => orderItem.Order_id, (order, orderItem) => new
-        //            {
-        //                orderItem.Quantity,
-        //                orderItem.Product_id
-        //            })
-        //            .Join(dbContext.Products, orderItem => orderItem.Product_id, product => product.Product_id, (orderItem, product) => new
-        //            {
-        //                ProductName = product.Product_name,
-        //                TotalAmount = orderItem.Quantity * (product.Price ?? 0)
-        //            })
-        //            .ToList();
-
-        //        double totalAmount = productsAmount.Sum(item => item.TotalAmount);
-        //        double averageOrderAmount = ordersCount > 0 ? totalAmount / ordersCount : 0;
-        //        double averageOrderQuantity = ordersCount > 0 ? totalQuantity / ordersCount : 0;
-
-        //        var salesData = productsAmount
-        //            .GroupBy(item => item.ProductName)
-        //            .Select(group => new
-        //            {
-        //                ProductName = group.Key,
-        //                TotalSales = group.Sum(item => item.TotalAmount)
-        //            })
-        //            .ToList();
-
-        //        var chartData = salesData.Select(item => item.TotalSales).ToList();
-
-        //        SalesChart.Series.Add(new ColumnSeries
-        //        {
-        //            Title = "Raport zamówień",
-        //            Values = new ChartValues<double>(chartData)
-        //        });
-        //    }
-        //}
-
-        #endregion
-
-        // Jeszcze nie naprawione
-        #region Working Time Raport
+        #region Working time Raport
 
         private List<EmployeeWorkingTime> GenerateWorkingTimeData(DateTime startDate, DateTime endDate)
         {
@@ -250,19 +179,6 @@ namespace POS.Views
             }
         }
 
-
-        //private long CalculateTotalWorkTime(string? fromTime, string? toTime)
-        //{
-        //    if (TimeSpan.TryParse(fromTime, out TimeSpan startTime) &&
-        //        TimeSpan.TryParse(toTime, out TimeSpan endTime))
-        //    {
-        //        TimeSpan timeDifference = endTime - startTime;
-        //        return timeDifference.Ticks;
-        //    }
-
-        //    return TimeSpan.Zero.Ticks;
-        //}
-
         private void GenerateEmployeesWorkTimeReportChart(List<EmployeeWorkingTime> raportData)
         {
             var workingTimeChart = new CartesianChart();
@@ -280,12 +196,70 @@ namespace POS.Views
                 Title = "Pracownicy",
                 Labels = raportData.Select(p => p.EmployeeName).ToList()
             });
+
+            liveChart.Children.Add(workingTimeChart);
         }
 
         #endregion
 
+        #region Popularity of products raport
 
-        #region Employee Productivity
+        private List<ProductPopularity> GenerateProductPopularityData(DateTime startDate, DateTime endDate)
+        {
+            List<ProductPopularity> productPopularityData;
+            using (var dbContext = new AppDbContext())
+            {
+                productPopularityData = (from orderItems in dbContext.OrderItems
+                                         join products in dbContext.Products on orderItems.Product_id equals products.Product_id
+                                         join order in dbContext.Orders on orderItems.OrdersOrder_id equals order.Order_id
+                                         where order.Order_time >= startDate && order.Order_time <= endDate
+                                         group orderItems by products.Product_name into groupedItems
+                                         select new ProductPopularity
+                                         {
+                                             ProductName = groupedItems.Key,
+                                             Quantity = groupedItems.Sum(item => item.Quantity)
+                                         }).ToList();
+            }
+
+            return productPopularityData;
+        }
+
+        private void GenerateProductPopularityChart(List<ProductPopularity> popularityOfProductsData)
+        {
+            var popularityOfProductsChart = new CartesianChart();
+
+            popularityOfProductsChart.AxisY.Add(new Axis
+            {
+                Title = "Ilość sprzedanych produktów",
+                Separator = new LiveCharts.Wpf.Separator
+                {
+                    Step = 1,
+                    IsEnabled = true
+                }
+            });
+
+            popularityOfProductsChart.Series = new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Title = "Ilość sprzedanych produktów: ",
+                    Values = new ChartValues<int>(popularityOfProductsData.Select(p => (p.Quantity))),
+                    DataLabels = true,
+                }
+            };
+
+            popularityOfProductsChart.AxisX.Add(new Axis
+            {
+                Title = "Produkt",
+                Labels = popularityOfProductsData.Select(p => p.ProductName).ToList(),
+            });
+
+            liveChart.Children.Add(popularityOfProductsChart);
+        }
+
+        #endregion
+
+        #region Employee productivity raport
 
         private List<EmployeeProductivity> GenerateEmployeeProductivityData(DateTime startDate, DateTime endDate)
         {
@@ -309,39 +283,36 @@ namespace POS.Views
         private void GenerateEmployeeProductivityChart(List<EmployeeProductivity> productivityData)
         {
             var productivityChart = new CartesianChart();
+
+            productivityChart.AxisY.Add(new Axis
+            {
+                Title = "Ilość zrealizowanych zamówień",
+                Separator = new LiveCharts.Wpf.Separator
+                {
+                    Step = 1,
+                    IsEnabled = true
+                }
+            });
+
             productivityChart.Series = new SeriesCollection
             {
                 new ColumnSeries
                 {
-                    Title = "Ilość zrealizowanych zamówień",
-                    Values = new ChartValues<int>(productivityData.Select(p => p.OrderCount))
+                    Title = "Ilość zrealizowanych zamówień: ",
+                    Values = new ChartValues<int>(productivityData.Select(p => p.OrderCount)),
+                    DataLabels = true,
                 }
             };
 
             productivityChart.AxisX.Add(new Axis
             {
+                Title = "Pracownik",
                 Labels = productivityData.Select(p => p.EmployeeName).ToList()
             });
 
-            productivityChart.LegendLocation = LegendLocation.Bottom;
-
             liveChart.Children.Add(productivityChart);
-
-        }
-
-        public class EmployeeProductivity
-        {
-            public string EmployeeName { get; set; }
-            public int OrderCount { get; set; }
         }
 
         #endregion
-
-
-        public class EmployeeWorkingTime
-        {
-            public string EmployeeName { get; set; }
-            public double TotalWorkTime { get; set; }
-        }
     }
 }
