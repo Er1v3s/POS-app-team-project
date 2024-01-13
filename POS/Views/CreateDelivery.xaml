@@ -43,13 +43,18 @@
                     </DataGrid>
                 </Grid>
             </Border>
-            
+
 
             <Border Grid.Row="2" BorderThickness="1" BorderBrush="Black" Background="#7286D3" CornerRadius="0,0,8,8" d:IsLocked="True">
                 <Grid Grid.Row="2">
-                    <TextBlock Text="GENERUJ ZAMÓWIENIE" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"></TextBlock>
+                    <Button x:Name="GenerateDeliveryButton" Click="GenerateDeliveryButton_Click" Style="{StaticResource GenerateButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="GENERUJ ZAMÓWIENIE" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"/>
+                        </StackPanel>
+                    </Button>
                 </Grid>
             </Border>
+
         </Grid>
         <!--#endregion-->
         
@@ -63,13 +68,15 @@
             <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black" Background="#FF8EA7E9" d:IsLocked="True"/>
             <Grid Grid.Row="0" Background="#FF8EA7E9">
                 <TextBox x:Name="searchTextBox" Style="{StaticResource searchBar}" Margin="25,0,0,0" Text="Szukaj" Width="360"
-                             Height="42" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus">
+         Height="42" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus"
+         TextChanged="searchTextBox_TextChanged">
                     <TextBox.Resources>
                         <Style TargetType="{x:Type Border}">
                             <Setter Property="CornerRadius" Value="16"/>
                         </Style>
                     </TextBox.Resources>
                 </TextBox>
+
 
                 <Border BorderBrush="#FF7286D3" BorderThickness="1" Width="200" Height="42" HorizontalAlignment="Right" Margin="0,0,25,0" Background="#FF7286D3" CornerRadius="8">
                     <Label x:Name="welcomeLabel"  VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="White" Margin="-1,-1,0,-1"/>

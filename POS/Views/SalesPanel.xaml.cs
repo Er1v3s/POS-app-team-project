@@ -238,6 +238,7 @@ namespace POS.Views
 
         private void LoadProductsBySearch(string searchText)
         {
+   
             using (var dbContext = new AppDbContext())
             {
                 var products = dbContext.Products.Where(p => p.Product_name.ToLower().Contains(searchText)).ToList();

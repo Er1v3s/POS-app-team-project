@@ -153,6 +153,9 @@ namespace POS.Views
                     dbContext.Database.ExecuteSqlRaw("DELETE FROM RecipeIngredients WHERE Ingredient_id = {0} AND Recipe_id = {1}", IngredientId, RecipeId);
                     dbContext.SaveChanges();
                     MessageBox.Show("Rekord usunięty pomyślnie.");
+                    LoadIngredientsToDataGrid(selectedProduct);
+                    EditRecipeIngredient_ComboBox.SelectedIndex = 0;
+                    RecipeIngredientQuantity.Text = "Ilość składnika w przepisie";
                 }
                 catch (Exception ex)
                 {
@@ -166,41 +169,49 @@ namespace POS.Views
             int IngredientId = 0, RecipeId = 0;
             string selectedIngredient = EditRecipeIngredient_ComboBox.SelectedItem.ToString();
             string selectedProduct = EditRecipeOfProduct_ComboBox.SelectedItem.ToString();
-            int Quantity = Convert.ToInt32(RecipeIngredientQuantity.Text);
-
-            using (var dbContext = new AppDbContext())
+            int Quantity;
+            if (int.TryParse(RecipeIngredientQuantity.Text, out Quantity))
             {
-                var product = dbContext.Products.FirstOrDefault(p => p.Product_name == selectedProduct);
-                if (product != null)
-                {
-                    RecipeId = product.Recipe_id;
-                }
+                Quantity = Convert.ToInt32(RecipeIngredientQuantity.Text);
 
-                var ingredient = dbContext.Ingredients.FirstOrDefault(i => i.Name == selectedIngredient);
-                if (ingredient != null)
+                using (var dbContext = new AppDbContext())
                 {
-                    IngredientId = ingredient.Ingredient_id;
-                }
-
-                var recipe = dbContext.Recipes.FirstOrDefault(r => r.Recipe_id == RecipeId);
-                if (ingredient != null && recipe != null)
-                {
-
-                    var recipeIngredient = new RecipeIngredients
+                    var product = dbContext.Products.FirstOrDefault(p => p.Product_name == selectedProduct);
+                    if (product != null)
                     {
-                        Recipe_id = RecipeId,
-                        Ingredient_id = IngredientId,
-                        Quantity = Quantity
-                    };
+                        RecipeId = product.Recipe_id;
+                    }
 
-                    dbContext.Database.ExecuteSqlRaw("INSERT INTO RecipeIngredients (Recipe_id, Ingredient_id, Quantity) VALUES ({0}, {1}, {2})", RecipeId, ingredient.Ingredient_id, Quantity);
-                    dbContext.SaveChanges();
+                    var ingredient = dbContext.Ingredients.FirstOrDefault(i => i.Name == selectedIngredient);
+                    if (ingredient != null)
+                    {
+                        IngredientId = ingredient.Ingredient_id;
+                    }
 
-                    MessageBox.Show("Rekord dodany pomyślnie.");
+                    var recipe = dbContext.Recipes.FirstOrDefault(r => r.Recipe_id == RecipeId);
+                    if (ingredient != null && recipe != null)
+                    {
+
+                        var recipeIngredient = new RecipeIngredients
+                        {
+                            Recipe_id = RecipeId,
+                            Ingredient_id = IngredientId,
+                            Quantity = Quantity
+                        };
+
+                        dbContext.Database.ExecuteSqlRaw("INSERT INTO RecipeIngredients (Recipe_id, Ingredient_id, Quantity) VALUES ({0}, {1}, {2})", RecipeId, ingredient.Ingredient_id, Quantity);
+                        dbContext.SaveChanges();
+
+                        MessageBox.Show("Rekord dodany pomyślnie.");
+                    }
+                    LoadIngredientsToDataGrid(selectedProduct);
+                    EditRecipeIngredient_ComboBox.SelectedIndex = 0;
+                    RecipeIngredientQuantity.Text = "Ilość składnika w przepisie";
                 }
-                LoadIngredientsToDataGrid(selectedProduct);
-                EditRecipeIngredient_ComboBox.SelectedIndex = 0;
-                RecipeIngredientQuantity.Text = "Ilość składnika w przepisie";
+            }
+            else
+            {
+                MessageBox.Show("Wprowadzona ilość nie jest cyfrą");
             }
         }
 
@@ -325,6 +336,8 @@ namespace POS.Views
                     dbContext.Products.Add(newProduct);
                     dbContext.SaveChanges();
                     EditProduct_Clear();
+                    FillEditProductComboBox(EditProduct_ComboBox);
+                    FillEditProductComboBox(EditRecipeOfProduct_ComboBox);
                     CreateNewProduct_CheckBox.IsChecked = false;
                     MessageBox.Show("Pomyślnie dodano nowy produkt.");
                 }
@@ -397,6 +410,11 @@ namespace POS.Views
                             dbContext.SaveChanges();
 
                             MessageBox.Show("Produkt usunięty pomyślnie.");
+                            EditProduct_Clear();
+                            FillEditProductComboBox(EditProduct_ComboBox);
+                            EditProduct_ComboBox.SelectedIndex = 0;
+                            FillEditProductComboBox(EditRecipeOfProduct_ComboBox);
+                            EditRecipeOfProduct_ComboBox.SelectedIndex = 0;
                         }
                         catch (Exception ex)
                         {
@@ -504,6 +522,8 @@ namespace POS.Views
                     dbContext.Ingredients.Add(newIngredient);
                     dbContext.SaveChanges();
                     EditIngredient_Clear();
+                    FillEditIngredientComboBox(EditIngredient_ComboBox);
+                    FillEditIngredientComboBox(EditRecipeIngredient_ComboBox);
                     CreateNewIngredient_CheckBox.IsChecked = false;
                     MessageBox.Show("Pomyślnie dodano nowy składnik.");
                 }
@@ -564,6 +584,11 @@ namespace POS.Views
                             dbContext.Database.ExecuteSqlRaw(deleteIngredientSql);
 
                             MessageBox.Show("Składnik usunięty pomyślnie.");
+                            FillEditIngredientComboBox(EditIngredient_ComboBox);
+                            EditIngredient_ComboBox.SelectedIndex = 0;
+                            EditIngredient_Clear();
+                            FillEditIngredientComboBox(EditRecipeIngredient_ComboBox);
+                            EditRecipeIngredient_ComboBox.SelectedIndex = 0;
                         }
                         catch (Exception ex)
                         {

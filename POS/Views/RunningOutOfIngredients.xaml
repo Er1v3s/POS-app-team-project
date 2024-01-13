@@ -47,9 +47,9 @@
                 <Border BorderThickness="0, 1, 0 ,0" BorderBrush="Black">
                     <DataGrid x:Name="runningOutOfIngredientsDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" RowStyle="{DynamicResource DataGridRowStyle1}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="SKŁADNIK" IsReadOnly="True" Width="3*" CanUserResize="False" CanUserReorder="False" Binding="{Binding}"/>
-                            <DataGridTextColumn Header="ZAPAS BEZPIECZEŃSTWA" IsReadOnly="True" Width="3*" CanUserResize="False" CanUserReorder="False" Binding="{Binding}"/>
-                            <DataGridTextColumn Header="ZAPAS" IsReadOnly="True" Width="2*" CanUserResize="False" CanUserReorder="False" Binding="{Binding }"/>
+                            <DataGridTextColumn Header="SKŁADNIK" IsReadOnly="True" Width="3*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Name}"/>
+                            <DataGridTextColumn Header="ZAPAS BEZPIECZEŃSTWA" IsReadOnly="True" Width="3*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Safety_stok}"/>
+                            <DataGridTextColumn Header="ZAPAS" IsReadOnly="True" Width="2*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Stock}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Border>

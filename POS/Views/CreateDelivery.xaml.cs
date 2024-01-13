@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Utilities;
 using POS.Converter;
@@ -8,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +23,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using static iTextSharp.text.pdf.AcroFields;
+using Paragraph = iTextSharp.text.Paragraph;
 
 namespace POS.Views
 {
@@ -78,7 +82,7 @@ namespace POS.Views
             if (selectedIngredient != null)
             {
                 // Wyświetl MessageBox z pytaniem o nową wartość
-                string newValueString = Microsoft.VisualBasic.Interaction.InputBox("Enter new value:", "Edit Value", selectedIngredient.Stock.ToString());
+                string newValueString = Microsoft.VisualBasic.Interaction.InputBox("Podaj ilość składnika:", "Dodaj składnik do zamówienia", selectedIngredient.Stock.ToString());
 
                 // Sprawdź, czy użytkownik nie anulował operacji
                 if (!string.IsNullOrEmpty(newValueString))
@@ -166,6 +170,90 @@ namespace POS.Views
             {
                 var ingredients = dbContext.Ingredients.ToList();
                 IngredientsDataGrid.ItemsSource = ingredients;
+            }
+        }
+
+        private void GenerateDeliveryButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "Pliki PDF (*.pdf)|*.pdf";
+                saveFileDialog.FileName = "Podsumowanie_zamowienia.pdf";
+
+                bool? result = saveFileDialog.ShowDialog();
+
+                if (result == true)
+                {
+                    string filePath = saveFileDialog.FileName;
+
+                    Document pdfDoc = new Document(PageSize.A4);
+                    PdfWriter writer = PdfWriter.GetInstance(pdfDoc, new FileStream(filePath, FileMode.Create));
+
+                    pdfDoc.Open();
+                    pdfDoc.NewPage();
+
+                    PdfPTable pdfTable = new PdfPTable(deliveryListDataGrid.Columns.Count);
+
+                    foreach (DataGridColumn column in deliveryListDataGrid.Columns)
+                    {
+                        PdfPCell cell = new PdfPCell(new Phrase(column.Header.ToString()));
+                        pdfTable.AddCell(cell);
+                    }
+
+                    foreach (var item in deliveryListDataGrid.Items)
+                    {
+                        foreach (DataGridColumn column in deliveryListDataGrid.Columns)
+                        {
+                            string cellValue = (column.GetCellContent(item) as TextBlock)?.Text;
+                            PdfPCell cell = new PdfPCell(new Phrase(cellValue ?? ""));
+                            pdfTable.AddCell(cell);
+                        }
+                    }
+
+                    Paragraph pdfTitle = new Paragraph("Zamówienie", new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD));
+                    pdfTitle.Alignment = Element.ALIGN_CENTER;
+                    pdfTitle.SpacingAfter = 10f;
+                    pdfTitle.SetLeading(0, 1.2f);
+
+                    pdfDoc.Add(pdfTitle);
+                    pdfDoc.Add(pdfTable);
+
+                    pdfDoc.Close();
+                    this.Close();
+                    MessageBox.Show("Zamówienie zostało zapisane do pliku PDF.");
+                }
+                else
+                {
+                    MessageBox.Show("Anulowano zapisywanie pliku PDF.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Wystąpił błąd podczas zapisywania pliku PDF: " + ex.Message);
+            }
+        }
+        private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                using (var dbContext = new AppDbContext())
+                {
+                    string searchPhrase = searchTextBox.Text.ToLower();
+
+                    var filteredIngredients = dbContext.Ingredients
+                        .Where(ingredient => ingredient.Name.ToLower().Contains(searchPhrase))
+                        .ToList();
+
+                    if(filteredIngredients.Count != 0)
+                    {
+                        IngredientsDataGrid.ItemsSource = filteredIngredients;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Wystąpił błąd podczas filtrowania składników: " + ex.Message);
             }
         }
 
