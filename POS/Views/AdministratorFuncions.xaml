@@ -29,7 +29,7 @@
                     <Button Style="{StaticResource topButton}" Background="#4BAEA0">
                         <TextBlock Text="ROZPOCZNIJ DZIEŃ" Style="{StaticResource topButtonTextBlock}"/>
                     </Button>
-                    <Button Style="{StaticResource topButton}" Background="#FF7286D3">
+                    <Button Style="{StaticResource topButton}" Background="#FF7286D3" Click="ShowCashBalance_ButtonClick">
                         <TextBlock Text="KONTROLA GOTÓWKI" Style="{StaticResource topButtonTextBlock}"/>
                     </Button>
                     <Button Style="{StaticResource topButton}" Background="#AE4B59">

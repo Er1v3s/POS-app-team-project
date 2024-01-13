@@ -1,5 +1,7 @@
-﻿using POS.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using POS.Models;
 using POS.ViewModel;
+using POS.ViewModel.Raports;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -127,6 +129,20 @@ namespace POS.Views
             }
         }
 
+        private void ShowCashBalance_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            double cashBalance = 0;
 
+            using(var dbContext = new AppDbContext())
+            {
+                cashBalance = dbContext.Payments
+                                .Where(payment => payment.Payment_method == "Gotówka")
+                                .Sum(payment => payment.Amount);
+            }
+
+            cashBalance = Math.Round(cashBalance, 2);
+
+            MessageBox.Show($"Stan kasy wynosi: {cashBalance :C}");
+        }
     }
 }
