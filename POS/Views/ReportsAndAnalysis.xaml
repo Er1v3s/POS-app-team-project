@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:POS.Views"
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             d:DesignHeight="768" d:DesignWidth="666"
               mc:Ignorable="d">
     
     <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" CornerRadius="8" Background="White">
@@ -47,23 +48,7 @@
                 <Button Content="Generuj raport" Grid.Column="2" Click="GenerateRaport_ButtonClick" HorizontalAlignment="Center" Margin="5 5 20 5" Padding="10"/>
             </Grid>
 
-            <DataGrid Grid.Row="2" x:Name="SalesReportDataGrid" AutoGenerateColumns="False" Margin="10" Visibility="Hidden">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="ID Pracownika" Binding="{Binding ProductId}" />
-                    <DataGridTextColumn Header="Nazwa Pracownika" Binding="{Binding ProductName}" />
-                    <DataGridTextColumn Header="Całkowita Sprzedaż" Binding="{Binding TotalSales}" />
-                </DataGrid.Columns>
-            </DataGrid>
-
-            <DataGrid Grid.Row="2" x:Name="ConsumptionReportDataGrid" AutoGenerateColumns="False" Margin="10" Visibility="Hidden">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Nazwa produktu" Binding="{Binding IngredientName}" />
-                    <DataGridTextColumn Header="Ilość zużytego produktu" Binding="{Binding TotalConsumedQuantity}" />
-                    <DataGridTextColumn Header="Miara" Binding="{Binding Unit}" />
-                </DataGrid.Columns>
-            </DataGrid>
-
-            <GroupBox Header="Wyniki raportu" Grid.Row="2" Margin="20" Visibility="Hidden">
+            <GroupBox Header="Wyniki raportu" Grid.Row="2" Margin="20">
                 <Grid Name="liveChart"></Grid>
             </GroupBox>
         </Grid>

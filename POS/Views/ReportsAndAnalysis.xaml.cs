@@ -61,9 +61,6 @@ namespace POS.Views
         private void GenerateChoosenReport(string selectedReport, DateTime startDate, DateTime endDate)
         {
             liveChart.Children.Clear();
-            liveChart.Visibility = Visibility.Hidden;
-            ConsumptionReportDataGrid.Visibility = Visibility.Hidden;
-            SalesReportDataGrid.Visibility = Visibility.Hidden;
 
             if (selectedReport == raports[0])
             {
@@ -77,24 +74,20 @@ namespace POS.Views
             {
                 List<EmployeeWorkingTime> workingTimeData = GenerateWorkingTimeData(startDate, endDate);
                 GenerateEmployeesWorkTimeReportChart(workingTimeData);
-                liveChart.Visibility = Visibility.Visible;
-                GenerateEmployeesWorkTimeReportChart(GenerateWorkingTimeData(startDate, endDate));
             }
             else if (selectedReport == raports[3])
             {
-                liveChart.Visibility = Visibility.Visible;
-                GenerateEmployeeProductivityChart(GenerateEmployeeProductivityData(startDate, endDate));
                 List <EmployeeProductivity> employeeProductivityData = GenerateEmployeeProductivityData(startDate, endDate);
                 GenerateEmployeeProductivityChart(employeeProductivityData);
             }
             else if (selectedReport == raports[4])
             {
-                liveChart.Visibility = Visibility.Visible;
-                GenerateProductPopularityChart(GenerateProductPopularityData(startDate, endDate));
                 List<ProductPopularity> productPopularityData = GenerateProductPopularityData(startDate, endDate);
                 GenerateProductPopularityChart(productPopularityData);
             }
         }
+
+        #region Sales raport
 
         private void GenerateSalesReport(DateTime startDate, DateTime endDate)
         {
@@ -116,11 +109,17 @@ namespace POS.Views
                                            && orderItem.Orider_time <= endDate)
                         .Sum(o => o.Quantity)
                 });
-                SalesReportDataGrid.Visibility = Visibility.Visible;
-                SalesReportDataGrid.ItemsSource = salesReport.ToList();
+
+                DataGrid salesRaportDataGrid = new DataGrid();
+                salesRaportDataGrid.ItemsSource = salesReport.ToList();
+
+                liveChart.Children.Add(salesRaportDataGrid);
             }
         }
 
+        #endregion
+
+        #region Consumption raport
         private void GenerateConsumptionReport(DateTime startDate, DateTime endDate)
         {
             using (var dbContext = new AppDbContext())
@@ -139,12 +138,17 @@ namespace POS.Views
                                             TotalConsumedQuantity = grouped.Sum(g => g.recipeIngredient.Quantity * g.orderItem.Quantity)
                                         };
 
-                ConsumptionReportDataGrid.Visibility = Visibility.Visible;
-                ConsumptionReportDataGrid.ItemsSource = consumptionReport.ToList();
+                DataGrid consumptionReportDataGrid = new DataGrid();
+                consumptionReportDataGrid.ItemsSource = consumptionReport.ToList();
+
+                liveChart.Children.Add(consumptionReportDataGrid);
             }
         }
 
-        #region Working Time Raport
+        #endregion
+
+        // Nie działa
+        #region Working time Raport
 
         private List<EmployeeWorkingTime> GenerateWorkingTimeData(DateTime startDate, DateTime endDate)
         {
@@ -192,11 +196,13 @@ namespace POS.Views
                 Title = "Pracownicy",
                 Labels = raportData.Select(p => p.EmployeeName).ToList()
             });
+
+            liveChart.Children.Add(workingTimeChart);
         }
 
         #endregion
 
-        #region Popularity of products
+        #region Popularity of products raport
 
         private List<ProductPopularity> GenerateProductPopularityData(DateTime startDate, DateTime endDate)
         {
@@ -253,7 +259,7 @@ namespace POS.Views
 
         #endregion
 
-        #region Employee Productivity
+        #region Employee productivity raport
 
         private List<EmployeeProductivity> GenerateEmployeeProductivityData(DateTime startDate, DateTime endDate)
         {
