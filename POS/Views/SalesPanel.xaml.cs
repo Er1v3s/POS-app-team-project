@@ -67,15 +67,18 @@ namespace POS.Views
             PlaceholderTextBoxHelper.SetPlaceholderOnLostFocus(sender, e);
         }
 
-        private void SearchTextBox_KeyUp(object sender, KeyEventArgs e)
+        private void SearchTextBox_KeyUp(object sender, TextChangedEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            //if (e.Key == Key.Enter)
             {
                 var searchText = searchTextBox.Text.ToLower();
-                LoadProductsBySearch(searchText);
+                if(searchText != null)
+                {
+                    LoadProductsBySearch(searchText);
+                }
 
-                e.Handled = true;
-                searchTextBox.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+                //e.Handled = true;
+                //searchTextBox.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
             }
         }
 
@@ -242,7 +245,10 @@ namespace POS.Views
             using (var dbContext = new AppDbContext())
             {
                 var products = dbContext.Products.Where(p => p.Product_name.ToLower().Contains(searchText)).ToList();
-                LoadProducts(products);
+                if(products.Count > 0)
+                {
+                    LoadProducts(products);
+                }
             }
         }
 
