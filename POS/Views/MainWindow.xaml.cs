@@ -1,8 +1,10 @@
-﻿using POS.Views;
+﻿using POS.Models;
+using POS.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
@@ -27,6 +29,8 @@ namespace POS
     public partial class MainWindow : Window
     {
         private DispatcherTimer timer;
+        private bool alertDisplayed = false;
+        private bool expirationAlertDisplayed = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -114,6 +118,81 @@ namespace POS
         private void TimerTick(object sender, EventArgs e)
         {
             UpdateDateTime();
+            if (!alertDisplayed)
+            {
+                CheckIngredientLevels();
+            }
+            if (!expirationAlertDisplayed)
+            {
+                CheckIngredientExpiration();
+            }
+        }
+
+        private void CheckIngredientLevels()
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                var lowIngredients = dbContext.Ingredients
+                    .Where(i => i.Stock.HasValue && i.Stock.Value < i.Safety_stock)
+                    .ToList();
+
+                if (lowIngredients.Any())
+                {
+                    string alertMessage = "Uwaga! Niektóre z poniższych składników się kończą:\n";
+                    foreach (var ingredient in lowIngredients)
+                    {
+                        alertMessage += $"{ingredient.Name}\n";
+                    }
+
+                    MessageBoxButton button = MessageBoxButton.OKCancel;
+                    MessageBoxImage icon = MessageBoxImage.Warning;
+                    MessageBoxResult result = MessageBox.Show(alertMessage, "Alert o kończących się składnikach", button, icon);
+
+                    if (result == MessageBoxResult.OK)
+                    {
+                        RunningOutOfIngredients runningOutOfIngredients = new RunningOutOfIngredients();
+                        runningOutOfIngredients.ShowWindow();
+                    }
+                    alertDisplayed = true;
+
+                    Task.Delay(TimeSpan.FromMinutes(3)).ContinueWith(_ => alertDisplayed = false);
+                }
+            }
+        }
+
+        private void CheckIngredientExpiration()
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                var expiringIngredients = dbContext.Ingredients
+                .AsEnumerable()
+                .Where(i => i.Expiration_date != null && DateTime.ParseExact(i.Expiration_date, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture) <= DateTime.Now.AddDays(7))
+                .ToList();
+
+
+                if (expiringIngredients.Any())
+                {
+                    string alertMessage = "Uwaga! Niektóre ze składników tracą na ważności:\n";
+                    foreach (var ingredient in expiringIngredients)
+                    {
+                        alertMessage += $"{ingredient.Name} (Data ważności: {ingredient.Expiration_date})\n";
+                    }
+
+                    MessageBoxButton button = MessageBoxButton.OKCancel;
+                    MessageBoxImage icon = MessageBoxImage.Warning;
+
+                    MessageBoxResult result = MessageBox.Show(alertMessage, "Alert o przeterminowaniu składników", button, icon);
+
+                    if (result == MessageBoxResult.OK)
+                    {
+                        CreateDelivery createDelivery = new CreateDelivery();
+                        createDelivery.Show();
+                    }
+                    expirationAlertDisplayed = true;
+
+                    Task.Delay(TimeSpan.FromMinutes(3)).ContinueWith(_ => expirationAlertDisplayed = false);
+                }
+            }
         }
 
         private void UpdateDateTime()
