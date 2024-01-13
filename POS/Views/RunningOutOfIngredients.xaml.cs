@@ -27,8 +27,12 @@ namespace POS.Views
         public RunningOutOfIngredients()
         {
             InitializeComponent();
+            LoadRunningOutOfIngredients();
         }
-        private void Refresh_ButtonClick(object sender, RoutedEventArgs e) { }
+        private void Refresh_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            LoadRunningOutOfIngredients();
+        }
         private void OpenStockManagmentWindow_ButtonClick(object sender, RoutedEventArgs e)
         {
             LoginPanel loginPanel = new LoginPanel();
@@ -53,6 +57,26 @@ namespace POS.Views
                 createDelivery.Show();
             }
         }
+
+        private void LoadRunningOutOfIngredients()
+        {
+            try
+            {
+                using (var dbContext = new AppDbContext())
+                {
+                    var runningOutOfIngredients = dbContext.Ingredients
+                        .Where(ingredient => ingredient.Stock < ingredient.Safety_stock)
+                        .ToList();
+
+                    runningOutOfIngredientsDataGrid.ItemsSource = runningOutOfIngredients;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Wystąpił błąd podczas wczytywania składników: " + ex.Message);
+            }
+        }
+
         public void ShowWindow()
         {
             // Otwieranie kontrolki (okna) RunningOutOfIngredients
