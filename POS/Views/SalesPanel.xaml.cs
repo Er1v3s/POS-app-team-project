@@ -1,23 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.X509;
-using POS.Converter;
+﻿using POS.Converter;
 using POS.Models;
 using POS.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace POS.Views
 {
@@ -28,19 +18,23 @@ namespace POS.Views
     {
         private Employees currentUser;
         public int EmployeeId;
-
         private double totalPrice = 0;
         private int currentOrderId = 0;
+        private bool discountApplied = false;
+
         ObservableCollection<OrderItem> orderList = new ObservableCollection<OrderItem>();
         ObservableCollection<ObservableCollection<OrderItem>> orderListCollection = new ObservableCollection<ObservableCollection<OrderItem>>();
+
         public SalesPanel(int employeeId)
         {
             orderListCollection.Add(orderList);
             InitializeComponent();
+
             using (var dbContext = new AppDbContext())
             {
                 currentUser = dbContext.Employees.FirstOrDefault(e => e.Employee_id == employeeId);
             }
+
             string welcomeMessage = $"{currentUser.First_name} {currentUser.Last_name}";
             SetWelcomeMessage(welcomeMessage);
             LoadAllProducts();
@@ -464,11 +458,12 @@ namespace POS.Views
 
             discountApplied = false;
         }
+
         private void SetWelcomeMessage(string message)
         {
             welcomeLabel.Content = message;
         }
-        private bool discountApplied = false;
+        
         private void ApplyDiscount_ButtonClick(object sender, RoutedEventArgs e)
         {
             if (discountApplied)

@@ -1,28 +1,15 @@
 ﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
-using Org.BouncyCastle.Asn1.X509;
-using Org.BouncyCastle.Utilities;
 using POS.Converter;
 using POS.Models;
 using POS.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Paragraph = iTextSharp.text.Paragraph;
 
 namespace POS.Views
@@ -35,6 +22,7 @@ namespace POS.Views
         private Employees currentUser;
         public int EmployeeId;
         List<DeliveryItem> deliveryItems = new List<DeliveryItem>();
+
         public CreateDelivery(int employeeId)
         {
             InitializeComponent();
@@ -49,6 +37,7 @@ namespace POS.Views
             EmployeeId = employeeId;
             deliveryListDataGrid.ItemsSource = deliveryItems;
         }
+
         public CreateDelivery()
         {
             InitializeComponent();
@@ -233,6 +222,7 @@ namespace POS.Views
                 MessageBox.Show("Wystąpił błąd podczas zapisywania pliku PDF: " + ex.Message);
             }
         }
+
         private void searchTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             try
@@ -256,14 +246,5 @@ namespace POS.Views
                 MessageBox.Show("Wystąpił błąd podczas filtrowania składników: " + ex.Message);
             }
         }
-
-    }
-
-    public class DeliveryItem
-    {
-        public string Name { get; set; }
-        public int Quantity { get; set; }
-        public string Package { get; set; }
-        public int FullQuantity { get; set; }
     }
 }

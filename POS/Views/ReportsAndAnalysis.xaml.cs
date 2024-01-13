@@ -15,16 +15,12 @@ namespace POS.Views
     /// </summary>
     public partial class ReportsAndAnalysis : Page
     {
-        List<string> employeeNames = new List<string>();
-        List<long> totalWorkTimes = new List<long>();
-
         Dictionary<int, string> raports = new Dictionary<int, string>()
         {
             { 0, "Raport sprzedaży produktów" },
             { 1, "Raport zużycia materiałów" },
-            { 2, "Czas pracy pracowników" },
-            { 3, "Produktywność pracowników" },
-            { 4, "Popularność produktów" }
+            { 2, "Produktywność pracowników" },
+            { 3, "Popularność produktów" }
         };
 
         public ReportsAndAnalysis()
@@ -72,15 +68,10 @@ namespace POS.Views
             }
             else if (selectedReport == raports[2])
             {
-                List<EmployeeWorkingTime> workingTimeData = GenerateWorkingTimeData(startDate, endDate);
-                GenerateEmployeesWorkTimeReportChart(workingTimeData);
-            }
-            else if (selectedReport == raports[3])
-            {
                 List <EmployeeProductivity> employeeProductivityData = GenerateEmployeeProductivityData(startDate, endDate);
                 GenerateEmployeeProductivityChart(employeeProductivityData);
             }
-            else if (selectedReport == raports[4])
+            else if (selectedReport == raports[3])
             {
                 List<ProductPopularity> productPopularityData = GenerateProductPopularityData(startDate, endDate);
                 GenerateProductPopularityChart(productPopularityData);

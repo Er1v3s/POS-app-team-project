@@ -43,7 +43,7 @@
                     <DataGridTextColumn Width="1.5*" Header="ID" Binding="{Binding Id}"/>
                     <DataGridTextColumn Width="9*" Header="Nazwa" Binding="{Binding Name}"/>
                     <DataGridTextColumn Width="4*" Header="Cena/szt" Binding="{Binding Price}"/>
-                    <DataGridTextColumn Width="1.5*" Header="Ilość" Binding="{Binding Amount}"/>
+                    <DataGridTextColumn Width="1.5*" Header="Ilosc" Binding="{Binding Amount}"/>
                     <DataGridTextColumn Width="4*" Header="Cena razem" Binding="{Binding TotalPrice}"/>
                 </DataGrid.Columns>
             </DataGrid>

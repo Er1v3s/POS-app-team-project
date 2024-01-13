@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using Microsoft.EntityFrameworkCore;
 
 namespace POS.Models
@@ -23,6 +17,7 @@ namespace POS.Models
         public DbSet<EmployeeWorkSession> EmployeeWorkSession { get; set; }
 
         public static string DatabasePath { get; private set; }
+
         static AppDbContext()
         {
             string databaseLocation = @"..\..\..\Database\barmanagement.db";

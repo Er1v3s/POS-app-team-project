@@ -24,6 +24,7 @@ namespace POS.Views
     public partial class WorkTimeSummaryControl : UserControl
     {
         ObservableCollection<EmployeeWorkSession> ActiveSessions = new ObservableCollection<EmployeeWorkSession>();
+
         public WorkTimeSummaryControl()
         {
             InitializeComponent();
