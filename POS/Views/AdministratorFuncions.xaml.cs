@@ -1,23 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using POS.Models;
+﻿using POS.Models;
 using POS.ViewModel;
-using POS.ViewModel.Raports;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace POS.Views
 {
@@ -27,6 +14,7 @@ namespace POS.Views
     public partial class AdministratorFuncions : Page
     {
         ObservableCollection<EmployeeInfo> employeesCollection = new ObservableCollection<EmployeeInfo>();
+
         public AdministratorFuncions()
         {
             InitializeComponent();
@@ -64,6 +52,7 @@ namespace POS.Views
             AddEditEmployeeWindow addEditEmployeeWindow = new AddEditEmployeeWindow();
             addEditEmployeeWindow.ShowDialog();
         }
+
         private void EditEmployeeButton_Click(object sender, RoutedEventArgs e)
         {
             EmployeeInfo selectedEmployee = employeesInfoDataGrid.SelectedItem as EmployeeInfo;
@@ -110,6 +99,7 @@ namespace POS.Views
                 }
             }
         }
+
         private void RefreshEmployeesList_ButtonClick(object sender, RoutedEventArgs e)
         {
             ShowEmployeesList();

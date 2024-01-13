@@ -1,22 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using POS.Converter;
 using POS.Models;
-using POS.ViewModel;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace POS.Views
 {
@@ -27,6 +15,7 @@ namespace POS.Views
     {
         private Employees currentUser;
         public int EmployeeId;
+
         public StockManagment(int employeeId)
         {
             InitializeComponent();
@@ -39,10 +28,12 @@ namespace POS.Views
             {
                 currentUser = dbContext.Employees.FirstOrDefault(e => e.Employee_id == employeeId);
             }
+
             string welcomeMessage = $"{currentUser.First_name} {currentUser.Last_name}";
             SetWelcomeMessage(welcomeMessage);
             EmployeeId = employeeId;
         }
+
         private void MoveToMainWindow_ButtonClick(object sender, RoutedEventArgs e)
         {
             MainWindow mainWindow = new MainWindow();
@@ -50,6 +41,7 @@ namespace POS.Views
 
             Window.GetWindow(this).Close();
         }
+
         private void SetWelcomeMessage(string message)
         {
             welcomeLabel.Content = message;
@@ -65,7 +57,8 @@ namespace POS.Views
             PlaceholderTextBoxHelper.SetPlaceholderOnLostFocus(sender, e);
         }
 
-        // left side
+        #region left side
+
         private void EditRecipeOfProduct_ComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (EditRecipeOfProduct_ComboBox.SelectedItem != null)
@@ -215,8 +208,10 @@ namespace POS.Views
             }
         }
 
+        #endregion
 
-        // middle side
+        #region middle side
+
         private void FillEditProductComboBox(ComboBox ComboBoxName)
         {
             using (var dbContext = new AppDbContext())
@@ -229,6 +224,7 @@ namespace POS.Views
                 }
             }
         }
+
         private void EditProduct_ComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (EditProduct_ComboBox.SelectedItem != null)
@@ -269,6 +265,7 @@ namespace POS.Views
                 }
             }
         }
+
         public void EditProduct_Clear()
         {
             EditProduct_ComboBox.SelectedIndex = 0;
@@ -292,6 +289,7 @@ namespace POS.Views
             NewProductName.IsEnabled = true;
             ProductPrice.IsEnabled = true;
         }
+
         private void CreateNewProduct_CheckBoxChecked(object sender, RoutedEventArgs e)
         {
             if (CreateNewProduct_CheckBox.IsChecked == true)
@@ -300,6 +298,7 @@ namespace POS.Views
                 EditProduct_ComboBox.IsEnabled = false;
             }
         }
+
         private void CreateNewProduct_CheckBoxUnChecked(object sender, RoutedEventArgs e)
         {
             EditProduct_ComboBox.IsEnabled = true;
@@ -429,9 +428,10 @@ namespace POS.Views
             }
         }
 
+        #endregion
 
+        #region right side
 
-        // right side
         private void FillEditIngredientComboBox(ComboBox ComboBoxName)
         {
             using (var dbContext = new AppDbContext())
@@ -603,6 +603,6 @@ namespace POS.Views
             }
         }
 
-
+        #endregion
     }
 }

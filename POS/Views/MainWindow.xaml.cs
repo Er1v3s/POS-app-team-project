@@ -1,24 +1,11 @@
 ﻿using POS.Models;
 using POS.Views;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Threading;
 
 namespace POS
@@ -31,6 +18,7 @@ namespace POS
         private DispatcherTimer timer;
         private bool alertDisplayed = false;
         private bool expirationAlertDisplayed = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -115,6 +103,7 @@ namespace POS
             // Initialize first date render
             UpdateDateTime(); 
         }
+
         private void TimerTick(object sender, EventArgs e)
         {
             UpdateDateTime();
@@ -190,7 +179,7 @@ namespace POS
                     }
                     expirationAlertDisplayed = true;
 
-                    Task.Delay(TimeSpan.FromMinutes(3)).ContinueWith(_ => expirationAlertDisplayed = false);
+                    Task.Delay(TimeSpan.FromMinutes(30)).ContinueWith(_ => expirationAlertDisplayed = false);
                 }
             }
         }

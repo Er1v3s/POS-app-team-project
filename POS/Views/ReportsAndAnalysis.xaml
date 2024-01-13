@@ -31,7 +31,7 @@
                 <ComboBox Grid.Column="0" x:Name="reportTypeComboBox" Margin="20 5 5 5">
                     <ComboBoxItem Content="Raport sprzedaży produktów"/>
                     <ComboBoxItem Content="Raport zużycia materiałów"/>
-                    <ComboBoxItem Content="Czas pracy pracowników"/>
+                    <!--<ComboBoxItem Content="Czas pracy pracowników"/>-->
                     <ComboBoxItem Content="Produktywność pracowników"/>
                     <ComboBoxItem Content="Popularność produktów"/>
                 </ComboBox>
