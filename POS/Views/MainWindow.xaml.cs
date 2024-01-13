@@ -166,7 +166,7 @@ namespace POS
             {
                 var expiringIngredients = dbContext.Ingredients
                 .AsEnumerable()
-                .Where(i => i.Expiration_date != null && DateTime.ParseExact(i.Expiration_date, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture) <= DateTime.Now.AddDays(7))
+                .Where(i => i.Expiration_date != null && DateTime.ParseExact(i.Expiration_date, "yyyy-MM-dd", CultureInfo.InvariantCulture) <= DateTime.Now.AddDays(7))
                 .ToList();
 
 
