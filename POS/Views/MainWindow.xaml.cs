@@ -144,7 +144,7 @@ namespace POS
                     }
                     alertDisplayed = true;
 
-                    Task.Delay(TimeSpan.FromMinutes(3)).ContinueWith(_ => alertDisplayed = false);
+                    Task.Delay(TimeSpan.FromMinutes(10)).ContinueWith(_ => alertDisplayed = false);
                 }
             }
         }

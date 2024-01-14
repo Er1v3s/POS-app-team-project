@@ -312,7 +312,7 @@ namespace POS.Views
 
         private void SaveProduct_ButtonClick(object sender, RoutedEventArgs e)
         {
-            if (CreateNewProduct_CheckBox.IsChecked == true)
+            if (CreateNewProduct_CheckBox.IsChecked == true && double.TryParse(ProductPrice.Text, out double price))
             {
                 using (var dbContext = new AppDbContext())
                 {
@@ -341,7 +341,7 @@ namespace POS.Views
                     MessageBox.Show("Pomyślnie dodano nowy produkt.");
                 }
             }
-            else
+            else if(CreateNewProduct_CheckBox.IsChecked == false && double.TryParse(ProductPrice.Text, out price))
             {
                 if (EditProduct_ComboBox.SelectedItem != null)
                 {
@@ -374,6 +374,10 @@ namespace POS.Views
                 {
                     MessageBox.Show("Wybierz produkt do edycji.");
                 }
+            }
+            else
+            {
+                MessageBox.Show("Wprowadzona cena nie jest cyfrą");
             }
             FillEditProductComboBox(EditProduct_ComboBox);
         }
