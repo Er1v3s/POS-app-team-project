@@ -94,11 +94,63 @@ namespace POS.Views
                 var order = SaveOrder();
                 SaveOrderItems(order);
                 SavePayment(order, paymentMethod, totalPrice);
+                RemoveIngredients();
                 orderList.Clear();
                 UpdateTotalPrice();
                 MessageBox.Show($"Zapłacono za zamówienie {totalPrice:C} - metoda płatności: {paymentMethod}");
             }
 
+        }
+
+        private void RemoveIngredients()
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                foreach (var item in orderList)
+                {
+                    var recipeId = dbContext.Products
+                                            .Where(p => p.Product_id == item.Id)
+                                            .Select(p => p.Recipe_id)
+                                            .FirstOrDefault();
+                    if (recipeId == null)
+                    {
+                        throw new Exception("Nie znaleziono przepisu dla danego produktu");
+                    }
+
+                    var recipeIngredientsId = dbContext.RecipeIngredients
+                            .Where(ri => ri.Recipe_id == recipeId)
+                            .Select(ri => ri.Ingredient_id)
+                            .ToList();
+
+                    foreach(var ingredientId in recipeIngredientsId)
+                    {
+                        var ingredient = dbContext.Ingredients
+                                        .Where(i => i.Ingredient_id == ingredientId)
+                                        .FirstOrDefault();
+
+                        var recipeIngredient = dbContext.RecipeIngredients
+                                                .Where(ri => ri.Ingredient_id == ingredientId)
+                                                .Select(ri => ri.Quantity)
+                                                .FirstOrDefault();
+
+                        if (ingredient != null)
+                        {
+                            // Tak funkcja prezentuje się w poprawny sposób, ale trzeba zmienić sposób przedstawiania ilości składników w bazie danych 
+                            //ingredient.Stock -= (int)recipeIngredient;
+
+                            // Tymczasowe, po zmianie wartości w bazie danych usunąć!!! 
+                            ingredient.Stock -= 1;
+                        }
+                        else
+                        {
+                            throw new Exception("Składnik nie znaleziony w magazynie.");
+                        }
+                    }
+                    
+                }
+
+                dbContext.SaveChanges();
+            }
         }
 
         private Orders SaveOrder()
