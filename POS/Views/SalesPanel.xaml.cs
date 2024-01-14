@@ -1,46 +1,40 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.X509;
-using POS.Converter;
+﻿using POS.Converter;
 using POS.Models;
 using POS.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace POS.Views
 {
     /// <summary>
     /// Logika interakcji dla klasy SalesPanel.xaml
     /// </summary>
-    public partial class SalesPanel
+    public partial class SalesPanel : Window
     {
         private Employees currentUser;
         public int EmployeeId;
-
         private double totalPrice = 0;
         private int currentOrderId = 0;
+        private bool discountApplied = false;
+
         ObservableCollection<OrderItem> orderList = new ObservableCollection<OrderItem>();
         ObservableCollection<ObservableCollection<OrderItem>> orderListCollection = new ObservableCollection<ObservableCollection<OrderItem>>();
+
         public SalesPanel(int employeeId)
         {
             orderListCollection.Add(orderList);
             InitializeComponent();
+
             using (var dbContext = new AppDbContext())
             {
                 currentUser = dbContext.Employees.FirstOrDefault(e => e.Employee_id == employeeId);
             }
+
             string welcomeMessage = $"{currentUser.First_name} {currentUser.Last_name}";
             SetWelcomeMessage(welcomeMessage);
             LoadAllProducts();
@@ -49,7 +43,7 @@ namespace POS.Views
             EmployeeId = employeeId;
         }
 
-        private void MoveToMainWindow(object sender, RoutedEventArgs e)
+        private void MoveToMainWindow_ButtonClick(object sender, RoutedEventArgs e)
         {
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
@@ -67,26 +61,29 @@ namespace POS.Views
             PlaceholderTextBoxHelper.SetPlaceholderOnLostFocus(sender, e);
         }
 
-        private void SearchTextBox_KeyUp(object sender, KeyEventArgs e)
+        private void SearchTextBox_KeyUp(object sender, TextChangedEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            //if (e.Key == Key.Enter)
             {
                 var searchText = searchTextBox.Text.ToLower();
-                LoadProductsBySearch(searchText);
+                if(searchText != null)
+                {
+                    LoadProductsBySearch(searchText);
+                }
 
-                e.Handled = true;
-                searchTextBox.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+                //e.Handled = true;
+                //searchTextBox.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
             }
         }
 
-        private void CategoryButton_Click(object sender, RoutedEventArgs e)
+        private void FilterByCategory_ButtonClick(object sender, RoutedEventArgs e)
         {
             Button categoryButton = sender as Button;
             string category = categoryButton.Content.ToString();
             LoadProductsByCategory(category);
         }
 
-        private void PayForOrder_Click(object sender, RoutedEventArgs e)
+        private void PayForOrder_ButtonClick(object sender, RoutedEventArgs e)
         {
 
             if (sender is Button button && button.Tag is string paymentMethod)
@@ -97,11 +94,63 @@ namespace POS.Views
                 var order = SaveOrder();
                 SaveOrderItems(order);
                 SavePayment(order, paymentMethod, totalPrice);
+                RemoveIngredients();
                 orderList.Clear();
                 UpdateTotalPrice();
                 MessageBox.Show($"Zapłacono za zamówienie {totalPrice:C} - metoda płatności: {paymentMethod}");
             }
 
+        }
+
+        private void RemoveIngredients()
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                foreach (var item in orderList)
+                {
+                    var recipeId = dbContext.Products
+                                            .Where(p => p.Product_id == item.Id)
+                                            .Select(p => p.Recipe_id)
+                                            .FirstOrDefault();
+                    if (recipeId == null)
+                    {
+                        throw new Exception("Nie znaleziono przepisu dla danego produktu");
+                    }
+
+                    var recipeIngredientsId = dbContext.RecipeIngredients
+                            .Where(ri => ri.Recipe_id == recipeId)
+                            .Select(ri => ri.Ingredient_id)
+                            .ToList();
+
+                    foreach(var ingredientId in recipeIngredientsId)
+                    {
+                        var ingredient = dbContext.Ingredients
+                                        .Where(i => i.Ingredient_id == ingredientId)
+                                        .FirstOrDefault();
+
+                        var recipeIngredient = dbContext.RecipeIngredients
+                                                .Where(ri => ri.Ingredient_id == ingredientId)
+                                                .Select(ri => ri.Quantity)
+                                                .FirstOrDefault();
+
+                        if (ingredient != null)
+                        {
+                            // Tak funkcja prezentuje się w poprawny sposób, ale trzeba zmienić sposób przedstawiania ilości składników w bazie danych 
+                            //ingredient.Stock -= (int)recipeIngredient;
+
+                            // Tymczasowe, po zmianie wartości w bazie danych usunąć!!! 
+                            ingredient.Stock -= 1;
+                        }
+                        else
+                        {
+                            throw new Exception("Składnik nie znaleziony w magazynie.");
+                        }
+                    }
+                    
+                }
+
+                dbContext.SaveChanges();
+            }
         }
 
         private Orders SaveOrder()
@@ -140,13 +189,14 @@ namespace POS.Views
                 {
                     OrderItems newOrderItem = new OrderItems
                     {
-                        Product_id = orderListItem.Id,
-                        Order_id = order.Order_id,
-                        Quantity = orderListItem.Amount,
+                        OrdersOrder_id = order.Order_id,
                         Employee_id = EmployeeId,
+                        Product_id = orderListItem.Id,
                         Orider_time = DateTime.Now,
+                        Quantity = orderListItem.Amount,
                     };
                     dbContext.OrderItems.Add(newOrderItem);
+                    dbContext.SaveChanges();
                 }
             }
         }
@@ -172,7 +222,7 @@ namespace POS.Views
             }
         }
 
-        private void DeleteProductFromOrderList(object sender, RoutedEventArgs e)
+        private void DeleteProductFromOrderList_ButtonClick(object sender, RoutedEventArgs e)
         {
             if (orderListDataGrid.SelectedItem != null)
             {
@@ -238,10 +288,14 @@ namespace POS.Views
 
         private void LoadProductsBySearch(string searchText)
         {
+   
             using (var dbContext = new AppDbContext())
             {
                 var products = dbContext.Products.Where(p => p.Product_name.ToLower().Contains(searchText)).ToList();
-                LoadProducts(products);
+                if(products.Count > 0)
+                {
+                    LoadProducts(products);
+                }
             }
         }
 
@@ -254,7 +308,7 @@ namespace POS.Views
             }
         }
 
-        private void ShowRecipes(object sender, RoutedEventArgs e)
+        private void ShowRecipes_ButtonClick(object sender, RoutedEventArgs e)
         {
             ProductsUnifromGrid.Children.Clear();
             ProductsUnifromGrid.Columns = 3;
@@ -345,13 +399,13 @@ namespace POS.Views
             return ingredientsList.ToString();
         }
 
-        private void ShowDrinks(object sender, RoutedEventArgs e)
+        private void ShowDrinks_ButtonClick(object sender, RoutedEventArgs e)
         {
             ProductsUnifromGrid.Children.Clear();
             LoadAllProducts();
         }
 
-        private void ShowOpenOrders(object sender, RoutedEventArgs e)
+        private void ShowOpenOrders_ButtonClick(object sender, RoutedEventArgs e)
         {
             ProductsUnifromGrid.Children.Clear();
             ProductsUnifromGrid.Columns = 5;
@@ -372,7 +426,7 @@ namespace POS.Views
             return order.Sum(item => item.Amount * item.Price);
         }
 
-        private void DeleteCurrentOrder(object sender, RoutedEventArgs e)
+        private void DeleteCurrentOrder_ButtonClick(object sender, RoutedEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show("Spowoduje to utratę aktualnie wyświetlonego zamówienia.\n Czy chcesz kontynuować?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
@@ -407,7 +461,7 @@ namespace POS.Views
                 currentOrderId = orderListCollection.Count - 1; // Ustawienie bieżącego indeksu zamówienia na ostatnie dodane
                 orderListDataGrid.ItemsSource = orderListCollection[currentOrderId]; // Ustawienie nowej kolekcji zamówień jako źródła danych dla orderListDataGrid
                 UpdateTotalPrice();
-                ShowRecipes(null, null);
+                ShowRecipes_ButtonClick(null, null);
                 LoadAllProducts();
             };
 
@@ -437,7 +491,7 @@ namespace POS.Views
                 currentOrderId = orderId;
                 orderListDataGrid.ItemsSource = orderListCollection[currentOrderId];
                 UpdateTotalPrice();
-                ShowRecipes(null, null);
+                ShowRecipes_ButtonClick(null, null);
                 LoadAllProducts();
             };
 
@@ -456,12 +510,13 @@ namespace POS.Views
 
             discountApplied = false;
         }
+
         private void SetWelcomeMessage(string message)
         {
             welcomeLabel.Content = message;
         }
-        private bool discountApplied = false;
-        private void ApplyDiscount_Click(object sender, RoutedEventArgs e)
+        
+        private void ApplyDiscount_ButtonClick(object sender, RoutedEventArgs e)
         {
             if (discountApplied)
             {
@@ -484,7 +539,7 @@ namespace POS.Views
             }
         }
 
-        private void InvoiceAdd_Click(object sender, RoutedEventArgs e)
+        private void AddInvoice_ButtonClick(object sender, RoutedEventArgs e)
         {
             if (orderListCollection[currentOrderId].Count == 0)
             {
@@ -506,7 +561,7 @@ namespace POS.Views
             }
         }
 
-        private void ShowFinishedOrders(object sender, RoutedEventArgs e)
+        private void ShowFinishedOrders_ButtonClick(object sender, RoutedEventArgs e)
         {
             FinishedOrders finishedOrders = new FinishedOrders();
             finishedOrders.Show();

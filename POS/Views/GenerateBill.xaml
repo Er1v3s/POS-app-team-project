@@ -31,7 +31,7 @@
 
                 <Border Grid.Row="0" CornerRadius="0,8,0,0" Grid.Column="1" Background="#FF7286D3" BorderBrush="Black" BorderThickness="0,0,0,1">
                     <Grid Grid.Row="0" Grid.Column="1" Margin="9">
-                        <Button MaxWidth="32" MaxHeight="32" Grid.Row="0" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}" d:IsLocked="True" Click="CloseButton_Click">
+                        <Button MaxWidth="32" MaxHeight="32" Grid.Row="0" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}" d:IsLocked="True" Click="CloseWindow_ButtonClick">
                             <fa:ImageAwesome Icon="Close" Height="16" Foreground="White"/>
                         </Button>
                     </Grid>
@@ -43,7 +43,7 @@
                     <DataGridTextColumn Width="1.5*" Header="ID" Binding="{Binding Id}"/>
                     <DataGridTextColumn Width="9*" Header="Nazwa" Binding="{Binding Name}"/>
                     <DataGridTextColumn Width="4*" Header="Cena/szt" Binding="{Binding Price}"/>
-                    <DataGridTextColumn Width="1.5*" Header="Ilość" Binding="{Binding Amount}"/>
+                    <DataGridTextColumn Width="1.5*" Header="Ilosc" Binding="{Binding Amount}"/>
                     <DataGridTextColumn Width="4*" Header="Cena razem" Binding="{Binding TotalPrice}"/>
                 </DataGrid.Columns>
             </DataGrid>
@@ -65,7 +65,7 @@
 
                 <Border Grid.Row="2" CornerRadius="0,0,0,8" Grid.Column="0" Background="#FF7286D3" BorderBrush="Black" BorderThickness="0,1,0,0">
                     <Grid Grid.Row="2" Grid.Column="0" Margin="0,9,0,9">
-                        <Button Grid.Row="2" Grid.Column="0" MaxHeight="32" MaxWidth="120" Margin="25,0,0,0" Click="PrintButton_Click" Style="{StaticResource payButton}">
+                        <Button Grid.Row="2" Grid.Column="0" MaxHeight="32" MaxWidth="120" Margin="25,0,0,0" Click="PrintDocument_ButtonClick" Style="{StaticResource payButton}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Drukuj" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                             </StackPanel>

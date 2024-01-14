@@ -34,7 +34,7 @@
                             <DataGridTemplateColumn Header="" Width="1.3*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Style="{StaticResource deleteItemButton}" HorizontalAlignment="Right" Click="deleteTask_ButtonClick">
+                                        <Button Style="{StaticResource deleteItemButton}" HorizontalAlignment="Right" Click="DeleteTask_ButtonClick">
                                             <fa:ImageAwesome Style="{StaticResource deleteItemIcon}" Icon="Close"/>
                                         </Button>
                                     </DataTemplate>
@@ -46,8 +46,8 @@
             </Grid>
 
             <Grid Grid.Row="2">
-                <TextBox Text="Dodaj zadanie" Tag="Dodaj zadanie" x:Name="addTaskTextBox" LostFocus="addTaskTextBox_LostFocus" GotFocus="addTaskTextBox_GotFocus" KeyUp="addTask_KeyUp" Style="{StaticResource addTaskTextBox}" Margin="50,0,10,0"/>
-                <Button Style="{StaticResource addTaskButton}" Click="addTask_ButtonClick">
+                <TextBox Text="Dodaj zadanie" Tag="Dodaj zadanie" x:Name="addTaskTextBox" LostFocus="AddTask_TextBoxLostFocus" GotFocus="AddTask_TextBoxGotFocus" KeyUp="AddTask_KeyUp" Style="{StaticResource addTaskTextBox}" Margin="50,0,10,0"/>
+                <Button Style="{StaticResource addTaskButton}" Click="AddTask_ButtonClick">
                     <fa:ImageAwesome Style="{StaticResource plusIcon}" Icon="Plus"  Width="25" Height="25" />
                 </Button>
             </Grid>

@@ -17,31 +17,31 @@
 
         <Grid Grid.Column="0" Background="#8EA7E9">
             <UniformGrid Rows="5" Columns="1"  VerticalAlignment="Stretch" Margin="0, 12.5, 0, 12.5" >
-                <Button Style="{StaticResource sideBarButton}" Click="NavigateButton_Click" Tag="./WorkTimeSummaryControl.xaml">
+                <Button Style="{StaticResource sideBarButton}" Click="ChangeSource_ButtonClick" Tag="./WorkTimeSummaryControl.xaml">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="ClockOutline" Width="30" Height="30" Foreground="White"/>
                         <TextBlock Text="PODSUMOWANIE CZASU PRACY" Style="{StaticResource sideBarButtonTextBlock}"/>
                     </StackPanel>
                 </Button>
-                <Button Style="{StaticResource sideBarButton}" Click="NavigateButton_Click" Tag="./StartFinishWork.xaml">
+                <Button Style="{StaticResource sideBarButton}" Click="ChangeSource_ButtonClick" Tag="./StartFinishWork.xaml">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="User" Width="30" Height="30" Foreground="White"/>
                         <TextBlock Text="ROZPOCZĘCIE I ZAKOŃCZENIE PRACY" Style="{StaticResource sideBarButtonTextBlock}"/>
                     </StackPanel>
                 </Button>
-                <Button Style="{StaticResource sideBarButton}" Click="NavigateButton_Click" Tag="./RunningOutOfIngredients.xaml" >
+                <Button Style="{StaticResource sideBarButton}" Click="ChangeSource_ButtonClick" Tag="./RunningOutOfIngredients.xaml" >
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Dropbox" Width="30" Height="30" Foreground="White" />
                         <TextBlock Text="FUNKCJE MAGAZYNOWE" Style="{StaticResource sideBarButtonTextBlock}"/>
                     </StackPanel>
                 </Button>
-                <Button Style="{StaticResource sideBarButton}" Click="NavigateButton_Click" Tag="./ReportsAndAnalysis.xaml">
+                <Button Style="{StaticResource sideBarButton}" Click="ChangeSource_ButtonClick" Tag="./ReportsAndAnalysis.xaml">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="BarChart"  Width="30" Height="30" Foreground="White"/>
                         <TextBlock Text="RAPORTY I ANALIZY" Style="{StaticResource sideBarButtonTextBlock}"/>
                     </StackPanel>
                 </Button>
-                <Button Style="{StaticResource sideBarButton}" Click="NavigateButton_Click" Tag="./AdministratorFuncions.xaml">
+                <Button Style="{StaticResource sideBarButton}" Click="ChangeSource_ButtonClick" Tag="./AdministratorFuncions.xaml">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Shield" Width="30" Height="30" Foreground="White"/>
                         <TextBlock Text="FUNKCJE ADMINISTRATORA" Style="{StaticResource sideBarButtonTextBlock}"/>
@@ -85,7 +85,7 @@
                     <TextBlock x:Name="timeTextBlock" Text="" HorizontalAlignment="Center" FontSize="20" Foreground="White"/>
                 </StackPanel>
                 <Grid Grid.Column="4">
-                    <Button Style="{StaticResource TurnOffAppButton}" Click="Turn_Off_Application">
+                    <Button Style="{StaticResource TurnOffAppButton}" Click="TurnOffApplication_ButtonClick">
                         <fa:ImageAwesome Icon="PowerOff" Foreground="White" Width="24" Height="24"/>
                     </Button>
                 </Grid>
@@ -115,7 +115,7 @@
             </Border>
 
             <Grid Grid.Row="2" >
-                <Button Style="{StaticResource registerSellButton}" Click="Move_To_Sales_Panel">
+                <Button Style="{StaticResource registerSellButton}" Click="MoveToSalesPanel_ButtonClick">
                     <StackPanel Orientation="Vertical">
                         <fa:ImageAwesome Icon="ShoppingBasket" Width="50" Height="50" Foreground="White" Margin="0, 0, 0, 10"/>
                         <TextBlock Text="ZAREJESTRUJ SPRZEDAŻ" Width="200" TextWrapping="Wrap" TextAlignment="Center" FontSize="24" FontWeight="Bold"/>

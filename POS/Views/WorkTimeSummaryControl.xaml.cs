@@ -24,6 +24,7 @@ namespace POS.Views
     public partial class WorkTimeSummaryControl : UserControl
     {
         ObservableCollection<EmployeeWorkSession> ActiveSessions = new ObservableCollection<EmployeeWorkSession>();
+
         public WorkTimeSummaryControl()
         {
             InitializeComponent();
@@ -74,7 +75,7 @@ namespace POS.Views
             workingTimeSummaryDataGrid.ItemsSource = ActiveSessions;
         }
 
-        private void Refresh_Button(object sender, RoutedEventArgs e)
+        private void Refresh_ButtonClick(object sender, RoutedEventArgs e)
         {
             ShowActiveSessions();
         }

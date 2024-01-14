@@ -1,20 +1,8 @@
 ﻿using POS.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using static System.Collections.Specialized.BitVector32;
 
 namespace POS.Views
 {
@@ -25,6 +13,7 @@ namespace POS.Views
     {
         private readonly int employeeId;
         public static event EventHandler<EventArgs>? WorkSessionChangeStatus;
+
         public StartFinishWork(int employeeId)
         {
             this.employeeId = employeeId;
@@ -42,13 +31,13 @@ namespace POS.Views
                     }
                     else
                     {
-                         FinishWork.IsEnabled = false;
+                        FinishWork.IsEnabled = false;
                     }
                 }
             }
         }
 
-        private async void StartWork_Button(object sender, RoutedEventArgs e)
+        private async void StartWork_ButtonClick(object sender, RoutedEventArgs e)
         {
             await using (var dbContext = new AppDbContext())
             {
@@ -59,16 +48,16 @@ namespace POS.Views
                     dbContext.SaveChanges();
                 }
 
-                EmployeeWorkSession newEmployeeWorkSession = createNewEmployeeWorkSession(user);
+                EmployeeWorkSession newEmployeeWorkSession = CreateNewEmployeeWorkSession(user);
 
                 dbContext.EmployeeWorkSession.Add(newEmployeeWorkSession);
                 dbContext.SaveChanges();
             }
 
-                OnStartFinishWork();
+            OnStartFinishWork();
         }
 
-        private async void FinishWork_Button(object sender, RoutedEventArgs e)
+        private async void FinishWork_ButtonClick(object sender, RoutedEventArgs e)
         {
             await using (var dbContext = new AppDbContext())
             {
@@ -85,7 +74,7 @@ namespace POS.Views
             OnStartFinishWork();
         }
 
-        private EmployeeWorkSession createNewEmployeeWorkSession(Employees user)
+        private EmployeeWorkSession CreateNewEmployeeWorkSession(Employees user)
         {
             EmployeeWorkSession employeeWorkSession = (
                 new EmployeeWorkSession

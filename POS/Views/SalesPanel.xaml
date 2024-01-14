@@ -16,7 +16,7 @@
         </Grid.ColumnDefinitions>
 
         <!--#region right bar -->
-        
+
         <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1, 0, 0, 0">
             <Grid>
                 <Grid.RowDefinitions>
@@ -26,7 +26,7 @@
 
                 <Grid Grid.Row="0" Background="#FF8EA7E9">
                     <TextBox x:Name="searchTextBox" Style="{StaticResource searchBar}" Margin="20,0,0,0" Text="Szukaj" Tag="Szukaj" Width="360"
-                             Height="42" KeyUp="SearchTextBox_KeyUp" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus">
+                            Height="42" TextChanged="SearchTextBox_KeyUp" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus">
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="16"/>
@@ -56,7 +56,7 @@
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
 
-                            <Button Grid.Column="0" Content="Whisky" Click="CategoryButton_Click" Style="{StaticResource cocktailCategoryButton}">
+                            <Button Grid.Column="0" Content="Whisky" Click="FilterByCategory_ButtonClick" Style="{StaticResource cocktailCategoryButton}">
                                 <Button.Resources>
                                     <Style TargetType="{x:Type Border}">
                                         <Setter Property="CornerRadius">
@@ -67,10 +67,10 @@
                                     </Style>
                                 </Button.Resources>
                             </Button>
-                            <Button Grid.Column="1" Content="Gin" Click="CategoryButton_Click" Style="{StaticResource cocktailCategoryButton}"/>
-                            <Button Grid.Column="2" Content="Wódka" Click="CategoryButton_Click" Style="{StaticResource cocktailCategoryButton}"/>
-                            <Button Grid.Column="3" Content="Rum" Click="CategoryButton_Click" Style="{StaticResource cocktailCategoryButton}"/>
-                            <Button Grid.Column="4" Content="Tequila" Click="CategoryButton_Click" Style="{StaticResource cocktailCategoryButton}">
+                            <Button Grid.Column="1" Content="Gin" Click="FilterByCategory_ButtonClick" Style="{StaticResource cocktailCategoryButton}"/>
+                            <Button Grid.Column="2" Content="Wódka" Click="FilterByCategory_ButtonClick" Style="{StaticResource cocktailCategoryButton}"/>
+                            <Button Grid.Column="3" Content="Rum" Click="FilterByCategory_ButtonClick" Style="{StaticResource cocktailCategoryButton}"/>
+                            <Button Grid.Column="4" Content="Tequila" Click="FilterByCategory_ButtonClick" Style="{StaticResource cocktailCategoryButton}">
                                 <Button.Resources>
                                     <Style TargetType="{x:Type Border}">
                                         <Setter Property="CornerRadius">
@@ -104,12 +104,12 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Button Grid.Column="0" Content="Zapłać" Style="{StaticResource payButton}" Grid.Row="2" d:IsLocked="True" />
-                                <Button Grid.Column="1" Content="Anuluj" Style="{StaticResource cancelButton}" Click="DeleteCurrentOrder" Grid.Row="2" d:IsLocked="True" />
-                                <Button Grid.Column="2" Content="Przepisy" Style="{StaticResource recipeButton}" Click="ShowRecipes" Grid.Row="2" d:IsLocked="True" />
-                                <Button Grid.Column="3" Content="Drinki" Style="{StaticResource recipeButton}" Click="ShowDrinks" Grid.Row="2" d:IsLocked="True" />
+                                <Button Grid.Column="1" Content="Anuluj" Style="{StaticResource cancelButton}" Click="DeleteCurrentOrder_ButtonClick" Grid.Row="2" d:IsLocked="True" />
+                                <Button Grid.Column="2" Content="Przepisy" Style="{StaticResource recipeButton}" Click="ShowRecipes_ButtonClick" Grid.Row="2" d:IsLocked="True" />
+                                <Button Grid.Column="3" Content="Drinki" Style="{StaticResource recipeButton}" Click="ShowDrinks_ButtonClick" Grid.Row="2" d:IsLocked="True" />
 
 
-                                <Button Grid.Column="5" Style="{StaticResource homeButton}" d:IsLocked="True" Click="MoveToMainWindow">
+                                <Button Grid.Column="5" Style="{StaticResource homeButton}" d:IsLocked="True" Click="MoveToMainWindow_ButtonClick">
                                     <fa:ImageAwesome Icon="Home" Height="24" Foreground="White"/>
                                 </Button>
 
@@ -120,7 +120,7 @@
 
             </Grid>
         </Border>
-        
+
         <!--#endregion-->
 
         <!--#region left bar -->
@@ -141,7 +141,7 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Style="{StaticResource leftBarButton}" Click="ShowFinishedOrders">
+                <Button Grid.Column="0" Style="{StaticResource leftBarButton}" Click="ShowFinishedOrders_ButtonClick">
                     <fa:ImageAwesome Icon="ListOl" Height="24" Foreground="White"/>
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">
@@ -154,11 +154,11 @@
                     </Button.Resources>
                 </Button>
 
-                <Button Grid.Column="1" Style="{StaticResource leftBarButton}" Click="InvoiceAdd_Click">
+                <Button Grid.Column="1" Style="{StaticResource leftBarButton}" Click="AddInvoice_ButtonClick">
                     <fa:ImageAwesome Icon="File" Height="24" Foreground="White"/>
                 </Button>
 
-                <Button Grid.Column="2" Click="ShowOpenOrders" Style="{StaticResource leftBarButton}">
+                <Button Grid.Column="2" Click="ShowOpenOrders_ButtonClick" Style="{StaticResource leftBarButton}">
                     <fa:ImageAwesome Icon="Save" Height="24" Foreground="White"/>
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">
@@ -181,7 +181,7 @@
                         <DataGridTemplateColumn Header="" Width="1*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Style="{StaticResource deleteItemButton}" Click="DeleteProductFromOrderList">
+                                    <Button Style="{StaticResource deleteItemButton}" Click="DeleteProductFromOrderList_ButtonClick">
                                         <StackPanel Orientation="Horizontal">
                                             <fa:ImageAwesome Style="{StaticResource deleteItemIcon}" Icon="Close"/>
                                         </StackPanel>
@@ -212,7 +212,7 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Style="{StaticResource leftBarButton}" Click="PayForOrder_Click" Tag="Gotówka">
+                <Button Grid.Column="0" Style="{StaticResource leftBarButton}" Click="PayForOrder_ButtonClick" Tag="Gotówka">
                     <fa:ImageAwesome Icon="Money" Height="24" Foreground="White"/>
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">
@@ -225,11 +225,11 @@
                     </Button.Resources>
                 </Button>
 
-                <Button Grid.Column="1" Style="{StaticResource leftBarButton}" Click="PayForOrder_Click" Tag="Karta debetowa">
+                <Button Grid.Column="1" Style="{StaticResource leftBarButton}" Click="PayForOrder_ButtonClick" Tag="Karta debetowa">
                     <fa:ImageAwesome Icon="CreditCard" Height="24" Foreground="White"/>
                 </Button>
 
-                <Button Grid.Column="2" Style="{StaticResource leftBarButton}" Click="ApplyDiscount_Click">
+                <Button Grid.Column="2" Style="{StaticResource leftBarButton}" Click="ApplyDiscount_ButtonClick">
                     <fa:ImageAwesome Icon="Percent" Height="24" Foreground="White"/>
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">
@@ -247,4 +247,5 @@
 
         <!--#endregion-->
     </Grid>
+
 </Window>

@@ -51,7 +51,7 @@
                         </Border>
                     </Grid>
                     <Border Background="#4BAEA0" CornerRadius="10" Width="100" Margin="0,30,0,0" Padding="5" Grid.Row="2" BorderBrush="Black" BorderThickness="1">
-                        <Button Style="{StaticResource loginButton}" Content="Zaloguj się" Click="LoginButton_Click" Background="#4BAEA0" BorderBrush="#4BAEA0" Foreground="White" />
+                        <Button Style="{StaticResource loginButton}" Content="Zaloguj się" Click="LogIn_ButtonClick" Background="#4BAEA0" BorderBrush="#4BAEA0" Foreground="White" />
                     </Border>
                 </Grid>
             </Border>

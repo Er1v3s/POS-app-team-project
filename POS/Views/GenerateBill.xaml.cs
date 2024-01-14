@@ -1,26 +1,11 @@
 ﻿using iTextSharp.text.pdf;
 using iTextSharp.text;
-using Microsoft.EntityFrameworkCore;
-using PdfSharp.Drawing;
-using PdfSharp.Pdf;
-using POS.Models;
 using POS.ViewModel;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Microsoft.Win32;
 
 namespace POS.Views
@@ -31,34 +16,38 @@ namespace POS.Views
     public partial class GenerateBill
     {
         private ObservableCollection<OrderItem> orderList;
+        double totalOrderPrice = 0;
 
         public GenerateBill(ObservableCollection<OrderItem> orderList)
         {
             InitializeComponent();
 
             this.orderList = orderList;
+
+            CalculateProductTimesAmount();
+            CalculateTotalPrice(ref totalOrderPrice);
+
             orderSummaryDataGrid.ItemsSource = this.orderList;
-
-            double totalSum = CalculateTotalSum();
-            totalPriceTextBlock.Text = totalSum.ToString("C");
+            totalPriceTextBlock.Text = totalOrderPrice.ToString("C2");
         }
 
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        private void CalculateProductTimesAmount()
         {
-            this.Close(); 
-        }
-
-        private double CalculateTotalSum()
-        {
-            double totalSum = 0;
             foreach (var orderItem in orderList)
             {
-                totalSum += orderItem.TotalPrice;
+                orderItem.TotalPrice = orderItem.Price * orderItem.Amount;
             }
-            return Math.Round(totalSum, 2);
         }
 
-        private void PrintButton_Click(object sender, RoutedEventArgs e)
+        private void CalculateTotalPrice(ref double totalOrderPrice)
+        {
+            foreach(var orderItem in orderList)
+            {
+                totalOrderPrice += orderItem.TotalPrice;
+            }    
+        }
+
+        private void PrintDocument_ButtonClick(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -73,45 +62,23 @@ namespace POS.Views
                     string filePath = saveFileDialog.FileName;
 
                     Document pdfDoc = new Document(PageSize.A4);
-                    PdfWriter writer = PdfWriter.GetInstance(pdfDoc, new FileStream(filePath, FileMode.Create));
-
-                    pdfDoc.Open();
-                    pdfDoc.NewPage();
-
-                    PdfPTable pdfTable = new PdfPTable(orderSummaryDataGrid.Columns.Count);
-
-                    foreach (DataGridColumn column in orderSummaryDataGrid.Columns)
+                    using (FileStream fs = new FileStream(filePath, FileMode.Create))
                     {
-                        PdfPCell cell = new PdfPCell(new Phrase(column.Header.ToString()));
-                        pdfTable.AddCell(cell);
+                        PdfWriter writer = PdfWriter.GetInstance(pdfDoc, fs);
+                        pdfDoc.Open();
+                        pdfDoc.NewPage();
+
+                        Paragraph pdfTitle = CreatePdfTtiel();
+                        PdfPTable pdfPTable = CreatePdfTable();
+                        Paragraph pdfFooter = CreatePdfFooter();
+
+                        pdfDoc.Add(pdfTitle);
+                        pdfDoc.Add(pdfPTable);
+                        pdfDoc.Add(pdfFooter);
+
+                        pdfDoc.Close();
                     }
 
-                    foreach (var item in orderSummaryDataGrid.Items)
-                    {
-                        foreach (DataGridColumn column in orderSummaryDataGrid.Columns)
-                        {
-                            string cellValue = (column.GetCellContent(item) as TextBlock)?.Text;
-                            PdfPCell cell = new PdfPCell(new Phrase(cellValue ?? ""));
-                            pdfTable.AddCell(cell);
-                        }
-                    }
-
-                    Paragraph pdfTitle = new Paragraph("Zamówienie", new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD));
-                    pdfTitle.Alignment = Element.ALIGN_CENTER; 
-                    pdfTitle.SpacingAfter = 10f; 
-                    pdfTitle.SetLeading(0, 1.2f);
-
-                    string footer = "Podsumowanie ceny zamówienia: " + CalculateTotalSum().ToString() + "zl";
-                    Paragraph pdfFooter = new Paragraph(footer);
-                    pdfFooter.Alignment = Element.ALIGN_CENTER; 
-                    pdfFooter.SpacingBefore = 10f; 
-                    pdfFooter.SetLeading(0, 1.2f); 
-
-                    pdfDoc.Add(pdfTitle);
-                    pdfDoc.Add(pdfTable);
-                    pdfDoc.Add(pdfFooter);
-
-                    pdfDoc.Close();
                     this.Close();
                     MessageBox.Show("Zamówienie zostało zapisane do pliku PDF.");
                 }
@@ -126,6 +93,54 @@ namespace POS.Views
             }
         }
 
+        private Paragraph CreatePdfTtiel()
+        {
+            Paragraph pdfTitle = new Paragraph("Zamówienie", new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD));
+            pdfTitle.Alignment = Element.ALIGN_CENTER;
+            pdfTitle.SpacingAfter = 10f;
+            pdfTitle.SetLeading(0, 1.2f);
+
+            return pdfTitle;
+        }
+
+        private PdfPTable CreatePdfTable()
+        {
+            PdfPTable pdfTable = new PdfPTable(orderSummaryDataGrid.Columns.Count);
+
+            foreach (DataGridColumn column in orderSummaryDataGrid.Columns)
+            {
+                PdfPCell cell = new PdfPCell(new Phrase(column.Header.ToString()));
+                pdfTable.AddCell(cell);
+            }
+
+            foreach (var item in orderSummaryDataGrid.Items)
+            {
+                foreach (DataGridColumn column in orderSummaryDataGrid.Columns)
+                {
+                    string cellValue = (column.GetCellContent(item) as TextBlock)?.Text;
+                    PdfPCell cell = new PdfPCell(new Phrase(cellValue ?? ""));
+                    pdfTable.AddCell(cell);
+                }
+            }
+
+            return pdfTable;
+        }
+
+        private Paragraph CreatePdfFooter()
+        {
+            string footer = $"Podsumowanie ceny zamówienia: {totalOrderPrice} zl";
+            Paragraph pdfFooter = new Paragraph(footer);
+            pdfFooter.Alignment = Element.ALIGN_CENTER;
+            pdfFooter.SpacingBefore = 10f;
+            pdfFooter.SetLeading(0, 1.2f);
+
+            return pdfFooter;
+        }
+
+        private void CloseWindow_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.Close(); 
+        }
     }
 }
 

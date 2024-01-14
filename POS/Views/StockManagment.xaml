@@ -44,14 +44,14 @@
 
                     <Border Grid.Row="2" CornerRadius="8" Margin="25,0,25,0" Background="White">
                         <Grid Grid.Row="2">
-                            <ComboBox x:Name="EditRecipeOfProduct_ComboBox" SelectionChanged="EditRecipeOfProduct_ComboBox_SelectionChanged" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                            <ComboBox x:Name="EditRecipeOfProduct_ComboBox" SelectionChanged="EditRecipeOfProduct_ComboBoxSelectionChanged" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                                 <ComboBoxItem IsSelected="True" IsEnabled="False">Wybierz produkt</ComboBoxItem>
                             </ComboBox>
                         </Grid>
                     </Border>
                     <Border Grid.Row="4" CornerRadius="8" Margin="25,0,25,0" Background="White">
                         <Grid Grid.Row="4">
-                            <ComboBox x:Name="EditRecipeIngredient_ComboBox" SelectionChanged="EditRecipeIngredient_ComboBox_SelectionChanged" IsEnabled="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                            <ComboBox x:Name="EditRecipeIngredient_ComboBox" SelectionChanged="EditRecipeIngredient_ComboBoxSelectionChanged" IsEnabled="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                                 <ComboBoxItem IsSelected="True" IsEnabled="False">Wybierz składnik</ComboBoxItem>
                             </ComboBox>
                         </Grid>
@@ -78,13 +78,13 @@
                             <ColumnDefinition Width="25*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Button x:Name="DeleteRecipeIngredient_Button" Click="DeleteRecipeIngredient_Button_Click" Grid.Row="8" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}">
+                        <Button x:Name="DeleteRecipeIngredient_Button" Click="DeleteRecipeIngredient_ButtonClick" Grid.Row="8" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="USUŃ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                             </StackPanel>
                         </Button>
 
-                        <Button x:Name="AddRecipeIngredient_Button" Click="AddRecipeIngredient_Button_Click" Grid.Row="8" Grid.Column="3" Margin="0" Style="{StaticResource payButton}">
+                        <Button x:Name="AddRecipeIngredient_Button" Click="AddRecipeIngredient_ButtonClick" Grid.Row="8" Grid.Column="3" Margin="0" Style="{StaticResource payButton}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="DODAJ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                             </StackPanel>
@@ -151,7 +151,7 @@
 
                     <Border Grid.Row="2" CornerRadius="8" Margin="25,0,25,0" Background="White">
                         <Grid Grid.Row="2">
-                                <ComboBox x:Name="EditProduct_ComboBox" SelectionChanged="EditProduct_ComboBox_SelectionChanged" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                                <ComboBox x:Name="EditProduct_ComboBox" SelectionChanged="EditProduct_ComboBoxSelectionChanged" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                                     <ComboBoxItem IsSelected="True" IsEnabled="False">Wybierz produkt</ComboBoxItem>
                                 </ComboBox>
                             </Grid>
@@ -165,7 +165,7 @@
 
                         <Grid Grid.Column="0" Margin="25,0,0,0">
                             <Viewbox Height="32" HorizontalAlignment="Left" >
-                                <CheckBox x:Name="CreateNewProduct_CheckBox" Checked="CreateNewProduct_CheckBox_Checked" Unchecked="CreateNewProduct_CheckBox_UnChecked"/>
+                                <CheckBox x:Name="CreateNewProduct_CheckBox" Checked="CreateNewProduct_CheckBoxChecked" Unchecked="CreateNewProduct_CheckBoxUnChecked"/>
                             </Viewbox>
                         </Grid>
 
@@ -252,13 +252,13 @@
                             <ColumnDefinition Width="25*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Button x:Name="DeleteProduct_Button" Grid.Row="14" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}">
+                        <Button x:Name="DeleteProduct_Button" Click="DeleteProduct_ButtonClick" Grid.Row="14" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="USUŃ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                             </StackPanel>
                         </Button>
 
-                        <Button x:Name="SaveProduct_Button" Click="SaveProduct_Button_Click" Grid.Row="14" Grid.Column="3" Margin="0" Style="{StaticResource payButton}">
+                        <Button x:Name="SaveProduct_Button" Click="SaveProduct_ButtonClick" Grid.Row="14" Grid.Column="3" Margin="0" Style="{StaticResource payButton}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="ZAPISZ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                             </StackPanel>
@@ -317,7 +317,7 @@
 
                         <Border Grid.Row="2" CornerRadius="8" Margin="25,0,25,0" Background="White">
                             <Grid Grid.Row="2">
-                                <ComboBox x:Name="EditIngredient_ComboBox" SelectionChanged="EditIngredient_ComboBox_SelectionChanged" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                                <ComboBox x:Name="EditIngredient_ComboBox" SelectionChanged="EditIngredient_ComboBoxSelectionChanged" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                                     <ComboBoxItem IsSelected="True" IsEnabled="False">Wybierz składnik</ComboBoxItem>
                                 </ComboBox>
                             </Grid>
@@ -331,7 +331,7 @@
 
                             <Grid Grid.Column="0" Margin="25,0,0,0">
                                 <Viewbox Height="32" HorizontalAlignment="Left" >
-                                    <CheckBox x:Name="CreateNewIngredient_CheckBox" Checked="CreateNewIngredient_CheckBox_Checked" Unchecked="CreateNewIngredient_CheckBox_UnChecked"/>
+                                    <CheckBox x:Name="CreateNewIngredient_CheckBox" Checked="CreateNewIngredient_CheckBoxChecked" Unchecked="CreateNewIngredient_CheckBoxUnChecked"/>
                                 </Viewbox>
                             </Grid>
 
@@ -400,13 +400,13 @@
                                 <ColumnDefinition Width="25*"/>
                             </Grid.ColumnDefinitions>
 
-                            <Button x:Name="DeleteIngredient_Button" Grid.Row="10" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}">
+                            <Button x:Name="DeleteIngredient_Button" Click="DeleteIngredient_ButtonClick" Grid.Row="10" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="USUŃ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                                 </StackPanel>
                             </Button>
 
-                            <Button x:Name="SaveIngredient_Button" Click="SaveIngredient_Button_Click" Grid.Row="10" Grid.Column="3" Margin="0" Style="{StaticResource payButton}">
+                            <Button x:Name="SaveIngredient_Button" Click="SaveIngredient_ButtonClick" Grid.Row="10" Grid.Column="3" Margin="0" Style="{StaticResource payButton}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="ZAPISZ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                                 </StackPanel>
@@ -420,7 +420,7 @@
                         <ColumnDefinition Width="355*"/>
                         <ColumnDefinition Width="50*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="1" Margin="0" Style="{StaticResource homeButton}" d:IsLocked="True" Click="MoveToMainWindow">
+                    <Button Grid.Column="1" Margin="0" Style="{StaticResource homeButton}" d:IsLocked="True" Click="MoveToMainWindow_ButtonClick">
                         <fa:ImageAwesome Icon="Home" Height="24" Foreground="White"/>
                     </Button>
                 </Grid>

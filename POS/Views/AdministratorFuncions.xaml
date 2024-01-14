@@ -29,7 +29,7 @@
                     <Button Style="{StaticResource topButton}" Background="#4BAEA0">
                         <TextBlock Text="ROZPOCZNIJ DZIEŃ" Style="{StaticResource topButtonTextBlock}"/>
                     </Button>
-                    <Button Style="{StaticResource topButton}" Background="#FF7286D3">
+                    <Button Style="{StaticResource topButton}" Background="#FF7286D3" Click="ShowCashBalance_ButtonClick">
                         <TextBlock Text="KONTROLA GOTÓWKI" Style="{StaticResource topButtonTextBlock}"/>
                     </Button>
                     <Button Style="{StaticResource topButton}" Background="#AE4B59">
@@ -39,16 +39,22 @@
             </Grid>
 
             <Border Grid.Row="2" Background="#8EA7E9" BorderThickness="0, 1, 0, 0" BorderBrush="Black">
-                <TextBlock Text="ZARZĄDZANIE KADRĄ PRACOWNICZĄ" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="24"></TextBlock>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0">
+                    <TextBlock Text="ZARZĄDZANIE KADRĄ PRACOWNICZĄ" VerticalAlignment="Center" Foreground="White" FontSize="24" />
+                    <Button Click="RefreshEmployeesList_ButtonClick" Style="{StaticResource refreshButton}" Margin="45,0,0,0">
+                        <fa:ImageAwesome Icon="Refresh" Height="20" Foreground="White" />
+                    </Button>
+                </StackPanel>
             </Border>
+
 
             <Grid Grid.Row="3">
                 <Border BorderThickness="0, 1, 0 ,0" BorderBrush="Black">
-                    <DataGrid x:Name="workingTimeSummaryDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" RowStyle="{DynamicResource DataGridRowStyle1}">
+                    <DataGrid x:Name="employeesInfoDataGrid" SelectionMode="Single" SelectionChanged="employeesInfoDataGrid_SelectionChanged" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" RowStyle="{DynamicResource DataGridRowStyle1}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="PRACOWNIK" IsReadOnly="True" Width="3*" CanUserResize="False" CanUserReorder="False"/>
-                            <DataGridTextColumn Header="STANOWISKO" IsReadOnly="True" Width="1.5*" CanUserResize="False" CanUserReorder="False"/>
-                            <DataGridTextColumn Header="UPRAWNIENIA" IsReadOnly="True" Width="1.5*" CanUserResize="False" CanUserReorder="False"/>
+                            <DataGridTextColumn Header="PRACOWNIK"  Width="3*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Employee_name}"  />
+                            <DataGridTextColumn Header="STANOWISKO"  Width="1.5*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Job_title}" />
+                            <DataGridTextColumn Header="UPRAWNIENIA"  Width="1.5*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Permission_level}" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </Border>
@@ -56,13 +62,13 @@
 
             <Grid Grid.Row="4">
                 <UniformGrid Rows="1" Columns="3"  VerticalAlignment="Stretch" Margin="10, 0, 10, 10">
-                    <Button Style="{StaticResource bottomButton}">
+                    <Button Style="{StaticResource bottomButton}" Click="OpenAddEditEmployeeWindow_ButtonClick">
                         <TextBlock Text="DODAJ PRACOWNIKA" Style="{StaticResource topButtonTextBlock}"/>
                     </Button>
-                    <Button Style="{StaticResource bottomButton}">
+                    <Button Style="{StaticResource bottomButton}" x:Name="btnEdit"  IsEnabled="False" Click="EditEmployeeButton_Click">
                         <TextBlock Text="EDYTUJ PRACOWNIKA" Style="{StaticResource topButtonTextBlock}"/>
                     </Button>
-                    <Button Style="{StaticResource bottomButton}">
+                    <Button Style="{StaticResource bottomButton}" x:Name="btnDelete"  IsEnabled="False" Click="DeleteEmployee_ButtonClick">
                         <TextBlock Text="USUŃ PRACOWNIKA" Style="{StaticResource topButtonTextBlock}" Width="120"/>
                     </Button>
                 </UniformGrid>

@@ -34,9 +34,9 @@
                     <DataGrid x:Name="deliveryListDataGrid" Style="{DynamicResource DataGridStyle3}" RowStyle="{DynamicResource DataGridRowStyle3}" CellStyle="{DynamicResource DataGridCellStyle3}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle3}" IsReadOnly="True">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Składnik" Width="8*" Binding="{Binding Name}" />
-                            <DataGridTextColumn Header="Ilość" Width="1.5*" Binding="{Binding Amount}"/>
-                            <DataGridTextColumn Header="Opakowanie" Width="4*" Binding="{Binding Package}"/>
                             <DataGridTextColumn Header="Ilość" Width="1.5*" Binding="{Binding Quantity}"/>
+                            <DataGridTextColumn Header="Opakowanie" Width="4*" Binding="{Binding Package}"/>
+                            <DataGridTextColumn Header="Ilość" Width="1.5*" Binding="{Binding FullQuantity}"/>
                             <DataGridTemplateColumn Header="" Width="1*">
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
@@ -44,11 +44,17 @@
                 </Grid>
             </Border>
 
+
             <Border Grid.Row="2" BorderThickness="1" BorderBrush="Black" Background="#7286D3" CornerRadius="0,0,8,8" d:IsLocked="True">
                 <Grid Grid.Row="2">
-                    <TextBlock Text="GENERUJ ZAMÓWIENIE" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"></TextBlock>
+                    <Button x:Name="GenerateDeliveryButton" Click="GenerateDeliveryButton_Click" Style="{StaticResource GenerateButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="GENERUJ ZAMÓWIENIE" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"/>
+                        </StackPanel>
+                    </Button>
                 </Grid>
             </Border>
+
         </Grid>
         <!--#endregion-->
         
@@ -62,13 +68,15 @@
             <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black" Background="#FF8EA7E9" d:IsLocked="True"/>
             <Grid Grid.Row="0" Background="#FF8EA7E9">
                 <TextBox x:Name="searchTextBox" Style="{StaticResource searchBar}" Margin="25,0,0,0" Text="Szukaj" Width="360"
-                             Height="42" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus">
+         Height="42" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus"
+         TextChanged="searchTextBox_TextChanged">
                     <TextBox.Resources>
                         <Style TargetType="{x:Type Border}">
                             <Setter Property="CornerRadius" Value="16"/>
                         </Style>
                     </TextBox.Resources>
                 </TextBox>
+
 
                 <Border BorderBrush="#FF7286D3" BorderThickness="1" Width="200" Height="42" HorizontalAlignment="Right" Margin="0,0,25,0" Background="#FF7286D3" CornerRadius="8">
                     <Label x:Name="welcomeLabel"  VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="White" Margin="-1,-1,0,-1"/>
@@ -89,12 +97,12 @@
 
                 <Border Grid.Row="1" BorderThickness="1" BorderBrush="Black" CornerRadius="0,0,0,0" d:IsLocked="True">
                     <Grid Grid.Row="1">
-                        <DataGrid x:Name="IngredientsDataGrid" Style="{DynamicResource DataGridStyle3}" RowStyle="{DynamicResource DataGridRowStyle3}" CellStyle="{DynamicResource DataGridCellStyle3}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle3}" IsReadOnly="True">
+                        <DataGrid x:Name="IngredientsDataGrid" Style="{DynamicResource DataGridStyle4}" RowStyle="{DynamicResource DataGridRowStyle4}" CellStyle="{DynamicResource DataGridCellStyle4}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle4}" IsReadOnly="True" SelectionMode="Single">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Składnik" Width="8*" Binding="{Binding Name}" />
-                                <DataGridTextColumn Header="Data ważności" Width="4*" Binding="{Binding Amount}"/>
-                                <DataGridTextColumn Header="Zapas Bezpieczeństwa" Width="6*" Binding="{Binding Package}"/>
-                                <DataGridTextColumn Header="Zapas" Width="1.5*" Binding="{Binding Quantity}"/>
+                                <DataGridTextColumn Header="Data ważności" Width="4*" Binding="{Binding Expiration_date}"/>
+                                <DataGridTextColumn Header="Zapas Bezpieczeństwa" Width="6*" Binding="{Binding Safety_stock}"/>
+                                <DataGridTextColumn Header="Zapas" Width="1.5*" Binding="{Binding Stock}"/>
                                 <DataGridTemplateColumn Header="" Width="1*">
                                 </DataGridTemplateColumn>
                             </DataGrid.Columns>
@@ -112,11 +120,11 @@
                             <ColumnDefinition Width="2*" />
                         </Grid.ColumnDefinitions>
 
-                        <Button Grid.Column="0" Content="Dodaj" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
-                        <Button Grid.Column="1" Content="Korekta" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
-                        <Button Grid.Column="2" Content="Przyjmij" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
+                        <Button Grid.Column="0" Content="Dodaj" Click="AddToDeliveryButton_Click" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
+                        <Button Grid.Column="1" Content="Korekta" Click="EditValueButton_Click" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
+                        <Button Grid.Column="2" Content="Przyjmij" IsEnabled="False" Click="AddFromDeliveryButton_Click" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
 
-                        <Button Grid.Column="4" Style="{StaticResource homeButton}" d:IsLocked="True" Click="MoveToMainWindow">
+                        <Button Grid.Column="4" Style="{StaticResource homeButton}" d:IsLocked="True" Click="MoveToMainWindow_ButtonClick">
                             <fa:ImageAwesome Icon="Home" Height="24" Foreground="White"/>
                         </Button>
 
