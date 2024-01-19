@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Paragraph = iTextSharp.text.Paragraph;
 
 namespace POS.Views
@@ -244,6 +245,15 @@ namespace POS.Views
             catch (Exception ex)
             {
                 MessageBox.Show("Wystąpił błąd podczas filtrowania składników: " + ex.Message);
+            }
+        }
+
+        private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is DataGridRow row)
+            {
+                row.IsSelected = !row.IsSelected;
+                e.Handled = true;
             }
         }
     }

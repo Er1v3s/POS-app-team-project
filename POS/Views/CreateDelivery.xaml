@@ -97,7 +97,7 @@
 
                 <Border Grid.Row="1" BorderThickness="1" BorderBrush="Black" CornerRadius="0,0,0,0" d:IsLocked="True">
                     <Grid Grid.Row="1">
-                        <DataGrid x:Name="IngredientsDataGrid" Style="{DynamicResource DataGridStyle4}" RowStyle="{DynamicResource DataGridRowStyle4}" CellStyle="{DynamicResource DataGridCellStyle4}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle4}" IsReadOnly="True" SelectionMode="Single">
+                        <DataGrid x:Name="IngredientsDataGrid" Style="{DynamicResource DataGridStyle4}" CellStyle="{DynamicResource DataGridCellStyle4}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle4}" IsReadOnly="True" SelectionMode="Single">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Składnik" Width="8*" Binding="{Binding Name}" />
                                 <DataGridTextColumn Header="Data ważności" Width="4*" Binding="{Binding Expiration_date}"/>
@@ -106,6 +106,12 @@
                                 <DataGridTemplateColumn Header="" Width="1*">
                                 </DataGridTemplateColumn>
                             </DataGrid.Columns>
+                            <DataGrid.RowStyle>
+                                <Style BasedOn="{StaticResource DataGridRowStyle4}" TargetType="DataGridRow">
+                                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="OnPreviewMouseLeftButtonDown"/>
+                                </Style>
+                            </DataGrid.RowStyle>
+
                         </DataGrid>
                     </Grid>
                 </Border>
@@ -122,7 +128,7 @@
 
                         <Button Grid.Column="0" Content="Dodaj" Click="AddToDeliveryButton_Click" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
                         <Button Grid.Column="1" Content="Korekta" Click="EditValueButton_Click" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
-                        <Button Grid.Column="2" Content="Przyjmij" IsEnabled="False" Click="AddFromDeliveryButton_Click" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
+                        <!-- <Button Grid.Column="2" Content="Przyjmij" IsEnabled="False" Click="AddFromDeliveryButton_Click" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" /> -->
 
                         <Button Grid.Column="4" Style="{StaticResource homeButton}" d:IsLocked="True" Click="MoveToMainWindow_ButtonClick">
                             <fa:ImageAwesome Icon="Home" Height="24" Foreground="White"/>
