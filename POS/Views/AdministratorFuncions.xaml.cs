@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace POS.Views
 {
@@ -38,7 +39,24 @@ namespace POS.Views
                         EmployeeInfo employeeInfo = new EmployeeInfo();
                         employeeInfo.Employee_name = employee.First_name + " " + employee.Last_name;
                         employeeInfo.Job_title = employee.Job_title;
-                        employeeInfo.Permission_level = 5; // temporary data
+                        switch (employee.Job_title)
+                        {
+                            case "Barman":
+                                employeeInfo.Permission_level = 3;
+                                break;
+                            case "Miksolog":
+                                employeeInfo.Permission_level = 4;
+                                break;
+                            case "Uczeń":
+                                employeeInfo.Permission_level = 2;
+                                break;
+                            case "Kierownik":
+                                employeeInfo.Permission_level = 5;
+                                break;
+                            default:
+                                employeeInfo.Permission_level = 1; // Domyślny poziom uprawnień
+                                break;
+                        }
                         employeesCollection.Add(employeeInfo);
                     }
                 }
@@ -133,6 +151,15 @@ namespace POS.Views
             cashBalance = Math.Round(cashBalance, 2);
 
             MessageBox.Show($"Stan kasy wynosi: {cashBalance :C}");
+        }
+
+        private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is DataGridRow row)
+            {
+                row.IsSelected = !row.IsSelected;
+                e.Handled = true;
+            }
         }
     }
 }

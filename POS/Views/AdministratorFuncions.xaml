@@ -50,12 +50,18 @@
 
             <Grid Grid.Row="3">
                 <Border BorderThickness="0, 1, 0 ,0" BorderBrush="Black">
-                    <DataGrid x:Name="employeesInfoDataGrid" SelectionMode="Single" SelectionChanged="employeesInfoDataGrid_SelectionChanged" Style="{DynamicResource DataGridStyle4}" CellStyle="{DynamicResource DataGridCellStyle4}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" RowStyle="{DynamicResource DataGridRowStyle4}">
+                    <DataGrid x:Name="employeesInfoDataGrid" SelectionMode="Single" SelectionChanged="employeesInfoDataGrid_SelectionChanged" Style="{DynamicResource DataGridStyle4}" CellStyle="{DynamicResource DataGridCellStyle4}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="PRACOWNIK"  Width="3*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Employee_name}"  />
                             <DataGridTextColumn Header="STANOWISKO"  Width="1.5*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Job_title}" />
                             <DataGridTextColumn Header="UPRAWNIENIA"  Width="1.5*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Permission_level}" />
                         </DataGrid.Columns>
+                        <DataGrid.RowStyle>
+                            <Style BasedOn="{StaticResource DataGridRowStyle4}" TargetType="DataGridRow">
+                                <EventSetter Event="PreviewMouseLeftButtonDown" Handler="OnPreviewMouseLeftButtonDown"/>
+                            </Style>
+                        </DataGrid.RowStyle>
+
                     </DataGrid>
                 </Border>
             </Grid>

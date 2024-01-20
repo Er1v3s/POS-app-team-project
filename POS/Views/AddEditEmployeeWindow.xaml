@@ -52,6 +52,9 @@
                 <Label Grid.Row="2">Stanowisko:</Label>
                 <ComboBox x:Name="txtJobTitle" Grid.Row="2" Grid.Column="1" Margin="0,0,0,10">
                     <ComboBoxItem>Barman</ComboBoxItem>
+                    <ComboBoxItem>Miksolog</ComboBoxItem>
+                    <ComboBoxItem>Uczeń</ComboBoxItem>
+                    <ComboBoxItem>Kierownik</ComboBoxItem>
                 </ComboBox>
 
                 <Label Grid.Row="3">E-mail:</Label>

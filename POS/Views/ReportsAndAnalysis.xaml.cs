@@ -30,8 +30,12 @@ namespace POS.Views
 
         private void GenerateRaport_ButtonClick(object sender, RoutedEventArgs e)
         {
+            string selectedReport = null;
             ComboBoxItem selectedComboBoxItem = (ComboBoxItem)reportTypeComboBox.SelectedItem;
-            string selectedReport = selectedComboBoxItem.Content.ToString();
+            if (selectedComboBoxItem != null)
+            {
+                selectedReport = selectedComboBoxItem.Content.ToString();
+            }
 
             DateTime startDate = datePickerFrom.SelectedDate.GetValueOrDefault();
             DateTime endDate = datePickerTo.SelectedDate.GetValueOrDefault().Date.AddHours(23).AddMinutes(59).AddSeconds(59);
@@ -259,12 +263,14 @@ namespace POS.Views
             {
                 productivityData = (from order in dbContext.Orders
                                     join employee in dbContext.Employees on order.Employee_id equals employee.Employee_id
+                                    join payment in dbContext.Payments on order.Order_id equals payment.Order_id into payments
                                     where order.Order_time >= startDate && order.Order_time <= endDate
-                                    group order by new { employee.Employee_id, employee.First_name, employee.Last_name } into g
+                                    group new { order, payments } by new { employee.Employee_id, employee.First_name, employee.Last_name } into g
                                     select new EmployeeProductivity
                                     {
                                         EmployeeName = $"{g.Key.First_name} {g.Key.Last_name}",
-                                        OrderCount = g.Count()
+                                        OrderCount = g.Count(),
+                                        TotalAmount = Math.Round(g.Sum(x => x.payments.Sum(p => p.Amount)), 2)
                                     }).ToList();
             }
 
@@ -285,15 +291,33 @@ namespace POS.Views
                 }
             });
 
-            productivityChart.Series = new SeriesCollection
+            productivityChart.AxisY.Add(new Axis
             {
-                new ColumnSeries
+                Title = "Suma kwot zamówień",
+                Position = AxisPosition.RightTop,
+                Separator = new LiveCharts.Wpf.Separator
                 {
-                    Title = "Ilość zrealizowanych zamówień: ",
-                    Values = new ChartValues<int>(productivityData.Select(p => p.OrderCount)),
-                    DataLabels = true,
+                    Step = 1,
+                    IsEnabled = true
                 }
-            };
+            });
+
+            productivityChart.Series = new SeriesCollection
+    {
+        new ColumnSeries
+        {
+            Title = "Ilość zrealizowanych zamówień: ",
+            Values = new ChartValues<int>(productivityData.Select(p => p.OrderCount)),
+            DataLabels = true,
+        },
+        new ColumnSeries
+        {
+            Title = "Suma kwot zamówień: ",
+            Values = new ChartValues<double>(productivityData.Select(p => p.TotalAmount)),
+            DataLabels = true,
+            ScalesYAt = 1 // Ta seria będzie korzystać z drugiej osi Y
+        }
+    };
 
             productivityChart.AxisX.Add(new Axis
             {
@@ -303,6 +327,8 @@ namespace POS.Views
 
             liveChart.Children.Add(productivityChart);
         }
+
+
 
         #endregion
     }

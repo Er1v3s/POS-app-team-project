@@ -26,7 +26,15 @@ namespace POS.Views
             string lastName = txtLastName.Text;
             string jobTitle = (txtJobTitle.SelectedItem as ComboBoxItem)?.Content.ToString();
             string email = txtEmail.Text;
-            int phoneNumber = int.Parse(txtPhoneNumber.Text);
+            int phoneNumber;
+            if (int.TryParse(txtPhoneNumber.Text, out phoneNumber))
+            {
+                phoneNumber = int.Parse(txtPhoneNumber.Text);
+            }
+            else
+            {
+                phoneNumber = 000000000;
+            }
             string address = txtAdress.Text;
             string login = txtLogin.Text;
             string password = txtPassword.Text;

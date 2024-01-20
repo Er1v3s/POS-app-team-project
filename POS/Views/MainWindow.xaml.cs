@@ -16,13 +16,15 @@ namespace POS
     public partial class MainWindow : Window
     {
         private DispatcherTimer timer;
-        private bool alertDisplayed = false;
-        private bool expirationAlertDisplayed = false;
+        private bool alertDisplayed = true;
+        private bool expirationAlertDisplayed = true;
 
         public MainWindow()
         {
             InitializeComponent();
             StartTimer();
+            Task.Delay(TimeSpan.FromSeconds(20)).ContinueWith(_ => alertDisplayed = false);
+            Task.Delay(TimeSpan.FromSeconds(20)).ContinueWith(_ => expirationAlertDisplayed = false);
         }
 
         private void MoveToSalesPanel_ButtonClick(object sender, RoutedEventArgs e)
