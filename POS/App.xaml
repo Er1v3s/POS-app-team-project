@@ -1254,7 +1254,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type DataGridRow}">
-                        <Border x:Name="DGR_Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="True">
+                        <Border x:Name="DGR_Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="True"
+                        PreviewMouseLeftButtonDown="OnPreviewMouseLeftButtonDown">
                             <SelectiveScrollingGrid>
                                 <SelectiveScrollingGrid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
@@ -1286,7 +1287,6 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
 
         <Style x:Key="DataGridCellStyle4" TargetType="{x:Type DataGridCell}">
             <Setter Property="Background" Value="Transparent" />
