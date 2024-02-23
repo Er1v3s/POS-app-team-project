@@ -1,4 +1,5 @@
 ﻿using POS.Models;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -22,35 +23,63 @@ namespace POS.Views
 
         private void AddNewEmployee_ButtonClick(object sender, RoutedEventArgs e)
         {
-            string firstName = txtFirstName.Text;
-            string lastName = txtLastName.Text;
-            string jobTitle = (txtJobTitle.SelectedItem as ComboBoxItem)?.Content.ToString();
-            string email = txtEmail.Text;
-            int phoneNumber = int.Parse(txtPhoneNumber.Text);
-            string address = txtAdress.Text;
-            string login = txtLogin.Text;
-            string password = txtPassword.Text;
+            TryAddEmployee();
+            this.Close();
+        }
 
+        private int ParsePhoneNumber(string txtPhoneNumber)
+        {
+            int intPhoneNumber;
+
+            if(int.TryParse(txtPhoneNumber, out intPhoneNumber))
+            {
+                return intPhoneNumber;
+            }
+            else
+            {
+                intPhoneNumber = 000000000;
+                return intPhoneNumber;
+            }
+        }
+
+        private Employees CreateEmployeeObject()
+        {
+            return new Employees
+            {
+                First_name = txtFirstName.Text,
+                Last_name = txtLastName.Text,
+                Job_title = (txtJobTitle.SelectedItem as ComboBoxItem)?.Content.ToString(),
+                Email = txtEmail.Text,
+                Phone_number = ParsePhoneNumber(txtPhoneNumber.Text),
+                Address = txtAdress.Text,
+                Login = txtLogin.Text,
+                Password = txtPassword.Text,
+                Is_User_LoggedIn = false
+            };
+        }
+
+        private void AddEmployee()
+        {
             using (var dbContext = new AppDbContext())
             {
-                Employees newEmployee = new Employees
-                {
-                    First_name = firstName,
-                    Last_name = lastName,
-                    Job_title = jobTitle,
-                    Email = email,
-                    Phone_number = phoneNumber,
-                    Address = address,
-                    Login = login,
-                    Password = password,
-                    Is_User_LoggedIn = false
-                };
-
+                Employees newEmployee = CreateEmployeeObject();
                 dbContext.Employees.Add(newEmployee);
                 dbContext.SaveChanges();
             }
+        }
 
-            this.Close();
+        private bool TryAddEmployee()
+        {
+            try
+            {
+                AddEmployee();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
         }
     }
 }
