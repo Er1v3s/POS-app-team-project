@@ -31,6 +31,11 @@ namespace POS.Views
             totalPriceTextBlock.Text = totalOrderPrice.ToString("C2");
         }
 
+        private void CloseWindow_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
         private void CalculateProductTimesAmount()
         {
             foreach (var orderItem in orderList)
@@ -41,10 +46,10 @@ namespace POS.Views
 
         private void CalculateTotalPrice(ref double totalOrderPrice)
         {
-            foreach(var orderItem in orderList)
+            foreach (var orderItem in orderList)
             {
                 totalOrderPrice += orderItem.TotalPrice;
-            }    
+            }
         }
 
         private void PrintDocument_ButtonClick(object sender, RoutedEventArgs e)
@@ -135,11 +140,6 @@ namespace POS.Views
             pdfFooter.SetLeading(0, 1.2f);
 
             return pdfFooter;
-        }
-
-        private void CloseWindow_ButtonClick(object sender, RoutedEventArgs e)
-        {
-            this.Close(); 
         }
     }
 }
