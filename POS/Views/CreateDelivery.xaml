@@ -47,7 +47,7 @@
 
             <Border Grid.Row="2" BorderThickness="1" BorderBrush="Black" Background="#7286D3" CornerRadius="0,0,8,8" d:IsLocked="True">
                 <Grid Grid.Row="2">
-                    <Button x:Name="GenerateDeliveryButton" Click="GenerateDeliveryButton_Click" Style="{StaticResource GenerateButton}">
+                    <Button x:Name="GenerateDeliveryButton" Click="GenerateDelivery_ButtonClick" Style="{StaticResource GenerateButton}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="GENERUJ ZAMÓWIENIE" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"/>
                         </StackPanel>
@@ -69,7 +69,7 @@
             <Grid Grid.Row="0" Background="#FF8EA7E9">
                 <TextBox x:Name="searchTextBox" Style="{StaticResource searchBar}" Margin="25,0,0,0" Text="Szukaj" Tag="Szukaj" Width="360"
          Height="42" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus"
-         TextChanged="searchTextBox_TextChanged">
+         TextChanged="SearchTextBox_TextChanged">
                     <TextBox.Resources>
                         <Style TargetType="{x:Type Border}">
                             <Setter Property="CornerRadius" Value="16"/>
@@ -126,9 +126,9 @@
                             <ColumnDefinition Width="2*" />
                         </Grid.ColumnDefinitions>
 
-                        <Button Grid.Column="0" Content="Dodaj" Click="AddToDeliveryButton_Click" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
-                        <Button Grid.Column="1" Content="Korekta" Click="EditValueButton_Click" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
-                        <!-- <Button Grid.Column="2" Content="Przyjmij" IsEnabled="False" Click="AddFromDeliveryButton_Click" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" /> -->
+                        <Button Grid.Column="0" Content="Dodaj" Click="AddToDelivery_ButtonClick" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
+                        <Button Grid.Column="1" Content="Korekta" Click="EditValue_ButtonClick" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
+                        <Button Grid.Column="2" Content="Przyjmij" IsEnabled="False" Click="AddFromDelivery_ButtonClick" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
 
                         <Button Grid.Column="4" Style="{StaticResource homeButton}" d:IsLocked="True" Click="MoveToMainWindow_ButtonClick">
                             <fa:ImageAwesome Icon="Home" Height="24" Foreground="White"/>

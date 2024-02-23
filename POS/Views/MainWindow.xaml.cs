@@ -16,8 +16,6 @@ namespace POS
     public partial class MainWindow : Window
     {
         private DispatcherTimer timer;
-        private bool alertDisplayed = true;
-        private bool expirationAlertDisplayed = true;
 
         public MainWindow()
         {
@@ -95,28 +93,39 @@ namespace POS
             }
         }
 
-        private void StartTimer() 
+        private async void StartTimer() 
         {
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += TimerTick;
             timer.Start();
 
-            // Initialize first date render
-            UpdateDateTime(); 
+            await UpdateDateTimeAsync();
+
+            ScheduleDelayedExecution(CheckIngredientLevels, TimeSpan.FromSeconds(60));
+            ScheduleDelayedExecution(CheckIngredientExpiration, TimeSpan.FromSeconds(60));
         }
 
-        private void TimerTick(object sender, EventArgs e)
+        private async void TimerTick(object sender, EventArgs e)
         {
-            UpdateDateTime();
-            if (!alertDisplayed)
+            await UpdateDateTimeAsync();
+        }
+
+        private async Task UpdateDateTimeAsync()
+        {
+            await Task.Run(() =>
             {
-                CheckIngredientLevels();
-            }
-            if (!expirationAlertDisplayed)
-            {
-                CheckIngredientExpiration();
-            }
+                Dispatcher.Invoke(() =>
+                {
+                    dateTextBlock.Text = DateTime.Now.ToString("dd.MM.yyyy");
+                    timeTextBlock.Text = DateTime.Now.ToString("HH:mm:ss");
+                });
+            });
+        }
+
+        private void ScheduleDelayedExecution(Action action, TimeSpan delay)
+        {
+            Task.Delay(delay).ContinueWith(_ => Dispatcher.Invoke(action));
         }
 
         private void CheckIngredientLevels()
@@ -144,9 +153,6 @@ namespace POS
                         RunningOutOfIngredients runningOutOfIngredients = new RunningOutOfIngredients();
                         runningOutOfIngredients.ShowWindow();
                     }
-                    alertDisplayed = true;
-
-                    Task.Delay(TimeSpan.FromMinutes(10)).ContinueWith(_ => alertDisplayed = false);
                 }
             }
         }
@@ -179,17 +185,8 @@ namespace POS
                         CreateDelivery createDelivery = new CreateDelivery();
                         createDelivery.Show();
                     }
-                    expirationAlertDisplayed = true;
-
-                    Task.Delay(TimeSpan.FromMinutes(30)).ContinueWith(_ => expirationAlertDisplayed = false);
                 }
             }
-        }
-
-        private void UpdateDateTime()
-        {
-            dateTextBlock.Text = DateTime.Now.ToString("dd.MM.yyyy");
-            timeTextBlock.Text = DateTime.Now.ToString("HH:mm:ss");
         }
     }
 }

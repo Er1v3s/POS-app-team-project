@@ -63,16 +63,11 @@ namespace POS.Views
 
         private void SearchTextBox_KeyUp(object sender, TextChangedEventArgs e)
         {
-            //if (e.Key == Key.Enter)
-            {
-                var searchText = searchTextBox.Text.ToLower();
-                if(searchText != null)
-                {
-                    LoadProductsBySearch(searchText);
-                }
+            var searchText = searchTextBox.Text.ToLower();
 
-                //e.Handled = true;
-                //searchTextBox.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+            if(searchText != null)
+            {
+                LoadProductsBySearch(searchText);
             }
         }
 
@@ -462,8 +457,8 @@ namespace POS.Views
             {
                 ObservableCollection<OrderItem> newOrder = new ObservableCollection<OrderItem>();
                 orderListCollection.Add(newOrder);
-                currentOrderId = orderListCollection.Count - 1; // Ustawienie bieżącego indeksu zamówienia na ostatnie dodane
-                orderListDataGrid.ItemsSource = orderListCollection[currentOrderId]; // Ustawienie nowej kolekcji zamówień jako źródła danych dla orderListDataGrid
+                currentOrderId = orderListCollection.Count - 1;
+                orderListDataGrid.ItemsSource = orderListCollection[currentOrderId];
                 UpdateTotalPrice();
                 ShowRecipes_ButtonClick(null, null);
                 LoadAllProducts();

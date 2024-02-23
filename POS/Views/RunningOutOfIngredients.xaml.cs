@@ -69,7 +69,6 @@ namespace POS.Views
 
         public void ShowWindow()
         {
-            // Otwieranie kontrolki (okna) RunningOutOfIngredients
             var window = new Window();
             window.Content = this;
             window.ShowDialog();
