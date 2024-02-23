@@ -37,7 +37,14 @@ namespace POS.Views
 
         private void AddTask_ButtonClick(object sender, RoutedEventArgs e)
         {
-            AddTask(new ToDoListTask { Content = addTaskTextBox.Text, CreationDate = DateTime.Now, CompletionDate = null });
+            if(addTaskTextBox.Text != null && addTaskTextBox.Text != "Dodaj zadanie")
+            {
+                AddTask(new ToDoListTask { Content = addTaskTextBox.Text, CreationDate = DateTime.Now, CompletionDate = null });
+            }
+            else
+            {
+                // można dodać messageBox z prośbą o wpisanie zadania
+            }
         }
 
         private void AddTask_KeyUp(object sender, KeyEventArgs e)

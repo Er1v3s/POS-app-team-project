@@ -305,6 +305,8 @@ namespace POS.Views
 
         private void ShowRecipes_ButtonClick(object sender, RoutedEventArgs e)
         {
+            showDrinks_Button.Style = (Style)FindResource("recipeButton");
+            showRecipes_Button.Style = (Style)FindResource("payButton");
             ProductsUnifromGrid.Children.Clear();
             ProductsUnifromGrid.Columns = 3;
             if (orderListCollection[currentOrderId].Count == 0)
@@ -396,6 +398,8 @@ namespace POS.Views
 
         private void ShowDrinks_ButtonClick(object sender, RoutedEventArgs e)
         {
+            showDrinks_Button.Style = (Style)FindResource("payButton");
+            showRecipes_Button.Style = (Style)FindResource("recipeButton");
             ProductsUnifromGrid.Children.Clear();
             LoadAllProducts();
         }

@@ -56,6 +56,12 @@
                             <DataGridTextColumn Header="STANOWISKO"  Width="1.5*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Job_title}" />
                             <DataGridTextColumn Header="UPRAWNIENIA"  Width="1.5*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Permission_level}" />
                         </DataGrid.Columns>
+                        <DataGrid.RowStyle>
+                            <Style BasedOn="{StaticResource DataGridRowStyle4}" TargetType="DataGridRow">
+                                <EventSetter Event="PreviewMouseLeftButtonDown" Handler="OnPreviewMouseLeftButtonDown"/>
+                            </Style>
+                        </DataGrid.RowStyle>
+
                     </DataGrid>
                 </Border>
             </Grid>
