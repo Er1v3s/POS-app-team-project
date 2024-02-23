@@ -8,10 +8,10 @@ namespace POS.Views
     /// <summary>
     /// Logika interakcji dla klasy AddEditEmployeeWindow.xaml
     /// </summary>
-    public partial class AddEditEmployeeWindow : Window
+    public partial class AddEmployeeWindow : Window
     {
 
-        public AddEditEmployeeWindow()
+        public AddEmployeeWindow()
         {
             InitializeComponent();
         }

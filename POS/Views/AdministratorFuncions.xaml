@@ -50,7 +50,7 @@
 
             <Grid Grid.Row="3">
                 <Border BorderThickness="0, 1, 0 ,0" BorderBrush="Black">
-                    <DataGrid x:Name="employeesInfoDataGrid" SelectionMode="Single" SelectionChanged="employeesInfoDataGrid_SelectionChanged" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" RowStyle="{DynamicResource DataGridRowStyle1}">
+                    <DataGrid x:Name="employeesInfoDataGrid" SelectionMode="Single" SelectionChanged="EmployeesInfoDataGrid_SelectionChanged" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" RowStyle="{DynamicResource DataGridRowStyle1}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="PRACOWNIK"  Width="3*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Employee_name}"  />
                             <DataGridTextColumn Header="STANOWISKO"  Width="1.5*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Job_title}" />
@@ -62,10 +62,10 @@
 
             <Grid Grid.Row="4">
                 <UniformGrid Rows="1" Columns="3"  VerticalAlignment="Stretch" Margin="10, 0, 10, 10">
-                    <Button Style="{StaticResource bottomButton}" Click="OpenAddEditEmployeeWindow_ButtonClick">
+                    <Button Style="{StaticResource bottomButton}" Click="OpenAddEmployeeWindow_ButtonClick">
                         <TextBlock Text="DODAJ PRACOWNIKA" Style="{StaticResource topButtonTextBlock}"/>
                     </Button>
-                    <Button Style="{StaticResource bottomButton}" x:Name="btnEdit"  IsEnabled="False" Click="EditEmployeeButton_Click">
+                    <Button Style="{StaticResource bottomButton}" x:Name="btnEdit"  IsEnabled="False" Click="EditEmployee_ButtonClick">
                         <TextBlock Text="EDYTUJ PRACOWNIKA" Style="{StaticResource topButtonTextBlock}"/>
                     </Button>
                     <Button Style="{StaticResource bottomButton}" x:Name="btnDelete"  IsEnabled="False" Click="DeleteEmployee_ButtonClick">
