@@ -53,7 +53,7 @@ namespace POS.Views
             addEditEmployeeWindow.ShowDialog();
         }
 
-        private void EditEmployeeButton_Click(object sender, RoutedEventArgs e)
+        private void EditEmployee_ButtonClick(object sender, RoutedEventArgs e)
         {
             EmployeeInfo selectedEmployee = employeesInfoDataGrid.SelectedItem as EmployeeInfo;
 
@@ -62,7 +62,7 @@ namespace POS.Views
                 using (var dbContext = new AppDbContext())
                 {
                     var employeeToEdit = dbContext.Employees
-                        .FirstOrDefault(emp => emp.First_name + " " + emp.Last_name == selectedEmployee.Employee_name);
+                        .FirstOrDefault(employee => employee.First_name + " " + employee.Last_name == selectedEmployee.Employee_name);
 
                     if (employeeToEdit != null)
                     {
