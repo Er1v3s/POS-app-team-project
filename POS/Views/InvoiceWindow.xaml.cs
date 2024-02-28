@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 
 namespace POS.Views
 {
@@ -15,10 +16,27 @@ namespace POS.Views
             InitializeComponent();
         }
 
+        private void DragWindow(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                this.DragMove();
+            }
+        }
+
+        private void CloseWindow_ButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
         private void SaveInvoice_ButtonClick(object sender, RoutedEventArgs e)
         {
-            ClientName = clientNameTextBox.Text;
-            DeliveryAddress = deliveryAddressTextBox.Text;
+            // TODO
+            // Dodawanie do zamówienia danych do faktury
+
+
+            //ClientName = clientNameTextBox.Text;
+            //DeliveryAddress = deliveryAddressTextBox.Text;
 
             this.DialogResult = true;
             this.Close();

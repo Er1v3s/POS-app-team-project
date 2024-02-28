@@ -2,6 +2,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace POS.Views
 {
@@ -14,6 +15,14 @@ namespace POS.Views
         public AddEmployeeWindow()
         {
             InitializeComponent();
+        }
+
+        private void DragWindow(object sender, MouseButtonEventArgs e)
+        {
+            if(e.ChangedButton == MouseButton.Left)
+            {
+                this.DragMove();
+            }
         }
 
         private void CloseWindow_ButtonClick(object sender, RoutedEventArgs e)

@@ -7,6 +7,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
+using System.Windows.Input;
 
 namespace POS.Views
 {
@@ -29,6 +30,14 @@ namespace POS.Views
 
             orderSummaryDataGrid.ItemsSource = this.orderList;
             totalPriceTextBlock.Text = totalOrderPrice.ToString("C2");
+        }
+
+        private void DragWindow(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                this.DragMove();
+            }
         }
 
         private void CloseWindow_ButtonClick(object sender, RoutedEventArgs e)

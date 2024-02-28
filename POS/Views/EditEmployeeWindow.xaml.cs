@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace POS.Views
 {
@@ -19,6 +20,14 @@ namespace POS.Views
 
             this.selectedEmployee = selectedEmployee;
             InsertCurrentEmployeeData();
+        }
+
+        private void DragWindow(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                this.DragMove();
+            }
         }
 
         private void CloseWindow_ButtonClick(object sender, RoutedEventArgs e)
