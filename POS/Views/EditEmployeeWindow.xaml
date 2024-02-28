@@ -3,10 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:POS.Views"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
-        Title="AddEditEmployee" Width="400" Height="450" WindowStyle="None" FontFamily="Lato" FontSize="16"
+        d:DesignHeight="450" d:DesignWidth="400"
+        Title="EditEmployee" Width="400" Height="450"
+        WindowStyle="None" FontFamily="Lato" FontSize="16"
         ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterScreen"
         AllowsTransparency="True" Background="Transparent">
 
@@ -18,7 +19,7 @@
                 <RowDefinition Height="2*"/>
             </Grid.RowDefinitions>
 
-            <Border CornerRadius="8,8,0,0" Background="#FF7286D3">
+            <Border MouseDown="DragWindow" CornerRadius="7,7,0,0" Background="#FF7286D3">
                 <Grid Grid.Row="0">
                     <Button Width="26" Height="26" Margin="0, 0, 3, 0" HorizontalAlignment="Right" Style="{StaticResource cancelButton}" d:IsLocked="True" Click="CloseWindow_ButtonClick">
                         <fa:ImageAwesome Icon="Close" Height="13" Foreground="White"/>
@@ -90,6 +91,7 @@
                     </StackPanel>
                 </Button>
             </Grid>
+
         </Grid>
     </Border>
 </Window>
