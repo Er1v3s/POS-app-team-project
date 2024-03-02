@@ -1,5 +1,10 @@
-﻿using System.Windows;
+﻿using POS.ViewModel;
+using System;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace POS.Views
 {
@@ -8,8 +13,7 @@ namespace POS.Views
     /// </summary>
     public partial class InvoiceWindow : Window
     {
-        public string ClientName { get; private set; }
-        public string DeliveryAddress { get; private set; }
+        public InvoiceCustomerData InvoiceCustomerDataObject;
 
         public InvoiceWindow()
         {
@@ -31,15 +35,78 @@ namespace POS.Views
 
         private void SaveInvoice_ButtonClick(object sender, RoutedEventArgs e)
         {
-            // TODO
-            // Dodawanie do zamówienia danych do faktury
+            try
+            {
+                InvoiceCustomerData invoiceCustomerData = CreateInvoiceCustomerDataObject();
+                ValidateInvoiceCustomerData(invoiceCustomerData);
 
+                InvoiceCustomerDataObject = invoiceCustomerData;
 
-            //ClientName = clientNameTextBox.Text;
-            //DeliveryAddress = deliveryAddressTextBox.Text;
+                this.DialogResult = true;
+                this.Close();
+            } 
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
 
-            this.DialogResult = true;
-            this.Close();
+        private async void TaxIdentificationNumber_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            (sender as TextBox).BorderThickness = new Thickness(2);
+
+            if ((sender as TextBox).Text.Length != 10) 
+            {
+                await Task.Delay(1500);
+
+                if ((sender as TextBox).Text.Length != 10)
+                {
+                    taxIdentificationNumberWarning.Text = "Niepoprawna długość numeru NIP";
+                    (sender as TextBox).BorderBrush = new SolidColorBrush(Color.FromRgb(174, 75, 89));
+                }
+            }
+            else
+            {
+                taxIdentificationNumberWarning.Text = "";
+                (sender as TextBox).BorderBrush = new SolidColorBrush(Color.FromRgb(55, 154, 140));
+            }
+        }
+
+        private int ParseTaxIdentificationNumber(string taxIdentificationNumber)
+        {
+            int parsedTaxIdentificationNumber;
+
+            if (int.TryParse(taxIdentificationNumber, out parsedTaxIdentificationNumber))
+            {
+                return parsedTaxIdentificationNumber;
+            }
+            else
+            {
+                MessageBox.Show("NIP nieprawidłowy");
+                txtTaxIdentificationNumber.Text = "";
+                return 0;
+            }
+        }
+
+        private InvoiceCustomerData CreateInvoiceCustomerDataObject()
+        {
+            return new InvoiceCustomerData()
+            {
+                TaxIdentificationNumber = ParseTaxIdentificationNumber(txtTaxIdentificationNumber.Text),
+                CustomerName = txtCustomerName.Text,
+                CustomerAddress = txtCustomerAddress.Text,
+            };
+        }
+
+        private void ValidateInvoiceCustomerData(InvoiceCustomerData invoiceCustomerData)
+        {
+            if(invoiceCustomerData.TaxIdentificationNumber.ToString().Length != 10
+                || invoiceCustomerData.CustomerName.ToString().Length < 1
+                || invoiceCustomerData.CustomerAddress.ToString().Length < 1
+                )
+            {
+                throw new Exception("Wprowadzone dane są nieprawidłowe");
+            }
         }
     }
 }

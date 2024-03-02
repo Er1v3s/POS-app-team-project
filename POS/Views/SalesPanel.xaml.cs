@@ -549,10 +549,9 @@ namespace POS.Views
             InvoiceWindow invoiceWindow = new InvoiceWindow();
             if (invoiceWindow.ShowDialog() == true)
             {
-                string clientName = invoiceWindow.ClientName;
-                string deliveryAddress = invoiceWindow.DeliveryAddress;
+                InvoiceCustomerData invoiceCustomerData = invoiceWindow.InvoiceCustomerDataObject;
 
-                MessageBox.Show($"Faktura dla: {clientName}\nAdres dostawy: {deliveryAddress}\nSuma: {totalPrice:C2}", "Faktura", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show($"Faktura dla: {invoiceCustomerData.CustomerName}\nAdres: {invoiceCustomerData.CustomerAddress}\nNIP: {invoiceCustomerData.TaxIdentificationNumber}\nSuma: {totalPrice:C2}", "Faktura", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 orderListCollection[currentOrderId].Clear();
                 UpdateTotalPrice();
