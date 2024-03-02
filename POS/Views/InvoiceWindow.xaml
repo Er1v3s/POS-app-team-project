@@ -45,16 +45,14 @@
                 </Grid.RowDefinitions>
 
                 <Label Grid.Row="0">NIP:</Label>
-                    <TextBox x:Name="xd" Grid.Column="1" Margin="0,0,0,10" />
-                <Label x:Name="xdd" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Gray" FontSize="12" />
+                <TextBox x:Name="txtTaxIdentificationNumber" Grid.Column="1" Margin="0,0,0,20" TextChanged="TaxIdentificationNumber_TextChanged" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                <TextBlock x:Name="taxIdentificationNumberWarning" Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" Foreground="Red" FontSize="14" />
 
                 <Label Grid.Row="1">Nazwa podmiotu:</Label>
-                <TextBox x:Name="xd1" Grid.Column="1" Grid.Row="1" Margin="0,0,0,10"/>
-                <Label x:Name="xdd1" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Gray" FontSize="12" />
+                <TextBox x:Name="txtCustomerName" Grid.Column="1" Grid.Row="1" Margin="0,0,0,20" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
 
                 <Label Grid.Row="2">Adres:</Label>
-                <TextBox x:Name="xd2" Grid.Column="1" Grid.Row="2" Margin="0,0,0,10"/>
-                <Label x:Name="xdd2" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Gray" FontSize="12" />
+                <TextBox x:Name="txtCustomerAddress" Grid.Column="1" Grid.Row="2" Margin="0,0,0,20" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
 
             </Grid>
 
