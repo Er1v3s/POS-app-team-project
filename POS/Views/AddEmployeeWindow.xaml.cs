@@ -1,8 +1,10 @@
-﻿using POS.Models;
+﻿using POS.Helpers;
+using POS.Models;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace POS.Views
 {
@@ -11,7 +13,6 @@ namespace POS.Views
     /// </summary>
     public partial class AddEmployeeWindow : Window
     {
-
         public AddEmployeeWindow()
         {
             InitializeComponent();
@@ -55,14 +56,14 @@ namespace POS.Views
         {
             return new Employees
             {
-                First_name = txtFirstName.Text,
-                Last_name = txtLastName.Text,
-                Job_title = (txtJobTitle.SelectedItem as ComboBoxItem)?.Content.ToString(),
-                Email = txtEmail.Text,
-                Phone_number = ParsePhoneNumber(txtPhoneNumber.Text),
-                Address = txtAdress.Text,
-                Login = txtLogin.Text,
-                Password = txtPassword.Text,
+                First_name = FormValidatorHelper.ValidateTextBox(txtFirstName),
+                Last_name = FormValidatorHelper.ValidateTextBox(txtLastName),
+                Job_title = FormValidatorHelper.ValidateComboBox(txtJobTitle),
+                Email = FormValidatorHelper.ValidateEmailAddress(txtEmail),
+                Phone_number = ParsePhoneNumber(FormValidatorHelper.ValidateTextBox(txtPhoneNumber)),
+                Address = FormValidatorHelper.ValidateTextBox(txtAdress),
+                Login = FormValidatorHelper.ValidateTextBox(txtLogin),
+                Password = FormValidatorHelper.ValidateTextBox(txtPassword),
                 Is_User_LoggedIn = false
             };
         }
@@ -86,9 +87,19 @@ namespace POS.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message, "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
+        }
+
+        private void FormInput_LostFocus(object sender, RoutedEventArgs e)
+        {
+            FormValidatorHelper.ValidateTextBox(sender, e);
+        }
+
+        private void EmailFormInput_LostFocus(object sender, RoutedEventArgs e)
+        {
+            FormValidatorHelper.ValidateEmailAddress(sender, e);
         }
     }
 }
