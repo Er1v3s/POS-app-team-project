@@ -33,8 +33,15 @@ namespace POS.Views
 
         private void AddNewEmployee_ButtonClick(object sender, RoutedEventArgs e)
         {
-            TryAddEmployee();
-            this.Close();
+            try
+            {
+                AddEmployee();
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private int ParsePhoneNumber(string txtPhoneNumber)
@@ -75,20 +82,6 @@ namespace POS.Views
                 Employees newEmployee = CreateEmployeeObject();
                 dbContext.Employees.Add(newEmployee);
                 dbContext.SaveChanges();
-            }
-        }
-
-        private bool TryAddEmployee()
-        {
-            try
-            {
-                AddEmployee();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
             }
         }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -83,6 +82,7 @@ namespace POS.Helpers
                 }
                 else
                 {
+                    textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(174, 75, 89));
                     throw new Exception("Niepoprawny adres email");
                 }
             }
