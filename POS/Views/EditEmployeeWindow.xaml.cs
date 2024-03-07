@@ -1,8 +1,8 @@
-﻿using POS.Models;
+﻿using POS.Helpers;
+using POS.Models;
 using System;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace POS.Views
@@ -37,8 +37,15 @@ namespace POS.Views
 
         private void EditEmployee_ButtonClick(object sender, RoutedEventArgs e)
         {
-            TryUpdateEmployee();
-            this.Close();
+            try
+            {
+                UpdateEmployee();
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void InsertCurrentEmployeeData()
@@ -81,32 +88,32 @@ namespace POS.Views
 
                 if (employeeToUpdate != null)
                 {
-                    employeeToUpdate.First_name = txtFirstName.Text;
-                    employeeToUpdate.Last_name = txtLastName.Text;
-                    employeeToUpdate.Job_title = txtJobTitle.Text;
-                    employeeToUpdate.Email = txtEmail.Text;
-                    employeeToUpdate.Phone_number = ParsePhoneNumber(txtPhoneNumber.Text);
-                    employeeToUpdate.Address = txtAdress.Text;
-                    employeeToUpdate.Login = txtLogin.Text;
-                    employeeToUpdate.Password = txtPassword.Text;
+                    employeeToUpdate.First_name = FormValidatorHelper.ValidateTextBox(txtFirstName);
+                    employeeToUpdate.Last_name = FormValidatorHelper.ValidateTextBox(txtLastName);
+                    employeeToUpdate.Job_title = FormValidatorHelper.ValidateComboBox(txtJobTitle);
+                    employeeToUpdate.Email = FormValidatorHelper.ValidateEmailAddress(txtEmail);
+                    employeeToUpdate.Phone_number = ParsePhoneNumber(FormValidatorHelper.ValidatePhoneNumber(txtPhoneNumber));
+                    employeeToUpdate.Address = FormValidatorHelper.ValidateTextBox(txtAdress);
+                    employeeToUpdate.Login = FormValidatorHelper.ValidateTextBox(txtLogin);
+                    employeeToUpdate.Password = FormValidatorHelper.ValidateTextBox(txtPassword);
                 }
 
                 dbContext.SaveChanges();
             }
         }
 
-        private bool TryUpdateEmployee()
+        private async void FormInput_LostFocus(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                UpdateEmployee();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
-            }
+            FormValidatorHelper.ValidateTextBox(sender, e);
+        }
+        private void EmailFormInput_LostFocus(object sender, RoutedEventArgs e)
+        {
+            FormValidatorHelper.ValidateEmailAddress(sender, e);
+        }
+
+        private void PhoneNumberFormInput_LostFocus(object sender, RoutedEventArgs e)
+        {
+            FormValidatorHelper.ValidatePhoneNumber(sender, e);
         }
     }
 }

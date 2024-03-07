@@ -18,7 +18,7 @@ namespace POS.Helpers
                 if (textBox.Text.Length < 1)
                 {
                     textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(174, 75, 89));
-                    throw new Exception("Niepoprawna długość");
+                    throw new Exception("Niekompletne dane");
                 }
                 else
                 {
@@ -114,6 +114,53 @@ namespace POS.Helpers
 
             Regex regex = new Regex(regexPattern);
             return regex.IsMatch(email);
+        }
+
+        public static string ValidatePhoneNumber(object sender)
+        {
+            TextBox textBox = sender as TextBox;
+            string textBoxValue = ValidateTextBox(textBox);
+
+            if (textBoxValue != null)
+            {
+                if (IsPhoneNumberValid(textBoxValue))
+                {
+                    return textBoxValue;
+                }
+                else
+                {
+                    textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(174, 75, 89));
+                    throw new Exception("Niepoprawny numer telefonu");
+                }
+            }
+
+            return textBoxValue;
+        }
+
+        public static void ValidatePhoneNumber(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            textBox.BorderThickness = new Thickness(2);
+
+            if (textBox != null)
+            {
+                if (IsPhoneNumberValid(textBox.Text))
+                {
+                    textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(55, 154, 140));
+                }
+                else
+                {
+                    textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(174, 75, 89));
+                }
+            }
+        }
+
+        private static bool IsPhoneNumberValid(string phoneNumber)
+        {
+            string regexPattern = @"^[1-9]\d{8}$";
+
+            Regex regex = new Regex(regexPattern);
+            return regex.IsMatch(phoneNumber);
         }
     }
 }

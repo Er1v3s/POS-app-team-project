@@ -54,6 +54,7 @@
                 <ComboBox x:Name="txtJobTitle" Grid.Row="2" Grid.Column="1" Margin="0,0,0,10">
                     <ComboBoxItem>Barman</ComboBoxItem>
                     <ComboBoxItem>Mixolog</ComboBoxItem>
+                    <ComboBoxItem>Uczeń</ComboBoxItem>
                     <ComboBoxItem>Kierownik</ComboBoxItem>
                 </ComboBox>
 
@@ -61,7 +62,7 @@
                 <TextBox x:Name="txtEmail" Grid.Row="3" Grid.Column="1" Margin="0,0,0,10" LostFocus="EmailFormInput_LostFocus"/>
 
                 <Label Grid.Row="4">Tel:</Label>
-                <TextBox x:Name="txtPhoneNumber" Grid.Row="4" Grid.Column="1" Margin="0,0,0,10" LostFocus="FormInput_LostFocus"/>
+                <TextBox x:Name="txtPhoneNumber" Grid.Row="4" Grid.Column="1" Margin="0,0,0,10" LostFocus="PhoneNumberFormInput_LostFocus"/>
 
                 <Label Grid.Row="5">Adres:</Label>
                 <TextBox x:Name="txtAdress" Grid.Row="5" Grid.Column="1" Margin="0,0,0,10" LostFocus="FormInput_LostFocus"/>

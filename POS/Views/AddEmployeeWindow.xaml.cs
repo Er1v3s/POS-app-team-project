@@ -2,9 +2,7 @@
 using POS.Models;
 using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace POS.Views
 {
@@ -67,7 +65,7 @@ namespace POS.Views
                 Last_name = FormValidatorHelper.ValidateTextBox(txtLastName),
                 Job_title = FormValidatorHelper.ValidateComboBox(txtJobTitle),
                 Email = FormValidatorHelper.ValidateEmailAddress(txtEmail),
-                Phone_number = ParsePhoneNumber(FormValidatorHelper.ValidateTextBox(txtPhoneNumber)),
+                Phone_number = ParsePhoneNumber(FormValidatorHelper.ValidatePhoneNumber(txtPhoneNumber)),
                 Address = FormValidatorHelper.ValidateTextBox(txtAdress),
                 Login = FormValidatorHelper.ValidateTextBox(txtLogin),
                 Password = FormValidatorHelper.ValidateTextBox(txtPassword),
@@ -93,6 +91,11 @@ namespace POS.Views
         private void EmailFormInput_LostFocus(object sender, RoutedEventArgs e)
         {
             FormValidatorHelper.ValidateEmailAddress(sender, e);
+        }
+
+        private void PhoneNumberFormInput_LostFocus(object sender, RoutedEventArgs e)
+        {
+            FormValidatorHelper.ValidatePhoneNumber(sender, e);
         }
     }
 }
