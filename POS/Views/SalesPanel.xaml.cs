@@ -80,21 +80,24 @@ namespace POS.Views
 
         private void PayForOrder_ButtonClick(object sender, RoutedEventArgs e)
         {
+            double totalPrice = Math.Round(orderList.Sum(item => item.Amount * item.Price), 2);
 
             if (sender is Button button && button.Tag is string paymentMethod)
             {
-                double totalPrice = Math.Round(orderList.Sum(item => item.Amount * item.Price), 2);
-                GenerateBill printWindow = new GenerateBill(orderList);
-                printWindow.ShowDialog();
-                var order = SaveOrder();
-                SaveOrderItems(order);
-                SavePayment(order, paymentMethod, totalPrice);
-                RemoveIngredients();
-                orderList.Clear();
-                UpdateTotalPrice();
-                MessageBox.Show($"Zapłacono za zamówienie {totalPrice:C} - metoda płatności: {paymentMethod}");
-            }
+                OrderSummary summaryOrderWindow = new OrderSummary(orderList);
+                summaryOrderWindow.ShowDialog();
 
+                if(summaryOrderWindow.DialogResult == true)
+                {
+                    var order = SaveOrder();
+                    SaveOrderItems(order);
+                    SavePayment(order, paymentMethod, totalPrice);
+                    RemoveIngredients();
+                    orderList.Clear();
+                    UpdateTotalPrice();
+                    MessageBox.Show($"Zapłacono za zamówienie {totalPrice:C} - metoda płatności: {paymentMethod}");
+                } 
+            }
         }
 
         private void RemoveIngredients()
@@ -549,13 +552,8 @@ namespace POS.Views
             InvoiceWindow invoiceWindow = new InvoiceWindow();
             if (invoiceWindow.ShowDialog() == true)
             {
-                InvoiceCustomerData invoiceCustomerData = invoiceWindow.InvoiceCustomerDataObject;
-
+                InvoiceCustomerData invoiceCustomerData = InvoiceWindow.InvoiceCustomerDataObject;
                 MessageBox.Show($"Faktura dla: {invoiceCustomerData.CustomerName}\nAdres: {invoiceCustomerData.CustomerAddress}\nNIP: {invoiceCustomerData.TaxIdentificationNumber}\nSuma: {totalPrice:C2}", "Faktura", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                orderListCollection[currentOrderId].Clear();
-                UpdateTotalPrice();
-                orderListDataGrid.Items.Refresh();
             }
         }
 
