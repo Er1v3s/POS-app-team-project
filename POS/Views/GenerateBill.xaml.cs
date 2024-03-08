@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
 using System.Windows.Input;
+using System.Windows.Shapes;
 
 namespace POS.Views
 {
@@ -61,7 +62,7 @@ namespace POS.Views
             }
         }
 
-        private void PrintDocument_ButtonClick(object sender, RoutedEventArgs e)
+        private async void PrintDocument_ButtonClick(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -76,19 +77,34 @@ namespace POS.Views
                     string filePath = saveFileDialog.FileName;
 
                     Document pdfDoc = new Document(PageSize.A4);
-                    using (FileStream fs = new FileStream(filePath, FileMode.Create))
+                    await using (FileStream fs = new FileStream(filePath, FileMode.Create))
                     {
                         PdfWriter writer = PdfWriter.GetInstance(pdfDoc, fs);
                         pdfDoc.Open();
                         pdfDoc.NewPage();
 
-                        Paragraph pdfTitle = CreatePdfTtiel();
+                        Paragraph pdfDateTime = CreateDateTime();
+                        Paragraph pdfTitle = CreatePdfTitle();
                         PdfPTable pdfPTable = CreatePdfTable();
-                        Paragraph pdfFooter = CreatePdfFooter();
+                        PdfPTable pdfSummary = CreateOrderSummary();
 
+                        pdfDoc.Add(pdfDateTime);
                         pdfDoc.Add(pdfTitle);
+                        pdfDoc.Add(spacer);
+
+                        if(InvoiceWindow.InvoiceCustomerDataObject != null)
+                        {
+                            Paragraph pdfInvoiceInfo = CreateInvoiceInfo();
+                            PdfPTable pdfInvoiceData = CreateInvoiceClientInfo();
+
+                            pdfDoc.Add(pdfInvoiceInfo);
+                            pdfDoc.Add(pdfInvoiceData);
+                        }
+
+                        pdfDoc.Add(spacer);
                         pdfDoc.Add(pdfPTable);
-                        pdfDoc.Add(pdfFooter);
+                        pdfDoc.Add(spacer);
+                        pdfDoc.Add(pdfSummary);
 
                         pdfDoc.Close();
                     }
@@ -107,7 +123,15 @@ namespace POS.Views
             }
         }
 
-        private Paragraph CreatePdfTtiel()
+        private Paragraph CreateDateTime()
+        {
+            Paragraph dateTime = new Paragraph(DateTime.Now.ToString());
+            dateTime.Alignment = Element.ALIGN_RIGHT;
+
+            return dateTime;
+        }
+
+        private Paragraph CreatePdfTitle()
         {
             Paragraph pdfTitle = new Paragraph("Zamówienie", new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD));
             pdfTitle.Alignment = Element.ALIGN_CENTER;
@@ -117,13 +141,50 @@ namespace POS.Views
             return pdfTitle;
         }
 
+        private Paragraph CreateInvoiceInfo()
+        {
+            Paragraph pdfInvoiceInfo = new Paragraph("Faktura VAT", new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD));
+            pdfInvoiceInfo.Alignment = Element.ALIGN_LEFT;
+            pdfInvoiceInfo.SpacingAfter = 10f;
+            pdfInvoiceInfo.SetLeading(0, 1.2f);
+
+            return pdfInvoiceInfo;
+        }
+
+        private PdfPTable CreateInvoiceClientInfo() 
+        {
+            PdfPTable clientInfoTable = new PdfPTable(new[] { .75f, 2f })
+            {
+                HorizontalAlignment = Element.ALIGN_LEFT,
+                WidthPercentage = 75,
+                DefaultCell = { MinimumHeight = 22f }
+            };
+
+            clientInfoTable.AddCell("NIP");
+            clientInfoTable.AddCell(InvoiceWindow.InvoiceCustomerDataObject.TaxIdentificationNumber.ToString());
+            clientInfoTable.AddCell("Nazwa");
+            clientInfoTable.AddCell(InvoiceWindow.InvoiceCustomerDataObject.CustomerName);
+            clientInfoTable.AddCell("Adres");
+            clientInfoTable.AddCell(InvoiceWindow.InvoiceCustomerDataObject.CustomerAddress);
+
+            return clientInfoTable;
+        }
+
         private PdfPTable CreatePdfTable()
         {
-            PdfPTable pdfTable = new PdfPTable(orderSummaryDataGrid.Columns.Count);
+            PdfPTable pdfTable = new PdfPTable(orderSummaryDataGrid.Columns.Count)
+            {
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                WidthPercentage = 100,
+                DefaultCell = { MinimumHeight = 22f },
+            };
 
             foreach (DataGridColumn column in orderSummaryDataGrid.Columns)
             {
-                PdfPCell cell = new PdfPCell(new Phrase(column.Header.ToString()));
+                PdfPCell cell = new PdfPCell(new Phrase(column.Header.ToString()))
+                {
+                    FixedHeight = 22f
+                };
                 pdfTable.AddCell(cell);
             }
 
@@ -132,7 +193,10 @@ namespace POS.Views
                 foreach (DataGridColumn column in orderSummaryDataGrid.Columns)
                 {
                     string cellValue = (column.GetCellContent(item) as TextBlock)?.Text;
-                    PdfPCell cell = new PdfPCell(new Phrase(cellValue ?? ""));
+                    PdfPCell cell = new PdfPCell(new Phrase(cellValue ?? ""))
+                    {
+                        FixedHeight = 22f
+                    };
                     pdfTable.AddCell(cell);
                 }
             }
@@ -140,16 +204,27 @@ namespace POS.Views
             return pdfTable;
         }
 
-        private Paragraph CreatePdfFooter()
+        private PdfPTable CreateOrderSummary()
         {
-            string footer = $"Podsumowanie ceny zamówienia: {totalOrderPrice} zl";
-            Paragraph pdfFooter = new Paragraph(footer);
-            pdfFooter.Alignment = Element.ALIGN_CENTER;
-            pdfFooter.SpacingBefore = 10f;
-            pdfFooter.SetLeading(0, 1.2f);
+            PdfPTable pdfTable = new PdfPTable(new[] { .75f, 2f })
+            {
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                WidthPercentage = 100,
+                DefaultCell = { MinimumHeight = 22f },
+                
+            };
 
-            return pdfFooter;
+            pdfTable.AddCell("SUMA");
+            pdfTable.AddCell($"{totalOrderPrice} zl ");
+
+            return pdfTable;
         }
+
+        private Paragraph spacer = new Paragraph("")
+        {
+            SpacingBefore = 10f,
+            SpacingAfter = 10f,
+        };
     }
 }
 

@@ -13,7 +13,7 @@ namespace POS.Views
     /// </summary>
     public partial class InvoiceWindow : Window
     {
-        public InvoiceCustomerData InvoiceCustomerDataObject;
+        public static InvoiceCustomerData InvoiceCustomerDataObject;
 
         public InvoiceWindow()
         {
@@ -53,22 +53,23 @@ namespace POS.Views
 
         private async void TaxIdentificationNumber_TextChanged(object sender, TextChangedEventArgs e)
         {
-            (sender as TextBox).BorderThickness = new Thickness(2);
+            TextBox textBox = sender as TextBox;
+            textBox.BorderThickness = new Thickness(2);
 
-            if ((sender as TextBox).Text.Length != 10) 
+            if (textBox.Text.Length != 10) 
             {
                 await Task.Delay(1500);
 
-                if ((sender as TextBox).Text.Length != 10)
+                if (textBox.Text.Length != 10)
                 {
                     taxIdentificationNumberWarning.Text = "Niepoprawna długość numeru NIP";
-                    (sender as TextBox).BorderBrush = new SolidColorBrush(Color.FromRgb(174, 75, 89));
+                    textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(174, 75, 89));
                 }
             }
             else
             {
                 taxIdentificationNumberWarning.Text = "";
-                (sender as TextBox).BorderBrush = new SolidColorBrush(Color.FromRgb(55, 154, 140));
+                textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(55, 154, 140));
             }
         }
 
