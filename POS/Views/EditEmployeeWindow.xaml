@@ -3,10 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:POS.Views"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
-        Title="AddEditEmployee" Width="400" Height="450" WindowStyle="None" FontFamily="Lato" FontSize="16"
+        d:DesignHeight="450" d:DesignWidth="400"
+        Title="EditEmployee" Width="400" Height="450"
+        WindowStyle="None" FontFamily="Lato" FontSize="16"
         ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterScreen"
         AllowsTransparency="True" Background="Transparent">
 
@@ -18,7 +19,7 @@
                 <RowDefinition Height="2*"/>
             </Grid.RowDefinitions>
 
-            <Border CornerRadius="8,8,0,0" Background="#FF7286D3">
+            <Border MouseDown="DragWindow" CornerRadius="7,7,0,0" Background="#FF7286D3">
                 <Grid Grid.Row="0">
                     <Button Width="26" Height="26" Margin="0, 0, 3, 0" HorizontalAlignment="Right" Style="{StaticResource cancelButton}" d:IsLocked="True" Click="CloseWindow_ButtonClick">
                         <fa:ImageAwesome Icon="Close" Height="13" Foreground="White"/>
@@ -45,13 +46,10 @@
                 </Grid.RowDefinitions>
 
                 <Label Grid.Row="0">Imię:</Label>
-                <TextBox x:Name="txtFirstName" Grid.Column="1" Margin="0,0,0,10" />
-                <Label x:Name="lblFirstName" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Gray" FontSize="12" />
-
+                <TextBox x:Name="txtFirstName" Grid.Column="1" Margin="0,0,0,10" LostFocus="FormInput_LostFocus"/>
 
                 <Label Grid.Row="1">Nazwisko:</Label>
-                <TextBox x:Name="txtLastName" Grid.Row="1" Grid.Column="1" Margin="0,0,0,10" />
-                <Label x:Name="lblLastName" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Gray" FontSize="12" />
+                <TextBox x:Name="txtLastName" Grid.Row="1" Grid.Column="1" Margin="0,0,0,10" LostFocus="FormInput_LostFocus"/>
 
                 <Label Grid.Row="2">Stanowisko:</Label>
                 <ComboBox x:Name="txtJobTitle" Grid.Row="2" Grid.Column="1" Margin="0,0,0,10">
@@ -60,27 +58,21 @@
                     <ComboBoxItem>Uczeń</ComboBoxItem>
                     <ComboBoxItem>Kierownik</ComboBoxItem>
                 </ComboBox>
-                <Label x:Name="lblJobTitle" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Gray" FontSize="12" />
 
                 <Label Grid.Row="3">E-mail:</Label>
-                <TextBox x:Name="txtEmail" Grid.Row="3" Grid.Column="1" Margin="0,0,0,10" />
-                <Label x:Name="lblEmail" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Gray" FontSize="12" />
+                <TextBox x:Name="txtEmail" Grid.Row="3" Grid.Column="1" Margin="0,0,0,10" LostFocus="EmailFormInput_LostFocus"/>
 
                 <Label Grid.Row="4">Tel:</Label>
-                <TextBox x:Name="txtPhoneNumber" Grid.Row="4" Grid.Column="1" Margin="0,0,0,10" />
-                <Label x:Name="lblPhoneNumber" Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Gray" FontSize="12" />
+                <TextBox x:Name="txtPhoneNumber" Grid.Row="4" Grid.Column="1" Margin="0,0,0,10" LostFocus="PhoneNumberFormInput_LostFocus"/>
 
                 <Label Grid.Row="5">Adres:</Label>
-                <TextBox x:Name="txtAdress" Grid.Row="5" Grid.Column="1" Margin="0,0,0,10"/>
-                <Label x:Name="lblAdress" Grid.Row="5" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Gray" FontSize="12" />
+                <TextBox x:Name="txtAdress" Grid.Row="5" Grid.Column="1" Margin="0,0,0,10" LostFocus="FormInput_LostFocus"/>
 
                 <Label Grid.Row="6">Login:</Label>
-                <TextBox x:Name="txtLogin" Grid.Row="6" Grid.Column="1" Margin="0,0,0,10"/>
-                <Label x:Name="lblLogin" Grid.Row="6" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Gray" FontSize="12" />
+                <TextBox x:Name="txtLogin" Grid.Row="6" Grid.Column="1" Margin="0,0,0,10" LostFocus="FormInput_LostFocus"/>
 
                 <Label Grid.Row="7">Hasło:</Label>
-                <TextBox x:Name="txtPassword" Grid.Row="7" Grid.Column="1" Margin="0,0,0,10"/>
-                <Label x:Name="lblPassword" Grid.Row="7" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="Gray" FontSize="12" />
+                <TextBox x:Name="txtPassword" Grid.Row="7" Grid.Column="1" Margin="0,0,0,10" LostFocus="FormInput_LostFocus"/>
             </Grid>
 
             <Grid Grid.Row="2">
@@ -90,6 +82,7 @@
                     </StackPanel>
                 </Button>
             </Grid>
+
         </Grid>
     </Border>
 </Window>

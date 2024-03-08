@@ -63,16 +63,11 @@ namespace POS.Views
 
         private void SearchTextBox_KeyUp(object sender, TextChangedEventArgs e)
         {
-            //if (e.Key == Key.Enter)
-            {
-                var searchText = searchTextBox.Text.ToLower();
-                if(searchText != null)
-                {
-                    LoadProductsBySearch(searchText);
-                }
+            var searchText = searchTextBox.Text.ToLower();
 
-                //e.Handled = true;
-                //searchTextBox.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+            if(searchText != null)
+            {
+                LoadProductsBySearch(searchText);
             }
         }
 
@@ -85,21 +80,24 @@ namespace POS.Views
 
         private void PayForOrder_ButtonClick(object sender, RoutedEventArgs e)
         {
+            double totalPrice = Math.Round(orderList.Sum(item => item.Amount * item.Price), 2);
 
             if (sender is Button button && button.Tag is string paymentMethod)
             {
-                double totalPrice = Math.Round(orderList.Sum(item => item.Amount * item.Price), 2);
-                GenerateBill printWindow = new GenerateBill(orderList);
-                printWindow.ShowDialog();
-                var order = SaveOrder();
-                SaveOrderItems(order);
-                SavePayment(order, paymentMethod, totalPrice);
-                RemoveIngredients();
-                orderList.Clear();
-                UpdateTotalPrice();
-                MessageBox.Show($"Zapłacono za zamówienie {totalPrice:C} - metoda płatności: {paymentMethod}");
-            }
+                OrderSummary summaryOrderWindow = new OrderSummary(orderList);
+                summaryOrderWindow.ShowDialog();
 
+                if(summaryOrderWindow.DialogResult == true)
+                {
+                    var order = SaveOrder();
+                    SaveOrderItems(order);
+                    SavePayment(order, paymentMethod, totalPrice);
+                    RemoveIngredients();
+                    orderList.Clear();
+                    UpdateTotalPrice();
+                    MessageBox.Show($"Zapłacono za zamówienie {totalPrice:C} - metoda płatności: {paymentMethod}");
+                } 
+            }
         }
 
         private void RemoveIngredients()
@@ -462,8 +460,8 @@ namespace POS.Views
             {
                 ObservableCollection<OrderItem> newOrder = new ObservableCollection<OrderItem>();
                 orderListCollection.Add(newOrder);
-                currentOrderId = orderListCollection.Count - 1; // Ustawienie bieżącego indeksu zamówienia na ostatnie dodane
-                orderListDataGrid.ItemsSource = orderListCollection[currentOrderId]; // Ustawienie nowej kolekcji zamówień jako źródła danych dla orderListDataGrid
+                currentOrderId = orderListCollection.Count - 1;
+                orderListDataGrid.ItemsSource = orderListCollection[currentOrderId];
                 UpdateTotalPrice();
                 ShowRecipes_ButtonClick(null, null);
                 LoadAllProducts();
@@ -554,14 +552,8 @@ namespace POS.Views
             InvoiceWindow invoiceWindow = new InvoiceWindow();
             if (invoiceWindow.ShowDialog() == true)
             {
-                string clientName = invoiceWindow.ClientName;
-                string deliveryAddress = invoiceWindow.DeliveryAddress;
-
-                MessageBox.Show($"Faktura dla: {clientName}\nAdres dostawy: {deliveryAddress}\nSuma: {totalPrice:C2}", "Faktura", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                orderListCollection[currentOrderId].Clear();
-                UpdateTotalPrice();
-                orderListDataGrid.Items.Refresh();
+                InvoiceCustomerData invoiceCustomerData = InvoiceWindow.InvoiceCustomerDataObject;
+                MessageBox.Show($"Faktura dla: {invoiceCustomerData.CustomerName}\nAdres: {invoiceCustomerData.CustomerAddress}\nNIP: {invoiceCustomerData.TaxIdentificationNumber}\nSuma: {totalPrice:C2}", "Faktura", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 

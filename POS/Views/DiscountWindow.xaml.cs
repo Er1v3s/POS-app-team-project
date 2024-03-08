@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 
 namespace POS.Views
 {
@@ -16,6 +17,14 @@ namespace POS.Views
         {
             DialogResult = true;
             Close();
+        }
+
+        private void DragWindow(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                this.DragMove();
+            }
         }
 
         private void CloseWindow_ButtonClick(object sender, RoutedEventArgs e)

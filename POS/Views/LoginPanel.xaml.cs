@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace POS.Views
 {
@@ -19,7 +20,15 @@ namespace POS.Views
             InitializeComponent();
         }
 
-        private void CloseLoginPanel(object sender, EventArgs e)
+        private void DragWindow(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                this.DragMove();
+            }
+        }
+
+        private void CloseWindow_ButtonClick(object sender, RoutedEventArgs e)
         {
             isUserLoggedIn = false;
             this.Close();
@@ -51,8 +60,8 @@ namespace POS.Views
                 {
                     StartFinishWork startFinishWork = new StartFinishWork(employeeId);
                     loginPanelWindow.Child = startFinishWork;
-                    startFinishWork.StartWork.Click += CloseLoginPanel;
-                    startFinishWork.FinishWork.Click += CloseLoginPanel;
+                    startFinishWork.StartWork.Click += CloseWindow_ButtonClick;
+                    startFinishWork.FinishWork.Click += CloseWindow_ButtonClick;
                 }
                 else
                 {

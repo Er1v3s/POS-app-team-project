@@ -1,7 +1,9 @@
-﻿using POS.Models;
+﻿using POS.Helpers;
+using POS.Models;
+using System;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace POS.Views
 {
@@ -17,15 +19,15 @@ namespace POS.Views
             InitializeComponent();
 
             this.selectedEmployee = selectedEmployee;
+            InsertCurrentEmployeeData();
+        }
 
-            lblFirstName.Content = $"(Aktualny: {selectedEmployee.First_name})";
-            lblLastName.Content = $"(Aktualny: {selectedEmployee.Last_name})";
-            lblJobTitle.Content = $"(Aktualny: {selectedEmployee.Job_title})";
-            lblEmail.Content = $"(Aktualny: {selectedEmployee.Email})";
-            lblPhoneNumber.Content = $"(Aktualny: {selectedEmployee.Phone_number})";
-            lblAdress.Content = $"(Aktualny: {selectedEmployee.Address})";
-            lblLogin.Content = $"(Aktualny: {selectedEmployee.Login})";
-            lblPassword.Content = $"(Aktualny: {selectedEmployee.Password})";
+        private void DragWindow(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                this.DragMove();
+            }
         }
 
         private void CloseWindow_ButtonClick(object sender, RoutedEventArgs e)
@@ -35,42 +37,83 @@ namespace POS.Views
 
         private void EditEmployee_ButtonClick(object sender, RoutedEventArgs e)
         {
-            string newFirstName = txtFirstName.Text;
-            string newLastName = txtLastName.Text;
-            string newJobTitle = (txtJobTitle.SelectedItem as ComboBoxItem)?.Content.ToString();
-            string newEmail = txtEmail.Text;
-            int newPhoneNumber;
-            if (int.TryParse(txtPhoneNumber.Text, out newPhoneNumber))
+            try
             {
-                newPhoneNumber = int.Parse(txtPhoneNumber.Text);
+                UpdateEmployee();
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void InsertCurrentEmployeeData()
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                var employeeToUpdate = dbContext.Employees.FirstOrDefault(employee => employee.Employee_id == this.selectedEmployee.Employee_id);
+
+                txtFirstName.Text = employeeToUpdate.First_name != null ? employeeToUpdate.First_name : "";
+                txtLastName.Text = employeeToUpdate.Last_name != null ? employeeToUpdate.Last_name : "";
+                txtJobTitle.Text = employeeToUpdate.Job_title != null ? employeeToUpdate.Job_title : "";
+                txtEmail.Text = employeeToUpdate.Email != null ? employeeToUpdate.Email : "";
+                txtPhoneNumber.Text = employeeToUpdate.Phone_number != null ? employeeToUpdate.Phone_number.ToString() : "";
+                txtAdress.Text = employeeToUpdate.Address != null ? employeeToUpdate.Address : " ";
+                txtLogin.Text = employeeToUpdate.Login;
+                txtPassword.Text = employeeToUpdate.Password;
+            }
+        }
+
+        private int ParsePhoneNumber(string txtPhoneNumber)
+        {
+            int intPhoneNumber;
+
+            if (int.TryParse(txtPhoneNumber, out intPhoneNumber))
+            {
+                return intPhoneNumber;
             }
             else
             {
-                newPhoneNumber = 000000000;
+                intPhoneNumber = 000000000;
+                return intPhoneNumber;
             }
-            string newAddress = txtAdress.Text;
-            string newLogin = txtLogin.Text;
-            string newPassword = txtPassword.Text;
+        }
 
+        private void UpdateEmployee()
+        {
             using (var dbContext = new AppDbContext())
             {
-                var employeeToUpdate = dbContext.Employees.FirstOrDefault(emp => emp.First_name == selectedEmployee.First_name && emp.Last_name == selectedEmployee.Last_name);
+                var employeeToUpdate = dbContext.Employees.FirstOrDefault(employee => employee.Employee_id == this.selectedEmployee.Employee_id);
 
                 if (employeeToUpdate != null)
                 {
-                    employeeToUpdate.First_name = newFirstName;
-                    employeeToUpdate.Last_name = newLastName;
-                    employeeToUpdate.Job_title = newJobTitle;
-                    employeeToUpdate.Email = newEmail;
-                    employeeToUpdate.Phone_number = newPhoneNumber;
-                    employeeToUpdate.Address = newAddress;
-                    employeeToUpdate.Login = newLogin;
-                    employeeToUpdate.Password = newPassword;
-
-                    dbContext.SaveChanges();
+                    employeeToUpdate.First_name = FormValidatorHelper.ValidateTextBox(txtFirstName);
+                    employeeToUpdate.Last_name = FormValidatorHelper.ValidateTextBox(txtLastName);
+                    employeeToUpdate.Job_title = FormValidatorHelper.ValidateComboBox(txtJobTitle);
+                    employeeToUpdate.Email = FormValidatorHelper.ValidateEmailAddress(txtEmail);
+                    employeeToUpdate.Phone_number = ParsePhoneNumber(FormValidatorHelper.ValidatePhoneNumber(txtPhoneNumber));
+                    employeeToUpdate.Address = FormValidatorHelper.ValidateTextBox(txtAdress);
+                    employeeToUpdate.Login = FormValidatorHelper.ValidateTextBox(txtLogin);
+                    employeeToUpdate.Password = FormValidatorHelper.ValidateTextBox(txtPassword);
                 }
+
+                dbContext.SaveChanges();
             }
-            this.Close();
+        }
+
+        private async void FormInput_LostFocus(object sender, RoutedEventArgs e)
+        {
+            FormValidatorHelper.ValidateTextBox(sender, e);
+        }
+        private void EmailFormInput_LostFocus(object sender, RoutedEventArgs e)
+        {
+            FormValidatorHelper.ValidateEmailAddress(sender, e);
+        }
+
+        private void PhoneNumberFormInput_LostFocus(object sender, RoutedEventArgs e)
+        {
+            FormValidatorHelper.ValidatePhoneNumber(sender, e);
         }
     }
 }

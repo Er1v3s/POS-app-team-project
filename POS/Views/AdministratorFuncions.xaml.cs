@@ -21,11 +21,13 @@ namespace POS.Views
             InitializeComponent();
             ShowEmployeesList();
 
-            employeesInfoDataGrid.SelectionChanged += employeesInfoDataGrid_SelectionChanged;
+            employeesInfoDataGrid.SelectionChanged += EmployeesInfoDataGrid_SelectionChanged;
         }
 
-        private void ShowEmployeesList()
+        private void OpenAddEmployeeWindow_ButtonClick(object sender, RoutedEventArgs e)
         {
+            AddEmployeeWindow addEmployeeWindow = new AddEmployeeWindow();
+            addEmployeeWindow.ShowDialog();
             employeesCollection.Clear();
 
             using (var dbContext = new AppDbContext())
@@ -65,13 +67,7 @@ namespace POS.Views
             employeesInfoDataGrid.ItemsSource = employeesCollection;
         }
 
-        private void OpenAddEditEmployeeWindow_ButtonClick(object sender, RoutedEventArgs e)
-        {
-            AddEditEmployeeWindow addEditEmployeeWindow = new AddEditEmployeeWindow();
-            addEditEmployeeWindow.ShowDialog();
-        }
-
-        private void EditEmployeeButton_Click(object sender, RoutedEventArgs e)
+        private void EditEmployee_ButtonClick(object sender, RoutedEventArgs e)
         {
             EmployeeInfo selectedEmployee = employeesInfoDataGrid.SelectedItem as EmployeeInfo;
 
@@ -80,7 +76,7 @@ namespace POS.Views
                 using (var dbContext = new AppDbContext())
                 {
                     var employeeToEdit = dbContext.Employees
-                        .FirstOrDefault(emp => emp.First_name + " " + emp.Last_name == selectedEmployee.Employee_name);
+                        .FirstOrDefault(employee => employee.First_name + " " + employee.Last_name == selectedEmployee.Employee_name);
 
                     if (employeeToEdit != null)
                     {
@@ -123,7 +119,7 @@ namespace POS.Views
             ShowEmployeesList();
         }
 
-        private void employeesInfoDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void EmployeesInfoDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (employeesInfoDataGrid.SelectedItem != null)
             {
@@ -151,6 +147,30 @@ namespace POS.Views
             cashBalance = Math.Round(cashBalance, 2);
 
             MessageBox.Show($"Stan kasy wynosi: {cashBalance :C}");
+        }
+
+        private void ShowEmployeesList()
+        {
+            employeesCollection.Clear();
+
+            using (var dbContext = new AppDbContext())
+            {
+                var employees = dbContext.Employees.ToList();
+
+                if (employees != null)
+                {
+                    foreach (var employee in employees)
+                    {
+                        EmployeeInfo employeeInfo = new EmployeeInfo();
+                        employeeInfo.Employee_name = employee.First_name + " " + employee.Last_name;
+                        employeeInfo.Job_title = employee.Job_title;
+                        employeeInfo.Permission_level = 5; // temporary data
+                        employeesCollection.Add(employeeInfo);
+                    }
+                }
+            }
+
+            employeesInfoDataGrid.ItemsSource = employeesCollection;
         }
 
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

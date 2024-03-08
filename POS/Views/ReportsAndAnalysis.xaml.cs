@@ -142,61 +142,6 @@ namespace POS.Views
 
         #endregion
 
-        // Nie działa
-        #region Working time Raport
-
-        private List<EmployeeWorkingTime> GenerateWorkingTimeData(DateTime startDate, DateTime endDate)
-        {
-            using (var dbContext = new AppDbContext())
-            {
-                var workTimeData = dbContext.EmployeeWorkSession
-                    //.Where(session => session.WorkingTimeFrom >= startDate && session.WorkingTimeTo <= endDate)
-                    .GroupBy(session => session.Employee_Id)
-                    .Select(group => new
-                    {
-                        EmployeeId = group.Key,
-                        TotalWorkTime = (long?)group.Sum(session => TimeSpan.Parse(session.Working_Time_Summary).Ticks)
-                    })
-                    .ToList();
-
-                var raportData = workTimeData.Join(
-                    dbContext.Employees,
-                    workTime => workTime.EmployeeId,
-                    employee => employee.Employee_id,
-                    (workTime, employee) => new EmployeeWorkingTime
-                    {
-                        EmployeeName = $"{employee.First_name} {employee.Last_name}",
-                        TotalWorkTime = (double)TimeSpan.FromTicks(workTime.TotalWorkTime ?? 0).TotalHours
-                    })
-                    .ToList();
-
-                return raportData;
-            }
-        }
-
-        private void GenerateEmployeesWorkTimeReportChart(List<EmployeeWorkingTime> raportData)
-        {
-            var workingTimeChart = new CartesianChart();
-            workingTimeChart.Series = new SeriesCollection
-            {
-                new ColumnSeries
-                {
-                    Title = "Raport czasu pracy pracowników",
-                    Values = new ChartValues<double>(raportData.Select(p => p.TotalWorkTime))
-                }
-            };
-
-            workingTimeChart.AxisX.Add(new LiveCharts.Wpf.Axis
-            {
-                Title = "Pracownicy",
-                Labels = raportData.Select(p => p.EmployeeName).ToList()
-            });
-
-            liveChart.Children.Add(workingTimeChart);
-        }
-
-        #endregion
-
         #region Popularity of products raport
 
         private List<ProductPopularity> GenerateProductPopularityData(DateTime startDate, DateTime endDate)
