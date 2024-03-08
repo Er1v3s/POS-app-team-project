@@ -15,12 +15,12 @@ namespace POS.Views
     /// <summary>
     /// Logika interakcji dla klasy GenerateBill.xaml
     /// </summary>
-    public partial class GenerateBill
+    public partial class OrderSummary : Window
     {
         private ObservableCollection<OrderItem> orderList;
         double totalOrderPrice = 0;
 
-        public GenerateBill(ObservableCollection<OrderItem> orderList)
+        public OrderSummary(ObservableCollection<OrderItem> orderList)
         {
             InitializeComponent();
 
@@ -109,17 +109,18 @@ namespace POS.Views
                         pdfDoc.Close();
                     }
 
+                    DialogResult = true;
                     this.Close();
-                    MessageBox.Show("Zamówienie zostało zapisane do pliku PDF.");
+                    MessageBox.Show("Rachunek został wygenrowany.");
                 }
                 else
                 {
-                    MessageBox.Show("Anulowano zapisywanie pliku PDF.");
+                    MessageBox.Show("Anulowano generowanie rachunku.");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Wystąpił błąd podczas zapisywania pliku PDF: " + ex.Message);
+                MessageBox.Show("Wystąpił błąd podczas generowania rachunku: " + ex.Message);
             }
         }
 
