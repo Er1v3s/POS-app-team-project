@@ -34,19 +34,19 @@ namespace POS.Views
                 {
                     foreach (var session in employeeWorkSession)
                     {
-                        var user = dbContext.Employees.FirstOrDefault(e => e.Employee_id == session.Employee_Id);
+                        var user = dbContext.Employees.FirstOrDefault(e => e.EmployeeId == session.EmployeeId);
                         if (user != null)
                         {
-                            DateTime workingTimeFrom = DateTime.ParseExact(session.Working_Time_From, "HH:mm", CultureInfo.InvariantCulture);
+                            DateTime workingTimeFrom = DateTime.ParseExact(session.WorkingTimeFrom, "HH:mm", CultureInfo.InvariantCulture);
                             DateTime workingTimeTo;
 
-                            if (session.Working_Time_To == "" || session.Working_Time_To == null)
+                            if (session.WorkingTimeTo == "" || session.WorkingTimeTo == null)
                             {
                                 workingTimeTo = DateTime.Now;
                             } 
                             else
                             {
-                                workingTimeTo = DateTime.ParseExact(session.Working_Time_To, "HH:mm", CultureInfo.InvariantCulture);
+                                workingTimeTo = DateTime.ParseExact(session.WorkingTimeTo, "HH:mm", CultureInfo.InvariantCulture);
                             }
 
                             TimeSpan workingTimeDifference = (workingTimeTo - workingTimeFrom);
@@ -54,7 +54,7 @@ namespace POS.Views
                             byte minutes = (byte)workingTimeDifference.Minutes;
                             string formattedTimeDifference = $"{hours:D2}:{minutes:D2}";
 
-                            session.Working_Time_Summary = formattedTimeDifference;
+                            session.WorkingTimeSummary = formattedTimeDifference;
                             dbContext.SaveChangesAsync();
                             ActiveSessions.Add(session);
                         }

@@ -2,11 +2,11 @@
 {
     public class EmployeeWorkSession
     {
-        public int Work_Session_Id { get; set; }
-        public int Employee_Id { get; set; }
-        public string? Employee_Name { get; set; }
-        public string? Working_Time_From { get; set; }
-        public string? Working_Time_To { get; set; }
-        public string? Working_Time_Summary { get; set; }
+        public int WorkSessionId { get; set; }
+        public int EmployeeId { get; set; }
+        public string? EmployeeName { get; set; }
+        public string? WorkingTimeFrom { get; set; }
+        public string? WorkingTimeTo { get; set; }
+        public string? WorkingTimeSummary { get; set; }
     }
 }

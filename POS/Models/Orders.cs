@@ -4,8 +4,8 @@ namespace POS.Models
 {
     public class Orders
     {
-        public int Order_id { get; set; }
-        public required int Employee_id { get; set; }
-        public DateTime Order_time { get; set; }
+        public int OrderId { get; set; }
+        public required int EmployeeId { get; set; }
+        public DateTime OrderTime { get; set; }
     }
 }

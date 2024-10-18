@@ -54,9 +54,9 @@
                 <Border BorderThickness="0, 1, 0 ,0" BorderBrush="Black">
                     <DataGrid x:Name="employeesInfoDataGrid" SelectionMode="Single" SelectionChanged="EmployeesInfoDataGrid_SelectionChanged" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="PRACOWNIK"  Width="3*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Employee_name}"  />
-                            <DataGridTextColumn Header="STANOWISKO"  Width="1.5*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Job_title}" />
-                            <DataGridTextColumn Header="UPRAWNIENIA"  Width="1.5*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Permission_level}" />
+                            <DataGridTextColumn Header="PRACOWNIK"  Width="3*" CanUserResize="False" CanUserReorder="False" Binding="{Binding EmployeeName}"  />
+                            <DataGridTextColumn Header="STANOWISKO"  Width="1.5*" CanUserResize="False" CanUserReorder="False" Binding="{Binding JobTitle}" />
+                            <DataGridTextColumn Header="UPRAWNIENIA"  Width="1.5*" CanUserResize="False" CanUserReorder="False" Binding="{Binding PermissionLevel}" />
                         </DataGrid.Columns>
                         <DataGrid.RowStyle>
                             <Style BasedOn="{StaticResource DataGridRowStyle4}" TargetType="DataGridRow">

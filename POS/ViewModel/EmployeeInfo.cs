@@ -2,8 +2,8 @@
 {
     class EmployeeInfo
     {
-        public string Employee_name { get; set; }
-        public string Job_title { get; set; }
-        public int Permission_level { get; set; }
+        public string EmployeeName { get; set; }
+        public string JobTitle { get; set; }
+        public int PermissionLevel { get; set; }
     }
 }

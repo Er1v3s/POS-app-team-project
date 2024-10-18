@@ -4,10 +4,10 @@ namespace POS.Models
 {
     public class Payments
     {
-        public int Payment_id { get; set; }
-        public int Order_id { get; set; }
-        public DateTime Payment_time { get; set; }
-        public string Payment_method { get; set; }
+        public int PaymentId { get; set; }
+        public int OrderId { get; set; }
+        public DateTime PaymentTime { get; set; }
+        public string PaymentMethod { get; set; }
         public double Amount { get; set; }
     }
 }

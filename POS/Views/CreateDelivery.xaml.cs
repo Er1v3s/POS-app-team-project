@@ -32,9 +32,9 @@ namespace POS.Views
             {
                 var ingredients = dbContext.Ingredients.ToList();
                 IngredientsDataGrid.ItemsSource = ingredients;
-                currentUser = dbContext.Employees.FirstOrDefault(e => e.Employee_id == employeeId);
+                currentUser = dbContext.Employees.FirstOrDefault(e => e.EmployeeId == employeeId);
             }
-            string welcomeMessage = $"{currentUser.First_name} {currentUser.Last_name}";
+            string welcomeMessage = $"{currentUser.FirstName} {currentUser.LastName}";
             SetWelcomeMessage(welcomeMessage);
             EmployeeId = employeeId;
             deliveryListDataGrid.ItemsSource = deliveryItems;
@@ -80,7 +80,7 @@ namespace POS.Views
                     {
                         using (var dbContext = new AppDbContext())
                         {
-                            var ingredientToUpdate = dbContext.Ingredients.FirstOrDefault(i => i.Ingredient_id == selectedIngredient.Ingredient_id);
+                            var ingredientToUpdate = dbContext.Ingredients.FirstOrDefault(i => i.IngredientId == selectedIngredient.IngredientId);
 
                             if (ingredientToUpdate != null)
                             {
@@ -89,7 +89,7 @@ namespace POS.Views
                                     Name = ingredientToUpdate.Name,
                                     Quantity = newValue,
                                     Package = ingredientToUpdate.Package,
-                                    FullQuantity = newValue + ingredientToUpdate.Safety_stock
+                                    FullQuantity = newValue + ingredientToUpdate.SafetyStock
                                 };
 
                                 deliveryItems.Add(newItem);
@@ -122,7 +122,7 @@ namespace POS.Views
                     {
                         using (var dbContext = new AppDbContext())
                         {
-                            var ingredientToUpdate = dbContext.Ingredients.FirstOrDefault(i => i.Ingredient_id == selectedIngredient.Ingredient_id);
+                            var ingredientToUpdate = dbContext.Ingredients.FirstOrDefault(i => i.IngredientId == selectedIngredient.IngredientId);
 
                             if (ingredientToUpdate != null)
                             {

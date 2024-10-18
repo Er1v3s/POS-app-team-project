@@ -86,12 +86,12 @@ namespace POS.Views
                 var user = dbContext.Employees.FirstOrDefault(e => e.Login == username && e.Password == password);
                 if (user != null)
                 {
-                    if(user.Is_User_LoggedIn)
+                    if(user.IsUserLoggedIn)
                     {
                         isUserLoggedIn = true;
                     }
 
-                    return user.Employee_id;
+                    return user.EmployeeId;
                 }
                 else
                 {

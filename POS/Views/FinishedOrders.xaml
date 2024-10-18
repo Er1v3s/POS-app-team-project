@@ -32,10 +32,10 @@
 
             <DataGrid x:Name="ordersHistoryDataGrid" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Width="80" Header="ID" Binding="{Binding Order_Id}"/>
-                    <DataGridTextColumn Width="*" Header="Pracownik" Binding="{Binding Employee_Name}"/>
-                    <DataGridTextColumn Width="*" Header="Data zamówienia" Binding="{Binding Order_Date}"/>
-                    <DataGridTextColumn Width="*" Header="Czas zamówienia" Binding="{Binding Order_Time}"/>
+                    <DataGridTextColumn Width="80" Header="ID" Binding="{Binding OrderId}"/>
+                    <DataGridTextColumn Width="*" Header="Pracownik" Binding="{Binding EmployeeName}"/>
+                    <DataGridTextColumn Width="*" Header="Data zamówienia" Binding="{Binding OrderDate}"/>
+                    <DataGridTextColumn Width="*" Header="Czas zamówienia" Binding="{Binding OrderTime}"/>
                 </DataGrid.Columns>
             </DataGrid>
 
