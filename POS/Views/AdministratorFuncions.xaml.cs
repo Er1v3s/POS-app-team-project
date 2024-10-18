@@ -39,24 +39,24 @@ namespace POS.Views
                     foreach (var employee in employees)
                     {
                         EmployeeInfo employeeInfo = new EmployeeInfo();
-                        employeeInfo.Employee_name = employee.First_name + " " + employee.Last_name;
-                        employeeInfo.Job_title = employee.Job_title;
-                        switch (employee.Job_title)
+                        employeeInfo.EmployeeName = employee.FirstName + " " + employee.LastName;
+                        employeeInfo.JobTitle = employee.JobTitle;
+                        switch (employee.JobTitle)
                         {
                             case "Barman":
-                                employeeInfo.Permission_level = 3;
+                                employeeInfo.PermissionLevel = 3;
                                 break;
                             case "Miksolog":
-                                employeeInfo.Permission_level = 4;
+                                employeeInfo.PermissionLevel = 4;
                                 break;
                             case "Uczeń":
-                                employeeInfo.Permission_level = 2;
+                                employeeInfo.PermissionLevel = 2;
                                 break;
                             case "Kierownik":
-                                employeeInfo.Permission_level = 5;
+                                employeeInfo.PermissionLevel = 5;
                                 break;
                             default:
-                                employeeInfo.Permission_level = 1; // Domyślny poziom uprawnień
+                                employeeInfo.PermissionLevel = 1; // Domyślny poziom uprawnień
                                 break;
                         }
                         employeesCollection.Add(employeeInfo);
@@ -76,7 +76,7 @@ namespace POS.Views
                 using (var dbContext = new AppDbContext())
                 {
                     var employeeToEdit = dbContext.Employees
-                        .FirstOrDefault(employee => employee.First_name + " " + employee.Last_name == selectedEmployee.Employee_name);
+                        .FirstOrDefault(employee => employee.FirstName + " " + employee.LastName == selectedEmployee.EmployeeName);
 
                     if (employeeToEdit != null)
                     {
@@ -93,14 +93,14 @@ namespace POS.Views
             {
                 EmployeeInfo selectedEmployee = employeesInfoDataGrid.SelectedItem as EmployeeInfo;
 
-                MessageBoxResult result = MessageBox.Show($"Czy na pewno chcesz usunąć pracownika {selectedEmployee.Employee_name}?", "Potwierdzenie", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                MessageBoxResult result = MessageBox.Show($"Czy na pewno chcesz usunąć pracownika {selectedEmployee.EmployeeName}?", "Potwierdzenie", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (result == MessageBoxResult.Yes)
                 {
                     using (var dbContext = new AppDbContext())
                     {
                         var employeeToRemove = dbContext.Employees
-                            .FirstOrDefault(emp => emp.First_name + " " + emp.Last_name == selectedEmployee.Employee_name);
+                            .FirstOrDefault(emp => emp.FirstName + " " + emp.LastName == selectedEmployee.EmployeeName);
 
                         if (employeeToRemove != null)
                         {
@@ -140,7 +140,7 @@ namespace POS.Views
             using(var dbContext = new AppDbContext())
             {
                 cashBalance = dbContext.Payments
-                                .Where(payment => payment.Payment_method == "Gotówka")
+                                .Where(payment => payment.PaymentMethod == "Gotówka")
                                 .Sum(payment => payment.Amount);
             }
 
@@ -162,9 +162,9 @@ namespace POS.Views
                     foreach (var employee in employees)
                     {
                         EmployeeInfo employeeInfo = new EmployeeInfo();
-                        employeeInfo.Employee_name = employee.First_name + " " + employee.Last_name;
-                        employeeInfo.Job_title = employee.Job_title;
-                        employeeInfo.Permission_level = 5; // temporary data
+                        employeeInfo.EmployeeName = employee.FirstName + " " + employee.LastName;
+                        employeeInfo.JobTitle = employee.JobTitle;
+                        employeeInfo.PermissionLevel = 5; // temporary data
                         employeesCollection.Add(employeeInfo);
                     }
                 }

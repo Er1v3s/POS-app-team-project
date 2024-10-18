@@ -26,10 +26,10 @@ namespace POS.Views
 
             using (var dbContext = new AppDbContext())
             {
-                currentUser = dbContext.Employees.FirstOrDefault(e => e.Employee_id == employeeId);
+                currentUser = dbContext.Employees.FirstOrDefault(e => e.EmployeeId == employeeId);
             }
 
-            string welcomeMessage = $"{currentUser.First_name} {currentUser.Last_name}";
+            string welcomeMessage = $"{currentUser.FirstName} {currentUser.LastName}";
             SetWelcomeMessage(welcomeMessage);
             EmployeeId = employeeId;
         }
@@ -73,19 +73,19 @@ namespace POS.Views
         {
             using (var dbContext = new AppDbContext())
             {
-                var product = dbContext.Products.FirstOrDefault(i => i.Product_name == SelectedProduct);
+                var product = dbContext.Products.FirstOrDefault(i => i.ProductName == SelectedProduct);
 
                 if (product != null)
                 {
                     var ingredients = dbContext.RecipeIngredients
-                        .Where(ri => ri.Recipe_id == product.Recipe_id)
+                        .Where(ri => ri.RecipeId == product.RecipeId)
                         .Join(dbContext.Ingredients,
-                            ri => ri.Ingredient_id,
-                            i => i.Ingredient_id,
+                            ri => ri.IngredientId,
+                            i => i.IngredientId,
                             (ri, i) => new
                             {
-                                ri.RecipeIngredient_id,
-                                ri.Ingredient_id,
+                                RecipeIngredient_id = ri.RecipeIngredientId,
+                                Ingredient_id = ri.IngredientId,
                                 ri.Quantity,
                                 i.Name,
                                 i.Unit
@@ -132,13 +132,13 @@ namespace POS.Views
                 var ingredient = dbContext.Ingredients.FirstOrDefault(i => i.Name == selectedIngredient);
                 if (ingredient != null)
                 {
-                    IngredientId = ingredient.Ingredient_id;
+                    IngredientId = ingredient.IngredientId;
                 }
 
-                var product = dbContext.Products.FirstOrDefault(p => p.Product_name == selectedProduct);
+                var product = dbContext.Products.FirstOrDefault(p => p.ProductName == selectedProduct);
                 if (product != null)
                 {
-                    RecipeId = product.Recipe_id;
+                    RecipeId = product.RecipeId;
                 }
 
                 try
@@ -169,30 +169,30 @@ namespace POS.Views
 
                 using (var dbContext = new AppDbContext())
                 {
-                    var product = dbContext.Products.FirstOrDefault(p => p.Product_name == selectedProduct);
+                    var product = dbContext.Products.FirstOrDefault(p => p.ProductName == selectedProduct);
                     if (product != null)
                     {
-                        RecipeId = product.Recipe_id;
+                        RecipeId = product.RecipeId;
                     }
 
                     var ingredient = dbContext.Ingredients.FirstOrDefault(i => i.Name == selectedIngredient);
                     if (ingredient != null)
                     {
-                        IngredientId = ingredient.Ingredient_id;
+                        IngredientId = ingredient.IngredientId;
                     }
 
-                    var recipe = dbContext.Recipes.FirstOrDefault(r => r.Recipe_id == RecipeId);
+                    var recipe = dbContext.Recipes.FirstOrDefault(r => r.RecipeId == RecipeId);
                     if (ingredient != null && recipe != null)
                     {
 
                         var recipeIngredient = new RecipeIngredients
                         {
-                            Recipe_id = RecipeId,
-                            Ingredient_id = IngredientId,
+                            RecipeId = RecipeId,
+                            IngredientId = IngredientId,
                             Quantity = Quantity
                         };
 
-                        dbContext.Database.ExecuteSqlRaw("INSERT INTO RecipeIngredients (Recipe_id, Ingredient_id, Quantity) VALUES ({0}, {1}, {2})", RecipeId, ingredient.Ingredient_id, Quantity);
+                        dbContext.Database.ExecuteSqlRaw("INSERT INTO RecipeIngredients (Recipe_id, Ingredient_id, Quantity) VALUES ({0}, {1}, {2})", RecipeId, ingredient.IngredientId, Quantity);
                         dbContext.SaveChanges();
 
                         MessageBox.Show("Rekord dodany pomyślnie.");
@@ -216,7 +216,7 @@ namespace POS.Views
         {
             using (var dbContext = new AppDbContext())
             {
-                var products = dbContext.Products.Select(i => i.Product_name).ToList();
+                var products = dbContext.Products.Select(i => i.ProductName).ToList();
 
                 foreach (var product in products)
                 {
@@ -234,12 +234,12 @@ namespace POS.Views
 
                 using (var dbContext = new AppDbContext())
                 {
-                    var product = dbContext.Products.FirstOrDefault(i => i.Product_name == selectedProduct);
+                    var product = dbContext.Products.FirstOrDefault(i => i.ProductName == selectedProduct);
 
                     if (product != null)
                     {
-                        recipeId = product.Recipe_id;
-                        NewProductName.Text = product.Product_name;
+                        recipeId = product.RecipeId;
+                        NewProductName.Text = product.ProductName;
                         ProductPrice.Text = product.Price.ToString();
                         ProductPrice.IsEnabled = true;
                         ProductPrice.LostFocus -= TextBox_LostFocus;
@@ -254,7 +254,7 @@ namespace POS.Views
                         ProductDescription.GotFocus -= TextBox_GotFocus;
                     }
 
-                    var recipe = dbContext.Recipes.FirstOrDefault(i => i.Recipe_id == recipeId);
+                    var recipe = dbContext.Recipes.FirstOrDefault(i => i.RecipeId == recipeId);
                     if(recipe != null)
                     {
                         Recipe.Text = recipe.Recipe;
@@ -318,15 +318,15 @@ namespace POS.Views
                 {
                     var newRecipe = new Recipes
                     {
-                        Recipe_name ="Przepis na " + NewProductName.Text,
+                        RecipeName ="Przepis na " + NewProductName.Text,
                         Recipe = Recipe.Text,
                     };
                     dbContext.Recipes.Add(newRecipe);
                     dbContext.SaveChanges();
                     var newProduct = new Products
                     {
-                        Recipe_id = newRecipe.Recipe_id,
-                        Product_name = NewProductName.Text,
+                        RecipeId = newRecipe.RecipeId,
+                        ProductName = NewProductName.Text,
                         Price = Convert.ToDouble(ProductPrice.Text),
                         Category = ProductCategory.Text,
                         Description = ProductDescription.Text
@@ -350,16 +350,16 @@ namespace POS.Views
                     using (var dbContext = new AppDbContext())
                     {
                         int recipeToUpdateId = 0;
-                        var productToUpdate = dbContext.Products.FirstOrDefault(p => p.Product_name == selectedProduct);
+                        var productToUpdate = dbContext.Products.FirstOrDefault(p => p.ProductName == selectedProduct);
                         if (productToUpdate != null)
                         {
-                            recipeToUpdateId = productToUpdate.Recipe_id;
-                            productToUpdate.Product_name = NewProductName.Text;
+                            recipeToUpdateId = productToUpdate.RecipeId;
+                            productToUpdate.ProductName = NewProductName.Text;
                             productToUpdate.Price = Convert.ToDouble(ProductPrice.Text);
                             productToUpdate.Category = ProductCategory.Text;
                             productToUpdate.Description = ProductDescription.Text;
                         }
-                        var recipeToUpdate = dbContext.Recipes.FirstOrDefault(r => r.Recipe_id == recipeToUpdateId);
+                        var recipeToUpdate = dbContext.Recipes.FirstOrDefault(r => r.RecipeId == recipeToUpdateId);
                         if(recipeToUpdate != null)
                         {
                             recipeToUpdate.Recipe = Recipe.Text;
@@ -390,12 +390,12 @@ namespace POS.Views
 
                 using (var dbContext = new AppDbContext())
                 {
-                    var product = dbContext.Products.FirstOrDefault(p => p.Product_name == selectedProduct);
+                    var product = dbContext.Products.FirstOrDefault(p => p.ProductName == selectedProduct);
 
                     if (product != null)
                     {
-                        int recipeId = product.Recipe_id;
-                        int productId = product.Product_id;
+                        int recipeId = product.RecipeId;
+                        int productId = product.ProductId;
 
                        try
                         {
@@ -575,7 +575,7 @@ namespace POS.Views
 
                     if (ingredient != null)
                     {
-                        int ingredientId = ingredient.Ingredient_id;
+                        int ingredientId = ingredient.IngredientId;
 
                         try
                         {

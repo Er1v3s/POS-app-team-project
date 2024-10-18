@@ -40,14 +40,14 @@ namespace POS.Views
                 {
                     foreach(var order in orders)
                     {
-                        var employee = dbContext.Employees.FirstOrDefault(e => e.Employee_id == order.Employee_id);
+                        var employee = dbContext.Employees.FirstOrDefault(e => e.EmployeeId == order.EmployeeId);
 
                         OrderHistory formattedOrder = new OrderHistory()
                         {
-                            Order_Id = order.Order_id,
-                            Employee_Name = employee.First_name + " " + employee.Last_name,
-                            Order_Date = order.Order_time.ToString("dd/MM/yyyy"),
-                            Order_Time = order.Order_time.ToString("HH:mm")
+                            OrderId = order.OrderId,
+                            EmployeeName = employee.FirstName + " " + employee.LastName,
+                            OrderDate = order.OrderTime.ToString("dd/MM/yyyy"),
+                            OrderTime = order.OrderTime.ToString("HH:mm")
                         };
 
                         ordersHistoryDataGrid.Items.Add(formattedOrder);

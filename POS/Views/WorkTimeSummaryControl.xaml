@@ -23,10 +23,10 @@
                 <Border BorderThickness="0, 1, 0 ,0" BorderBrush="Black">
                     <DataGrid x:Name="workingTimeSummaryDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" RowStyle="{DynamicResource DataGridRowStyle1}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="PRACOWNIK" IsReadOnly="True" Width="3*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Employee_Name}"/>
-                            <DataGridTextColumn Header="OD" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Working_Time_From}"/>
-                            <DataGridTextColumn Header="DO" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Working_Time_To}"/>
-                            <DataGridTextColumn Header="CZAS PRACY" IsReadOnly="True" Width="2*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Working_Time_Summary}"/>
+                            <DataGridTextColumn Header="PRACOWNIK" IsReadOnly="True" Width="3*" CanUserResize="False" CanUserReorder="False" Binding="{Binding EmployeeName}"/>
+                            <DataGridTextColumn Header="OD" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False" Binding="{Binding WorkingTimeFrom}"/>
+                            <DataGridTextColumn Header="DO" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False" Binding="{Binding WorkingTimeTo}"/>
+                            <DataGridTextColumn Header="CZAS PRACY" IsReadOnly="True" Width="2*" CanUserResize="False" CanUserReorder="False" Binding="{Binding WorkingTimeSummary}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Border>

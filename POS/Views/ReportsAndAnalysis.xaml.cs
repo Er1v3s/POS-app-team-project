@@ -91,17 +91,17 @@ namespace POS.Views
                 var salesReport = dbContext.Products
                 .Select(product => new
                 {
-                    ProductId = product.Product_id,
-                    ProductName = product.Product_name,
+                    ProductId = product.ProductId,
+                    ProductName = product.ProductName,
                     TotalSales = dbContext.OrderItems
-                        .Where(orderItem => orderItem.Product_id == product.Product_id
-                                           && orderItem.Orider_time >= startDate
-                                           && orderItem.Orider_time <= endDate)
+                        .Where(orderItem => orderItem.ProductId == product.ProductId
+                                           && orderItem.OriderTime >= startDate
+                                           && orderItem.OriderTime <= endDate)
                         .Sum(orderItem => orderItem.Quantity * product.Price),
                     TotalAmount = dbContext.OrderItems
-                        .Where(orderItem => orderItem.Product_id == product.Product_id
-                                           && orderItem.Orider_time >= startDate
-                                           && orderItem.Orider_time <= endDate)
+                        .Where(orderItem => orderItem.ProductId == product.ProductId
+                                           && orderItem.OriderTime >= startDate
+                                           && orderItem.OriderTime <= endDate)
                         .Sum(o => o.Quantity)
                 });
 
@@ -121,10 +121,10 @@ namespace POS.Views
             {
 
                 var consumptionReport = from orderItem in dbContext.OrderItems
-                                        where orderItem.Orider_time >= startDate && orderItem.Orider_time <= endDate
-                                        join product in dbContext.Products on orderItem.Product_id equals product.Product_id
-                                        join recipeIngredient in dbContext.RecipeIngredients on product.Recipe_id equals recipeIngredient.Recipe_id
-                                        join ingredient in dbContext.Ingredients on recipeIngredient.Ingredient_id equals ingredient.Ingredient_id
+                                        where orderItem.OriderTime >= startDate && orderItem.OriderTime <= endDate
+                                        join product in dbContext.Products on orderItem.ProductId equals product.ProductId
+                                        join recipeIngredient in dbContext.RecipeIngredients on product.RecipeId equals recipeIngredient.RecipeId
+                                        join ingredient in dbContext.Ingredients on recipeIngredient.IngredientId equals ingredient.IngredientId
                                         group new { orderItem, recipeIngredient } by new { ingredient.Name, ingredient.Unit } into grouped
                                         select new
                                         {
@@ -150,10 +150,10 @@ namespace POS.Views
             using (var dbContext = new AppDbContext())
             {
                 productPopularityData = (from orderItems in dbContext.OrderItems
-                                         join products in dbContext.Products on orderItems.Product_id equals products.Product_id
-                                         join order in dbContext.Orders on orderItems.OrdersOrder_id equals order.Order_id
-                                         where order.Order_time >= startDate && order.Order_time <= endDate
-                                         group orderItems by products.Product_name into groupedItems
+                                         join products in dbContext.Products on orderItems.ProductId equals products.ProductId
+                                         join order in dbContext.Orders on orderItems.OrdersOrderId equals order.OrderId
+                                         where order.OrderTime >= startDate && order.OrderTime <= endDate
+                                         group orderItems by products.ProductName into groupedItems
                                          select new ProductPopularity
                                          {
                                              ProductName = groupedItems.Key,
@@ -207,13 +207,13 @@ namespace POS.Views
             using (var dbContext = new AppDbContext())
             {
                 productivityData = (from order in dbContext.Orders
-                                    join employee in dbContext.Employees on order.Employee_id equals employee.Employee_id
-                                    join payment in dbContext.Payments on order.Order_id equals payment.Order_id into payments
-                                    where order.Order_time >= startDate && order.Order_time <= endDate
-                                    group new { order, payments } by new { employee.Employee_id, employee.First_name, employee.Last_name } into g
+                                    join employee in dbContext.Employees on order.EmployeeId equals employee.EmployeeId
+                                    join payment in dbContext.Payments on order.OrderId equals payment.OrderId into payments
+                                    where order.OrderTime >= startDate && order.OrderTime <= endDate
+                                    group new { order, payments } by new { Employee_id = employee.EmployeeId, First_name = employee.FirstName, employee.LastName } into g
                                     select new EmployeeProductivity
                                     {
-                                        EmployeeName = $"{g.Key.First_name} {g.Key.Last_name}",
+                                        EmployeeName = $"{g.Key.First_name} {g.Key.LastName}",
                                         OrderCount = g.Count(),
                                         TotalAmount = Math.Round(g.Sum(x => x.payments.Sum(p => p.Amount)), 2)
                                     }).ToList();

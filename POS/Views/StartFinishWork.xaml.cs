@@ -21,11 +21,11 @@ namespace POS.Views
 
             using (var dbContext = new AppDbContext())
             {
-                var user = dbContext.Employees.FirstOrDefault(e => e.Employee_id == employeeId);
+                var user = dbContext.Employees.FirstOrDefault(e => e.EmployeeId == employeeId);
                 if (user != null)
                 {
-                    employeeName.Text = user.First_name + " " + user.Last_name;
-                    if(user.Is_User_LoggedIn)
+                    employeeName.Text = user.FirstName + " " + user.LastName;
+                    if(user.IsUserLoggedIn)
                     {
                         StartWork.IsEnabled = false;
                     }
@@ -41,10 +41,10 @@ namespace POS.Views
         {
             await using (var dbContext = new AppDbContext())
             {
-                var user = dbContext.Employees.FirstOrDefault(e => e.Employee_id == employeeId);
+                var user = dbContext.Employees.FirstOrDefault(e => e.EmployeeId == employeeId);
                 if (user != null)
                 {
-                    user.Is_User_LoggedIn = true;
+                    user.IsUserLoggedIn = true;
                     dbContext.SaveChanges();
                 }
 
@@ -61,12 +61,12 @@ namespace POS.Views
         {
             await using (var dbContext = new AppDbContext())
             {
-                var user = dbContext.Employees.FirstOrDefault(e => e.Employee_id == employeeId);
-                var employeeWorkSession = dbContext.EmployeeWorkSession.FirstOrDefault(e => e.Employee_Id == user.Employee_id && user.Is_User_LoggedIn);
+                var user = dbContext.Employees.FirstOrDefault(e => e.EmployeeId == employeeId);
+                var employeeWorkSession = dbContext.EmployeeWorkSession.FirstOrDefault(e => e.EmployeeId == user.EmployeeId && user.IsUserLoggedIn);
                 if (user != null)
                 {
-                    employeeWorkSession.Working_Time_To = DateTime.Now.ToString("HH:mm");
-                    user.Is_User_LoggedIn = false;
+                    employeeWorkSession.WorkingTimeTo = DateTime.Now.ToString("HH:mm");
+                    user.IsUserLoggedIn = false;
                     dbContext.SaveChanges();
                 }
             }
@@ -79,11 +79,11 @@ namespace POS.Views
             EmployeeWorkSession employeeWorkSession = (
                 new EmployeeWorkSession
                 {
-                    Employee_Name = user.First_name + " " + user.Last_name,
-                    Employee_Id = user.Employee_id,
-                    Working_Time_From = DateTime.Now.ToString("HH:mm"),
-                    Working_Time_To = null,
-                    Working_Time_Summary = null,
+                    EmployeeName = user.FirstName + " " + user.LastName,
+                    EmployeeId = user.EmployeeId,
+                    WorkingTimeFrom = DateTime.Now.ToString("HH:mm"),
+                    WorkingTimeTo = null,
+                    WorkingTimeSummary = null,
                 }
             );
 

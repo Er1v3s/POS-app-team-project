@@ -32,10 +32,10 @@ namespace POS.Views
 
             using (var dbContext = new AppDbContext())
             {
-                currentUser = dbContext.Employees.FirstOrDefault(e => e.Employee_id == employeeId);
+                currentUser = dbContext.Employees.FirstOrDefault(e => e.EmployeeId == employeeId);
             }
 
-            string welcomeMessage = $"{currentUser.First_name} {currentUser.Last_name}";
+            string welcomeMessage = $"{currentUser.FirstName} {currentUser.LastName}";
             SetWelcomeMessage(welcomeMessage);
             LoadAllProducts();
             orderListDataGrid.ItemsSource = orderListCollection[currentOrderId];
@@ -107,8 +107,8 @@ namespace POS.Views
                 foreach (var item in orderList)
                 {
                     var recipeId = dbContext.Products
-                                            .Where(p => p.Product_id == item.Id)
-                                            .Select(p => p.Recipe_id)
+                                            .Where(p => p.ProductId == item.Id)
+                                            .Select(p => p.RecipeId)
                                             .FirstOrDefault();
                     if (recipeId == null)
                     {
@@ -116,18 +116,18 @@ namespace POS.Views
                     }
 
                     var recipeIngredientsId = dbContext.RecipeIngredients
-                            .Where(ri => ri.Recipe_id == recipeId)
-                            .Select(ri => ri.Ingredient_id)
+                            .Where(ri => ri.RecipeId == recipeId)
+                            .Select(ri => ri.IngredientId)
                             .ToList();
 
                     foreach(var ingredientId in recipeIngredientsId)
                     {
                         var ingredient = dbContext.Ingredients
-                                        .Where(i => i.Ingredient_id == ingredientId)
+                                        .Where(i => i.IngredientId == ingredientId)
                                         .FirstOrDefault();
 
                         var recipeIngredient = dbContext.RecipeIngredients
-                                                .Where(ri => ri.Ingredient_id == ingredientId)
+                                                .Where(ri => ri.IngredientId == ingredientId)
                                                 .Select(ri => ri.Quantity)
                                                 .FirstOrDefault();
 
@@ -155,7 +155,7 @@ namespace POS.Views
         {
             using (var dbContext = new AppDbContext())
             {
-                Orders newOrder = new Orders { Order_time = DateTime.Now, Employee_id = EmployeeId };
+                Orders newOrder = new Orders { OrderTime = DateTime.Now, EmployeeId = EmployeeId };
                 var addedOrderEntry = dbContext.Orders.Add(newOrder);
                 dbContext.SaveChanges();
 
@@ -169,9 +169,9 @@ namespace POS.Views
             {
                 Payments newPayment = new Payments
                 {
-                    Order_id = order.Order_id,
-                    Payment_time = DateTime.Now,
-                    Payment_method = paymentMethod,
+                    OrderId = order.OrderId,
+                    PaymentTime = DateTime.Now,
+                    PaymentMethod = paymentMethod,
                     Amount = totalPrice
                 };
                 dbContext.Payments.Add(newPayment);
@@ -187,10 +187,10 @@ namespace POS.Views
                 {
                     OrderItems newOrderItem = new OrderItems
                     {
-                        OrdersOrder_id = order.Order_id,
-                        Employee_id = EmployeeId,
-                        Product_id = orderListItem.Id,
-                        Orider_time = DateTime.Now,
+                        OrdersOrderId = order.OrderId,
+                        EmployeeId = EmployeeId,
+                        ProductId = orderListItem.Id,
+                        OriderTime = DateTime.Now,
                         Quantity = orderListItem.Amount,
                     };
                     dbContext.OrderItems.Add(newOrderItem);
@@ -207,7 +207,7 @@ namespace POS.Views
 
         private void AddOrUpdateProductInList(Products product)
         {
-            var existingProduct = orderListCollection[currentOrderId].FirstOrDefault(p => p.Id == product.Product_id);
+            var existingProduct = orderListCollection[currentOrderId].FirstOrDefault(p => p.Id == product.ProductId);
 
             if (existingProduct != null)
             {
@@ -216,7 +216,7 @@ namespace POS.Views
             }
             else
             {
-                orderListCollection[currentOrderId].Add(new OrderItem { Id = product.Product_id, Name = product.Product_name, Amount = 1, Price = Convert.ToDouble(product.Price) });
+                orderListCollection[currentOrderId].Add(new OrderItem { Id = product.ProductId, Name = product.ProductName, Amount = 1, Price = Convert.ToDouble(product.Price) });
             }
         }
 
@@ -246,7 +246,7 @@ namespace POS.Views
                 {
                     Children =
                     {
-                        new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = product.Product_name },
+                        new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = product.ProductName },
                         new TextBlock { TextAlignment = TextAlignment.Center, Margin = new Thickness(10), Text = $"{product.Price} zł" }
                     }
                 }
@@ -289,7 +289,7 @@ namespace POS.Views
    
             using (var dbContext = new AppDbContext())
             {
-                var products = dbContext.Products.Where(p => p.Product_name.ToLower().Contains(searchText)).ToList();
+                var products = dbContext.Products.Where(p => p.ProductName.ToLower().Contains(searchText)).ToList();
                 if(products.Count > 0)
                 {
                     LoadProducts(products);
@@ -357,8 +357,8 @@ namespace POS.Views
             using (var dbContext = new AppDbContext())
             {
                 var queryResult = dbContext.Products
-                    .Join(dbContext.Recipes, p => p.Recipe_id, r => r.Recipe_id, (p, r) => new { p, r })
-                    .Where(join => join.p.Product_name == productName)
+                    .Join(dbContext.Recipes, p => p.RecipeId, r => r.RecipeId, (p, r) => new { p, r })
+                    .Where(join => join.p.ProductName == productName)
                     .Select(join => join.r.Recipe)
                     .FirstOrDefault();
 
@@ -378,10 +378,10 @@ namespace POS.Views
             using (var dbContext = new AppDbContext())
             {
                 var queryResult = dbContext.Products
-                    .Join(dbContext.Recipes, p => p.Recipe_id, r => r.Recipe_id, (p, r) => new { p, r })
-                    .Join(dbContext.RecipeIngredients, j => j.r.Recipe_id, ri => ri.Recipe_id, (j, ri) => new { j, ri })
-                    .Join(dbContext.Ingredients, jri => jri.ri.Ingredient_id, i => i.Ingredient_id, (jri, i) => new { jri, i })
-                    .Where(join => join.jri.j.p.Product_name == productName)
+                    .Join(dbContext.Recipes, p => p.RecipeId, r => r.RecipeId, (p, r) => new { p, r })
+                    .Join(dbContext.RecipeIngredients, j => j.r.RecipeId, ri => ri.RecipeId, (j, ri) => new { j, ri })
+                    .Join(dbContext.Ingredients, jri => jri.ri.IngredientId, i => i.IngredientId, (jri, i) => new { jri, i })
+                    .Where(join => join.jri.j.p.ProductName == productName)
                     .Select(join => new
                     {
                         IngredientName = join.i.Name,

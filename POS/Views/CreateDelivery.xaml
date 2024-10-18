@@ -100,8 +100,8 @@
                         <DataGrid x:Name="IngredientsDataGrid" Style="{DynamicResource DataGridStyle4}" CellStyle="{DynamicResource DataGridCellStyle4}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle4}" IsReadOnly="True" SelectionMode="Single">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Składnik" Width="8*" Binding="{Binding Name}" />
-                                <DataGridTextColumn Header="Data ważności" Width="4*" Binding="{Binding Expiration_date}"/>
-                                <DataGridTextColumn Header="Zapas Bezpieczeństwa" Width="6*" Binding="{Binding Safety_stock}"/>
+                                <DataGridTextColumn Header="Data ważności" Width="4*" Binding="{Binding ExpirationDate}"/>
+                                <DataGridTextColumn Header="Zapas Bezpieczeństwa" Width="6*" Binding="{Binding SafetyStock}"/>
                                 <DataGridTextColumn Header="Zapas" Width="1.5*" Binding="{Binding Stock}"/>
                                 <DataGridTemplateColumn Header="" Width="1*">
                                 </DataGridTemplateColumn>

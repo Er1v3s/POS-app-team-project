@@ -131,7 +131,7 @@ namespace POS
             using (var dbContext = new AppDbContext())
             {
                 var lowIngredients = dbContext.Ingredients
-                    .Where(i => i.Stock.HasValue && i.Stock.Value < i.Safety_stock)
+                    .Where(i => i.Stock.HasValue && i.Stock.Value < i.SafetyStock)
                     .ToList();
 
                 if (lowIngredients.Any())
@@ -161,7 +161,7 @@ namespace POS
             {
                 var expiringIngredients = dbContext.Ingredients
                 .AsEnumerable()
-                .Where(i => i.Expiration_date != null && DateTime.ParseExact(i.Expiration_date, "yyyy-MM-dd", CultureInfo.InvariantCulture) <= DateTime.Now.AddDays(7))
+                .Where(i => i.ExpirationDate != null && DateTime.ParseExact(i.ExpirationDate, "yyyy-MM-dd", CultureInfo.InvariantCulture) <= DateTime.Now.AddDays(7))
                 .ToList();
 
 
@@ -170,7 +170,7 @@ namespace POS
                     string alertMessage = "Uwaga! Niektóre ze składników tracą na ważności:\n";
                     foreach (var ingredient in expiringIngredients)
                     {
-                        alertMessage += $"{ingredient.Name} (Data ważności: {ingredient.Expiration_date})\n";
+                        alertMessage += $"{ingredient.Name} (Data ważności: {ingredient.ExpirationDate})\n";
                     }
 
                     MessageBoxButton button = MessageBoxButton.OKCancel;

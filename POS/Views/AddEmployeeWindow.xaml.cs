@@ -61,15 +61,15 @@ namespace POS.Views
         {
             return new Employees
             {
-                First_name = FormValidatorHelper.ValidateTextBox(txtFirstName),
-                Last_name = FormValidatorHelper.ValidateTextBox(txtLastName),
-                Job_title = FormValidatorHelper.ValidateComboBox(txtJobTitle),
+                FirstName = FormValidatorHelper.ValidateTextBox(txtFirstName),
+                LastName = FormValidatorHelper.ValidateTextBox(txtLastName),
+                JobTitle = FormValidatorHelper.ValidateComboBox(txtJobTitle),
                 Email = FormValidatorHelper.ValidateEmailAddress(txtEmail),
-                Phone_number = ParsePhoneNumber(FormValidatorHelper.ValidatePhoneNumber(txtPhoneNumber)),
+                PhoneNumber = ParsePhoneNumber(FormValidatorHelper.ValidatePhoneNumber(txtPhoneNumber)),
                 Address = FormValidatorHelper.ValidateTextBox(txtAdress),
                 Login = FormValidatorHelper.ValidateTextBox(txtLogin),
                 Password = FormValidatorHelper.ValidateTextBox(txtPassword),
-                Is_User_LoggedIn = false
+                IsUserLoggedIn = false
             };
         }
 

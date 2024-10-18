@@ -2,10 +2,10 @@
 {
     public class OrderHistory
     {
-        public int Order_Id { get; set; }
-        public string Employee_Name {  get; set; }
-        public string Order_Date { get; set; }
-        public string Order_Time { get; set; }
+        public int OrderId { get; set; }
+        public string EmployeeName {  get; set; }
+        public string OrderDate { get; set; }
+        public string OrderTime { get; set; }
 
     }
 }

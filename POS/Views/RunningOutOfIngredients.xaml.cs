@@ -55,7 +55,7 @@ namespace POS.Views
                 using (var dbContext = new AppDbContext())
                 {
                     var runningOutOfIngredients = dbContext.Ingredients
-                        .Where(ingredient => ingredient.Stock < ingredient.Safety_stock)
+                        .Where(ingredient => ingredient.Stock < ingredient.SafetyStock)
                         .ToList();
 
                     runningOutOfIngredientsDataGrid.ItemsSource = runningOutOfIngredients;

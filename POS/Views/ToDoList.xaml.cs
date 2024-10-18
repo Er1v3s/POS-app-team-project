@@ -64,7 +64,7 @@ namespace POS.Views
 
                 using (var dbContext = new AppDbContext())
                 {
-                    var taskFromDb = dbContext.ToDoListTasks.Find(selectedTask.TodoTask_Id);
+                    var taskFromDb = dbContext.ToDoListTasks.Find(selectedTask.TodoTaskId);
 
                     if (taskFromDb != null)
                     {

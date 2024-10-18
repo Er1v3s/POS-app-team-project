@@ -52,13 +52,13 @@ namespace POS.Views
         {
             using (var dbContext = new AppDbContext())
             {
-                var employeeToUpdate = dbContext.Employees.FirstOrDefault(employee => employee.Employee_id == this.selectedEmployee.Employee_id);
+                var employeeToUpdate = dbContext.Employees.FirstOrDefault(employee => employee.EmployeeId == this.selectedEmployee.EmployeeId);
 
-                txtFirstName.Text = employeeToUpdate.First_name != null ? employeeToUpdate.First_name : "";
-                txtLastName.Text = employeeToUpdate.Last_name != null ? employeeToUpdate.Last_name : "";
-                txtJobTitle.Text = employeeToUpdate.Job_title != null ? employeeToUpdate.Job_title : "";
+                txtFirstName.Text = employeeToUpdate.FirstName != null ? employeeToUpdate.FirstName : "";
+                txtLastName.Text = employeeToUpdate.LastName != null ? employeeToUpdate.LastName : "";
+                txtJobTitle.Text = employeeToUpdate.JobTitle != null ? employeeToUpdate.JobTitle : "";
                 txtEmail.Text = employeeToUpdate.Email != null ? employeeToUpdate.Email : "";
-                txtPhoneNumber.Text = employeeToUpdate.Phone_number != null ? employeeToUpdate.Phone_number.ToString() : "";
+                txtPhoneNumber.Text = employeeToUpdate.PhoneNumber != null ? employeeToUpdate.PhoneNumber.ToString() : "";
                 txtAdress.Text = employeeToUpdate.Address != null ? employeeToUpdate.Address : " ";
                 txtLogin.Text = employeeToUpdate.Login;
                 txtPassword.Text = employeeToUpdate.Password;
@@ -84,15 +84,15 @@ namespace POS.Views
         {
             using (var dbContext = new AppDbContext())
             {
-                var employeeToUpdate = dbContext.Employees.FirstOrDefault(employee => employee.Employee_id == this.selectedEmployee.Employee_id);
+                var employeeToUpdate = dbContext.Employees.FirstOrDefault(employee => employee.EmployeeId == this.selectedEmployee.EmployeeId);
 
                 if (employeeToUpdate != null)
                 {
-                    employeeToUpdate.First_name = FormValidatorHelper.ValidateTextBox(txtFirstName);
-                    employeeToUpdate.Last_name = FormValidatorHelper.ValidateTextBox(txtLastName);
-                    employeeToUpdate.Job_title = FormValidatorHelper.ValidateComboBox(txtJobTitle);
+                    employeeToUpdate.FirstName = FormValidatorHelper.ValidateTextBox(txtFirstName);
+                    employeeToUpdate.LastName = FormValidatorHelper.ValidateTextBox(txtLastName);
+                    employeeToUpdate.JobTitle = FormValidatorHelper.ValidateComboBox(txtJobTitle);
                     employeeToUpdate.Email = FormValidatorHelper.ValidateEmailAddress(txtEmail);
-                    employeeToUpdate.Phone_number = ParsePhoneNumber(FormValidatorHelper.ValidatePhoneNumber(txtPhoneNumber));
+                    employeeToUpdate.PhoneNumber = ParsePhoneNumber(FormValidatorHelper.ValidatePhoneNumber(txtPhoneNumber));
                     employeeToUpdate.Address = FormValidatorHelper.ValidateTextBox(txtAdress);
                     employeeToUpdate.Login = FormValidatorHelper.ValidateTextBox(txtLogin);
                     employeeToUpdate.Password = FormValidatorHelper.ValidateTextBox(txtPassword);
