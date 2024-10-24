@@ -89,21 +89,23 @@ namespace POS.Views
             using (var dbContext = new AppDbContext())
             {
                 var salesReport = dbContext.Products
-                .Select(product => new
-                {
-                    ProductId = product.ProductId,
-                    ProductName = product.ProductName,
-                    TotalSales = dbContext.OrderItems
-                        .Where(orderItem => orderItem.ProductId == product.ProductId
-                                           && orderItem.OriderTime >= startDate
-                                           && orderItem.OriderTime <= endDate)
-                        .Sum(orderItem => orderItem.Quantity * product.Price),
-                    TotalAmount = dbContext.OrderItems
-                        .Where(orderItem => orderItem.ProductId == product.ProductId
-                                           && orderItem.OriderTime >= startDate
-                                           && orderItem.OriderTime <= endDate)
-                        .Sum(o => o.Quantity)
-                });
+                    .Select(product => new
+                    {
+                        ProductId = product.ProductId,
+                        ProductName = product.ProductName,
+                        TotalSales = dbContext.OrderItems
+                            .Where(orderItem => orderItem.ProductId == product.ProductId
+                                                && dbContext.Orders
+                                                    .Where(order => order.OrderId == orderItem.OrderId)
+                                                    .Any(order => order.OrderTime >= startDate && order.OrderTime <= endDate))
+                            .Sum(orderItem => orderItem.Quantity * product.Price),
+                        TotalAmount = dbContext.OrderItems
+                            .Where(orderItem => orderItem.ProductId == product.ProductId
+                                                && dbContext.Orders
+                                                    .Where(order => order.OrderId == orderItem.OrderId)
+                                                    .Any(order => order.OrderTime >= startDate && order.OrderTime <= endDate))
+                            .Sum(orderItem => orderItem.Quantity)
+                    });
 
                 DataGrid salesRaportDataGrid = new DataGrid();
                 salesRaportDataGrid.ItemsSource = salesReport.ToList();
@@ -119,25 +121,26 @@ namespace POS.Views
         {
             using (var dbContext = new AppDbContext())
             {
-
                 var consumptionReport = from orderItem in dbContext.OrderItems
-                                        where orderItem.OriderTime >= startDate && orderItem.OriderTime <= endDate
-                                        join product in dbContext.Products on orderItem.ProductId equals product.ProductId
-                                        join recipeIngredient in dbContext.RecipeIngredients on product.RecipeId equals recipeIngredient.RecipeId
-                                        join ingredient in dbContext.Ingredients on recipeIngredient.IngredientId equals ingredient.IngredientId
-                                        group new { orderItem, recipeIngredient } by new { ingredient.Name, ingredient.Unit } into grouped
-                                        select new
-                                        {
-                                            IngredientName = grouped.Key.Name,
-                                            Unit = grouped.Key.Unit,
-                                            TotalConsumedQuantity = grouped.Sum(g => g.recipeIngredient.Quantity * g.orderItem.Quantity)
-                                        };
+                    join order in dbContext.Orders on orderItem.OrderId equals order.OrderId
+                    where order.OrderTime >= startDate && order.OrderTime <= endDate
+                    join product in dbContext.Products on orderItem.ProductId equals product.ProductId
+                    join recipeIngredient in dbContext.RecipeIngredients on product.RecipeId equals recipeIngredient.RecipeId
+                    join ingredient in dbContext.Ingredients on recipeIngredient.IngredientId equals ingredient.IngredientId
+                    group new { orderItem, recipeIngredient } by new { ingredient.Name, ingredient.Unit } into grouped
+                    select new
+                    {
+                        IngredientName = grouped.Key.Name,
+                        Unit = grouped.Key.Unit,
+                        TotalConsumedQuantity = grouped.Sum(g => g.recipeIngredient.Quantity * g.orderItem.Quantity)
+                    };
 
                 DataGrid consumptionReportDataGrid = new DataGrid();
                 consumptionReportDataGrid.ItemsSource = consumptionReport.ToList();
 
                 liveChart.Children.Add(consumptionReportDataGrid);
             }
+
         }
 
         #endregion
@@ -150,16 +153,17 @@ namespace POS.Views
             using (var dbContext = new AppDbContext())
             {
                 productPopularityData = (from orderItems in dbContext.OrderItems
-                                         join products in dbContext.Products on orderItems.ProductId equals products.ProductId
-                                         join order in dbContext.Orders on orderItems.OrdersOrderId equals order.OrderId
-                                         where order.OrderTime >= startDate && order.OrderTime <= endDate
-                                         group orderItems by products.ProductName into groupedItems
-                                         select new ProductPopularity
-                                         {
-                                             ProductName = groupedItems.Key,
-                                             Quantity = groupedItems.Sum(item => item.Quantity)
-                                         }).ToList();
+                    join products in dbContext.Products on orderItems.ProductId equals products.ProductId
+                    join order in dbContext.Orders on orderItems.OrderId equals order.OrderId
+                    where order.OrderTime >= startDate && order.OrderTime <= endDate
+                    group orderItems by products.ProductName into groupedItems
+                    select new ProductPopularity
+                    {
+                        ProductName = groupedItems.Key,
+                        Quantity = groupedItems.Sum(item => item.Quantity)
+                    }).ToList();
             }
+
 
             return productPopularityData;
         }

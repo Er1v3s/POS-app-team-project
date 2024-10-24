@@ -170,7 +170,6 @@ namespace POS.Views
                 Payments newPayment = new Payments
                 {
                     OrderId = order.OrderId,
-                    PaymentTime = DateTime.Now,
                     PaymentMethod = paymentMethod,
                     Amount = totalPrice
                 };
@@ -187,10 +186,9 @@ namespace POS.Views
                 {
                     OrderItems newOrderItem = new OrderItems
                     {
-                        OrdersOrderId = order.OrderId,
+                        OrderId = order.OrderId,
                         EmployeeId = EmployeeId,
                         ProductId = orderListItem.Id,
-                        OriderTime = DateTime.Now,
                         Quantity = orderListItem.Amount,
                     };
                     dbContext.OrderItems.Add(newOrderItem);
