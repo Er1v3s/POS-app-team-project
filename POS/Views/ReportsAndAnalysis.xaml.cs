@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using LiveCharts.Wpf;
 using LiveCharts;
+using Microsoft.EntityFrameworkCore;
 using POS.ViewModel.Raports;
 
 namespace POS.Views
@@ -18,9 +20,13 @@ namespace POS.Views
         Dictionary<int, string> raports = new Dictionary<int, string>()
         {
             { 0, "Raport sprzedaży produktów" },
-            { 1, "Raport zużycia materiałów" },
-            { 2, "Produktywność pracowników" },
-            { 3, "Popularność produktów" }
+            //{ 1, "Raport przychodów" },
+            //{ 2, "Raport ilości zamówień" },
+            //{ 3, "Raport ilości zamówień w konkretne dni tygodnia" },
+            //{ 4, "Raport produktywności pracowników" },
+            //{ 5, "Stosunek płatności kartą a gotówką" },
+
+            //{ 2, "Raport zużycia materiałów" },
         };
 
         public ReportsAndAnalysis()
@@ -28,7 +34,7 @@ namespace POS.Views
             InitializeComponent();
         }
 
-        private void GenerateRaport_ButtonClick(object sender, RoutedEventArgs e)
+        private async void GenerateReport_ButtonClick(object sender, RoutedEventArgs e)
         {
             string selectedReport = null;
             ComboBoxItem selectedComboBoxItem = (ComboBoxItem)reportTypeComboBox.SelectedItem;
@@ -54,114 +60,65 @@ namespace POS.Views
             }
             else
             {
-                GenerateChoosenReport(selectedReport, startDate, endDate);
+                await GenerateChoosenReport(selectedReport, startDate, endDate);
             }
         }
 
-        private void GenerateChoosenReport(string selectedReport, DateTime startDate, DateTime endDate)
+        private async Task GenerateChoosenReport(string selectedReport, DateTime startDate, DateTime endDate)
         {
             liveChart.Children.Clear();
 
             if (selectedReport == raports[0])
             {
-                GenerateSalesReport(startDate, endDate);
+                List<ProductPopularity> productPopularityData = await GenerateSalesReport(startDate, endDate);
+                GenerateSalesReportChart(productPopularityData);
             }
             else if (selectedReport == raports[1])
             {
-                GenerateConsumptionReport(startDate, endDate);
+                //await GenerateNumberOfOrdersOnSpecificDays(startDate, endDate);
             }
-            else if (selectedReport == raports[2])
-            {
-                List <EmployeeProductivity> employeeProductivityData = GenerateEmployeeProductivityData(startDate, endDate);
-                GenerateEmployeeProductivityChart(employeeProductivityData);
-            }
-            else if (selectedReport == raports[3])
-            {
-                List<ProductPopularity> productPopularityData = GenerateProductPopularityData(startDate, endDate);
-                GenerateProductPopularityChart(productPopularityData);
-            }
+            //else if (selectedReport == raports[2])
+            //{
+            //    GenerateConsumptionReport(startDate, endDate);
+            //}
+            //else if (selectedReport == raports[3])
+            //{
+            //    List <EmployeeProductivity> employeeProductivityData = GenerateEmployeeProductivityData(startDate, endDate);
+            //    GenerateEmployeeProductivityChart(employeeProductivityData);
+            //}
+            //else if (selectedReport == raports[4])
+            //{
+            //    List<ProductPopularity> productPopularityData = GenerateProductPopularityData(startDate, endDate);
+            //    GenerateProductPopularityChart(productPopularityData);
+            //}
         }
 
         #region Sales raport
 
-        private void GenerateSalesReport(DateTime startDate, DateTime endDate)
+        private async Task<List<ProductPopularity>> GenerateSalesReport(DateTime startDate, DateTime endDate)
         {
-            using (var dbContext = new AppDbContext())
-            {
-                var salesReport = dbContext.OrderItems
-                    .Where(orderItem => dbContext.Orders
-                        .Any(order => order.OrderId == orderItem.OrderId &&
-                                      order.OrderTime >= startDate &&
-                                      order.OrderTime <= endDate))
-                    .GroupBy(orderItem => orderItem.ProductId)
-                    .Select(group => new
-                    {
-                        ProductName = dbContext.Products.FirstOrDefault(product => product.ProductId == group.Key).ProductName,
-                        TotalQuantity = group.Sum(orderItem => orderItem.Quantity)
-                    });
+            await using var dbContext = new AppDbContext();
 
-                DataGrid salesReportDataGrid = new DataGrid();
-                salesReportDataGrid.ItemsSource = salesReport.ToList();
+            var productSales = await dbContext.OrderItems
+                .Where(orderItem => dbContext.Orders
+                    .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
+                    .Select(order => order.OrderId)
+                    .Contains(orderItem.OrderId))
+                .GroupBy(orderItem => orderItem.ProductId)
+                .Select(groupedItems => new ProductPopularity
+                {
+                    ProductName = dbContext.Products
+                        .Where(product => product.ProductId == groupedItems.Key)
+                        .Select(product => product.ProductName)
+                        .FirstOrDefault(),
+                    Quantity = groupedItems.Sum(item => item.Quantity)
+                })
+                .ToListAsync();
 
-                liveChart.Children.Add(salesReportDataGrid);
-            }
+            return productSales;
         }
 
-        #endregion
-
-        #region Consumption raport
-        private void GenerateConsumptionReport(DateTime startDate, DateTime endDate)
-        {
-            using (var dbContext = new AppDbContext())
-            {
-                var consumptionReport = from orderItem in dbContext.OrderItems
-                    join order in dbContext.Orders on orderItem.OrderId equals order.OrderId
-                    where order.OrderTime >= startDate && order.OrderTime <= endDate
-                    join product in dbContext.Products on orderItem.ProductId equals product.ProductId
-                    join recipeIngredient in dbContext.RecipeIngredients on product.RecipeId equals recipeIngredient.RecipeId
-                    join ingredient in dbContext.Ingredients on recipeIngredient.IngredientId equals ingredient.IngredientId
-                    group new { orderItem, recipeIngredient } by new { ingredient.Name, ingredient.Unit } into grouped
-                    select new
-                    {
-                        IngredientName = grouped.Key.Name,
-                        Unit = grouped.Key.Unit,
-                        TotalConsumedQuantity = grouped.Sum(g => g.recipeIngredient.Quantity * g.orderItem.Quantity)
-                    };
-
-                DataGrid consumptionReportDataGrid = new DataGrid();
-                consumptionReportDataGrid.ItemsSource = consumptionReport.ToList();
-
-                liveChart.Children.Add(consumptionReportDataGrid);
-            }
-
-        }
-
-        #endregion
-
-        #region Popularity of products raport
-
-        private List<ProductPopularity> GenerateProductPopularityData(DateTime startDate, DateTime endDate)
-        {
-            List<ProductPopularity> productPopularityData;
-            using (var dbContext = new AppDbContext())
-            {
-                productPopularityData = (from orderItems in dbContext.OrderItems
-                    join products in dbContext.Products on orderItems.ProductId equals products.ProductId
-                    join order in dbContext.Orders on orderItems.OrderId equals order.OrderId
-                    where order.OrderTime >= startDate && order.OrderTime <= endDate
-                    group orderItems by products.ProductName into groupedItems
-                    select new ProductPopularity
-                    {
-                        ProductName = groupedItems.Key,
-                        Quantity = groupedItems.Sum(item => item.Quantity)
-                    }).ToList();
-            }
-
-
-            return productPopularityData;
-        }
-
-        private void GenerateProductPopularityChart(List<ProductPopularity> popularityOfProductsData)
+        private void GenerateSalesReportChart(List<ProductPopularity> popularityOfProductsData)
         {
             var popularityOfProductsChart = new CartesianChart();
 
@@ -189,10 +146,40 @@ namespace POS.Views
             {
                 Title = "Produkt",
                 Labels = popularityOfProductsData.Select(p => p.ProductName).ToList(),
+                IsEnabled = true
             });
 
             liveChart.Children.Add(popularityOfProductsChart);
         }
+
+        #endregion
+
+        #region Consumption raport
+        //private void GenerateConsumptionReport(DateTime startDate, DateTime endDate)
+        //{
+        //    using (var dbContext = new AppDbContext())
+        //    {
+        //        var consumptionReport = from orderItem in dbContext.OrderItems
+        //            join order in dbContext.Orders on orderItem.OrderId equals order.OrderId
+        //            where order.OrderTime >= startDate && order.OrderTime <= endDate
+        //            join product in dbContext.Products on orderItem.ProductId equals product.ProductId
+        //            join recipeIngredient in dbContext.RecipeIngredients on product.RecipeId equals recipeIngredient.RecipeId
+        //            join ingredient in dbContext.Ingredients on recipeIngredient.IngredientId equals ingredient.IngredientId
+        //            group new { orderItem, recipeIngredient } by new { ingredient.Name, ingredient.Unit } into grouped
+        //            select new
+        //            {
+        //                IngredientName = grouped.Key.Name,
+        //                Unit = grouped.Key.Unit,
+        //                TotalConsumedQuantity = grouped.Sum(g => g.recipeIngredient.Quantity * g.orderItem.Quantity)
+        //            };
+
+        //        DataGrid consumptionReportDataGrid = new DataGrid();
+        //        consumptionReportDataGrid.ItemsSource = consumptionReport.ToList();
+
+        //        liveChart.Children.Add(consumptionReportDataGrid);
+        //    }
+
+        //}
 
         #endregion
 
@@ -271,6 +258,31 @@ namespace POS.Views
         }
 
 
+
+        #endregion
+
+        #region NumberOfOrdersOnSpecificDays
+
+        private async Task GenerateNumberOfOrdersOnSpecificDays(DateTime startDate, DateTime endDate)
+        {
+            await using (var dbContext = new AppDbContext())
+            {
+                var ordersReport = await dbContext.Orders
+                    .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
+                    .GroupBy(order => order.DayOfWeek)
+                    .Select(group => new
+                    {
+                        DayOfWeek = group.Key,
+                        OrderCount = group.Count()
+                    })
+                    .ToListAsync();
+                
+                DataGrid ordersReportDataGrid = new DataGrid();
+                ordersReportDataGrid.ItemsSource = ordersReport;
+
+                liveChart.Children.Add(ordersReportDataGrid);
+            }
+        }
 
         #endregion
     }
