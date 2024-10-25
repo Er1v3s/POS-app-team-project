@@ -1,11 +1,11 @@
-﻿using POS.Models;
-using POS.ViewModel;
+﻿using POS.ViewModel;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using DataAccess.Models;
 
 namespace POS.Views
 {

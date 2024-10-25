@@ -1,5 +1,5 @@
 ﻿using POS.Helpers;
-using POS.Models;
+using DataAccess.Models;
 using System;
 using System.Windows;
 using System.Windows.Input;

@@ -3,9 +3,8 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using POS.Helpers;
 
-namespace POS.Models
+namespace DataAccess.Models
 {
     public class AppDbContext : DbContext
     {
@@ -20,8 +19,8 @@ namespace POS.Models
 
         //static AppDbContext()
         //{
-        //    string databaseLocation = @"..\..\..\Database\barmanagement.db";
-        //    //string databaseLocation = "C:\\Users\\filip\\Programing\\C#\\POS-app-team-project\\POS\\Database\\barmanagement.db";
+        //    string databaseLocation = @"..\..\..\Database\database.db";
+        //    //string databaseLocation = "C:\\Users\\filip\\Programing\\C#\\DbSeeder\\DbSeeder\\Database\\barmanagement.db";
         //    string projectPath = Directory.GetCurrentDirectory();
         //    string absolutePath = Path.Combine(projectPath, databaseLocation);
 

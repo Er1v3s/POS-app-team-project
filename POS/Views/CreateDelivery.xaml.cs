@@ -2,7 +2,6 @@
 using iTextSharp.text.pdf;
 using Microsoft.Win32;
 using POS.Converter;
-using POS.Models;
 using POS.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -12,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using DataAccess.Models;
 using Paragraph = iTextSharp.text.Paragraph;
 
 namespace POS.Views

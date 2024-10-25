@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using POS.Converter;
-using POS.Models;
+using DataAccess.Models;
 using System;
 using System.Linq;
 using System.Windows;

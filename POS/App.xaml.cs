@@ -9,7 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using POS.Models;
+using DataAccess.Models;
 
 namespace POS
 {
