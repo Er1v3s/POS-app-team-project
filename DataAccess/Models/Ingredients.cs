@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace POS.Models
+namespace DataAccess.Models
 {
     public class Ingredients
     {

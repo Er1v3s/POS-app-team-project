@@ -1,10 +1,12 @@
-﻿using POS.Models;
+﻿using DataAccess.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.EntityFrameworkCore;
 
 namespace POS.Views
 {
@@ -23,10 +25,10 @@ namespace POS.Views
             StartFinishWork.WorkSessionChangeStatus += EmployeeWorkSession_SessionCreated;
         }
 
-        private void ShowActiveSessions()
+        private async Task ShowActiveSessions()
         {
             ActiveSessions.Clear();
-            using (var dbContext = new AppDbContext())
+            await using (var dbContext = new AppDbContext())
             {
                 var employeeWorkSession = dbContext.EmployeeWorkSession.ToList();
 
@@ -34,13 +36,13 @@ namespace POS.Views
                 {
                     foreach (var session in employeeWorkSession)
                     {
-                        var user = dbContext.Employees.FirstOrDefault(e => e.EmployeeId == session.EmployeeId);
+                        var user = await dbContext.Employees.FirstOrDefaultAsync(e => e.EmployeeId == session.EmployeeId);
                         if (user != null)
                         {
                             DateTime workingTimeFrom = DateTime.ParseExact(session.WorkingTimeFrom, "HH:mm", CultureInfo.InvariantCulture);
                             DateTime workingTimeTo;
 
-                            if (session.WorkingTimeTo == "" || session.WorkingTimeTo == null)
+                            if (string.IsNullOrEmpty(session.WorkingTimeTo))
                             {
                                 workingTimeTo = DateTime.Now;
                             } 
@@ -55,7 +57,7 @@ namespace POS.Views
                             string formattedTimeDifference = $"{hours:D2}:{minutes:D2}";
 
                             session.WorkingTimeSummary = formattedTimeDifference;
-                            dbContext.SaveChangesAsync();
+                            await dbContext.SaveChangesAsync();
                             ActiveSessions.Add(session);
                         }
                     }

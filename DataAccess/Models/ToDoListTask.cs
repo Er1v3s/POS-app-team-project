@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace POS.Models
+namespace DataAccess.Models
 {
     public class ToDoListTask
     {

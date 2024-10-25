@@ -1,9 +1,9 @@
 ﻿using POS.Helpers;
-using POS.Models;
 using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using DataAccess.Models;
 
 namespace POS.Views
 {

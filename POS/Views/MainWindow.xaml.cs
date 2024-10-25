@@ -1,14 +1,13 @@
-﻿using POS.Models;
-using POS.Views;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using DataAccess.Models;
 
-namespace POS
+namespace POS.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

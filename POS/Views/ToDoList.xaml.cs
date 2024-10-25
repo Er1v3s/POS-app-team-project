@@ -1,5 +1,5 @@
 ﻿using POS.Converter;
-using POS.Models;
+using DataAccess.Models;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;

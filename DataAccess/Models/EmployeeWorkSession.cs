@@ -1,4 +1,4 @@
-﻿namespace POS.Models
+﻿namespace DataAccess.Models
 {
     public class EmployeeWorkSession
     {
