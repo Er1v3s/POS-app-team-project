@@ -78,25 +78,16 @@ namespace POS.Views
             }
             else if (selectedReport == reports[1])
             {
-                //List<RevenueReport> revenueData = await GenerateDailyRevenueReport(startDate, endDate);
-                //GenerateDailyRevenueReportChart(revenueData);
-
                 List<RevenueReport> revenueData = await GenerateRevenueReport(startDate, endDate, "Daily");
                 GenerateRevenueChart(revenueData, "Przychód", "Data", p => p.Date.ToString("yyyy-MM-dd"));
             }
             else if (selectedReport == reports[2])
             {
-                //List<RevenueReport> revenueData = await GenerateMonthlyRevenueReport(startDate, endDate);
-                //GenerateMonthlyRevenueReportChart(revenueData);
-
                 List<RevenueReport> revenueData = await GenerateRevenueReport(startDate, endDate, "Monthly");
                 GenerateRevenueChart(revenueData, "Przychód", "Miesiąc", p => $"{p.Month:00}-{p.Year}");
             }
             else if (selectedReport == reports[3])
             {
-                //List<RevenueReport> revenueData = await GenerateYearlyRevenueReport(startDate, endDate);
-                //GenerateYearlyRevenueReportChart(revenueData);
-
                 List<RevenueReport> revenueData = await GenerateRevenueReport(startDate, endDate, "Yearly");
                 GenerateRevenueChart(revenueData, "Przychód", "Rok", p => p.Year.ToString());
             }
@@ -183,7 +174,7 @@ namespace POS.Views
 
         #endregion
 
-        #region RevenueReport
+        #region RevenueReports
 
         private async Task<List<RevenueReport>> GenerateRevenueReport(DateTime startDate, DateTime endDate, string groupBy)
         {
@@ -280,197 +271,6 @@ namespace POS.Views
 
 
         #endregion
-
-        //#region DailyRevenueReport
-
-        //private async Task<List<RevenueReport>> GenerateDailyRevenueReport(DateTime startDate, DateTime endDate)
-        //{
-        //    await using var dbContext = new AppDbContext();
-
-        //    var revenueReport = await dbContext.Orders
-        //        .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
-        //        .Join(dbContext.Payments,
-        //            order => order.OrderId,
-        //            payment => payment.OrderId,
-        //            (order, payment) => new { OrderDate = order.OrderTime.Date, payment.Amount })
-        //        .GroupBy(item => item.OrderDate)
-        //        .Select(grouped => new RevenueReport
-        //        {
-        //            Date = grouped.Key,
-        //            TotalRevenue = (decimal)grouped.Sum(item => item.Amount)
-        //        })
-        //        .ToListAsync();
-
-        //    return revenueReport;
-        //}
-
-        //private void GenerateDailyRevenueReportChart(List<RevenueReport> revenueReport)
-        //{
-        //    var revenueReportChart = new CartesianChart();
-
-        //    revenueReportChart.AxisY.Add(new Axis
-        //    {
-        //        Title = "Przychód",
-        //        Separator = new LiveCharts.Wpf.Separator
-        //        {
-        //            Step = 1,
-        //            IsEnabled = true
-        //        },
-        //        MinValue = (double)(revenueReport.Min(p => p.TotalRevenue) * 0.8m),
-        //        ShowLabels = false
-        //    });
-
-        //    revenueReportChart.Series = new SeriesCollection
-        //    {
-        //        new ColumnSeries
-        //        {
-        //            Title = "Przychód",
-        //            Values = new ChartValues<decimal>(revenueReport.Select(p => (p.TotalRevenue))),
-        //            DataLabels = true,
-        //        }
-        //    };
-
-        //    revenueReportChart.AxisX.Add(new Axis
-        //    {
-        //        Title = "Data",
-        //        Labels = revenueReport.Select(p => p.Date.ToString("yyyy-MM-dd")).ToList(),
-        //        IsEnabled = true
-        //    });
-
-        //    liveChart.Children.Add(revenueReportChart);
-        //}
-
-
-        //#endregion
-
-        //#region MonthlyRevenueReport
-
-        //public async Task<List<RevenueReport>> GenerateMonthlyRevenueReport(DateTime startDate, DateTime endDate)
-        //{
-        //    await using var dbContext = new AppDbContext();
-
-        //        var monthlyRevenueReport = await dbContext.Orders
-        //            .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
-        //            .Join(dbContext.Payments,
-        //                order => order.OrderId,
-        //                payment => payment.OrderId,
-        //                (order, payment) => new { order.OrderTime, payment.Amount })
-        //            .GroupBy(x => new { x.OrderTime.Year, x.OrderTime.Month })
-        //            .Select(g => new RevenueReport
-        //            {
-        //                Year = g.Key.Year,
-        //                Month = g.Key.Month,
-        //                TotalRevenue = (decimal)g.Sum(x => x.Amount)
-        //            })
-        //            .OrderBy(report => report.Year)
-        //            .ThenBy(report => report.Month)
-        //            .ToListAsync();
-
-        //        return monthlyRevenueReport;
-        //}
-
-        //private void GenerateMonthlyRevenueReportChart(List<RevenueReport> revenueReport)
-        //{
-        //    var revenueReportChart = new CartesianChart();
-
-        //    revenueReportChart.AxisY.Add(new Axis
-        //    {
-        //        Title = "Przychód",
-        //        Separator = new LiveCharts.Wpf.Separator
-        //        {
-        //            Step = 1,
-        //            IsEnabled = true
-        //        },
-        //        MinValue = (double)(revenueReport.Min(p => p.TotalRevenue) * 0.8m),
-        //        ShowLabels = false
-        //    });
-
-        //    revenueReportChart.Series = new SeriesCollection
-        //    {
-        //        new ColumnSeries
-        //        {
-        //            Title = "Przychód",
-        //            Values = new ChartValues<decimal>(revenueReport.Select(p => (p.TotalRevenue))),
-        //            DataLabels = true,
-        //        }
-        //    };
-
-        //    revenueReportChart.AxisX.Add(new Axis
-        //    {
-        //        Title = "Miesiąc",
-        //        Labels = revenueReport.Select(p => $"{p.Month:00}-{p.Year}").ToList(),
-        //        IsEnabled = true
-        //    });
-
-        //    liveChart.Children.Add(revenueReportChart);
-        //}
-
-        //#endregion
-
-        //#region YearlyRevenueReportChart
-
-        //private async Task<List<RevenueReport>> GenerateYearlyRevenueReport(DateTime startDate, DateTime endDate)
-        //{
-        //    await using (var dbContext = new AppDbContext())
-        //    {
-        //        var revenueReport = await dbContext.Orders
-        //            .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
-        //            .Join(dbContext.Payments,
-        //                order => order.OrderId,
-        //                payment => payment.OrderId,
-        //                (order, payment) => new { order, payment })
-        //            .GroupBy(g => g.order.OrderTime.Year)
-        //            .Select(g => new RevenueReport
-        //            {
-        //                Year = g.Key,
-        //                TotalRevenue = (decimal)g.Sum(x => x.payment.Amount)
-        //            })
-        //            .OrderBy(report => report.Year)
-        //            .ToListAsync();
-
-        //        return revenueReport;
-        //    }
-        //}
-
-
-        //private void GenerateYearlyRevenueReportChart(List<RevenueReport> revenueReport)
-        //{
-        //    var revenueReportChart = new CartesianChart();
-
-        //    revenueReportChart.AxisY.Add(new Axis
-        //    {
-        //        Title = "Przychód",
-        //        Separator = new LiveCharts.Wpf.Separator
-        //        {
-        //            Step = 1,
-        //            IsEnabled = true
-        //        },
-        //        MinValue = (double)(revenueReport.Min(p => p.TotalRevenue) * 0.8m),
-        //        ShowLabels = false
-        //    });
-
-        //    revenueReportChart.Series = new SeriesCollection
-        //    {
-        //        new ColumnSeries
-        //        {
-        //            Title = "Przychód",
-        //            Values = new ChartValues<decimal>(revenueReport.Select(p => (p.TotalRevenue))),
-        //            DataLabels = true,
-        //        }
-        //    };
-
-        //    revenueReportChart.AxisX.Add(new Axis
-        //    {
-        //        Title = "Rok",
-        //        Labels = revenueReport.Select(p => p.Year.ToString()).Distinct().ToList(),
-        //        IsEnabled = true
-        //    });
-
-        //    liveChart.Children.Add(revenueReportChart);
-        //}
-
-        //#endregion
-
 
         #region Consumption raport
         //private void GenerateConsumptionReport(DateTime startDate, DateTime endDate)
