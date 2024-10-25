@@ -33,8 +33,11 @@
                     <ComboBoxItem Content="Dzienny raport przychodów"/>
                     <ComboBoxItem Content="Miesięczny raport przychodów"/>
                     <ComboBoxItem Content="Roczny raport przychodów"/>
-                    <!--<ComboBoxItem Content="Raport ilości zamówień w konkretne dni tygodnia"/>
-                    <ComboBoxItem Content="Raport zużycia materiałów"/>
+                    <ComboBoxItem Content="Dzienny raport ilości zamówień"/>
+                    <ComboBoxItem Content="Miesięczny raport ilości zamówień"/>
+                    <ComboBoxItem Content="Roczny raport ilości zamówień"/>
+                    <ComboBoxItem Content="Raport ilości zamówień w konkretne dni tygodnia"/>
+                    <!--<ComboBoxItem Content="Raport zużycia materiałów"/>
                     <ComboBoxItem Content="Produktywność pracowników"/>-->
                 </ComboBox>
 
