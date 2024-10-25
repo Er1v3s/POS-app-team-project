@@ -88,29 +88,22 @@ namespace POS.Views
         {
             using (var dbContext = new AppDbContext())
             {
-                var salesReport = dbContext.Products
-                    .Select(product => new
+                var salesReport = dbContext.OrderItems
+                    .Where(orderItem => dbContext.Orders
+                        .Any(order => order.OrderId == orderItem.OrderId &&
+                                      order.OrderTime >= startDate &&
+                                      order.OrderTime <= endDate))
+                    .GroupBy(orderItem => orderItem.ProductId)
+                    .Select(group => new
                     {
-                        ProductId = product.ProductId,
-                        ProductName = product.ProductName,
-                        TotalSales = dbContext.OrderItems
-                            .Where(orderItem => orderItem.ProductId == product.ProductId
-                                                && dbContext.Orders
-                                                    .Where(order => order.OrderId == orderItem.OrderId)
-                                                    .Any(order => order.OrderTime >= startDate && order.OrderTime <= endDate))
-                            .Sum(orderItem => orderItem.Quantity * product.Price),
-                        TotalAmount = dbContext.OrderItems
-                            .Where(orderItem => orderItem.ProductId == product.ProductId
-                                                && dbContext.Orders
-                                                    .Where(order => order.OrderId == orderItem.OrderId)
-                                                    .Any(order => order.OrderTime >= startDate && order.OrderTime <= endDate))
-                            .Sum(orderItem => orderItem.Quantity)
+                        ProductName = dbContext.Products.FirstOrDefault(product => product.ProductId == group.Key).ProductName,
+                        TotalQuantity = group.Sum(orderItem => orderItem.Quantity)
                     });
 
-                DataGrid salesRaportDataGrid = new DataGrid();
-                salesRaportDataGrid.ItemsSource = salesReport.ToList();
+                DataGrid salesReportDataGrid = new DataGrid();
+                salesReportDataGrid.ItemsSource = salesReport.ToList();
 
-                liveChart.Children.Add(salesRaportDataGrid);
+                liveChart.Children.Add(salesReportDataGrid);
             }
         }
 
