@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using LiveCharts.Wpf;
 using LiveCharts;
 using Microsoft.EntityFrameworkCore;
@@ -24,11 +25,12 @@ namespace POS.Views
             { 1, "Dzienny raport przychodów" },
             { 2, "Miesięczny raport przychodów" },
             { 3, "Roczny raport przychodów" },
-            //{ 2, "Raport ilości zamówień" },
-            //{ 3, "Raport ilości zamówień w konkretne dni tygodnia" },
+            { 4, "Dzienny raport ilości zamówień" },
+            { 5, "Miesięczny raport ilości zamówień" },
+            { 6, "Roczny raport ilości zamówień" },
+            { 7, "Raport ilości zamówień w konkretne dni tygodnia" },
             //{ 4, "Raport produktywności pracowników" },
             //{ 5, "Stosunek płatności kartą a gotówką" },
-
             //{ 2, "Raport zużycia materiałów" },
         };
 
@@ -91,10 +93,26 @@ namespace POS.Views
                 List<RevenueReport> revenueData = await GenerateRevenueReport(startDate, endDate, "Yearly");
                 GenerateRevenueChart(revenueData, "Przychód", "Rok", p => p.Year.ToString());
             }
-            //else if (selectedReport == raports[1])
-            //{
-            //    //await GenerateNumberOfOrdersOnSpecificDays(startDate, endDate);
-            //}
+            else if (selectedReport == reports[4])
+            {
+                List<OrderReport> orderReports = await GenerateNumberOfOrdersOnDays(startDate, endDate);
+                GenerateOrdersChartForDays(orderReports);
+            }
+            else if (selectedReport == reports[5])
+            {
+                List<OrderReport> orderReports = await GenerateNumberOfOrdersByMonths(startDate, endDate);
+                GenerateOrdersChartForMonths(orderReports);
+            }
+            else if (selectedReport == reports[6])
+            {
+                List<OrderReport> orderReports = await GenerateNumberOfOrdersByYears(startDate, endDate);
+                GenerateOrdersChartForYears(orderReports);
+            }
+            else if (selectedReport == reports[7])
+            {
+                List<OrderReport> orderReports = await GenerateNumberOfOrdersOnSpecificDays(startDate, endDate);
+                GenerateOrdersChart(orderReports);
+            }
             //else if (selectedReport == raports[2])
             //{
             //    GenerateConsumptionReport(startDate, endDate);
@@ -103,11 +121,6 @@ namespace POS.Views
             //{
             //    List <EmployeeProductivity> employeeProductivityData = GenerateEmployeeProductivityData(startDate, endDate);
             //    GenerateEmployeeProductivityChart(employeeProductivityData);
-            //}
-            //else if (selectedReport == raports[4])
-            //{
-            //    List<ProductPopularity> productPopularityData = GenerateProductPopularityData(startDate, endDate);
-            //    GenerateProductPopularityChart(productPopularityData);
             //}
         }
 
@@ -272,6 +285,257 @@ namespace POS.Views
 
         #endregion
 
+        #region NumberOfOrdersOnSpecificDays
+
+        private async Task<List<OrderReport>> GenerateNumberOfOrdersOnSpecificDays(DateTime startDate, DateTime endDate)
+        {
+            await using (var dbContext = new AppDbContext())
+            {
+                var ordersReport = await dbContext.Orders
+                    .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
+                    .GroupBy(order => order.DayOfWeek)
+                    .Select(group => new OrderReport
+                    {
+                        DayOfWeek = group.Key,
+                        OrderCount = group.Count()
+                    })
+                    .OrderBy(order => order.DayOfWeek)
+                    .ToListAsync();
+
+                return ordersReport;
+            }
+        }
+
+        private void GenerateOrdersChart(List<OrderReport> ordersReport)
+        {
+            var ordersChart = new CartesianChart();
+
+            ordersChart.AxisY.Add(new Axis
+            {
+                Title = "Liczba zamówień",
+                Separator = new LiveCharts.Wpf.Separator
+                {
+                    Step = 1,
+                    IsEnabled = true
+                },
+                MinValue = ordersReport.Select(p => p.OrderCount).DefaultIfEmpty(0).Min() * 0.8,
+                ShowLabels = false
+            });
+
+            var chartValues = new ChartValues<int>(ordersReport.Select(o => o.OrderCount));
+
+            ordersChart.Series = new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Title = "Zamówienia",
+                    Values = chartValues,
+                    DataLabels = true,
+                }
+            };
+
+            ordersChart.AxisX.Add(new Axis
+            {
+                Title = "Dzień tygodnia",
+                Labels = ordersReport.Select(o => o.DayOfWeek.ToString()).ToList(),
+                IsEnabled = true
+            });
+
+            liveChart.Children.Add(ordersChart);
+        }
+
+
+        #endregion
+
+        #region NumberOfOrdersOnDays
+
+        private async Task<List<OrderReport>> GenerateNumberOfOrdersOnDays(DateTime startDate, DateTime endDate)
+        {
+            await using (var dbContext = new AppDbContext())
+            {
+                var ordersReport = dbContext.Orders
+                    .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
+                    .GroupBy(order => order.OrderTime.Date)
+                    .Select(group => new OrderReport
+                    {
+                        Date = group.Key,
+                        OrderCount = group.Count()
+                    })
+                    .AsEnumerable()
+                    .OrderBy(order => order.Date.DayOfWeek)
+                    .ToList();
+
+                return ordersReport;
+            }
+        }
+
+        private void GenerateOrdersChartForDays(List<OrderReport> ordersReport)
+        {
+            var ordersChart = new CartesianChart();
+
+            ordersChart.AxisY.Add(new Axis
+            {
+                Title = "Liczba zamówień",
+                Separator = new LiveCharts.Wpf.Separator
+                {
+                    Step = 1,
+                    IsEnabled = true
+                },
+                MinValue = ordersReport.Select(p => p.OrderCount).DefaultIfEmpty(0).Min() * 0.8,
+                ShowLabels = false
+            });
+
+            var chartValues = new ChartValues<int>(ordersReport.Select(o => o.OrderCount));
+
+            ordersChart.Series = new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Title = "Zamówienia",
+                    Values = chartValues,
+                    DataLabels = true,
+                }
+            };
+
+            ordersChart.AxisX.Add(new Axis
+            {
+                Title = "Data",
+                Labels = ordersReport.Select(o => o.Date.ToString("yyyy-MM-dd")).ToList(),
+                IsEnabled = true
+            });
+
+            liveChart.Children.Add(ordersChart);
+        }
+
+        #endregion
+
+        #region NumberOfOrdersByMonths
+
+        private async Task<List<OrderReport>> GenerateNumberOfOrdersByMonths(DateTime startDate, DateTime endDate)
+        {
+            await using (var dbContext = new AppDbContext())
+            {
+                var ordersReport = dbContext.Orders
+                    .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
+                    .GroupBy(order => new { order.OrderTime.Year, order.OrderTime.Month })
+                    .Select(group => new OrderReport
+                    {
+                        Date = new DateTime(group.Key.Year, group.Key.Month, 1),
+                        OrderCount = group.Count()
+                    })
+                    .AsEnumerable()
+                    .OrderBy(order => order.Date.DayOfWeek)
+                    .ToList();
+
+                return ordersReport;
+            }
+        }
+
+
+        private void GenerateOrdersChartForMonths(List<OrderReport> ordersReport)
+        {
+            var ordersChart = new CartesianChart();
+
+            ordersChart.AxisY.Add(new Axis
+            {
+                Title = "Liczba zamówień",
+                Separator = new LiveCharts.Wpf.Separator
+                {
+                    Step = 1,
+                    IsEnabled = true
+                },
+                MinValue = ordersReport.Select(p => p.OrderCount).DefaultIfEmpty(0).Min() * 0.8,
+                ShowLabels = false
+            });
+
+            var chartValues = new ChartValues<int>(ordersReport.Select(o => o.OrderCount));
+
+            ordersChart.Series = new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Title = "Zamówienia",
+                    Values = chartValues,
+                    DataLabels = true,
+                }
+            };
+
+            ordersChart.AxisX.Add(new Axis
+            {
+                Title = "Miesiąc",
+                Labels = ordersReport.Select(o => new DateTime(1, 1, (int)o.DayOfWeek + 1).ToString("MMMM yyyy")).ToList(),
+                IsEnabled = true
+            });
+
+            liveChart.Children.Add(ordersChart);
+        }
+
+        #endregion
+
+        #region NumberOfOrdersByYears
+
+        private async Task<List<OrderReport>> GenerateNumberOfOrdersByYears(DateTime startDate, DateTime endDate)
+        {
+            await using (var dbContext = new AppDbContext())
+            {
+                var ordersReport = dbContext.Orders
+                    .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
+                    .GroupBy(order => order.OrderTime.Year)
+                    .AsEnumerable()
+                    .Select(group => new OrderReport
+                    {
+                        Date = new DateTime(group.Key, 1, 1),
+                        OrderCount = group.Count()
+                    })
+                    .OrderBy(order => order.Date.DayOfWeek)
+                    .ToList();
+
+                return ordersReport;
+            }
+        }
+
+
+        private void GenerateOrdersChartForYears(List<OrderReport> ordersReport)
+        {
+            var ordersChart = new CartesianChart();
+
+            ordersChart.AxisY.Add(new Axis
+            {
+                Title = "Liczba zamówień",
+                Separator = new LiveCharts.Wpf.Separator
+                {
+                    Step = 1,
+                    IsEnabled = true
+                },
+                MinValue = ordersReport.Select(p => p.OrderCount).DefaultIfEmpty(0).Min() * 0.8,
+                ShowLabels = false
+            });
+
+            var chartValues = new ChartValues<int>(ordersReport.Select(o => o.OrderCount));
+
+            ordersChart.Series = new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Title = "Zamówienia",
+                    Values = chartValues,
+                    DataLabels = true,
+                }
+            };
+
+            ordersChart.AxisX.Add(new Axis
+            {
+                Title = "Rok",
+                Labels = ordersReport.Select(o => o.Date.Year.ToString()).ToList(),
+                IsEnabled = true
+            });
+
+            liveChart.Children.Add(ordersChart);
+        }
+
+
+        #endregion
+
         #region Consumption raport
         //private void GenerateConsumptionReport(DateTime startDate, DateTime endDate)
         //{
@@ -376,31 +640,6 @@ namespace POS.Views
         }
 
 
-
-        #endregion
-
-        #region NumberOfOrdersOnSpecificDays
-
-        private async Task GenerateNumberOfOrdersOnSpecificDays(DateTime startDate, DateTime endDate)
-        {
-            await using (var dbContext = new AppDbContext())
-            {
-                var ordersReport = await dbContext.Orders
-                    .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
-                    .GroupBy(order => order.DayOfWeek)
-                    .Select(group => new
-                    {
-                        DayOfWeek = group.Key,
-                        OrderCount = group.Count()
-                    })
-                    .ToListAsync();
-                
-                DataGrid ordersReportDataGrid = new DataGrid();
-                ordersReportDataGrid.ItemsSource = ordersReport;
-
-                liveChart.Children.Add(ordersReportDataGrid);
-            }
-        }
 
         #endregion
     }
