@@ -30,6 +30,9 @@
 
                 <ComboBox Grid.Column="0" x:Name="reportTypeComboBox" Margin="20,5,5,5">
                     <ComboBoxItem Content="Raport sprzedaży produktów"/>
+                    <ComboBoxItem Content="Dzienny raport przychodów"/>
+                    <ComboBoxItem Content="Miesięczny raport przychodów"/>
+                    <ComboBoxItem Content="Roczny raport przychodów"/>
                     <!--<ComboBoxItem Content="Raport ilości zamówień w konkretne dni tygodnia"/>
                     <ComboBoxItem Content="Raport zużycia materiałów"/>
                     <ComboBoxItem Content="Produktywność pracowników"/>-->
