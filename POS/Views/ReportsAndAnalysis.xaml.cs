@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using LiveCharts.Wpf;
 using LiveCharts;
+using LiveCharts.Defaults;
 using Microsoft.EntityFrameworkCore;
 using POS.ViewModel.Raports;
 using POS.ViewModel.Reports;
@@ -32,7 +33,6 @@ namespace POS.Views
             { 7, "Raport ilości zamówień w konkretne dni tygodnia" },
             { 8, "Raport produktywności pracowników" },
             { 9, "Stosunek płatności kartą a gotówką" },
-            //{ 2, "Raport zużycia materiałów" },
         };
 
         public ReportsAndAnalysis()
@@ -50,7 +50,8 @@ namespace POS.Views
             }
 
             DateTime startDate = datePickerFrom.SelectedDate.GetValueOrDefault();
-            DateTime endDate = datePickerTo.SelectedDate.GetValueOrDefault().Date.AddHours(23).AddMinutes(59).AddSeconds(59);
+            DateTime endDate = datePickerTo.SelectedDate.GetValueOrDefault().Date.AddHours(23).AddMinutes(59)
+                .AddSeconds(59);
 
             if (selectedReport == null)
             {
@@ -114,19 +115,16 @@ namespace POS.Views
                 List<OrderReport> orderReports = await GenerateNumberOfOrdersOnSpecificDays(startDate, endDate);
                 GenerateOrdersChart(orderReports);
             }
-            //else if (selectedReport == raports[2])
-            //{
-            //    GenerateConsumptionReport(startDate, endDate);
-            //}
             else if (selectedReport == reports[8])
             {
-                List<EmployeeProductivity> employeeProductivityData = await GenerateEmployeeProductivityData(startDate, endDate);
+                List<EmployeeProductivity> employeeProductivityData =
+                    await GenerateEmployeeProductivityData(startDate, endDate);
                 GenerateEmployeeProductivityChart(employeeProductivityData);
             }
             else if (selectedReport == reports[9])
             {
-                //List<EmployeeProductivity> employeeProductivityData = GenerateEmployeeProductivityData(startDate, endDate);
-                //GenerateEmployeeProductivityChart(employeeProductivityData);
+                List<PaymentRatio> paymentRatio = await GenerateCardToCashPaymentRatioData(startDate, endDate);
+                GeneratePaymentMethodChart(paymentRatio);
             }
         }
 
@@ -195,7 +193,8 @@ namespace POS.Views
 
         #region RevenueReports
 
-        private async Task<List<RevenueReport>> GenerateRevenueReport(DateTime startDate, DateTime endDate, string groupBy)
+        private async Task<List<RevenueReport>> GenerateRevenueReport(DateTime startDate, DateTime endDate,
+            string groupBy)
         {
             await using var dbContext = new AppDbContext();
 
@@ -252,7 +251,8 @@ namespace POS.Views
                 .ToList();
         }
 
-        private void GenerateRevenueChart(List<RevenueReport> revenueReport, string title, string xAxisTitle, Func<RevenueReport, string> labelSelector)
+        private void GenerateRevenueChart(List<RevenueReport> revenueReport, string title, string xAxisTitle,
+            Func<RevenueReport, string> labelSelector)
         {
             var revenueChart = new CartesianChart();
 
@@ -471,7 +471,8 @@ namespace POS.Views
             ordersChart.AxisX.Add(new Axis
             {
                 Title = "Miesiąc",
-                Labels = ordersReport.Select(o => new DateTime(1, 1, (int)o.DayOfWeek + 1).ToString("MMMM yyyy")).ToList(),
+                Labels = ordersReport.Select(o => new DateTime(1, 1, (int)o.DayOfWeek + 1).ToString("MMMM yyyy"))
+                    .ToList(),
                 IsEnabled = true
             });
 
@@ -545,56 +546,30 @@ namespace POS.Views
 
         #endregion
 
-        #region Consumption raport
-        //private void GenerateConsumptionReport(DateTime startDate, DateTime endDate)
-        //{
-        //    using (var dbContext = new AppDbContext())
-        //    {
-        //        var consumptionReport = from orderItem in dbContext.OrderItems
-        //            join order in dbContext.Orders on orderItem.OrderId equals order.OrderId
-        //            where order.OrderTime >= startDate && order.OrderTime <= endDate
-        //            join product in dbContext.Products on orderItem.ProductId equals product.ProductId
-        //            join recipeIngredient in dbContext.RecipeIngredients on product.RecipeId equals recipeIngredient.RecipeId
-        //            join ingredient in dbContext.Ingredients on recipeIngredient.IngredientId equals ingredient.IngredientId
-        //            group new { orderItem, recipeIngredient } by new { ingredient.Name, ingredient.Unit } into grouped
-        //            select new
-        //            {
-        //                IngredientName = grouped.Key.Name,
-        //                Unit = grouped.Key.Unit,
-        //                TotalConsumedQuantity = grouped.Sum(g => g.recipeIngredient.Quantity * g.orderItem.Quantity)
-        //            };
-
-        //        DataGrid consumptionReportDataGrid = new DataGrid();
-        //        consumptionReportDataGrid.ItemsSource = consumptionReport.ToList();
-
-        //        liveChart.Children.Add(consumptionReportDataGrid);
-        //    }
-
-        //}
-
-        #endregion
-
         #region Employee productivity raport
 
-        private async Task<List<EmployeeProductivity>> GenerateEmployeeProductivityData(DateTime startDate, DateTime endDate)
+        private async Task<List<EmployeeProductivity>> GenerateEmployeeProductivityData(DateTime startDate,
+            DateTime endDate)
         {
-            await using var dbContext = new AppDbContext() ;
-            
-                var productivityData = dbContext.Orders
-                    .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
-                    .Join(dbContext.Employees, order => order.EmployeeId, employee => employee.EmployeeId, (order, employee) => new { order, employee })
-                    .Join(dbContext.Payments, orderEmployee => orderEmployee.order.OrderId, payment => payment.OrderId, (orderEmployee, payment) => new { orderEmployee.order, orderEmployee.employee, payment })
-                    .GroupBy(x => new { x.employee.EmployeeId, x.employee.FirstName, x.employee.LastName })
-                    .Select(g => new EmployeeProductivity
-                    {
-                        EmployeeName = $"{g.Key.FirstName} {g.Key.LastName}",
-                        OrderCount = g.Count(),
-                        TotalAmount = Math.Round(g.Sum(x => x.payment.Amount), 2)
-                    })
-                    .ToList();
+            await using var dbContext = new AppDbContext();
 
-                return productivityData;
-            
+            var productivityData = dbContext.Orders
+                .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
+                .Join(dbContext.Employees, order => order.EmployeeId, employee => employee.EmployeeId,
+                    (order, employee) => new { order, employee })
+                .Join(dbContext.Payments, orderEmployee => orderEmployee.order.OrderId, payment => payment.OrderId,
+                    (orderEmployee, payment) => new { orderEmployee.order, orderEmployee.employee, payment })
+                .GroupBy(x => new { x.employee.EmployeeId, x.employee.FirstName, x.employee.LastName })
+                .Select(g => new EmployeeProductivity
+                {
+                    EmployeeName = $"{g.Key.FirstName} {g.Key.LastName}",
+                    OrderCount = g.Count(),
+                    TotalAmount = Math.Round(g.Sum(x => x.payment.Amount), 2)
+                })
+                .ToList();
+
+            return productivityData;
+
         }
 
         private void GenerateEmployeeProductivityChart(List<EmployeeProductivity> productivityData)
@@ -627,21 +602,21 @@ namespace POS.Views
             });
 
             productivityChart.Series = new SeriesCollection
-    {
-        new ColumnSeries
-        {
-            Title = "Ilość zrealizowanych zamówień: ",
-            Values = new ChartValues<int>(productivityData.Select(p => p.OrderCount)),
-            DataLabels = true,
-        },
-        new ColumnSeries
-        {
-            Title = "Suma kwot zamówień: ",
-            Values = new ChartValues<double>(productivityData.Select(p => p.TotalAmount)),
-            DataLabels = true,
-            ScalesYAt = 1 // Ta seria będzie korzystać z drugiej osi Y
-        }
-    };
+            {
+                new ColumnSeries
+                {
+                    Title = "Ilość zrealizowanych zamówień: ",
+                    Values = new ChartValues<int>(productivityData.Select(p => p.OrderCount)),
+                    DataLabels = true,
+                },
+                new ColumnSeries
+                {
+                    Title = "Suma kwot zamówień: ",
+                    Values = new ChartValues<double>(productivityData.Select(p => p.TotalAmount)),
+                    DataLabels = true,
+                    ScalesYAt = 1 // Ta seria będzie korzystać z drugiej osi Y
+                }
+            };
 
             productivityChart.AxisX.Add(new Axis
             {
@@ -653,6 +628,55 @@ namespace POS.Views
         }
 
 
+
+        #endregion
+
+        #region Card to cash payment ratio
+
+        private async Task<List<PaymentRatio>> GenerateCardToCashPaymentRatioData(DateTime starTime, DateTime endTime)
+        {
+            await using var dbContext = new AppDbContext();
+
+            var paymentRatio = await dbContext.Orders
+                .Where(order => order.OrderTime >= starTime && order.OrderTime <= endTime)
+                .Join(dbContext.Payments, order => order.OrderId, payment => payment.OrderId,
+                    (order, payment) => payment)
+                .GroupBy(payment => payment.PaymentMethod)
+                .Select(group => new PaymentRatio
+                {
+                    PaymentMethod = group.Key,
+                    Count = group.Count()
+                })
+                .ToListAsync();
+
+            return paymentRatio;
+        }
+
+        private void GeneratePaymentMethodChart(List<PaymentRatio> paymentRatio)
+        {
+            var pieChart = new PieChart();
+
+            var cardPayments = paymentRatio.FirstOrDefault(p => p.PaymentMethod == "Karta debetowa")?.Count ?? 0;
+            var cashPayments = paymentRatio.FirstOrDefault(p => p.PaymentMethod == "Gotówka")?.Count ?? 0;
+
+            pieChart.Series = new SeriesCollection
+            {
+                new PieSeries
+                {
+                    Title = "Karta Debetowa",
+                    Values = new ChartValues<ObservableValue> { new ObservableValue(cardPayments) },
+                    DataLabels = true,
+                },
+                new PieSeries
+                {
+                    Title = "Gotówka",
+                    Values = new ChartValues<ObservableValue> { new ObservableValue(cashPayments) },
+                    DataLabels = true,
+                }
+            };
+
+            liveChart.Children.Add(pieChart);
+        }
 
         #endregion
     }
