@@ -37,6 +37,8 @@
                     <ComboBoxItem Content="Miesięczny raport ilości zamówień"/>
                     <ComboBoxItem Content="Roczny raport ilości zamówień"/>
                     <ComboBoxItem Content="Raport ilości zamówień w konkretne dni tygodnia"/>
+                    <ComboBoxItem Content="Raport produktywności pracowników"/>
+                    <ComboBoxItem Content="Stosunek płatności kartą a gotówką"/>
                     <!--<ComboBoxItem Content="Raport zużycia materiałów"/>
                     <ComboBoxItem Content="Produktywność pracowników"/>-->
                 </ComboBox>
