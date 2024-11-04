@@ -7,16 +7,16 @@ using System.Windows.Input;
 using DataAccess.Models;
 using POS.Models.AdminFunctions;
 
-namespace POS.Views
+namespace POS.Views.AdminFunctionsPanel
 {
     /// <summary>
     /// Logika interakcji dla klasy AdministratorFuncions.xaml
     /// </summary>
-    public partial class AdministratorFuncions : Page
+    public partial class AdministratorFunctions : Page
     {
         ObservableCollection<EmployeeInfoDto> employeesCollection = new ObservableCollection<EmployeeInfoDto>();
 
-        public AdministratorFuncions()
+        public AdministratorFunctions()
         {
             InitializeComponent();
             ShowEmployeesList();

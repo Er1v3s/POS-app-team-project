@@ -7,6 +7,9 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using DataAccess.Models;
 using POS.Services;
+using POS.Views.RegisterSale;
+using POS.Views.StartFinishWorkPanel;
+using POS.Views.WarehouseFunctionsPanel;
 
 namespace POS.Views
 {

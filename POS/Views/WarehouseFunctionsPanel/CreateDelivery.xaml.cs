@@ -1,8 +1,4 @@
-﻿using iTextSharp.text;
-using iTextSharp.text.pdf;
-using Microsoft.Win32;
-using POS.Converter;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,10 +7,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using DataAccess.Models;
-using Paragraph = iTextSharp.text.Paragraph;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Microsoft.Win32;
+using POS.Converter;
 using POS.Models.Warehouse;
+using Paragraph = iTextSharp.text.Paragraph;
 
-namespace POS.Views
+namespace POS.Views.WarehouseFunctionsPanel
 {
     /// <summary>
     /// Logika interakcji dla klasy CreateDelivery.xaml

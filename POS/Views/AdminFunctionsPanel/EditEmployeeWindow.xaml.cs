@@ -1,11 +1,11 @@
-﻿using POS.Helpers;
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using DataAccess.Models;
+using POS.Helpers;
 
-namespace POS.Views
+namespace POS.Views.AdminFunctionsPanel
 {
     /// <summary>
     /// Logika interakcji dla klasy EditEmployeeWindow.xaml

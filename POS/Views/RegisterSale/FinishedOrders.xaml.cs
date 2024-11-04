@@ -4,7 +4,7 @@ using System.Windows.Input;
 using DataAccess.Models;
 using POS.Models.Orders;
 
-namespace POS.Views
+namespace POS.Views.RegisterSale
 {
     /// <summary>
     /// Logika interakcji dla klasy FinishedOrders.xaml

@@ -1,11 +1,10 @@
-﻿using DataAccess.Models;
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
+using DataAccess.Models;
 
-namespace POS.Views
+namespace POS.Views.StartFinishWorkPanel
 {
     public partial class LoginPanel : Window
     {

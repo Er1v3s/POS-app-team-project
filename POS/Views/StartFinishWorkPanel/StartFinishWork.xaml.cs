@@ -1,10 +1,10 @@
-﻿using DataAccess.Models;
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using DataAccess.Models;
 
-namespace POS.Views
+namespace POS.Views.StartFinishWorkPanel
 {
     /// <summary>
     /// Logika interakcji dla klasy StartFinishWork.xaml

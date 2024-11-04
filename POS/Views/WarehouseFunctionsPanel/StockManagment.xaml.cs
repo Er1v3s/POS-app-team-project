@@ -1,22 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
-using POS.Converter;
-using DataAccess.Models;
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
+using POS.Converter;
 
-namespace POS.Views
+namespace POS.Views.WarehouseFunctionsPanel
 {
     /// <summary>
     /// Logika interakcji dla klasy StockManagment.xaml
     /// </summary>
-    public partial class StockManagment
+    public partial class StockManagement
     {
         private Employees currentUser;
         public int EmployeeId;
 
-        public StockManagment(int employeeId)
+        public StockManagement(int employeeId)
         {
             InitializeComponent();
             FillEditIngredientComboBox(EditIngredient_ComboBox);

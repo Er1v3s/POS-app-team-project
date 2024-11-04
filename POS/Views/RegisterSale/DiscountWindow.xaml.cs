@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 
-namespace POS.Views
+namespace POS.Views.RegisterSale
 {
     /// <summary>
     /// Logika interakcji dla klasy DiscountWindow.xaml

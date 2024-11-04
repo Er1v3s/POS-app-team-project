@@ -1,15 +1,16 @@
-﻿using DataAccess.Models;
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using DataAccess.Models;
+using POS.Views.StartFinishWorkPanel;
 
-namespace POS.Views
+namespace POS.Views.WarehouseFunctionsPanel
 {
     /// <summary>
     /// Logika interakcji dla klasy RunningOutOfIngredients.xaml
     /// </summary>
-    public partial class RunningOutOfIngredients :UserControl
+    public partial class RunningOutOfIngredients : UserControl
     {
         public RunningOutOfIngredients()
         {
@@ -30,7 +31,7 @@ namespace POS.Views
             if (loginPanel.isLoginValid)
             {
                 int employeeId = loginPanel.employeeId;
-                StockManagment stockManagment = new StockManagment(employeeId);
+                StockManagement stockManagment = new StockManagement(employeeId);
                 stockManagment.Show();
             }
         }

@@ -1,24 +1,18 @@
-﻿using DataAccess.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
-using LiveCharts.Wpf;
+using DataAccess.Models;
 using LiveCharts;
 using LiveCharts.Defaults;
+using LiveCharts.Wpf;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.Internal;
-using Separator = LiveCharts.Wpf.Separator;
 using POS.Models.Reports;
-using System.DirectoryServices.ActiveDirectory;
-using POS.Models.Reports.ReportsPredictions;
-using POS.Services;
-using System.Text.RegularExpressions;
+using Separator = LiveCharts.Wpf.Separator;
 
-namespace POS.Views
+namespace POS.Views.ReportsAndAnalysisPanel
 {
     /// <summary>
     /// Logika interakcji dla klasy ReportsAndAnalysis.xaml

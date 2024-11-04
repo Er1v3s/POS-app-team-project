@@ -1,16 +1,15 @@
-﻿using iTextSharp.text.pdf;
-using iTextSharp.text;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.Win32;
 using System.Windows.Input;
-using System.Windows.Shapes;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Microsoft.Win32;
 using POS.Models.Orders;
 
-namespace POS.Views
+namespace POS.Views.RegisterSale
 {
     /// <summary>
     /// Logika interakcji dla klasy GenerateBill.xaml

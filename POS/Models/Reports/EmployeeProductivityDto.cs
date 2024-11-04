@@ -1,6 +1,6 @@
 ﻿namespace POS.Models.Reports
 {
-    internal class EmployeeProductivityDto
+    public class EmployeeProductivityDto
     {
         public string EmployeeName { get; set; }
         public int OrderCount { get; set; }

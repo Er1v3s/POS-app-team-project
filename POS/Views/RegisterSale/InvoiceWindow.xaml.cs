@@ -1,12 +1,12 @@
-﻿using POS.Models.Invoices;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using POS.Models.Invoices;
 
-namespace POS.Views
+namespace POS.Views.RegisterSale
 {
     /// <summary>
     /// Logika interakcji dla klasy InvoiceWindow.xaml
