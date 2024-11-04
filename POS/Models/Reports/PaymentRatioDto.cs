@@ -1,8 +1,8 @@
 using System;
 
-namespace POS.ViewModel.Reports
+namespace POS.Models.Reports
 {
-    public class PaymentRatio
+    public class PaymentRatioDto
     {
         public string PaymentMethod { get; set; }
         public int Count { get; set; }

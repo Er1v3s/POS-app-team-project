@@ -2,7 +2,6 @@
 using iTextSharp.text.pdf;
 using Microsoft.Win32;
 using POS.Converter;
-using POS.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using DataAccess.Models;
 using Paragraph = iTextSharp.text.Paragraph;
+using POS.Models.Warehouse;
 
 namespace POS.Views
 {
@@ -23,7 +23,7 @@ namespace POS.Views
     {
         private Employees currentUser;
         public int EmployeeId;
-        List<DeliveryItem> deliveryItems = new List<DeliveryItem>();
+        List<DeliveryItemDto> deliveryItems = new List<DeliveryItemDto>();
 
         public CreateDelivery(int employeeId)
         {
@@ -84,7 +84,7 @@ namespace POS.Views
 
                             if (ingredientToUpdate != null)
                             {
-                                DeliveryItem newItem = new DeliveryItem
+                                DeliveryItemDto newItem = new DeliveryItemDto
                                 {
                                     Name = ingredientToUpdate.Name,
                                     Quantity = newValue,

@@ -1,6 +1,6 @@
-﻿namespace POS.ViewModel
+﻿namespace POS.Models.AdminFunctions
 {
-    class EmployeeInfo
+    class EmployeeInfoDto
     {
         public string EmployeeName { get; set; }
         public string JobTitle { get; set; }

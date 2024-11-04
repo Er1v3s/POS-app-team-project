@@ -1,8 +1,8 @@
-﻿using POS.ViewModel;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using DataAccess.Models;
+using POS.Models.Orders;
 
 namespace POS.Views
 {
@@ -42,7 +42,7 @@ namespace POS.Views
                     {
                         var employee = dbContext.Employees.FirstOrDefault(e => e.EmployeeId == order.EmployeeId);
 
-                        OrderHistory formattedOrder = new OrderHistory()
+                        OrderHistoryDto formattedOrder = new OrderHistoryDto()
                         {
                             OrderId = order.OrderId,
                             EmployeeName = employee.FirstName + " " + employee.LastName,

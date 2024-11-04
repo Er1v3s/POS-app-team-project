@@ -1,6 +1,6 @@
-﻿namespace POS.ViewModel.Raports
+﻿namespace POS.Models.Reports
 {
-    internal class EmployeeProductivity
+    internal class EmployeeProductivityDto
     {
         public string EmployeeName { get; set; }
         public int OrderCount { get; set; }

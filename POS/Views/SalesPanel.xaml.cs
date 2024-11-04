@@ -1,6 +1,5 @@
 ﻿using POS.Converter;
 using DataAccess.Models;
-using POS.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using POS.Models.Orders;
+using POS.Models.Invoices;
 
 namespace POS.Views
 {
@@ -22,8 +23,8 @@ namespace POS.Views
         private int currentOrderId = 0;
         private bool discountApplied = false;
 
-        ObservableCollection<OrderItem> orderList = new ObservableCollection<OrderItem>();
-        ObservableCollection<ObservableCollection<OrderItem>> orderListCollection = new ObservableCollection<ObservableCollection<OrderItem>>();
+        ObservableCollection<OrderItemDto> orderList = new ObservableCollection<OrderItemDto>();
+        ObservableCollection<ObservableCollection<OrderItemDto>> orderListCollection = new ObservableCollection<ObservableCollection<OrderItemDto>>();
 
         public SalesPanel(int employeeId)
         {
@@ -214,7 +215,7 @@ namespace POS.Views
             }
             else
             {
-                orderListCollection[currentOrderId].Add(new OrderItem { Id = product.ProductId, Name = product.ProductName, Amount = 1, Price = Convert.ToDouble(product.Price) });
+                orderListCollection[currentOrderId].Add(new OrderItemDto { Id = product.ProductId, Name = product.ProductName, Amount = 1, Price = Convert.ToDouble(product.Price) });
             }
         }
 
@@ -222,7 +223,7 @@ namespace POS.Views
         {
             if (orderListDataGrid.SelectedItem != null)
             {
-                var selectedItem = (OrderItem)orderListDataGrid.SelectedItem;
+                var selectedItem = (OrderItemDto)orderListDataGrid.SelectedItem;
                 selectedItem.Amount--;
                 selectedItem.TotalPrice = Math.Round(selectedItem.Amount * selectedItem.Price, 2);
                 if (selectedItem.Amount == 0)
@@ -421,7 +422,7 @@ namespace POS.Views
             }
         }
 
-        private double CalculateTotalPriceForOrder(ObservableCollection<OrderItem> order)
+        private double CalculateTotalPriceForOrder(ObservableCollection<OrderItemDto> order)
         {
             return order.Sum(item => item.Amount * item.Price);
         }
@@ -438,7 +439,7 @@ namespace POS.Views
                 }
                 else
                 {
-                    ObservableCollection<OrderItem> newOrder = new ObservableCollection<OrderItem>();
+                    ObservableCollection<OrderItemDto> newOrder = new ObservableCollection<OrderItemDto>();
                     orderListCollection.Add(newOrder);
                     removeOrder();
                 }
@@ -456,7 +457,7 @@ namespace POS.Views
 
             newOrderButton.Click += (object sender, RoutedEventArgs e) =>
             {
-                ObservableCollection<OrderItem> newOrder = new ObservableCollection<OrderItem>();
+                ObservableCollection<OrderItemDto> newOrder = new ObservableCollection<OrderItemDto>();
                 orderListCollection.Add(newOrder);
                 currentOrderId = orderListCollection.Count - 1;
                 orderListDataGrid.ItemsSource = orderListCollection[currentOrderId];
@@ -550,7 +551,7 @@ namespace POS.Views
             InvoiceWindow invoiceWindow = new InvoiceWindow();
             if (invoiceWindow.ShowDialog() == true)
             {
-                InvoiceCustomerData invoiceCustomerData = InvoiceWindow.InvoiceCustomerDataObject;
+                InvoiceCustomerDataDto invoiceCustomerData = InvoiceWindow.InvoiceCustomerDataObject;
                 MessageBox.Show($"Faktura dla: {invoiceCustomerData.CustomerName}\nAdres: {invoiceCustomerData.CustomerAddress}\nNIP: {invoiceCustomerData.TaxIdentificationNumber}\nSuma: {totalPrice:C2}", "Faktura", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }

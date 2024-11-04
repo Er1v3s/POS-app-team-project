@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace POS.ViewModel
+namespace POS.Models.Invoices
 {
-    public class InvoiceCustomerData
+    public class InvoiceCustomerDataDto
     {
         public int TaxIdentificationNumber { get; set; }
-        public string CustomerName { get; set;}
-        public string CustomerAddress { get; set;}
+        public string CustomerName { get; set; }
+        public string CustomerAddress { get; set; }
     }
 }

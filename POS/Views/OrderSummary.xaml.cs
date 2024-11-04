@@ -1,6 +1,5 @@
 ﻿using iTextSharp.text.pdf;
 using iTextSharp.text;
-using POS.ViewModel;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -9,6 +8,7 @@ using System.Windows.Controls;
 using Microsoft.Win32;
 using System.Windows.Input;
 using System.Windows.Shapes;
+using POS.Models.Orders;
 
 namespace POS.Views
 {
@@ -17,10 +17,10 @@ namespace POS.Views
     /// </summary>
     public partial class OrderSummary : Window
     {
-        private ObservableCollection<OrderItem> orderList;
+        private ObservableCollection<OrderItemDto> orderList;
         double totalOrderPrice = 0;
 
-        public OrderSummary(ObservableCollection<OrderItem> orderList)
+        public OrderSummary(ObservableCollection<OrderItemDto> orderList)
         {
             InitializeComponent();
 

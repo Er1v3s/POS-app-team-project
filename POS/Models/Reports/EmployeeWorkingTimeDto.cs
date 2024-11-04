@@ -1,6 +1,6 @@
-﻿namespace POS.ViewModel.Raports
+﻿namespace POS.Models.Reports
 {
-    public class EmployeeWorkingTime
+    public class EmployeeWorkingTimeDto
     {
         public string EmployeeName { get; set; }
         public double TotalWorkTime { get; set; }

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 
-namespace POS.ViewModel
+namespace POS.Models.Orders
 {
-    public class OrderItem : INotifyPropertyChanged
+    public class OrderItemDto : INotifyPropertyChanged
     {
         private int _amount;
         private double _totalPrice;

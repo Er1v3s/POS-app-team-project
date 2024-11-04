@@ -1,4 +1,4 @@
-﻿using POS.ViewModel;
+﻿using POS.Models.Invoices;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,7 +13,7 @@ namespace POS.Views
     /// </summary>
     public partial class InvoiceWindow : Window
     {
-        public static InvoiceCustomerData InvoiceCustomerDataObject;
+        public static InvoiceCustomerDataDto InvoiceCustomerDataObject;
 
         public InvoiceWindow()
         {
@@ -37,7 +37,7 @@ namespace POS.Views
         {
             try
             {
-                InvoiceCustomerData invoiceCustomerData = CreateInvoiceCustomerDataObject();
+                InvoiceCustomerDataDto invoiceCustomerData = CreateInvoiceCustomerDataObject();
                 ValidateInvoiceCustomerData(invoiceCustomerData);
 
                 InvoiceCustomerDataObject = invoiceCustomerData;
@@ -89,9 +89,9 @@ namespace POS.Views
             }
         }
 
-        private InvoiceCustomerData CreateInvoiceCustomerDataObject()
+        private InvoiceCustomerDataDto CreateInvoiceCustomerDataObject()
         {
-            return new InvoiceCustomerData()
+            return new InvoiceCustomerDataDto()
             {
                 TaxIdentificationNumber = ParseTaxIdentificationNumber(txtTaxIdentificationNumber.Text),
                 CustomerName = txtCustomerName.Text,
@@ -99,7 +99,7 @@ namespace POS.Views
             };
         }
 
-        private void ValidateInvoiceCustomerData(InvoiceCustomerData invoiceCustomerData)
+        private void ValidateInvoiceCustomerData(InvoiceCustomerDataDto invoiceCustomerData)
         {
             if(invoiceCustomerData.TaxIdentificationNumber.ToString().Length != 10
                 || invoiceCustomerData.CustomerName.ToString().Length < 1

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace POS.ViewModel.Reports
+namespace POS.Models.Reports
 {
-    public class RevenueReport
+    public class RevenueReportDto
     {
         public DateTime Date { get; set; }
         public int Year { get; set; }

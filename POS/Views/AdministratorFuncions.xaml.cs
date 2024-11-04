@@ -1,11 +1,11 @@
-﻿using POS.ViewModel;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using DataAccess.Models;
+using POS.Models.AdminFunctions;
 
 namespace POS.Views
 {
@@ -14,7 +14,7 @@ namespace POS.Views
     /// </summary>
     public partial class AdministratorFuncions : Page
     {
-        ObservableCollection<EmployeeInfo> employeesCollection = new ObservableCollection<EmployeeInfo>();
+        ObservableCollection<EmployeeInfoDto> employeesCollection = new ObservableCollection<EmployeeInfoDto>();
 
         public AdministratorFuncions()
         {
@@ -38,7 +38,7 @@ namespace POS.Views
                 {
                     foreach (var employee in employees)
                     {
-                        EmployeeInfo employeeInfo = new EmployeeInfo();
+                        EmployeeInfoDto employeeInfo = new EmployeeInfoDto();
                         employeeInfo.EmployeeName = employee.FirstName + " " + employee.LastName;
                         employeeInfo.JobTitle = employee.JobTitle;
                         switch (employee.JobTitle)
@@ -69,7 +69,7 @@ namespace POS.Views
 
         private void EditEmployee_ButtonClick(object sender, RoutedEventArgs e)
         {
-            EmployeeInfo selectedEmployee = employeesInfoDataGrid.SelectedItem as EmployeeInfo;
+            EmployeeInfoDto selectedEmployee = employeesInfoDataGrid.SelectedItem as EmployeeInfoDto;
 
             if (selectedEmployee != null)
             {
@@ -91,7 +91,7 @@ namespace POS.Views
         {
             if (employeesInfoDataGrid.SelectedItem != null)
             {
-                EmployeeInfo selectedEmployee = employeesInfoDataGrid.SelectedItem as EmployeeInfo;
+                EmployeeInfoDto selectedEmployee = employeesInfoDataGrid.SelectedItem as EmployeeInfoDto;
 
                 MessageBoxResult result = MessageBox.Show($"Czy na pewno chcesz usunąć pracownika {selectedEmployee.EmployeeName}?", "Potwierdzenie", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
@@ -161,7 +161,7 @@ namespace POS.Views
                 {
                     foreach (var employee in employees)
                     {
-                        EmployeeInfo employeeInfo = new EmployeeInfo();
+                        EmployeeInfoDto employeeInfo = new EmployeeInfoDto();
                         employeeInfo.EmployeeName = employee.FirstName + " " + employee.LastName;
                         employeeInfo.JobTitle = employee.JobTitle;
                         employeeInfo.PermissionLevel = 5; // temporary data
