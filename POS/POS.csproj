@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\ReportsAndAnalysis.xaml.cs">
+    <Compile Update="Views\ReportsAndAnalysisPanel\ReportsAndAnalysis.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
