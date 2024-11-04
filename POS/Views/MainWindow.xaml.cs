@@ -6,6 +6,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using DataAccess.Models;
+using POS.Services;
+using POS.Views.RegisterSale;
+using POS.Views.StartFinishWorkPanel;
+using POS.Views.WarehouseFunctionsPanel;
 
 namespace POS.Views
 {
@@ -14,12 +18,14 @@ namespace POS.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        private DispatcherTimer timer;
+        private readonly TimerService _timerService;
 
         public MainWindow()
         {
             InitializeComponent();
-            StartTimer();
+
+            _timerService = new TimerService(UpdateDateTime);
+            _timerService.Start();
         }
 
         private void MoveToSalesPanel_ButtonClick(object sender, RoutedEventArgs e)
@@ -75,11 +81,11 @@ namespace POS.Views
         {
             if (sender is Button button && button.Tag is string uri)
             {
-                if (uri == "./WorkTimeSummaryControl.xaml" || uri == "./RunningOutOfIngredients.xaml" || uri == "./ReportsAndAnalysis.xaml")
+                if (uri == "./WorkTimeSummaryPanel/WorkTimeSummaryControl.xaml" || uri == "./WarehouseFunctionsPanel/RunningOutOfIngredients.xaml" || uri == "./ReportsAndAnalysisPanel/ReportsAndAnalysis.xaml")
                 {
                     ChangeFrameSource(uri);
                 }
-                else if (uri == "./AdministratorFuncions.xaml")
+                else if (uri == "./AdminFunctionsPanel/AdministratorFunctions.xaml")
                 {
                     ShowLoginPanelAndChangeSource(uri);
                 }
@@ -90,34 +96,17 @@ namespace POS.Views
             }
         }
 
-        private async void StartTimer() 
+        private void UpdateDateTime(string date, string time)
         {
-            timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(1);
-            timer.Tick += TimerTick;
-            timer.Start();
-
-            await UpdateDateTimeAsync();
-
-            ScheduleDelayedExecution(CheckIngredientLevels, TimeSpan.FromSeconds(60));
-            ScheduleDelayedExecution(CheckIngredientExpiration, TimeSpan.FromSeconds(60));
-        }
-
-        private async void TimerTick(object sender, EventArgs e)
-        {
-            await UpdateDateTimeAsync();
-        }
-
-        private async Task UpdateDateTimeAsync()
-        {
-            await Task.Run(() =>
+            if (dateTextBlock.Dispatcher.CheckAccess())
             {
-                Dispatcher.Invoke(() =>
-                {
-                    dateTextBlock.Text = DateTime.Now.ToString("dd.MM.yyyy");
-                    timeTextBlock.Text = DateTime.Now.ToString("HH:mm:ss");
-                });
-            });
+                dateTextBlock.Text = date;
+                timeTextBlock.Text = time;
+            }
+            else
+            {
+                dateTextBlock.Dispatcher.Invoke(() => UpdateDateTime(date, time));
+            }
         }
 
         private void ScheduleDelayedExecution(Action action, TimeSpan delay)

@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="POS.Views.WorkTimeSummaryPanel.WorkTimeSummaryControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             xmlns:fa="http://schemas.fontawesome.io/icons/">
+
+    <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" CornerRadius="8" Background="White">
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="9*"/>
+                <RowDefinition Height="2*"/>
+            </Grid.RowDefinitions>
+            <Border CornerRadius="8,8,0, 0" Background="#8EA7E9">
+                <Grid Grid.Row="0">
+                    <TextBlock Text="PODSUMOWANIE CZASU PRACY" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="24"></TextBlock>
+                </Grid>
+            </Border>
+            <Grid Grid.Row="1">
+                <Border BorderThickness="0, 1, 0 ,0" BorderBrush="Black">
+                    <DataGrid x:Name="workingTimeSummaryDataGrid" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" RowStyle="{DynamicResource DataGridRowStyle1}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="PRACOWNIK" IsReadOnly="True" Width="3*" CanUserResize="False" CanUserReorder="False" Binding="{Binding EmployeeName}"/>
+                            <DataGridTextColumn Header="OD" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False" Binding="{Binding WorkingTimeFrom}"/>
+                            <DataGridTextColumn Header="DO" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False" Binding="{Binding WorkingTimeTo}"/>
+                            <DataGridTextColumn Header="CZAS PRACY" IsReadOnly="True" Width="2*" CanUserResize="False" CanUserReorder="False" Binding="{Binding WorkingTimeSummary}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+            </Grid>
+            <Grid Grid.Row="2">
+                <Button Style="{StaticResource refreshButton}" Click="Refresh_ButtonClick">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:ImageAwesome Icon="Refresh" Width="25" Height="25" Foreground="White"/>
+                        <TextBlock Text="ODŚWIEŻ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>
