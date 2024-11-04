@@ -11,6 +11,6 @@ namespace POS.Models.Reports
         public DateTime Date { get; set; }
         public int Year { get; set; }
         public int Month { get; set; }
-        public decimal TotalRevenue { get; set; }
+        public float TotalRevenue { get; set; }
     }
 }

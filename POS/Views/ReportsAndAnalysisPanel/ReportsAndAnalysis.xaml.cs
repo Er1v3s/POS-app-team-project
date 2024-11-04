@@ -10,8 +10,13 @@ using LiveCharts.Wpf;
 using LiveCharts;
 using LiveCharts.Defaults;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Separator = LiveCharts.Wpf.Separator;
 using POS.Models.Reports;
+using System.DirectoryServices.ActiveDirectory;
+using POS.Models.Reports.ReportsPredictions;
+using POS.Services;
+using System.Text.RegularExpressions;
 
 namespace POS.Views
 {
@@ -20,19 +25,6 @@ namespace POS.Views
     /// </summary>
     public partial class ReportsAndAnalysis : Page
     {
-        Dictionary<int, string> reports = new Dictionary<int, string>()
-        {
-            { 0, "Raport sprzedaży produktów" },
-            { 1, "Dzienny raport przychodów" },
-            { 2, "Miesięczny raport przychodów" },
-            { 3, "Roczny raport przychodów" },
-            { 4, "Dzienny raport ilości zamówień" },
-            { 5, "Miesięczny raport ilości zamówień" },
-            { 6, "Roczny raport ilości zamówień" },
-            { 7, "Raport ilości zamówień w konkretne dni tygodnia" },
-            { 8, "Raport produktywności pracowników" },
-            { 9, "Stosunek płatności kartą a gotówką" },
-        };
 
         public ReportsAndAnalysis()
         {
@@ -41,91 +33,93 @@ namespace POS.Views
 
         private async void GenerateReport_ButtonClick(object sender, RoutedEventArgs e)
         {
-            string selectedReport = null;
-            ComboBoxItem selectedComboBoxItem = (ComboBoxItem)reportTypeComboBox.SelectedItem;
-            if (selectedComboBoxItem != null)
-            {
-                selectedReport = selectedComboBoxItem.Content.ToString();
-            }
-
+            int selectedReportIndex = reportTypeComboBox.SelectedIndex;
             DateTime startDate = datePickerFrom.SelectedDate.GetValueOrDefault();
-            DateTime endDate = datePickerTo.SelectedDate.GetValueOrDefault().Date.AddHours(23).AddMinutes(59)
-                .AddSeconds(59);
+            DateTime endDate = datePickerTo.SelectedDate.GetValueOrDefault().Date.AddHours(23).AddMinutes(59).AddSeconds(59);
 
-            if (selectedReport == null)
+            if (ValidateInputs(selectedReportIndex, startDate, endDate))
+            {
+                liveChart.Children.Clear();
+                await GenerateReport(selectedReportIndex, startDate, endDate);
+            }
+        }
+
+        private bool ValidateInputs(int selectedReportIndex, DateTime startDate, DateTime endDate)
+        {
+            if (selectedReportIndex < 0)
             {
                 MessageBox.Show("Nie wybrano typu raportu");
+                return false;
             }
-            else if (startDate == DateTime.MinValue || endDate == DateTime.MinValue)
+
+            if (startDate == DateTime.MinValue || endDate == DateTime.MinValue)
             {
                 MessageBox.Show("Nie wybrano zakresu czasu");
+                return false;
             }
-            else if (endDate < startDate)
+
+            if (endDate < startDate)
             {
                 MessageBox.Show("Data 'Do' nie może być wcześniejsza niż data 'Od'");
+                return false;
             }
-            else
-            {
-                await GenerateChoosenReport(selectedReport, startDate, endDate);
-            }
+
+            return true;
         }
 
-        private async Task GenerateChoosenReport(string selectedReport, DateTime startDate, DateTime endDate)
+        private async Task GenerateReport(int reportIndex, DateTime startDate, DateTime endDate)
         {
-            liveChart.Children.Clear();
+            switch (reportIndex)
+            {
+                case 0:
+                    List<ProductSalesDto> productSalesData = await GenerateSalesReport(startDate, endDate);
+                    GenerateSalesReportChart(productSalesData);
+                    break;
+                case 1:
+                    List<RevenueReportDto> revenueDailyData = await GenerateRevenueReport(startDate, endDate, "Daily");
+                    GenerateRevenueChart(revenueDailyData, "Przychód", "Data", p => p.Date.ToString("yyyy-MM-dd"));
+                    break;
+                case 2:
+                    List<RevenueReportDto> revenueMonthlyData = await GenerateRevenueReport(startDate, endDate, "Monthly");
+                    GenerateRevenueChart(revenueMonthlyData, "Przychód", "Miesiąc", p => $"{p.Month:00}-{p.Year}");
 
-            if (selectedReport == reports[0])
-            {
-                List<ProductSalesDto> productSalesData = await GenerateSalesReport(startDate, endDate);
-                GenerateSalesReportChart(productSalesData);
-            }
-            else if (selectedReport == reports[1])
-            {
-                List<RevenueReportDto> revenueData = await GenerateRevenueReport(startDate, endDate, "Daily");
-                GenerateRevenueChart(revenueData, "Przychód", "Data", p => p.Date.ToString("yyyy-MM-dd"));
-            }
-            else if (selectedReport == reports[2])
-            {
-                List<RevenueReportDto> revenueData = await GenerateRevenueReport(startDate, endDate, "Monthly");
-                GenerateRevenueChart(revenueData, "Przychód", "Miesiąc", p => $"{p.Month:00}-{p.Year}");
-            }
-            else if (selectedReport == reports[3])
-            {
-                List<RevenueReportDto> revenueData = await GenerateRevenueReport(startDate, endDate, "Yearly");
-                GenerateRevenueChart(revenueData, "Przychód", "Rok", p => p.Year.ToString());
-            }
-            else if (selectedReport == reports[4])
-            {
-                List<OrderReportDto> orderReports = await GenerateNumberOfOrdersOnDays(startDate, endDate);
-                GenerateOrdersChartForDays(orderReports);
-            }
-            else if (selectedReport == reports[5])
-            {
-                List<OrderReportDto> orderReports = await GenerateNumberOfOrdersByMonths(startDate, endDate);
-                GenerateOrdersChartForMonths(orderReports);
-            }
-            else if (selectedReport == reports[6])
-            {
-                List<OrderReportDto> orderReports = await GenerateNumberOfOrdersByYears(startDate, endDate);
-                GenerateOrdersChartForYears(orderReports);
-            }
-            else if (selectedReport == reports[7])
-            {
-                List<OrderReportDto> orderReports = await GenerateNumberOfOrdersOnSpecificDays(startDate, endDate);
-                GenerateOrdersChart(orderReports);
-            }
-            else if (selectedReport == reports[8])
-            {
-                List<EmployeeProductivityDto> employeeProductivityData =
-                    await GenerateEmployeeProductivityData(startDate, endDate);
-                GenerateEmployeeProductivityChart(employeeProductivityData);
-            }
-            else if (selectedReport == reports[9])
-            {
-                List<PaymentRatioDto> paymentRatio = await GenerateCardToCashPaymentRatioData(startDate, endDate);
-                GeneratePaymentMethodChart(paymentRatio);
+                    //await GenerateRevenueReportWithForecast(startDate, endDate, "Monthly");
+                    break;
+                case 3:
+                    List<RevenueReportDto> revenueYearlyData = await GenerateRevenueReport(startDate, endDate, "Yearly");
+                    GenerateRevenueChart(revenueYearlyData, "Przychód", "Rok", p => p.Year.ToString());
+                    break;
+                case 4:
+                    List<OrderReportDto> orderReportsOnDays = await GenerateNumberOfOrdersOnDays(startDate, endDate);
+                    GenerateOrdersChartForDays(orderReportsOnDays);
+                    break;
+                case 5:
+                    List<OrderReportDto> orderReportsOnMonths = await GenerateNumberOfOrdersByMonths(startDate, endDate);
+                    GenerateOrdersChartForMonths(orderReportsOnMonths);
+                    break;
+                case 6:
+                    List<OrderReportDto> orderReportsOnYears = await GenerateNumberOfOrdersByYears(startDate, endDate);
+                    GenerateOrdersChartForYears(orderReportsOnYears);
+                    break;
+                case 7:
+                    List<OrderReportDto> orderReportsOnSpecificDay = await GenerateNumberOfOrdersOnSpecificDays(startDate, endDate);
+                    GenerateOrdersChart(orderReportsOnSpecificDay);
+                    break;
+                case 8:
+                    List<EmployeeProductivityDto> employeeProductivityData =
+                        await GenerateEmployeeProductivityData(startDate, endDate);
+                    GenerateEmployeeProductivityChart(employeeProductivityData);
+                    break;
+                case 9:
+                    List<PaymentRatioDto> paymentRatio = await GenerateCardToCashPaymentRatioData(startDate, endDate);
+                    GeneratePaymentMethodChart(paymentRatio);
+                    break;
+                default:
+                    MessageBox.Show("Wybrany raport nie jest dostępny.");
+                    break;
             }
         }
+
 
         #region Sales raport
 
@@ -159,7 +153,7 @@ namespace POS.Views
             salesProductsChart.AxisY.Add(new Axis
             {
                 Title = "Ilość sprzedanych produktów",
-                Separator = new LiveCharts.Wpf.Separator
+                Separator = new Separator
                 {
                     Step = 1,
                     IsEnabled = true
@@ -190,6 +184,53 @@ namespace POS.Views
 
         #endregion
 
+        //private async Task GenerateRevenueReportWithForecast(DateTime startDate, DateTime endDate, string groupBy)
+        //{
+        //    var revenueReport = await GenerateRevenueReport(startDate, endDate, groupBy);
+
+        //    var salesPredictionService = new SalesPredictionService();
+        //    var model = salesPredictionService.TrainModel(revenueReport);
+        //    var forecast = salesPredictionService.Predict(model, revenueReport);
+
+        //    DisplayForecastChart(forecast);
+        //}
+
+        //private void DisplayForecastChart(RevenuePrediction forecast)
+        //{
+        //    var forecastChart = new CartesianChart();
+
+        //    forecastChart.Series = new SeriesCollection
+        //    {
+        //        new ColumnSeries
+        //        {
+        //            Title = "Prognozowana sprzedaż",
+        //            Values = new ChartValues<float>(forecast.ForecastedRevenue)
+        //        }
+        //    };
+
+        //    forecastChart.AxisX.Add(new Axis
+        //    {
+        //        Title = "Miesiące",
+        //        Labels = Enumerable.Range(1, forecast.ForecastedRevenue.Length)
+        //            .Select(i => $"Miesiąc {i}").ToArray(),
+        //    });
+
+        //    forecastChart.AxisY.Add(new Axis
+        //    {
+        //        Title = "Sprzedaż",
+        //        Separator = new Separator
+        //        {
+        //            Step = 1,
+        //            IsEnabled = true
+        //        },
+        //        MinValue = forecast.ForecastedRevenue.Min() * 0.9f,
+        //        MaxValue = forecast.ForecastedRevenue.Max() * 1.1f,
+        //        ShowLabels = false
+        //    });
+
+        //    liveChart.Children.Add(forecastChart);
+        //}
+
         #region RevenueReports
 
         private async Task<List<RevenueReportDto>> GenerateRevenueReport(DateTime startDate, DateTime endDate,
@@ -214,7 +255,7 @@ namespace POS.Views
                         .Select(g => new RevenueReportDto
                         {
                             Date = g.Key,
-                            TotalRevenue = (decimal)g.Sum(x => x.Amount)
+                            TotalRevenue = (float)g.Sum(x => x.Amount)
                         });
                     break;
 
@@ -225,7 +266,7 @@ namespace POS.Views
                         {
                             Year = g.Key.Year,
                             Month = g.Key.Month,
-                            TotalRevenue = (decimal)g.Sum(x => x.Amount)
+                            TotalRevenue = (float)g.Sum(x => x.Amount)
                         });
                     break;
 
@@ -235,7 +276,7 @@ namespace POS.Views
                         .Select(g => new RevenueReportDto
                         {
                             Year = g.Key,
-                            TotalRevenue = (decimal)g.Sum(x => x.Amount)
+                            TotalRevenue = (float)g.Sum(x => x.Amount)
                         });
                     break;
 
@@ -258,12 +299,12 @@ namespace POS.Views
             revenueChart.AxisY.Add(new Axis
             {
                 Title = "Przychód",
-                Separator = new LiveCharts.Wpf.Separator
+                Separator = new Separator
                 {
                     Step = 1,
                     IsEnabled = true
                 },
-                MinValue = (double)(revenueReport.Min(p => p.TotalRevenue) * 0.8m),
+                MinValue = (revenueReport.Min(p => p.TotalRevenue) * 0.8f),
                 ShowLabels = false
             });
 
@@ -272,7 +313,7 @@ namespace POS.Views
                 new ColumnSeries
                 {
                     Title = title,
-                    Values = new ChartValues<decimal>(revenueReport.Select(p => p.TotalRevenue)),
+                    Values = new ChartValues<float>(revenueReport.Select(p => p.TotalRevenue)),
                     DataLabels = true,
                 }
             };
@@ -678,5 +719,6 @@ namespace POS.Views
         }
 
         #endregion
+
     }
 }
