@@ -8,6 +8,7 @@ using DataAccess.Models;
 using LiveCharts;
 using LiveCharts.Wpf;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using POS.Models.Reports;
 
 namespace POS.ViewModels.ReportsAndAnalysis
@@ -18,9 +19,10 @@ namespace POS.ViewModels.ReportsAndAnalysis
         private DateTime? startDate;
         private DateTime? endDate;
         private SeriesCollection? seriesCollection;
-        private string[]? labels;
+        private List<string>? labels;
+
         public Func<double, string>? Values { get; set; }
-        public string[]? Labels
+        public List<string>? Labels
         {
             get => labels;
             set
@@ -77,7 +79,18 @@ namespace POS.ViewModels.ReportsAndAnalysis
                 case 0:
                     var productSalesData = await GenerateSalesReport(StartDate.Value, EndDate.Value);
                     GenerateSalesReportChart(productSalesData);
-                    MessageBox.Show($"Wykres {SelectedReportIndex} powinien być już widoczny start:{StartDate.Value} koniec:{EndDate.Value}");
+                    break;
+                case 1:
+                    var revenueDailyData = await GenerateRevenueReport(StartDate.Value, EndDate.Value, "Daily");
+                    GenerateRevenueChart(revenueDailyData, "Przychód", "Data", p => p.Date.ToString("yyyy-MM-dd"));
+                    break;
+                case 2:
+                    var revenueMonthlyData = await GenerateRevenueReport(StartDate.Value, EndDate.Value, "Monthly");
+                    GenerateRevenueChart(revenueMonthlyData, "Przychód", "Miesiąc", p => $"{p.Month:00}-{p.Year}");
+                    break;
+                case 3:
+                    var revenueYearlyData = await GenerateRevenueReport(startDate.Value, EndDate.Value, "Yearly");
+                    GenerateRevenueChart(revenueYearlyData, "Przychd", "Rok", p => p.Year.ToString());
                     break;
             }
         }
@@ -121,8 +134,111 @@ namespace POS.ViewModels.ReportsAndAnalysis
                 DataLabels = true,
             });
 
-            Labels = productSales.Select(p => p.ProductName).ToArray();
+            Labels = productSales.Select(p => p.ProductName).ToList();
             Values = value => value.ToString("N");
         }
+
+
+
+        #region RevenueReports
+
+        private async Task<List<RevenueReportDto>> GenerateRevenueReport(DateTime startDate, DateTime endDate,
+    string groupBy)
+        {
+            IQueryable<RevenueReportDto> groupedQuery;
+
+            await using var dbContext = new AppDbContext();
+
+            var revenueReportQuery = dbContext.Orders
+                .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
+                .Join(dbContext.Payments,
+                    order => order.OrderId,
+                    payment => payment.OrderId,
+                    (order, payment) => new { order.OrderTime, payment.Amount });
+
+            switch (groupBy)
+            {
+                case "Daily":
+                    groupedQuery = revenueReportQuery
+                        .GroupBy(x => x.OrderTime.Date)
+                        .Select(g => new RevenueReportDto
+                        {
+                            Date = g.Key,
+                            TotalRevenue = (float)g.Sum(x => x.Amount)
+                        });
+                    break;
+
+                case "Monthly":
+                    groupedQuery = revenueReportQuery
+                        .GroupBy(x => new { x.OrderTime.Year, x.OrderTime.Month })
+                        .Select(g => new RevenueReportDto
+                        {
+                            Year = g.Key.Year,
+                            Month = g.Key.Month,
+                            TotalRevenue = (float)g.Sum(x => x.Amount)
+                        });
+                    break;
+
+                case "Yearly":
+                    groupedQuery = revenueReportQuery
+                        .GroupBy(x => x.OrderTime.Year)
+                        .Select(g => new RevenueReportDto
+                        {
+                            Year = g.Key,
+                            TotalRevenue = (float)g.Sum(x => x.Amount)
+                        });
+                    break;
+
+                default:
+                    throw new ArgumentException("Invalid groupBy value");
+            }
+
+            var revenueReport = await groupedQuery.ToListAsync();
+
+            if (groupBy == "Daily")
+            {
+                revenueReport = AddMissingDates(revenueReport, startDate, endDate);
+            }
+
+            revenueReport = revenueReport.OrderBy(r => r.Date)
+                .ThenBy(r => r.Month)
+                .ThenBy(r => r.Year)
+                .ToList();
+
+            return revenueReport;
+        }
+
+        private List<RevenueReportDto> AddMissingDates(List<RevenueReportDto> revenueReport, DateTime startDate, DateTime endDate)
+        {
+            var allDates = Enumerable.Range(0, (endDate - startDate).Days + 1)
+                .Select(offset => startDate.AddDays(offset).Date)
+                .ToList();
+
+            foreach (var date in allDates)
+            {
+                if (revenueReport.All(r => r.Date != date))
+                {
+                    revenueReport.Add(new RevenueReportDto { Date = date, TotalRevenue = 0 });
+                }
+            }
+
+            return revenueReport;
+        }
+
+        private void GenerateRevenueChart(List<RevenueReportDto> revenueReport, string title, string xAxisTitle,
+            Func<RevenueReportDto, string> labelSelector)
+        {
+            SeriesCollection.Add(new ColumnSeries
+            {
+                Title = title,
+                Values = new ChartValues<float>(revenueReport.Select(p => p.TotalRevenue)),
+                LabelPoint = point => point.Y.ToString("C"),
+                DataLabels = true,
+            });
+
+            Labels = revenueReport.Select(labelSelector).ToList();
+        }
+
+        #endregion
     }
 }

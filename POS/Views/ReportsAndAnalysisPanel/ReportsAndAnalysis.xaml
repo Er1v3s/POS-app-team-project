@@ -49,6 +49,7 @@
                     <ComboBoxItem Content="Raport sprzedaży produktów"/>
                     <ComboBoxItem Content="Dzienny raport przychodów"/>
                     <ComboBoxItem Content="Miesięczny raport przychodów"/>
+                    <ComboBoxItem Content="Roczny raport przychodów"/>
                 </ComboBox>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Grid.ColumnSpan="2">
@@ -75,10 +76,8 @@
                     </lvc:CartesianChart.AxisX>
 
                     <lvc:CartesianChart.AxisY>
-                        <lvc:Axis Labels="{Binding Values}" MinValue="0">
-                            <lvc:Axis.Separator>
-                                <lvc:Separator Step="10"></lvc:Separator>
-                            </lvc:Axis.Separator>
+                        <lvc:Axis Labels="{Binding Values}">
+                            
                         </lvc:Axis>
                     </lvc:CartesianChart.AxisY>
                 </lvc:CartesianChart>
