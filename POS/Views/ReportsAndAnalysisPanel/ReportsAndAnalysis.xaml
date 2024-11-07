@@ -30,21 +30,7 @@
                     <ColumnDefinition Width="160*"/>
                 </Grid.ColumnDefinitions>
 
-                <!--<ComboBox Grid.Column="0" x:Name="reportTypeComboBox" Margin="20,5,5,5">
-                    <ComboBoxItem Content="Raport sprzedaży produktów"/>
-                    <ComboBoxItem Content="Dzienny raport przychodów"/>
-                    <ComboBoxItem Content="Miesięczny raport przychodów"/>
-                    <ComboBoxItem Content="Roczny raport przychodów"/>
-                    <ComboBoxItem Content="Dzienny raport ilości zamówień"/>
-                    <ComboBoxItem Content="Miesięczny raport ilości zamówień"/>
-                    <ComboBoxItem Content="Roczny raport ilości zamówień"/>
-                    <ComboBoxItem Content="Raport ilości zamówień w konkretne dni tygodnia"/>
-                    <ComboBoxItem Content="Raport produktywności pracowników"/>
-                    <ComboBoxItem Content="Stosunek płatności kartą a gotówką"/>
-                </ComboBox>-->
-
                 <ComboBox Grid.Row="1" x:Name="reportTypeComboBox" Margin="20,5,5,5"
-                          
                           SelectedIndex="{Binding SelectedReportIndex, Mode=TwoWay}">
                     <ComboBoxItem Content="Raport sprzedaży produktów"/>
                     <ComboBoxItem Content="Dzienny raport przychodów"/>
@@ -55,6 +41,8 @@
                     <ComboBoxItem Content="Tygodniowy raport ilości zamówień"/>
                     <ComboBoxItem Content="Miesięczny raport ilości zamówień"/>
                     <ComboBoxItem Content="Roczny raport ilości zamówień"/>
+                    <ComboBoxItem Content="Raport produktywności pracowników"/>
+                    <ComboBoxItem Content="Stosunek płatności kartą a gotówką"/>
                 </ComboBox>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Grid.ColumnSpan="2">
@@ -70,7 +58,6 @@
             </Grid>
 
             <GroupBox Header="Wyniki raportu" Grid.Row="2" Margin="20">
-                <!--<Grid Name="liveChart"></Grid>-->
                 <lvc:CartesianChart Series="{Binding SeriesCollection}">
                     <lvc:CartesianChart.AxisX>
                         <lvc:Axis Labels="{Binding Labels}">
