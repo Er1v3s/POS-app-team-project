@@ -10,6 +10,7 @@ using LiveCharts.Wpf;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using POS.Models.Reports;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace POS.ViewModels.ReportsAndAnalysis
 {
@@ -22,6 +23,7 @@ namespace POS.ViewModels.ReportsAndAnalysis
         private List<string>? labels;
 
         public Func<double, string>? Values { get; set; }
+
         public List<string>? Labels
         {
             get => labels;
@@ -81,28 +83,28 @@ namespace POS.ViewModels.ReportsAndAnalysis
                     GenerateSalesReportChart(productSalesData);
                     break;
                 case 1:
-                    var revenueDailyData = await GenerateRevenueReport(StartDate.Value, EndDate.Value, "Daily");
-                    GenerateRevenueChart(revenueDailyData, "Przychód", "Data", p => p.Date.ToString("yyyy-MM-dd"));
+                    var revenueDailyData = await GenerateRevenueReport(StartDate.Value, EndDate.Value, "day");
+                    GenerateRevenueChart(revenueDailyData, "yyyy-MM-dd");
                     break;
                 case 2:
-                    var revenueMonthlyData = await GenerateRevenueReport(StartDate.Value, EndDate.Value, "Monthly");
-                    GenerateRevenueChart(revenueMonthlyData, "Przychód", "Miesiąc", p => $"{p.Month:00}-{p.Year}");
+                    var revenueMonthlyData = await GenerateRevenueReport(StartDate.Value, EndDate.Value, "month");
+                    GenerateRevenueChart(revenueMonthlyData, "yyyy-MM");
                     break;
                 case 3:
-                    var revenueYearlyData = await GenerateRevenueReport(startDate.Value, EndDate.Value, "Yearly");
-                    GenerateRevenueChart(revenueYearlyData, "Przychd", "Rok", p => p.Year.ToString());
+                    var revenueYearlyData = await GenerateRevenueReport(startDate.Value, EndDate.Value, "year");
+                    GenerateRevenueChart(revenueYearlyData,  "yyyy");
                     break;
                 case 4:
-                    var orderReportsByDays = await GenerateNumberOfOrdersByDays(StartDate.Value, EndDate.Value);
-                    GenerateOrdersChartForDays(orderReportsByDays);
+                    var orderReportsByDays = await GenerateNumberOfOrders(StartDate.Value, EndDate.Value, "day");
+                    GenerateNumberOfOrdersChart(orderReportsByDays, "yyyy-MM-dd");
                     break;
                 case 5:
-                    var orderReportsByMonths = await GenerateNumberOfOrdersByMonths(StartDate.Value, EndDate.Value);
-                    GenerateOrdersChartForMonths(orderReportsByMonths);
+                    var orderReportsByMonths = await GenerateNumberOfOrders(StartDate.Value, EndDate.Value, "month");
+                    GenerateNumberOfOrdersChart(orderReportsByMonths, "yyyy-MM");
                     break;
                 case 6:
-                    var orderReportsByYears = await GenerateNumberOfOrdersByYears(StartDate.Value, EndDate.Value);
-                    GenerateOrdersChartForYears(orderReportsByYears);
+                    var orderReportsByYears = await GenerateNumberOfOrders(startDate.Value, EndDate.Value, "year");
+                    GenerateNumberOfOrdersChart(orderReportsByYears, "yyyy");
                     break;
             }
         }
@@ -171,7 +173,7 @@ namespace POS.ViewModels.ReportsAndAnalysis
 
             switch (groupBy)
             {
-                case "Daily":
+                case "day":
                     groupedQuery = revenueReportQuery
                         .GroupBy(x => x.OrderTime.Date)
                         .Select(g => new RevenueReportDto
@@ -181,23 +183,22 @@ namespace POS.ViewModels.ReportsAndAnalysis
                         });
                     break;
 
-                case "Monthly":
+                case "month":
                     groupedQuery = revenueReportQuery
                         .GroupBy(x => new { x.OrderTime.Year, x.OrderTime.Month })
                         .Select(g => new RevenueReportDto
                         {
-                            Year = g.Key.Year,
-                            Month = g.Key.Month,
+                            Date = new DateTime(g.Key.Year, g.Key.Month, 1),
                             TotalRevenue = (float)g.Sum(x => x.Amount)
                         });
                     break;
 
-                case "Yearly":
+                case "year":
                     groupedQuery = revenueReportQuery
                         .GroupBy(x => x.OrderTime.Year)
                         .Select(g => new RevenueReportDto
                         {
-                            Year = g.Key,
+                            Date = new DateTime(g.Key, 1, 1),
                             TotalRevenue = (float)g.Sum(x => x.Amount)
                         });
                     break;
@@ -208,7 +209,7 @@ namespace POS.ViewModels.ReportsAndAnalysis
 
             var revenueReport = await groupedQuery.ToListAsync();
 
-            if (groupBy == "Daily")
+            if (groupBy == "day")
             {
                 revenueReport = AddMissingDates(revenueReport, startDate, endDate);
             }
@@ -238,18 +239,17 @@ namespace POS.ViewModels.ReportsAndAnalysis
             return revenueReport;
         }
 
-        private void GenerateRevenueChart(List<RevenueReportDto> revenueReport, string title, string xAxisTitle,
-            Func<RevenueReportDto, string> labelSelector)
+        private void GenerateRevenueChart(List<RevenueReportDto> revenueReport, string dateFormat)
         {
             SeriesCollection.Add(new ColumnSeries
             {
-                Title = title,
+                Title = "Przychód",
                 Values = new ChartValues<float>(revenueReport.Select(p => p.TotalRevenue)),
                 LabelPoint = point => point.Y.ToString("C"),
                 DataLabels = true,
             });
 
-            Labels = revenueReport.Select(labelSelector).ToList();
+            Labels = revenueReport.Select(r => r.Date.ToString(dateFormat)).ToList();
         }
 
         #endregion
@@ -293,9 +293,7 @@ namespace POS.ViewModels.ReportsAndAnalysis
 
         #endregion
 
-        #region NumberOfOrdersByDays
-
-        private async Task<List<OrderReportDto>> GenerateNumberOfOrdersByDays(DateTime startDate, DateTime endDate)
+        private async Task<List<OrderReportDto>> GenerateNumberOfOrders(DateTime startDate, DateTime endDate, string groupBy)
         {
             await using var dbContext = new AppDbContext();
 
@@ -303,111 +301,63 @@ namespace POS.ViewModels.ReportsAndAnalysis
                 .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
                 .ToListAsync();
 
-            var ordersReport = orders
-                .GroupBy(order => order.OrderTime.Date)
-                .Select(group => new OrderReportDto
-                {
-                    Date = group.Key,
-                    OrderCount = group.Count()
-                })
-                .OrderBy(order => order.Date.Day)
-                .ToList();
+            IEnumerable<OrderReportDto> ordersReport;
 
-            return ordersReport;
+            switch (groupBy)
+            {
+                case "day":
+                    ordersReport = orders
+                        .GroupBy(order => order.OrderTime.Date)
+                        .Select(group => new OrderReportDto
+                        {
+                            Date = group.Key,
+                            OrderCount = group.Count()
+                        })
+                        .OrderBy(order => order.Date);
+                    break;
+
+                case "month":
+                    ordersReport = orders
+                        .GroupBy(order => new { order.OrderTime.Year, order.OrderTime.Month })
+                        .Select(group => new OrderReportDto
+                        {
+                            Date = new DateTime(group.Key.Year, group.Key.Month, 1),
+                            OrderCount = group.Count()
+                        })
+                        .OrderBy(order => order.Date);
+                    break;
+
+                case "year":
+                    ordersReport = orders
+                        .GroupBy(order => order.OrderTime.Year)
+                        .Select(group => new OrderReportDto
+                        {
+                            Date = new DateTime(group.Key, 1, 1),
+                            OrderCount = group.Count()
+                        })
+                        .OrderBy(order => order.Date);
+                    break;
+
+                default:
+                    throw new ArgumentException("Invalid groupBy value");
+            }
+
+            return ordersReport.ToList();
         }
 
-        private void GenerateOrdersChartForDays(List<OrderReportDto> ordersReport)
+
+        private void GenerateNumberOfOrdersChart(List<OrderReportDto> ordersReport, string dateFormat)
         {
             SeriesCollection.Add(new ColumnSeries
             {
-                Title = "Liczba zamówień", // temp title
-                Values = new ChartValues<int>(ordersReport.Select(o => o.OrderCount)),
-                LabelPoint = point => point.Y.ToString(""),
-                DataLabels = true,
-            });
-
-            Labels = ordersReport.Select(o => o.Date.ToString("yyyy-MM-dd")).ToList();
-        }
-
-        #endregion
-
-        #region NumberOfOrdersByMonths
-
-        private async Task<List<OrderReportDto>> GenerateNumberOfOrdersByMonths(DateTime startDate, DateTime endDate)
-        {
-            await using var dbContext = new AppDbContext();
-
-            var orders = await dbContext.Orders
-                .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
-                .ToListAsync();
-
-            var ordersReport = orders
-                .GroupBy(order => new { order.OrderTime.Year, order.OrderTime.Month })
-                .Select(group => new OrderReportDto
-                {
-                    Date = new DateTime(group.Key.Year, group.Key.Month, 1),
-                    OrderCount = group.Count()
-                })
-                .OrderBy(order => order.Date.Month)
-                .ToList();
-
-            return ordersReport;
-        }
-
-
-        private void GenerateOrdersChartForMonths(List<OrderReportDto> ordersReport)
-        {
-            SeriesCollection.Add(new ColumnSeries
-            {
-                Title = "Liczba zamówień", // temp title
+                Title = "Liczba zamówień",
                 Values = new ChartValues<int>(ordersReport.Select(o => o.OrderCount)),
                 LabelPoint = point => point.Y.ToString("N0"),
                 DataLabels = true,
             });
 
-            Labels = ordersReport.Select(o => o.Date.ToString("MMMM yyyy")).ToList();
+            Labels = ordersReport.Select(o => o.Date.ToString(dateFormat)).ToList();
         }
-
-        #endregion
-
-        #region NumberOfOrdersByYears
-
-        private async Task<List<OrderReportDto>> GenerateNumberOfOrdersByYears(DateTime startDate, DateTime endDate)
-        {
-            await using var dbContext = new AppDbContext();
-
-            var orders= await dbContext.Orders
-                .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
-                .ToListAsync();
-
-            var ordersReport = orders
-                .GroupBy(order => order.OrderTime.Year)
-                .Select(group => new OrderReportDto
-                {
-                    Date = new DateTime(group.Key, 1, 1),
-                    OrderCount = group.Count()
-                })
-                .OrderBy(order => order.Date.Year)
-                .ToList();
-
-            return ordersReport;
-        }
-
-
-        private void GenerateOrdersChartForYears(List<OrderReportDto> ordersReport)
-        {
-            SeriesCollection.Add(new ColumnSeries
-            {
-                Title = "Liczba zamówień", // temp title
-                Values = new ChartValues<int>(ordersReport.Select(o => o.OrderCount)),
-                LabelPoint = point => point.Y.ToString("N0"),
-                DataLabels = true,
-            });
-
-            Labels = ordersReport.Select(o => o.Date.Year.ToString()).ToList();
-        }
-
-        #endregion
 
         #endregion
     }

@@ -71,7 +71,7 @@
                 <!--<Grid Name="liveChart"></Grid>-->
                 <lvc:CartesianChart Series="{Binding SeriesCollection}">
                     <lvc:CartesianChart.AxisX>
-                        <lvc:Axis Title="Product" Labels="{Binding Labels}">
+                        <lvc:Axis Labels="{Binding Labels}">
                             <lvc:Axis.Separator>
                                 <lvc:Separator Step="1"></lvc:Separator>
                             </lvc:Axis.Separator>
