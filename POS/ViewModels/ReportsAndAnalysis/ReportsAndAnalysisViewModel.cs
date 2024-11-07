@@ -92,6 +92,18 @@ namespace POS.ViewModels.ReportsAndAnalysis
                     var revenueYearlyData = await GenerateRevenueReport(startDate.Value, EndDate.Value, "Yearly");
                     GenerateRevenueChart(revenueYearlyData, "Przychd", "Rok", p => p.Year.ToString());
                     break;
+                case 4:
+                    var orderReportsByDays = await GenerateNumberOfOrdersByDays(StartDate.Value, EndDate.Value);
+                    GenerateOrdersChartForDays(orderReportsByDays);
+                    break;
+                case 5:
+                    var orderReportsByMonths = await GenerateNumberOfOrdersByMonths(StartDate.Value, EndDate.Value);
+                    GenerateOrdersChartForMonths(orderReportsByMonths);
+                    break;
+                case 6:
+                    var orderReportsByYears = await GenerateNumberOfOrdersByYears(StartDate.Value, EndDate.Value);
+                    GenerateOrdersChartForYears(orderReportsByYears);
+                    break;
             }
         }
 
@@ -101,6 +113,7 @@ namespace POS.ViewModels.ReportsAndAnalysis
         }
 
 
+        #region Sales Report
 
         private async Task<List<ProductSalesDto>> GenerateSalesReport(DateTime startDate, DateTime endDate)
         {
@@ -138,12 +151,12 @@ namespace POS.ViewModels.ReportsAndAnalysis
             Values = value => value.ToString("N");
         }
 
+        #endregion
 
 
         #region RevenueReports
 
-        private async Task<List<RevenueReportDto>> GenerateRevenueReport(DateTime startDate, DateTime endDate,
-    string groupBy)
+        private async Task<List<RevenueReportDto>> GenerateRevenueReport(DateTime startDate, DateTime endDate, string groupBy)
         {
             IQueryable<RevenueReportDto> groupedQuery;
 
@@ -238,6 +251,163 @@ namespace POS.ViewModels.ReportsAndAnalysis
 
             Labels = revenueReport.Select(labelSelector).ToList();
         }
+
+        #endregion
+
+        #region NumberOfOrdersReports
+
+        #region NumberOfOrdersOnSpecificDays
+
+        private async Task<List<OrderReportDto>> GenerateNumberOfOrdersOnSpecificDays(DateTime startDate, DateTime endDate)
+        {
+            await using (var dbContext = new AppDbContext())
+            {
+                var ordersReport = await dbContext.Orders
+                    .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
+                    .GroupBy(order => order.DayOfWeek)
+                    .Select(group => new OrderReportDto
+                    {
+                        DayOfWeek = group.Key,
+                        OrderCount = group.Count()
+                    })
+                    .OrderBy(order => order.DayOfWeek)
+                    .ToListAsync();
+
+                return ordersReport;
+            }
+        }
+
+        private void GenerateOrdersChart(List<OrderReportDto> ordersReport)
+        {
+            SeriesCollection.Add(new ColumnSeries
+            {
+                Title = "Liczba zamówień", // temp title
+                Values = new ChartValues<int>(ordersReport.Select(o => o.OrderCount)),
+                LabelPoint = point => point.Y.ToString("N"),
+                DataLabels = true,
+            });
+
+            Labels = ordersReport.Select(o => o.DayOfWeek.ToString()).ToList();
+        }
+
+
+        #endregion
+
+        #region NumberOfOrdersByDays
+
+        private async Task<List<OrderReportDto>> GenerateNumberOfOrdersByDays(DateTime startDate, DateTime endDate)
+        {
+            await using var dbContext = new AppDbContext();
+
+            var orders = await dbContext.Orders
+                .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
+                .ToListAsync();
+
+            var ordersReport = orders
+                .GroupBy(order => order.OrderTime.Date)
+                .Select(group => new OrderReportDto
+                {
+                    Date = group.Key,
+                    OrderCount = group.Count()
+                })
+                .OrderBy(order => order.Date.Day)
+                .ToList();
+
+            return ordersReport;
+        }
+
+        private void GenerateOrdersChartForDays(List<OrderReportDto> ordersReport)
+        {
+            SeriesCollection.Add(new ColumnSeries
+            {
+                Title = "Liczba zamówień", // temp title
+                Values = new ChartValues<int>(ordersReport.Select(o => o.OrderCount)),
+                LabelPoint = point => point.Y.ToString(""),
+                DataLabels = true,
+            });
+
+            Labels = ordersReport.Select(o => o.Date.ToString("yyyy-MM-dd")).ToList();
+        }
+
+        #endregion
+
+        #region NumberOfOrdersByMonths
+
+        private async Task<List<OrderReportDto>> GenerateNumberOfOrdersByMonths(DateTime startDate, DateTime endDate)
+        {
+            await using var dbContext = new AppDbContext();
+
+            var orders = await dbContext.Orders
+                .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
+                .ToListAsync();
+
+            var ordersReport = orders
+                .GroupBy(order => new { order.OrderTime.Year, order.OrderTime.Month })
+                .Select(group => new OrderReportDto
+                {
+                    Date = new DateTime(group.Key.Year, group.Key.Month, 1),
+                    OrderCount = group.Count()
+                })
+                .OrderBy(order => order.Date.Month)
+                .ToList();
+
+            return ordersReport;
+        }
+
+
+        private void GenerateOrdersChartForMonths(List<OrderReportDto> ordersReport)
+        {
+            SeriesCollection.Add(new ColumnSeries
+            {
+                Title = "Liczba zamówień", // temp title
+                Values = new ChartValues<int>(ordersReport.Select(o => o.OrderCount)),
+                LabelPoint = point => point.Y.ToString("N0"),
+                DataLabels = true,
+            });
+
+            Labels = ordersReport.Select(o => o.Date.ToString("MMMM yyyy")).ToList();
+        }
+
+        #endregion
+
+        #region NumberOfOrdersByYears
+
+        private async Task<List<OrderReportDto>> GenerateNumberOfOrdersByYears(DateTime startDate, DateTime endDate)
+        {
+            await using var dbContext = new AppDbContext();
+
+            var orders= await dbContext.Orders
+                .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
+                .ToListAsync();
+
+            var ordersReport = orders
+                .GroupBy(order => order.OrderTime.Year)
+                .Select(group => new OrderReportDto
+                {
+                    Date = new DateTime(group.Key, 1, 1),
+                    OrderCount = group.Count()
+                })
+                .OrderBy(order => order.Date.Year)
+                .ToList();
+
+            return ordersReport;
+        }
+
+
+        private void GenerateOrdersChartForYears(List<OrderReportDto> ordersReport)
+        {
+            SeriesCollection.Add(new ColumnSeries
+            {
+                Title = "Liczba zamówień", // temp title
+                Values = new ChartValues<int>(ordersReport.Select(o => o.OrderCount)),
+                LabelPoint = point => point.Y.ToString("N0"),
+                DataLabels = true,
+            });
+
+            Labels = ordersReport.Select(o => o.Date.Year.ToString()).ToList();
+        }
+
+        #endregion
 
         #endregion
     }

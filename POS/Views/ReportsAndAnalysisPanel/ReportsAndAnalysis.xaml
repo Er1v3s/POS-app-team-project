@@ -50,6 +50,9 @@
                     <ComboBoxItem Content="Dzienny raport przychodów"/>
                     <ComboBoxItem Content="Miesięczny raport przychodów"/>
                     <ComboBoxItem Content="Roczny raport przychodów"/>
+                    <ComboBoxItem Content="Dzienny raport ilości zamówień"/>
+                    <ComboBoxItem Content="Miesięczny raport ilości zamówień"/>
+                    <ComboBoxItem Content="Roczny raport ilości zamówień"/>
                 </ComboBox>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Grid.ColumnSpan="2">
