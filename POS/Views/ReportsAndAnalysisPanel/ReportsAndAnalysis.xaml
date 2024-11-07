@@ -5,8 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:POS.Views"
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
-             d:DesignHeight="768" d:DesignWidth="666"
-              mc:Ignorable="d">
+             xmlns:reportsandanalysis="clr-namespace:POS.ViewModels.ReportsAndAnalysis"
+             d:DataContext="{d:DesignInstance Type=reportsandanalysis:ReportsAndAnalysisViewModel}"
+             DataContext="{Binding ReportsAndAnalysisViewModel}"
+             mc:Ignorable="d">
 
     <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" CornerRadius="8" Background="White">
         <Grid Grid.Row="1">
@@ -28,15 +30,17 @@
                     <ColumnDefinition Width="160*"/>
                 </Grid.ColumnDefinitions>
 
-                <ComboBox Grid.Column="0" x:Name="reportTypeComboBox" Margin="20,5,5,5">
+                <ComboBox Grid.Row="1" x:Name="reportTypeComboBox" Margin="20,5,5,5"
+                          SelectedIndex="{Binding SelectedReportIndex, Mode=TwoWay}">
                     <ComboBoxItem Content="Raport sprzedaży produktów"/>
                     <ComboBoxItem Content="Dzienny raport przychodów"/>
+                    <ComboBoxItem Content="Tygodniowy raport przychodów"/>
                     <ComboBoxItem Content="Miesięczny raport przychodów"/>
                     <ComboBoxItem Content="Roczny raport przychodów"/>
                     <ComboBoxItem Content="Dzienny raport ilości zamówień"/>
+                    <ComboBoxItem Content="Tygodniowy raport ilości zamówień"/>
                     <ComboBoxItem Content="Miesięczny raport ilości zamówień"/>
                     <ComboBoxItem Content="Roczny raport ilości zamówień"/>
-                    <ComboBoxItem Content="Raport ilości zamówień w konkretne dni tygodnia"/>
                     <ComboBoxItem Content="Raport produktywności pracowników"/>
                     <ComboBoxItem Content="Stosunek płatności kartą a gotówką"/>
                 </ComboBox>
@@ -44,17 +48,31 @@
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Grid.ColumnSpan="2">
                     <StackPanel Orientation="Horizontal" Margin="5">
                         <TextBlock Text="Od:" VerticalAlignment="Center"/>
-                        <DatePicker x:Name="datePickerFrom" Margin="5"/>
+                        <DatePicker x:Name="datePickerFrom" SelectedDate="{Binding StartDate, Mode=TwoWay}" />
                         <TextBlock Text="Do:" VerticalAlignment="Center" Margin="5"/>
-                        <DatePicker x:Name="datePickerTo" Margin="5"/>
+                        <DatePicker x:Name="datePickerTo" SelectedDate="{Binding EndDate, Mode=TwoWay}" />
                     </StackPanel>
                 </StackPanel>
 
-                <Button Content="Generuj raport" Grid.Column="3" Click="GenerateReport_ButtonClick" HorizontalAlignment="Left" Margin="8,5,0,5" Padding="10" Width="99"/>
+                <Button Content="Generuj raport" Command="{Binding GenerateReportCommand}" Grid.Column="3" HorizontalAlignment="Left" Margin="8,5,0,5" Padding="10" Width="99"/>
             </Grid>
 
             <GroupBox Header="Wyniki raportu" Grid.Row="2" Margin="20">
-                <Grid Name="liveChart"></Grid>
+                <lvc:CartesianChart Series="{Binding SeriesCollection}">
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis Labels="{Binding Labels}">
+                            <lvc:Axis.Separator>
+                                <lvc:Separator Step="1"></lvc:Separator>
+                            </lvc:Axis.Separator>
+                        </lvc:Axis>
+                    </lvc:CartesianChart.AxisX>
+
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis Labels="{Binding Values}">
+                            
+                        </lvc:Axis>
+                    </lvc:CartesianChart.AxisY>
+                </lvc:CartesianChart>
             </GroupBox>
         </Grid>
     </Border>
