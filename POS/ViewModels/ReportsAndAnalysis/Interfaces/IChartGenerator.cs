@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using LiveCharts;
 
 namespace POS.ViewModels.ReportsAndAnalysis.Interfaces
 {
-    interface IChartGenerator<T>
+    public interface IChartGenerator<T>
     {
-        void GenerateChar(List<T> data);
+        void GenerateChart(List<T> data, SeriesCollection seriesCollection, out List<string> labels, Func<dynamic, string>? labelSelector = null);
     }
 }

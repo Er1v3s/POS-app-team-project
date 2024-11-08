@@ -11,7 +11,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
 {
     public class CardToCashPaymentRatioGenerator : IReportGenerator<PaymentRatioDto>
     {
-        public async Task<List<PaymentRatioDto>> GenerateData(DateTime startDate, DateTime endDate, string? groupBy)
+        public async Task<List<PaymentRatioDto>> GenerateData(DateTime startDate, DateTime endDate, string? groupBy = null)
         {
             await using var dbContext = new AppDbContext();
 

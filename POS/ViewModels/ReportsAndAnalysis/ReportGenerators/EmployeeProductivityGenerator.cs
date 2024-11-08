@@ -11,7 +11,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
 {
     public class EmployeeProductivityGenerator : IReportGenerator<EmployeeProductivityDto>
     {
-        public async Task<List<EmployeeProductivityDto>> GenerateData(DateTime startDate, DateTime endDate, string? groupBy)
+        public async Task<List<EmployeeProductivityDto>> GenerateData(DateTime startDate, DateTime endDate, string? groupBy = null)
         {
             await using var dbContext = new AppDbContext();
 
