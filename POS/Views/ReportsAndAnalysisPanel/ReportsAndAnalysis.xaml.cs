@@ -1,19 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using DataAccess.Models;
-using LiveCharts;
-using LiveCharts.Defaults;
-using LiveCharts.Wpf;
-using Microsoft.EntityFrameworkCore;
-using POS.Models.Reports;
+﻿using System.Windows.Controls;
+using Microsoft.Extensions.DependencyInjection;
 using POS.ViewModels.ReportsAndAnalysis;
-using Separator = LiveCharts.Wpf.Separator;
 
 namespace POS.Views.ReportsAndAnalysisPanel
 {
@@ -26,7 +13,7 @@ namespace POS.Views.ReportsAndAnalysisPanel
         public ReportsAndAnalysis()
         {
             InitializeComponent();
-            DataContext = new ReportsAndAnalysisViewModel();
+            DataContext = App.ServiceProvider.GetRequiredService<ReportsAndAnalysisViewModel>();
         }
     }
 }
