@@ -9,14 +9,15 @@ using LiveCharts;
 using LiveCharts.Wpf;
 using Microsoft.EntityFrameworkCore;
 using POS.Models.Reports;
+using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 
 namespace POS.ViewModels.ReportsAndAnalysis
 {
     public class ReportsAndAnalysisViewModel : ViewModelBase
     {
         private int selectedReportIndex;
-        private DateTime? startDate;
-        private DateTime? endDate;
+        private DateTime startDate = DateTime.Now.AddMonths(-1);
+        private DateTime endDate = DateTime.Now;
         private SeriesCollection? seriesCollection;
         private List<string>? labels;
 
@@ -38,13 +39,13 @@ namespace POS.ViewModels.ReportsAndAnalysis
             set => SetField(ref selectedReportIndex, value);
         }
 
-        public DateTime? StartDate
+        public DateTime StartDate
         {
             get => startDate;
             set => SetField(ref startDate, value);
         }
 
-        public DateTime? EndDate
+        public DateTime EndDate
         {
             get => endDate;
             set => SetField(ref endDate, value);
@@ -58,17 +59,39 @@ namespace POS.ViewModels.ReportsAndAnalysis
 
         public ICommand GenerateReportCommand { get; }
 
-        public ReportsAndAnalysisViewModel()
+        private readonly IReportGenerator<ProductSalesDto> _saleReportGenerator;
+        private readonly IReportGenerator<RevenueReportDto> _revenueReportGenerator;
+        private readonly IReportGenerator<OrderReportDto> _numberOfOrdersReportGenerator;
+        private readonly IReportGenerator<EmployeeProductivityDto> _employeeProductivityReportGenerator;
+        private readonly IReportGenerator<PaymentRatioDto> _cashToCardPaymentRatioReportGenerator;
+
+        public ReportsAndAnalysisViewModel(
+            IReportGenerator<ProductSalesDto> saleReportGenerator, 
+            IReportGenerator<RevenueReportDto> revenueReportGenerator, 
+            IReportGenerator<OrderReportDto> numberOfOrdersReportGenerator,
+            IReportGenerator<EmployeeProductivityDto> employeeProductivityReportGenerator,
+            IReportGenerator<PaymentRatioDto> cashToCardPaymentRatioReportGenerator)
         {
             GenerateReportCommand = new RelayCommand(async _ => await GenerateReport());
             SeriesCollection = new SeriesCollection();
+
+            _saleReportGenerator = saleReportGenerator;
+            _revenueReportGenerator = revenueReportGenerator;
+            _numberOfOrdersReportGenerator = numberOfOrdersReportGenerator;
+            _employeeProductivityReportGenerator = employeeProductivityReportGenerator;
+            _cashToCardPaymentRatioReportGenerator = cashToCardPaymentRatioReportGenerator;
+
+            _ = GenerateDefaultChart();
         }
 
         private async Task GenerateReport()
         {
-            if (!ValidateInputs())
+            var inputValidator = new InputValidator();
+            var validationResult = inputValidator.ValidateInputs(SelectedReportIndex, startDate, endDate);
+
+            if (!validationResult.IsValid)
             {
-                MessageBox.Show("Formularz wypełniony nieprawidłowo");
+                MessageBox.Show(validationResult.ErrorMessage);
                 return;
             }
 
@@ -77,82 +100,83 @@ namespace POS.ViewModels.ReportsAndAnalysis
             switch (SelectedReportIndex)
             {
                 case 0:
-                    var productSalesData = await GenerateSalesReport(StartDate.Value, EndDate.Value);
+                    var productSalesData = await _saleReportGenerator.GenerateData(startDate, endDate, null);
                     GenerateSalesReportChart(productSalesData);
                     break;
                 case 1:
-                    var revenueDailyData = await GenerateRevenueReport(StartDate.Value, EndDate.Value, "day");
+                    var revenueDailyData = await _revenueReportGenerator.GenerateData(startDate, endDate, "day");
                     GenerateRevenueChart(revenueDailyData, r => r.Date.ToString("yyyy-MM-dd"));
                     break;
                 case 2:
-                    var revenueWeeklyData = await GenerateRevenueReport(StartDate.Value, EndDate.Value, "week");
+                    var revenueWeeklyData = await _revenueReportGenerator.GenerateData(startDate, endDate, "week");
                     GenerateRevenueChart(revenueWeeklyData, r => r.DayOfWeek.ToString());
                     break;
                 case 3:
-                    var revenueMonthlyData = await GenerateRevenueReport(StartDate.Value, EndDate.Value, "month");
+                    var revenueMonthlyData = await _revenueReportGenerator.GenerateData(startDate, endDate, "month");
                     GenerateRevenueChart(revenueMonthlyData, r => r.Date.ToString("yyyy-MM"));
                     break;
                 case 4:
-                    var revenueYearlyData = await GenerateRevenueReport(startDate.Value, EndDate.Value, "year");
+                    var revenueYearlyData = await _revenueReportGenerator.GenerateData(startDate, endDate, "year");
                     GenerateRevenueChart(revenueYearlyData, r => r.Date.ToString("yyyy"));
                     break;
                 case 5:
-                    var orderReportsByDays = await GenerateNumberOfOrders(StartDate.Value, EndDate.Value, "day");
+                    var orderReportsByDays = await _numberOfOrdersReportGenerator.GenerateData(startDate, endDate, "day");
                     GenerateNumberOfOrdersChart(orderReportsByDays, o => o.Date.ToString("yyyy-MM-dd"));
                     break;
                 case 6:
-                    var orderReportsByDayOfWeeks = await GenerateNumberOfOrders(StartDate.Value, EndDate.Value, "week");
+                    var orderReportsByDayOfWeeks = await _numberOfOrdersReportGenerator.GenerateData(startDate, endDate, "week");
                     GenerateNumberOfOrdersChart(orderReportsByDayOfWeeks, o => o.DayOfWeek.ToString());
                     break;
                 case 7:
-                    var orderReportsByMonths = await GenerateNumberOfOrders(StartDate.Value, EndDate.Value, "month");
+                    var orderReportsByMonths = await _numberOfOrdersReportGenerator.GenerateData(startDate, endDate, "month");
                     GenerateNumberOfOrdersChart(orderReportsByMonths, o => o.Date.ToString("yyyy-MM"));
                     break;
                 case 8:
-                    var orderReportsByYears = await GenerateNumberOfOrders(startDate.Value, EndDate.Value, "year");
+                    var orderReportsByYears = await _numberOfOrdersReportGenerator.GenerateData(startDate, endDate, "year");
                     GenerateNumberOfOrdersChart(orderReportsByYears, o => o.Date.ToString("yyyy"));
                     break;
                 case 9:
-                    var employeeProductivityData = await GenerateEmployeeProductivityData(StartDate.Value, EndDate.Value);
+                    var employeeProductivityData = await _employeeProductivityReportGenerator.GenerateData(startDate, endDate, null);
                     GenerateEmployeeProductivityChart(employeeProductivityData);
                     break;
                 case 10:
-                    var paymentMethodData = await GenerateCardToCashPaymentRatioData(StartDate.Value, EndDate.Value);
+                    var paymentMethodData = await _cashToCardPaymentRatioReportGenerator.GenerateData(startDate, endDate, null);
                     GeneratePaymentMethodChart(paymentMethodData);
                     break;
             }
         }
 
-        private bool ValidateInputs()
+        private async Task GenerateDefaultChart()
         {
-            return SelectedReportIndex >= 0 && StartDate.HasValue && EndDate.HasValue && StartDate <= EndDate;
+            var productSalesData = await _saleReportGenerator.GenerateData(DateTime.Now.AddMonths(-1), DateTime.Now, null);
+            GenerateSalesReportChart(productSalesData);
         }
 
 
         #region Sales Report
 
-        private async Task<List<ProductSalesDto>> GenerateSalesReport(DateTime startDate, DateTime endDate)
-        {
-            await using var dbContext = new AppDbContext();
+        //private async Task<List<ProductSalesDto>> GenerateSalesReport(DateTime startDate, DateTime endDate)
+        //{
+        //    await using var dbContext = new AppDbContext();
 
-            var productSales = await dbContext.OrderItems
-                .Where(orderItem => dbContext.Orders
-                    .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
-                    .Select(order => order.OrderId)
-                    .Contains(orderItem.OrderId))
-                .GroupBy(orderItem => orderItem.ProductId)
-                .Select(groupedItems => new ProductSalesDto
-                {
-                    ProductName = dbContext.Products
-                        .Where(product => product.ProductId == groupedItems.Key)
-                        .Select(product => product.ProductName)
-                        .FirstOrDefault(),
-                    Quantity = groupedItems.Sum(item => item.Quantity)
-                })
-                .ToListAsync();
+        //    var productSales = await dbContext.OrderItems
+        //        .Where(orderItem => dbContext.Orders
+        //            .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
+        //            .Select(order => order.OrderId)
+        //            .Contains(orderItem.OrderId))
+        //        .GroupBy(orderItem => orderItem.ProductId)
+        //        .Select(groupedItems => new ProductSalesDto
+        //        {
+        //            ProductName = dbContext.Products
+        //                .Where(product => product.ProductId == groupedItems.Key)
+        //                .Select(product => product.ProductName)
+        //                .FirstOrDefault(),
+        //            Quantity = groupedItems.Sum(item => item.Quantity)
+        //        })
+        //        .ToListAsync();
 
-            return productSales;
-        }
+        //    return productSales;
+        //}
 
         private void GenerateSalesReportChart(List<ProductSalesDto> productSales)
         {
@@ -171,70 +195,70 @@ namespace POS.ViewModels.ReportsAndAnalysis
 
         #region Revenue Reports
 
-        private async Task<List<RevenueReportDto>> GenerateRevenueReport(DateTime startDate, DateTime endDate, string groupBy)
-        {
-            IQueryable<RevenueReportDto> groupedQuery;
+        //private async Task<List<RevenueReportDto>> GenerateRevenueReport(DateTime startDate, DateTime endDate, string groupBy)
+        //{
+        //    IQueryable<RevenueReportDto> groupedQuery;
 
-            await using var dbContext = new AppDbContext();
+        //    await using var dbContext = new AppDbContext();
 
-            var revenueReportQuery = dbContext.Orders
-                .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
-                .Join(dbContext.Payments,
-                    order => order.OrderId,
-                    payment => payment.OrderId,
-                    (order, payment) => new { order.OrderTime, payment.Amount })
-                .AsEnumerable();
+        //    var revenueReportQuery = dbContext.Orders
+        //        .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
+        //        .Join(dbContext.Payments,
+        //            order => order.OrderId,
+        //            payment => payment.OrderId,
+        //            (order, payment) => new { order.OrderTime, payment.Amount })
+        //        .AsEnumerable();
 
-            switch (groupBy)
-            {
-                case "day":
-                    groupedQuery = revenueReportQuery
-                        .GroupBy(x => x.OrderTime.Date)
-                        .Select(g => new RevenueReportDto
-                        {
-                            Date = g.Key,
-                            TotalRevenue = (float)g.Sum(x => x.Amount)
-                        })
-                        .AsQueryable();
-                    break;
-                case "week":
-                    groupedQuery = revenueReportQuery
-                        .GroupBy(x => x.OrderTime.DayOfWeek)
-                        .Select(g => new RevenueReportDto
-                        {
-                            DayOfWeek = g.Key,
-                            TotalRevenue = (float)g.Sum(x => x.Amount),
-                        })
-                        .OrderBy(order => order.DayOfWeek)
-                        .AsQueryable();
-                    break;
-                case "month":
-                    groupedQuery = revenueReportQuery
-                        .GroupBy(x => new { x.OrderTime.Year, x.OrderTime.Month })
-                        .Select(g => new RevenueReportDto
-                        {
-                            Date = new DateTime(g.Key.Year, g.Key.Month, 1),
-                            TotalRevenue = (float)g.Sum(x => x.Amount)
-                        })
-                        .AsQueryable();
-                    break;
-                case "year":
-                    groupedQuery = revenueReportQuery
-                        .GroupBy(x => x.OrderTime.Year)
-                        .Select(g => new RevenueReportDto
-                        {
-                            Date = new DateTime(g.Key, 1, 1),
-                            TotalRevenue = (float)g.Sum(x => x.Amount)
-                        })
-                        .AsQueryable();
-                    break;
+        //    switch (groupBy)
+        //    {
+        //        case "day":
+        //            groupedQuery = revenueReportQuery
+        //                .GroupBy(x => x.OrderTime.Date)
+        //                .Select(g => new RevenueReportDto
+        //                {
+        //                    Date = g.Key,
+        //                    TotalRevenue = (float)g.Sum(x => x.Amount)
+        //                })
+        //                .AsQueryable();
+        //            break;
+        //        case "week":
+        //            groupedQuery = revenueReportQuery
+        //                .GroupBy(x => x.OrderTime.DayOfWeek)
+        //                .Select(g => new RevenueReportDto
+        //                {
+        //                    DayOfWeek = g.Key,
+        //                    TotalRevenue = (float)g.Sum(x => x.Amount),
+        //                })
+        //                .OrderBy(order => order.DayOfWeek)
+        //                .AsQueryable();
+        //            break;
+        //        case "month":
+        //            groupedQuery = revenueReportQuery
+        //                .GroupBy(x => new { x.OrderTime.Year, x.OrderTime.Month })
+        //                .Select(g => new RevenueReportDto
+        //                {
+        //                    Date = new DateTime(g.Key.Year, g.Key.Month, 1),
+        //                    TotalRevenue = (float)g.Sum(x => x.Amount)
+        //                })
+        //                .AsQueryable();
+        //            break;
+        //        case "year":
+        //            groupedQuery = revenueReportQuery
+        //                .GroupBy(x => x.OrderTime.Year)
+        //                .Select(g => new RevenueReportDto
+        //                {
+        //                    Date = new DateTime(g.Key, 1, 1),
+        //                    TotalRevenue = (float)g.Sum(x => x.Amount)
+        //                })
+        //                .AsQueryable();
+        //            break;
 
-                default:
-                    throw new ArgumentException("Invalid groupBy value");
-            }
+        //        default:
+        //            throw new ArgumentException("Invalid groupBy value");
+        //    }
 
-            return groupedQuery.OrderBy(revenue => revenue.Date).ToList();
-        }
+        //    return groupedQuery.OrderBy(revenue => revenue.Date).ToList();
+        //}
 
         private void GenerateRevenueChart(List<RevenueReportDto> revenueReport, Func<RevenueReportDto, string> labelSelector)
         {
@@ -253,62 +277,62 @@ namespace POS.ViewModels.ReportsAndAnalysis
 
         #region Number Of Orders Reports
 
-        private async Task<List<OrderReportDto>> GenerateNumberOfOrders(DateTime startDate, DateTime endDate, string groupBy)
-        {
-            await using var dbContext = new AppDbContext();
+        //private async Task<List<OrderReportDto>> GenerateNumberOfOrders(DateTime startDate, DateTime endDate, string groupBy)
+        //{
+        //    await using var dbContext = new AppDbContext();
 
-            var orders = await dbContext.Orders
-                .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
-                .ToListAsync();
+        //    var orders = await dbContext.Orders
+        //        .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
+        //        .ToListAsync();
 
-            IEnumerable<OrderReportDto> ordersReport;
+        //    IEnumerable<OrderReportDto> ordersReport;
 
-            switch (groupBy)
-            {
-                case "day":
-                    ordersReport = orders
-                        .GroupBy(order => order.OrderTime.Date)
-                        .Select(group => new OrderReportDto
-                        {
-                            Date = group.Key,
-                            OrderCount = group.Count()
-                        });
-                    break;
-                case "week":
-                    ordersReport = orders.GroupBy(order => order.DayOfWeek)
-                        .Select(group => new OrderReportDto
-                        {
-                            DayOfWeek = group.Key,
-                            OrderCount = group.Count()
-                        })
-                        .OrderBy(order => order.DayOfWeek);
-                    break;
-                case "month":
-                    ordersReport = orders
-                        .GroupBy(order => new { order.OrderTime.Year, order.OrderTime.Month })
-                        .Select(group => new OrderReportDto
-                        {
-                            Date = new DateTime(group.Key.Year, group.Key.Month, 1),
-                            OrderCount = group.Count()
-                        });
-                    break;
+        //    switch (groupBy)
+        //    {
+        //        case "day":
+        //            ordersReport = orders
+        //                .GroupBy(order => order.OrderTime.Date)
+        //                .Select(group => new OrderReportDto
+        //                {
+        //                    Date = group.Key,
+        //                    OrderCount = group.Count()
+        //                });
+        //            break;
+        //        case "week":
+        //            ordersReport = orders.GroupBy(order => order.DayOfWeek)
+        //                .Select(group => new OrderReportDto
+        //                {
+        //                    DayOfWeek = group.Key,
+        //                    OrderCount = group.Count()
+        //                })
+        //                .OrderBy(order => order.DayOfWeek);
+        //            break;
+        //        case "month":
+        //            ordersReport = orders
+        //                .GroupBy(order => new { order.OrderTime.Year, order.OrderTime.Month })
+        //                .Select(group => new OrderReportDto
+        //                {
+        //                    Date = new DateTime(group.Key.Year, group.Key.Month, 1),
+        //                    OrderCount = group.Count()
+        //                });
+        //            break;
 
-                case "year":
-                    ordersReport = orders
-                        .GroupBy(order => order.OrderTime.Year)
-                        .Select(group => new OrderReportDto
-                        {
-                            Date = new DateTime(group.Key, 1, 1),
-                            OrderCount = group.Count()
-                        });
-                    break;
+        //        case "year":
+        //            ordersReport = orders
+        //                .GroupBy(order => order.OrderTime.Year)
+        //                .Select(group => new OrderReportDto
+        //                {
+        //                    Date = new DateTime(group.Key, 1, 1),
+        //                    OrderCount = group.Count()
+        //                });
+        //            break;
 
-                default:
-                    throw new ArgumentException("Invalid groupBy value");
-            }
+        //        default:
+        //            throw new ArgumentException("Invalid groupBy value");
+        //    }
 
-            return ordersReport.OrderBy(order => order.Date).ToList();
-        }
+        //    return ordersReport.OrderBy(order => order.Date).ToList();
+        //}
 
 
         private void GenerateNumberOfOrdersChart(List<OrderReportDto> ordersReport, Func<OrderReportDto, string> labelSelector)
@@ -328,27 +352,27 @@ namespace POS.ViewModels.ReportsAndAnalysis
 
         #region Employee productivity raport
 
-        private async Task<List<EmployeeProductivityDto>> GenerateEmployeeProductivityData(DateTime startDate, DateTime endDate)
-        {
-            await using var dbContext = new AppDbContext();
+        //private async Task<List<EmployeeProductivityDto>> GenerateEmployeeProductivityData(DateTime startDate, DateTime endDate)
+        //{
+        //    await using var dbContext = new AppDbContext();
 
-            var productivityData = await dbContext.Orders
-                .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
-                .Join(dbContext.Employees, order => order.EmployeeId, employee => employee.EmployeeId,
-                    (order, employee) => new { order, employee })
-                .Join(dbContext.Payments, orderEmployee => orderEmployee.order.OrderId, payment => payment.OrderId,
-                    (orderEmployee, payment) => new { orderEmployee.order, orderEmployee.employee, payment })
-                .GroupBy(x => new { x.employee.EmployeeId, x.employee.FirstName, x.employee.LastName })
-                .Select(g => new EmployeeProductivityDto
-                {
-                    EmployeeName = $"{g.Key.FirstName} {g.Key.LastName}",
-                    OrderCount = g.Count(),
-                    TotalAmount = Math.Round(g.Sum(x => x.payment.Amount), 2)
-                })
-                .ToListAsync();
+        //    var productivityData = await dbContext.Orders
+        //        .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
+        //        .Join(dbContext.Employees, order => order.EmployeeId, employee => employee.EmployeeId,
+        //            (order, employee) => new { order, employee })
+        //        .Join(dbContext.Payments, orderEmployee => orderEmployee.order.OrderId, payment => payment.OrderId,
+        //            (orderEmployee, payment) => new { orderEmployee.order, orderEmployee.employee, payment })
+        //        .GroupBy(x => new { x.employee.EmployeeId, x.employee.FirstName, x.employee.LastName })
+        //        .Select(g => new EmployeeProductivityDto
+        //        {
+        //            EmployeeName = $"{g.Key.FirstName} {g.Key.LastName}",
+        //            OrderCount = g.Count(),
+        //            TotalAmount = Math.Round(g.Sum(x => x.payment.Amount), 2)
+        //        })
+        //        .ToListAsync();
 
-            return productivityData;
-        }
+        //    return productivityData;
+        //}
 
         private void GenerateEmployeeProductivityChart(List<EmployeeProductivityDto> productivityData)
         {
@@ -375,24 +399,24 @@ namespace POS.ViewModels.ReportsAndAnalysis
 
         #region Card to cash payment ratio
 
-        private async Task<List<PaymentRatioDto>> GenerateCardToCashPaymentRatioData(DateTime starTime, DateTime endTime)
-        {
-            await using var dbContext = new AppDbContext();
+        //private async Task<List<PaymentRatioDto>> GenerateCardToCashPaymentRatioData(DateTime starDate, DateTime endDate)
+        //{
+        //    await using var dbContext = new AppDbContext();
 
-            var paymentRatio = await dbContext.Orders
-                .Where(order => order.OrderTime >= starTime && order.OrderTime <= endTime)
-                .Join(dbContext.Payments, order => order.OrderId, payment => payment.OrderId,
-                    (order, payment) => payment)
-                .GroupBy(payment => payment.PaymentMethod)
-                .Select(group => new PaymentRatioDto
-                {
-                    PaymentMethod = group.Key,
-                    Count = group.Count()
-                })
-                .ToListAsync();
+        //    var paymentRatio = await dbContext.Orders
+        //        .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
+        //        .Join(dbContext.Payments, order => order.OrderId, payment => payment.OrderId,
+        //            (order, payment) => payment)
+        //        .GroupBy(payment => payment.PaymentMethod)
+        //        .Select(group => new PaymentRatioDto
+        //        {
+        //            PaymentMethod = group.Key,
+        //            Count = group.Count()
+        //        })
+        //        .ToListAsync();
 
-            return paymentRatio;
-        }
+        //    return paymentRatio;
+        //}
 
         private void GeneratePaymentMethodChart(List<PaymentRatioDto> paymentRatio)
         {

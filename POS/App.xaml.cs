@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using DataAccess.Models;
+using Microsoft.Extensions.DependencyInjection;
+using POS.Models.Reports;
+using POS.ViewModels.ReportsAndAnalysis;
+using POS.ViewModels.ReportsAndAnalysis.Interfaces;
+using POS.ViewModels.ReportsAndAnalysis.ReportGenerators;
 
 namespace POS
 {
@@ -18,6 +15,28 @@ namespace POS
     /// </summary>
     public partial class App : Application
     {
+        public static IServiceProvider ServiceProvider { get; private set; }
+
+        public App()
+        {
+            InitializeComponent();
+
+            var serviceCollection = new ServiceCollection();
+            ConfigureServices(serviceCollection);
+            ServiceProvider = serviceCollection.BuildServiceProvider();
+        }
+
+        private void ConfigureServices(ServiceCollection servicesCollection)
+        {
+            servicesCollection.AddSingleton<ReportsAndAnalysisViewModel>();
+
+            servicesCollection.AddSingleton<IReportGenerator<ProductSalesDto>, SalesReportGenerator>();
+            servicesCollection.AddSingleton<IReportGenerator<RevenueReportDto>, RevenueReportGenerator>();
+            servicesCollection.AddSingleton<IReportGenerator<OrderReportDto>, NumberOfOrdersGenerator>();
+            servicesCollection.AddSingleton<IReportGenerator<EmployeeProductivityDto>, EmployeeProductivityGenerator>();
+            servicesCollection.AddSingleton<IReportGenerator<PaymentRatioDto>, CardToCashPaymentRatioGenerator>();
+        }
+
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (sender is DataGridRow row)
