@@ -42,6 +42,8 @@ namespace POS
             servicesCollection.AddSingleton<IChartGenerator<OrderReportDto>, NumberOfOrdersChartGenerator>();
             servicesCollection.AddSingleton<IChartGenerator<EmployeeProductivityDto>, EmployeeProductivityChartGenerator>();
             servicesCollection.AddSingleton<IChartGenerator<PaymentRatioDto>, PaymentMethodRatioChartGenerator>();
+
+            servicesCollection.AddSingleton<IReportFactory, ReportFactory>();
         }
 
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

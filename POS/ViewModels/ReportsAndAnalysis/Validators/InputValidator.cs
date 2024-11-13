@@ -1,7 +1,7 @@
 ﻿using System;
 using POS.Models.Validation;
 
-namespace POS.ViewModels.ReportsAndAnalysis
+namespace POS.ViewModels.ReportsAndAnalysis.Validators
 {
     public class InputValidator
     {
