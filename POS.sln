@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "POS", "POS\POS.csproj", "{3
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{F5A08902-2B4F-449F-AF83-35B703243BDF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbSeeder", "..\DbSeeder\DbSeeder\DbSeeder.csproj", "{1792079A-05C4-41D1-B813-C617F4439606}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbSeeder", "DbSeeder\DbSeeder\DbSeeder.csproj", "{50E68999-78B3-4F03-99A9-4923C1992D1F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{F5A08902-2B4F-449F-AF83-35B703243BDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5A08902-2B4F-449F-AF83-35B703243BDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5A08902-2B4F-449F-AF83-35B703243BDF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1792079A-05C4-41D1-B813-C617F4439606}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1792079A-05C4-41D1-B813-C617F4439606}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1792079A-05C4-41D1-B813-C617F4439606}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1792079A-05C4-41D1-B813-C617F4439606}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50E68999-78B3-4F03-99A9-4923C1992D1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50E68999-78B3-4F03-99A9-4923C1992D1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50E68999-78B3-4F03-99A9-4923C1992D1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50E68999-78B3-4F03-99A9-4923C1992D1F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
