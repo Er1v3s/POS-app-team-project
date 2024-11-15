@@ -56,14 +56,19 @@ namespace POS.ViewModels.ReportsAndAnalysis
         public ICommand GenerateReportCommand { get; }
         public ICommand GeneratePredictionCommand { get; }
 
-        private readonly IReportFactory reportFactory;
+        private readonly IReportsFactory _reportFactory;
+        private readonly IChartsFactory _chartFactory;
+        private readonly IPredictionsFactory _predictionsFactory;
 
-        public ReportsAndAnalysisViewModel(IReportFactory reportFactory)
+        public ReportsAndAnalysisViewModel(IReportsFactory reportFactory, IChartsFactory chartFactory, IPredictionsFactory predictionsFactory)
         {
             GenerateReportCommand = new RelayCommand(async _ => await GenerateReport());
             GeneratePredictionCommand = new RelayCommand(async _ => await GeneratePrediction());
 
-            this.reportFactory = reportFactory;
+            _reportFactory = reportFactory;
+            _chartFactory = chartFactory;
+            _predictionsFactory = predictionsFactory;
+
             seriesCollection = new SeriesCollection();
 
             _ = GenerateReport(); // default report
@@ -82,10 +87,11 @@ namespace POS.ViewModels.ReportsAndAnalysis
 
             seriesCollection.Clear();
 
-            reportFactory.SetParameters(seriesCollection, startDate, endDate);
-            await reportFactory.GenerateReport(selectedReportIndex);
+            _reportFactory.SetParameters(startDate, endDate);
+            await _reportFactory.GenerateReport(selectedReportIndex);
+            await _chartFactory.GenerateChart(selectedReportIndex, seriesCollection, ChartType.Report);
 
-            labels = reportFactory.GetUpdatedLabelsValues();
+            labels = _chartFactory.GetUpdatedLabelsValues();
             OnPropertyChanged(nameof(labels));
         }
 
@@ -93,13 +99,13 @@ namespace POS.ViewModels.ReportsAndAnalysis
         {
             seriesCollection.Clear();
 
-            //
-            reportFactory.SetParameters(seriesCollection, DateTime.Now.AddDays(-56), DateTime.Now.AddDays(-28)); // TO CHANGE
-            //
+            _reportFactory.SetParameters(DateTime.Now.AddDays(-56), DateTime.Now.AddDays(-28)); // TO CHANGE
 
-            await reportFactory.GeneratePrediction(selectedReportIndex);
+            await _reportFactory.GenerateReport(selectedReportIndex);
+            await _predictionsFactory.GeneratePrediction(selectedReportIndex, seriesCollection);
+            await _chartFactory.GenerateChart(selectedReportIndex, seriesCollection, ChartType.Prediction);
 
-            labels = reportFactory.GetUpdatedLabelsValues();
+            labels = _chartFactory.GetUpdatedLabelsValues();
             OnPropertyChanged(nameof(labels));
         }
     }

@@ -1,25 +1,25 @@
 ﻿using System.Collections.Generic;
 using Microsoft.ML;
-using System.Linq;
 using Microsoft.ML.Transforms.TimeSeries;
-using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
-using Microsoft.ML.Data;
 using System;
+using POS.ViewModels.ReportsAndAnalysis.Interfaces;
+using POS.Models.Reports;
+using System.Linq;
 
 namespace POS.ViewModels.ReportsAndAnalysis.Predictions
 {
-    public class PredictionModel
+    public class PredictionGenerator : IPredictionGenerator<RevenueReportDto>
     {
         private MLContext mlContext;
         private ITransformer model;
 
-        public PredictionModel()
+        public PredictionGenerator()
         {
             mlContext = new MLContext();
         }
 
-        public void TrainModel(List<RevenuePredictionDto> revenueData)
+        private void TrainModel(List<RevenuePredictionDto> revenueData)
         {
             var dataView = mlContext.Data.LoadFromEnumerable(revenueData);
 
@@ -35,7 +35,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.Predictions
             model = pipeline.Fit(dataView);
         }
 
-        public List<RevenuePredictionDto> Predict(List<RevenuePredictionDto> historicalData)
+        private List<RevenuePredictionDto> Predict()
         {
             var forecastEngine = model.CreateTimeSeriesEngine<RevenuePredictionInput, RevenuePredictionDataModel>(mlContext);
             var forecast = forecastEngine.Predict();
@@ -52,6 +52,27 @@ namespace POS.ViewModels.ReportsAndAnalysis.Predictions
             }
 
             return predictions;
+        }
+
+        public List<RevenuePredictionDto> GeneratePrediction(List<RevenueReportDto> data)
+        {
+            var historicalData = ConvertToPredictionData(data);
+
+            var predictionModel = new PredictionGenerator();
+            predictionModel.TrainModel(historicalData);
+
+            var revenuePredictions = predictionModel.Predict();
+
+            return revenuePredictions;
+        }
+
+        private List<RevenuePredictionDto> ConvertToPredictionData(List<RevenueReportDto> reportData)
+        {
+            return reportData.Select(report => new RevenuePredictionDto
+            {
+                Date = report.Date,
+                TotalRevenue = report.TotalRevenue
+            }).ToList();
         }
     }
 }

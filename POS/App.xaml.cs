@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
 using POS.ViewModels;
@@ -39,16 +40,18 @@ namespace POS
             servicesCollection.AddSingleton<IReportGenerator<OrderReportDto>, NumberOfOrdersGenerator>();
             servicesCollection.AddSingleton<IReportGenerator<EmployeeProductivityDto>, EmployeeProductivityGenerator>();
             servicesCollection.AddSingleton<IReportGenerator<PaymentRatioDto>, CardToCashPaymentRatioGenerator>();
+            servicesCollection.AddSingleton<IPredictionGenerator<RevenueReportDto>, PredictionGenerator>();
 
             servicesCollection.AddSingleton<IChartGenerator<ProductSalesDto>, SalesChartGenerator>();
             servicesCollection.AddSingleton<IChartGenerator<RevenueReportDto>, RevenueChartGenerator>();
             servicesCollection.AddSingleton<IChartGenerator<OrderReportDto>, NumberOfOrdersChartGenerator>();
             servicesCollection.AddSingleton<IChartGenerator<EmployeeProductivityDto>, EmployeeProductivityChartGenerator>();
             servicesCollection.AddSingleton<IChartGenerator<PaymentRatioDto>, PaymentMethodRatioChartGenerator>();
-
             servicesCollection.AddSingleton<IChartGenerator<RevenuePredictionDto>, PredictionChart>();
 
-            servicesCollection.AddSingleton<IReportFactory, ReportFactory>();
+            servicesCollection.AddSingleton<IReportsFactory, ReportsFactory>();
+            servicesCollection.AddSingleton<IChartsFactory, ChartsFactory>();
+            servicesCollection.AddSingleton<IPredictionsFactory, PredictionsFactory>();
         }
 
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
