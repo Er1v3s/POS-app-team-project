@@ -1,16 +1,18 @@
-﻿using System;
+﻿using Microsoft.ML.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using POS.Models.Reports.ReportsPredictions;
 
-namespace POS.Models.Reports
+namespace POS.Models.Reports.ReportsPredictions
 {
-    public class RevenueReportDto
+    public class RevenuePredictionInput
     {
-        public DayOfWeek? DayOfWeek { get; set; }
+        [LoadColumn(0)]
         public DateTime Date { get; set; }
+
+        [LoadColumn(1)]
         public float TotalRevenue { get; set; }
     }
 }

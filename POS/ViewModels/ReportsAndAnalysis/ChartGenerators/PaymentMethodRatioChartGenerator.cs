@@ -12,7 +12,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators
     {
         public void GenerateChart(List<PaymentRatioDto> data, SeriesCollection seriesCollection, out List<string> labels, Func<dynamic, string>? labelSelector = null)
         {
-            seriesCollection.Add(new ColumnSeries
+            seriesCollection.Add(new ColumnSeries()
             {
                 Title = "Suma kwot zamówień: ",
                 Values = new ChartValues<int>(data.Select(p => p.Count)),
