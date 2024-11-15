@@ -12,7 +12,7 @@ namespace POS.ViewModels.ReportsAndAnalysis
     {
         private readonly Dictionary<int, Func<Task>> _predictionGenerators;
 
-        private IReportsFactory _reportsFactory;
+        private readonly IReportsFactory _reportsFactory;
 
         private List<RevenuePredictionDto> _revenuePredictions;
 
@@ -31,7 +31,7 @@ namespace POS.ViewModels.ReportsAndAnalysis
 
         private async Task GeneratePrediction<T>(IPredictionGenerator<T> predictionGenerator)
         {
-            var data = _reportsFactory.GetReportData() as List<T>; // generical parameter to change
+            var data = _reportsFactory.GetReportData() as List<T>;
 
             _revenuePredictions = predictionGenerator.GeneratePrediction(data);
         }

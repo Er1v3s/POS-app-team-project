@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using LiveCharts;
 using LiveCharts.Wpf;
-using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 

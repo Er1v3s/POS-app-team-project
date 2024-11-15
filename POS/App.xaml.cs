@@ -10,7 +10,7 @@ using POS.ViewModels;
 using POS.ViewModels.ReportsAndAnalysis;
 using POS.ViewModels.ReportsAndAnalysis.ChartGenerators;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
-using POS.ViewModels.ReportsAndAnalysis.Predictions;
+using POS.ViewModels.ReportsAndAnalysis.PredictionGenerators;
 using POS.ViewModels.ReportsAndAnalysis.ReportGenerators;
 
 namespace POS

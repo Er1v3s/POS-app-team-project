@@ -1,29 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.ML;
 using Microsoft.ML.Transforms.TimeSeries;
-using POS.Models.Reports.ReportsPredictions;
-using System;
-using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 using POS.Models.Reports;
-using System.Linq;
+using POS.Models.Reports.ReportsPredictions;
+using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 
-namespace POS.ViewModels.ReportsAndAnalysis.Predictions
+namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
 {
     public class PredictionGenerator : IPredictionGenerator<RevenueReportDto>
     {
-        private MLContext mlContext;
-        private ITransformer model;
+        private readonly MLContext _mlContext;
+        private ITransformer _model;
 
         public PredictionGenerator()
         {
-            mlContext = new MLContext();
+            _mlContext = new MLContext();
         }
 
         private void TrainModel(List<RevenuePredictionDto> revenueData)
         {
-            var dataView = mlContext.Data.LoadFromEnumerable(revenueData);
+            var dataView = _mlContext.Data.LoadFromEnumerable(revenueData);
 
-            var pipeline = mlContext.Forecasting.ForecastBySsa(
+            var pipeline = _mlContext.Forecasting.ForecastBySsa(
                 outputColumnName: nameof(RevenuePredictionDataModel.PredictedRevenue),
                 inputColumnName: nameof(RevenuePredictionInput.TotalRevenue),
                 windowSize: 7,     // Define based on your time-series pattern
@@ -32,12 +32,12 @@ namespace POS.ViewModels.ReportsAndAnalysis.Predictions
                 horizon: 7         // Predicting one week ahead
             );
 
-            model = pipeline.Fit(dataView);
+            _model = pipeline.Fit(dataView);
         }
 
         private List<RevenuePredictionDto> Predict()
         {
-            var forecastEngine = model.CreateTimeSeriesEngine<RevenuePredictionInput, RevenuePredictionDataModel>(mlContext);
+            var forecastEngine = _model.CreateTimeSeriesEngine<RevenuePredictionInput, RevenuePredictionDataModel>(_mlContext);
             var forecast = forecastEngine.Predict();
 
             List<RevenuePredictionDto> predictions = new List<RevenuePredictionDto>();
@@ -46,8 +46,8 @@ namespace POS.ViewModels.ReportsAndAnalysis.Predictions
             {
                 predictions.Add(new RevenuePredictionDto
                 {
-                    Date = DateTime.Now.AddDays(i + 1), // Future date for each forecast point
-                    TotalRevenue = forecast.PredictedRevenue[i] // Forecasted revenue
+                    Date = DateTime.Now.AddDays(i + 1),
+                    TotalRevenue = forecast.PredictedRevenue[i]
                 });
             }
 
@@ -58,10 +58,9 @@ namespace POS.ViewModels.ReportsAndAnalysis.Predictions
         {
             var historicalData = ConvertToPredictionData(data);
 
-            var predictionModel = new PredictionGenerator();
-            predictionModel.TrainModel(historicalData);
+            TrainModel(historicalData);
 
-            var revenuePredictions = predictionModel.Predict();
+            var revenuePredictions = Predict();
 
             return revenuePredictions;
         }

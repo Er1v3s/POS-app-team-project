@@ -14,8 +14,8 @@ namespace POS.ViewModels.ReportsAndAnalysis
         private SeriesCollection seriesCollection;
         private List<string> labels;
 
-        private IReportsFactory _reportFactory;
-        private IPredictionsFactory _predictionsFactory;
+        private readonly IReportsFactory _reportFactory;
+        private readonly IPredictionsFactory _predictionsFactory;
 
         private readonly Dictionary<int, Func<Task>> _reportChartGenerators;
         private readonly Dictionary<int, Func<Task>> _predictionChartGenerators;
@@ -78,16 +78,10 @@ namespace POS.ViewModels.ReportsAndAnalysis
             this.seriesCollection = seriesCollection;
 
             if (type == ChartType.Report)
-            {
-                // Report
                 await _reportChartGenerators[selectedReportIndex]();
-            }
-            else
-            {
-                // Prediction
-                await _predictionChartGenerators[selectedReportIndex]();
-            }
 
+            if (type == ChartType.Prediction)
+                await _predictionChartGenerators[selectedReportIndex]();
         }
 
         public List<string> GetUpdatedLabelsValues()
