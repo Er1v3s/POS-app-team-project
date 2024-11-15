@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using LiveCharts;
+using POS.Models.Reports;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 using POS.ViewModels.ReportsAndAnalysis.Validators;
 
@@ -53,11 +54,15 @@ namespace POS.ViewModels.ReportsAndAnalysis
         }
 
         public ICommand GenerateReportCommand { get; }
+        public ICommand GeneratePredictionCommand { get; }
+
         private readonly IReportFactory reportFactory;
 
         public ReportsAndAnalysisViewModel(IReportFactory reportFactory)
         {
             GenerateReportCommand = new RelayCommand(async _ => await GenerateReport());
+            GeneratePredictionCommand = new RelayCommand(async _ => await GeneratePrediction());
+
             this.reportFactory = reportFactory;
             seriesCollection = new SeriesCollection();
 
@@ -79,8 +84,22 @@ namespace POS.ViewModels.ReportsAndAnalysis
 
             reportFactory.SetParameters(seriesCollection, startDate, endDate);
             await reportFactory.GenerateReport(selectedReportIndex);
-            labels = reportFactory.GetUpdatedLabelsValues();
 
+            labels = reportFactory.GetUpdatedLabelsValues();
+            OnPropertyChanged(nameof(labels));
+        }
+
+        private async Task GeneratePrediction()
+        {
+            seriesCollection.Clear();
+
+            //
+            reportFactory.SetParameters(seriesCollection, DateTime.Now.AddDays(-56), DateTime.Now.AddDays(-28)); // TO CHANGE
+            //
+
+            await reportFactory.GeneratePrediction(selectedReportIndex);
+
+            labels = reportFactory.GetUpdatedLabelsValues();
             OnPropertyChanged(nameof(labels));
         }
     }

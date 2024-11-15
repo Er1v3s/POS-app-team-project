@@ -72,7 +72,23 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
                     throw new ArgumentException("Invalid groupBy value");
             }
 
-            return groupedQuery.OrderBy(revenue => revenue.Date).ToList();
+            var groupedData = groupedQuery.OrderBy(revenue => revenue.Date).ToList();
+
+            var allDates = Enumerable.Range(0, (endDate - startDate).Days + 1)
+                .Select(offset => startDate.AddDays(offset))
+                .ToList();
+
+            var result = allDates.Select(date =>
+            {
+                var report = groupedData.FirstOrDefault(r => r.Date.Date == date.Date);
+                return report ?? new RevenueReportDto
+                {
+                    Date = date,
+                    TotalRevenue = 0f
+                };
+            }).ToList();
+
+            return result;
         }
     }
 }
