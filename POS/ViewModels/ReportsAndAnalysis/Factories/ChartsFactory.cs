@@ -7,7 +7,7 @@ using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 using ChartType = POS.Models.Reports.ChartType;
 using SeriesCollection = LiveCharts.SeriesCollection;
 
-namespace POS.ViewModels.ReportsAndAnalysis
+namespace POS.ViewModels.ReportsAndAnalysis.Factories
 {
     public class ChartsFactory : IChartsFactory
     {
@@ -30,7 +30,8 @@ namespace POS.ViewModels.ReportsAndAnalysis
             IChartGenerator<EmployeeProductivityDto> employeeProductivityReportChartGenerator,
             IChartGenerator<PaymentRatioDto> paymentRatioReportChartGenerator,
 
-            IChartGenerator<RevenuePredictionDto> predictionChartGenerator
+            IChartGenerator<ProductSalesPredictionDto> salesPredictionChartGenerator,
+            IChartGenerator<RevenuePredictionDto> revenuePredictionChartGenerator
             )
         {
             _reportFactory = reportFactory;
@@ -53,7 +54,8 @@ namespace POS.ViewModels.ReportsAndAnalysis
 
             _predictionChartGenerators = new Dictionary<int, Func<Task>>
             {
-                { 1, async () => await GeneratePredictionChart(predictionChartGenerator, r => r.Date.ToString("yyyy-MM-dd")) }
+                { 0, async () => await GeneratePredictionChart(salesPredictionChartGenerator) },
+                { 1, async () => await GeneratePredictionChart(revenuePredictionChartGenerator, r => r.Date.ToString("yyyy-MM-dd")) }
             };
         }
 

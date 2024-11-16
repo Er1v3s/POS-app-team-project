@@ -6,7 +6,7 @@ using LiveCharts.Wpf;
 using POS.Models.Reports;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 
-namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators
+namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators.ReportChartGenerators
 {
     public class SalesChartGenerator : IChartGenerator<ProductSalesDto>
     {
@@ -15,7 +15,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators
             seriesCollection.Add(new ColumnSeries
             {
                 Title = "Ilość sprzedanych produktów: ",
-                Values = new ChartValues<int>(data.Select(p => (p.Quantity))),
+                Values = new ChartValues<int>(data.Select(p => p.Quantity)),
                 LabelPoint = point => point.Y.ToString("N0"),
                 DataLabels = true,
             });

@@ -1,5 +1,4 @@
-﻿using Microsoft.ML.Data;
-using System;
+﻿using System;
 
 namespace POS.Models.Reports.ReportsPredictions
 {

@@ -6,7 +6,7 @@ using POS.Models.Reports.ReportsPredictions;
 using POS.Models.Reports;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 
-namespace POS.ViewModels.ReportsAndAnalysis
+namespace POS.ViewModels.ReportsAndAnalysis.Factories
 {
     public class PredictionsFactory : IPredictionsFactory
     {
@@ -14,24 +14,26 @@ namespace POS.ViewModels.ReportsAndAnalysis
 
         private readonly IReportsFactory _reportsFactory;
 
-        private List<RevenuePredictionDto> _revenuePredictions;
+        private object _revenuePredictions;
 
         public PredictionsFactory(
             IReportsFactory reportFactory,
 
-            IPredictionGenerator<RevenueReportDto> predictionGenerator)
+            IPredictionGenerator<RevenueReportDto, RevenuePredictionDto> revenuePredictionGenerator,
+            IPredictionGenerator<ProductSalesDto, ProductSalesPredictionDto> salePredictionGenerator)
         {
             _reportsFactory = reportFactory;
 
             _predictionGenerators = new Dictionary<int, Func<Task>>
             {
-                { 1, async () => await GeneratePrediction(predictionGenerator) },
+                { 0, async () => await GeneratePrediction(salePredictionGenerator) },
+                { 1, async () => await GeneratePrediction(revenuePredictionGenerator) },
             };
         }
 
-        private async Task GeneratePrediction<T>(IPredictionGenerator<T> predictionGenerator)
+        private async Task GeneratePrediction<TInput, TOutput>(IPredictionGenerator<TInput, TOutput> predictionGenerator)
         {
-            var data = _reportsFactory.GetReportData() as List<T>;
+            var data = _reportsFactory.GetReportData() as List<TInput>;
 
             _revenuePredictions = predictionGenerator.GeneratePrediction(data);
         }
@@ -41,7 +43,7 @@ namespace POS.ViewModels.ReportsAndAnalysis
             await _predictionGenerators[selectedReportIndex]();
         }
 
-        public List<RevenuePredictionDto> GetPredictionData()
+        public object GetPredictionData()
         {
             return _revenuePredictions;
         }

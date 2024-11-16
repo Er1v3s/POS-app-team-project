@@ -6,7 +6,7 @@ using LiveCharts;
 using POS.Models.Reports;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 
-namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators
+namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators.ReportChartGenerators
 {
     public class PaymentMethodRatioChartGenerator : IChartGenerator<PaymentRatioDto>
     {

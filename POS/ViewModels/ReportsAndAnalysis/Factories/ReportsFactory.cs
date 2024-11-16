@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using POS.Models.Reports;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 
-namespace POS.ViewModels.ReportsAndAnalysis
+namespace POS.ViewModels.ReportsAndAnalysis.Factories
 {
     public class ReportsFactory : IReportsFactory
     {

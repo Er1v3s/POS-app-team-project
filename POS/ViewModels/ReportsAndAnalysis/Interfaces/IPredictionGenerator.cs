@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace POS.ViewModels.ReportsAndAnalysis.Interfaces
 {
-    public interface IPredictionGenerator<T>
+    public interface IPredictionGenerator<TInput, TOutput>
     {
-        List<RevenuePredictionDto> GeneratePrediction(List<T> data);
+        List<TOutput> GeneratePrediction(List<TInput> data);
     }
 }
