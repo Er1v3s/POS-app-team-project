@@ -27,35 +27,31 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
                 var dataView = _mlContext.Data.LoadFromEnumerable(salesData);
 
                 var pipeline = _mlContext.Forecasting.ForecastBySsa(
-                    outputColumnName: nameof(ProductSalesPredictionDataModel.PredictedQuantity),
+                    outputColumnName: nameof(ProductSalesPredictionOutput.PredictedQuantity),
                     inputColumnName: nameof(ProductSalesPredictionInput.Quantity),
-                    windowSize: 7,     // Define based on your time-series pattern
-                    seriesLength: 28,  // Match historical data range
-                    trainSize: 28,     // Train on the last 28 records
-                    horizon: 7         // Predict for the next 7 days
+                    windowSize: 7,      // Okno czasowe (np. 7 dni)
+                    seriesLength: 28,   // Długość serii danych (28 dni)
+                    trainSize: 28,      // Dane do trenowania (28 dni)
+                    horizon: 1          // Prognozuj tylko na 1 dzień
                 );
 
                 _model = pipeline.Fit(dataView);
             }
 
-            private List<ProductSalesPredictionDto> Predict(string productName)
+
+            private ProductSalesPredictionDto Predict(string productName)
             {
-                var forecastEngine = _model.CreateTimeSeriesEngine<ProductSalesPredictionInput, ProductSalesPredictionDataModel>(_mlContext);
+                var forecastEngine = _model.CreateTimeSeriesEngine<ProductSalesPredictionInput, ProductSalesPredictionOutput>(_mlContext);
                 var forecast = forecastEngine.Predict();
 
-                List<ProductSalesPredictionDto> predictions = new List<ProductSalesPredictionDto>();
-
-                for (int i = 0; i < forecast.PredictedQuantity.Length; i++)
+                return new ProductSalesPredictionDto
                 {
-                    predictions.Add(new ProductSalesPredictionDto
-                    {
-                        ProductName = productName,
-                        Quantity = (int)Math.Round(forecast.PredictedQuantity[i])
-                    });
-                }
-
-                return predictions;
+                    ProductName = productName,
+                    PredictedDate = DateTime.Now.AddDays(1), // Prognoza na jutro
+                    PredictedQuantity = forecast.PredictedQuantity[0] // Pierwsza wartość w prognozie
+                };
             }
+
 
             public List<ProductSalesPredictionDto> GeneratePrediction(List<ProductSalesDto> data)
             {
@@ -70,22 +66,23 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
 
                     TrainModel(historicalData);
 
-                    var productPredictions = Predict(product.Key);
+                    var productPrediction = Predict(product.Key);
 
-                    allPredictions.AddRange(productPredictions);
+                    allPredictions.Add(productPrediction);
                 }
 
                 return allPredictions;
             }
 
+
             private List<ProductSalesPredictionInput> ConvertToPredictionData(List<ProductSalesDto> salesData)
             {
                 return salesData.Select(sale => new ProductSalesPredictionInput
                 {
-                    ProductName = sale.ProductName,
                     Quantity = sale.Quantity
                 }).ToList();
             }
+
         }
     }
 

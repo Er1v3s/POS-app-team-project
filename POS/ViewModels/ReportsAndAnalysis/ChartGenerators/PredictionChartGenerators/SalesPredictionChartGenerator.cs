@@ -10,17 +10,19 @@ namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators.PredictionChartGener
 {
     public class SalesPredictionChartGenerator : IChartGenerator<ProductSalesPredictionDto>
     {
-        public void GenerateChart(List<ProductSalesPredictionDto> data, SeriesCollection seriesCollection, out List<string> labels, Func<dynamic, string>? labelSelector = null)
+        public void GenerateChart(
+            List<ProductSalesPredictionDto> data, SeriesCollection seriesCollection, out List<string> labels, Func<dynamic, string>? labelSelector = null)
         {
-            seriesCollection.Add(new LineSeries()
+            seriesCollection.Add(new ColumnSeries
             {
-                Title = "Ilość sprzedanych produktów: ",
-                Values = new ChartValues<int>(data.Select(p => p.Quantity)),
+                Title = "Prognoza sprzedaży",
+                Values = new ChartValues<float>(data.Select(p => p.PredictedQuantity)),
                 LabelPoint = point => point.Y.ToString("N0"),
-                DataLabels = true,
+                DataLabels = true
             });
 
             labels = data.Select(p => p.ProductName).ToList();
         }
     }
+
 }
