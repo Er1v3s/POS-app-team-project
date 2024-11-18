@@ -10,10 +10,10 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
 {
     public class RevenueReportGenerator : IReportGenerator<RevenueReportDto>
     {
+        IQueryable<RevenueReportDto> groupedQuery;
+
         public async Task<List<RevenueReportDto>> GenerateData(DateTime startDate, DateTime endDate, string? groupBy)
         {
-            IQueryable<RevenueReportDto> groupedQuery;
-
             await using var dbContext = new AppDbContext();
 
             var revenueReportQuery = dbContext.Orders
@@ -74,21 +74,50 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
 
             var groupedData = groupedQuery.OrderBy(revenue => revenue.Date).ToList();
 
-            var allDates = Enumerable.Range(0, (endDate - startDate).Days + 1)
-                .Select(offset => startDate.AddDays(offset))
-                .ToList();
+            groupedData = CompleteMissingData(groupedData, startDate, endDate, groupBy);
 
-            var result = allDates.Select(date =>
+            return groupedData;
+        }
+
+        private List<RevenueReportDto> CompleteMissingData(List<RevenueReportDto> groupedData, DateTime startDate, DateTime endDate, string groupBy)
+        {
+            switch (groupBy)
             {
-                var report = groupedData.FirstOrDefault(r => r.Date.Date == date.Date);
-                return report ?? new RevenueReportDto
-                {
-                    Date = date,
-                    TotalRevenue = 0f
-                };
-            }).ToList();
+                case "day":
+                    var allDates = Enumerable.Range(0, (endDate - startDate).Days + 1)
+                        .Select(offset => startDate.AddDays(offset))
+                        .ToList();
 
-            return result;
+                    return allDates.Select(date =>
+                    {
+                        var report = groupedData.FirstOrDefault(r => r.Date.Date == date.Date);
+                        return report ?? new RevenueReportDto
+                        {
+                            Date = date,
+                            TotalRevenue = 0f
+                        };
+                    }).ToList();
+
+                case "week":
+                    var allDaysOfWeek = Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>();
+
+                    foreach (var dayOfWeek in allDaysOfWeek)
+                    {
+                        if (groupedData.All(data => data.DayOfWeek != dayOfWeek))
+                        {
+                            groupedData.Add(new RevenueReportDto
+                            {
+                                DayOfWeek = dayOfWeek,
+                                TotalRevenue = 0f
+                            });
+                        }
+                    }
+                    var result = groupedData.OrderBy(data => data.DayOfWeek).ToList();
+                    return result;
+
+                default:
+                    return groupedData;
+            }
         }
     }
 }
