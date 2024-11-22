@@ -12,7 +12,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators.PredictionChartGener
     {
         public void GenerateChart(List<RevenuePredictionDto> data, SeriesCollection seriesCollection, out List<string> labels, Func<dynamic, string>? labelSelector = null)
         {
-            seriesCollection.Add(new LineSeries()
+            seriesCollection.Add(new ColumnSeries()
             {
                 Title = "Prognozowany przychód",
                 Values = new ChartValues<float>(data.Select(p => p.TotalRevenue)),

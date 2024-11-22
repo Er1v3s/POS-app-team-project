@@ -55,7 +55,10 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
             _predictionChartGenerators = new Dictionary<int, Func<Task>>
             {
                 { 0, async () => await GeneratePredictionChart(salesPredictionChartGenerator) },
-                { 1, async () => await GeneratePredictionChart(revenuePredictionChartGenerator, r => r.Date.ToString("yyyy-MM-dd")) }
+                { 1, async () => await GeneratePredictionChart(revenuePredictionChartGenerator, r => r.Date.ToString("yyyy-MM-dd")) },
+                { 2, async () => await GeneratePredictionChart(revenuePredictionChartGenerator, r => r.Date.ToString("yyyy-MM-dd")) },
+                { 3, async () => await GeneratePredictionChart(revenuePredictionChartGenerator, r => r.Date.ToString("yyyy-MM-dd")) },
+                { 4, async () => await GeneratePredictionChart(revenuePredictionChartGenerator, r => r.Date.ToString("yyyy-MM-dd")) },
             };
         }
 

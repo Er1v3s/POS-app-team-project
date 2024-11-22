@@ -19,17 +19,17 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
             _mlContext = new MLContext();
         }
 
-        private void TrainModel(List<RevenuePredictionDto> revenueData)
+        private void TrainModel(List<RevenuePredictionDto> revenueData, int windowSize, int seriesLength, int horizon)
         {
             var dataView = _mlContext.Data.LoadFromEnumerable(revenueData);
 
             var pipeline = _mlContext.Forecasting.ForecastBySsa(
                 outputColumnName: nameof(RevenuePredictionDataModel.PredictedRevenue),
                 inputColumnName: nameof(RevenuePredictionDto.TotalRevenue),
-                windowSize: 7,     // Define based on your time-series pattern
-                seriesLength: 28,  // Series length should match the data pattern
-                trainSize: 28,    // Number of records to train on
-                horizon: 7         // Predicting one week ahead
+                windowSize: windowSize,     // Define based on your time-series pattern
+                seriesLength: seriesLength,  // Series length should match the data pattern
+                trainSize: (int)Math.Round(seriesLength * 0.8),    // Number of records to train on
+                horizon: horizon         // Predicting one week ahead
             );
 
             _model = pipeline.Fit(dataView);
@@ -54,11 +54,11 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
             return predictions;
         }
 
-        public List<RevenuePredictionDto> GeneratePrediction(List<RevenueReportDto> data)
+        public List<RevenuePredictionDto> GeneratePrediction(List<RevenueReportDto> data, int windowSize, int seriesLength, int horizon)
         {
             var historicalData = ConvertToPredictionData(data);
 
-            TrainModel(historicalData);
+            TrainModel(historicalData, windowSize, seriesLength, horizon);
 
             var revenuePredictions = Predict();
 

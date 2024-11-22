@@ -83,6 +83,10 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
                 }).ToList();
             }
 
+            public List<ProductSalesPredictionDto> GeneratePrediction(List<ProductSalesDto> data, int windowSize, int seriesLength, int horizon)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 
