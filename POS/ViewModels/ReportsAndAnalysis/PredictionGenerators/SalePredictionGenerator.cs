@@ -38,21 +38,6 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
                 _model = pipeline.Fit(dataView);
             }
 
-
-            private ProductSalesPredictionDto Predict(string productName)
-            {
-                var forecastEngine = _model.CreateTimeSeriesEngine<ProductSalesPredictionInput, ProductSalesPredictionOutput>(_mlContext);
-                var forecast = forecastEngine.Predict();
-
-                return new ProductSalesPredictionDto
-                {
-                    ProductName = productName,
-                    PredictedDate = DateTime.Now.AddDays(1), // Prognoza na jutro
-                    PredictedQuantity = forecast.PredictedQuantity[0] // Pierwsza wartość w prognozie
-                };
-            }
-
-
             public List<ProductSalesPredictionDto> GeneratePrediction(List<ProductSalesDto> data)
             {
                 var groupedData = data.GroupBy(d => d.ProductName)
@@ -74,18 +59,30 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
                 return allPredictions;
             }
 
+            public List<ProductSalesPredictionDto> GeneratePrediction(List<ProductSalesDto> data, int windowSize, int seriesLength, int horizon, GroupBy groupBy)
+            {
+                throw new NotImplementedException();
+            }
 
+            private ProductSalesPredictionDto Predict(string productName)
+            {
+                var forecastEngine = _model.CreateTimeSeriesEngine<ProductSalesPredictionInput, ProductSalesPredictionOutput>(_mlContext);
+                var forecast = forecastEngine.Predict();
+
+                return new ProductSalesPredictionDto
+                {
+                    ProductName = productName,
+                    PredictedDate = DateTime.Now.AddDays(1), // Prognoza na jutro
+                    PredictedQuantity = forecast.PredictedQuantity[0] // Pierwsza wartość w prognozie
+                };
+            }
+            
             private List<ProductSalesPredictionInput> ConvertToPredictionData(List<ProductSalesDto> salesData)
             {
                 return salesData.Select(sale => new ProductSalesPredictionInput
                 {
                     Quantity = sale.Quantity
                 }).ToList();
-            }
-
-            public List<ProductSalesPredictionDto> GeneratePrediction(List<ProductSalesDto> data, int windowSize, int seriesLength, int horizon, GroupBy groupBy)
-            {
-                throw new NotImplementedException();
             }
         }
     }

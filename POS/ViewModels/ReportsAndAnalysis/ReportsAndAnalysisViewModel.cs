@@ -19,6 +19,10 @@ namespace POS.ViewModels.ReportsAndAnalysis
         private SeriesCollection seriesCollection;
         private List<string> labels = [];
 
+        private readonly IReportsFactory _reportFactory;
+        private readonly IChartsFactory _chartFactory;
+        private readonly IPredictionsFactory _predictionsFactory;
+
         public List<string> Labels
         {
             get => labels;
@@ -55,10 +59,6 @@ namespace POS.ViewModels.ReportsAndAnalysis
 
         public ICommand GenerateReportCommand { get; }
         public ICommand GeneratePredictionCommand { get; }
-
-        private readonly IReportsFactory _reportFactory;
-        private readonly IChartsFactory _chartFactory;
-        private readonly IPredictionsFactory _predictionsFactory;
 
         public ReportsAndAnalysisViewModel(IReportsFactory reportFactory, IChartsFactory chartFactory, IPredictionsFactory predictionsFactory)
         {

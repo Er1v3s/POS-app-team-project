@@ -39,11 +39,6 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
             };
         }
 
-        private async Task GenerateReportData<T>(IReportGenerator<T> reportGenerator, string? groupBy = null)
-        {
-            reportData = await reportGenerator.GenerateData(startDate, endDate, groupBy);
-        }
-
         public void SetParameters(DateTime startDate, DateTime endDate)
         {
             this.startDate = startDate;
@@ -59,6 +54,11 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
         {
 
             return reportData;
+        }
+
+        private async Task GenerateReportData<T>(IReportGenerator<T> reportGenerator, string? groupBy = null)
+        {
+            reportData = await reportGenerator.GenerateData(startDate, endDate, groupBy);
         }
     }
 }

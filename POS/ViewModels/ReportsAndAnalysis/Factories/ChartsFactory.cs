@@ -62,22 +62,6 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
             };
         }
 
-        private async Task GenerateReportChart<T>(IChartGenerator<T> chartGenerator,
-                    Func<dynamic, string>? labelSelector = null)
-        {
-            var data = _reportFactory.GetReportData() as List<T>;
-
-            chartGenerator.GenerateChart(data, seriesCollection, out labels, labelSelector);
-        }
-
-        private async Task GeneratePredictionChart<T>(IChartGenerator<T> chartGenerator,
-            Func<dynamic, string>? labelSelector = null)
-        {
-            var data = _predictionsFactory.GetPredictionData() as List<T>;
-
-            chartGenerator.GenerateChart(data, seriesCollection, out labels, labelSelector);
-        }
-
         public async Task GenerateChart(int selectedReportIndex, SeriesCollection seriesCollection, ChartType type)
         {
             this.seriesCollection = seriesCollection;
@@ -92,6 +76,22 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
         public List<string> GetUpdatedLabelsValues()
         {
             return labels;
+        }
+
+        private async Task GenerateReportChart<T>(IChartGenerator<T> chartGenerator,
+                    Func<dynamic, string>? labelSelector = null)
+        {
+            var data = _reportFactory.GetReportData() as List<T>;
+
+            chartGenerator.GenerateChart(data, seriesCollection, out labels, labelSelector);
+        }
+
+        private async Task GeneratePredictionChart<T>(IChartGenerator<T> chartGenerator,
+            Func<dynamic, string>? labelSelector = null)
+        {
+            var data = _predictionsFactory.GetPredictionData() as List<T>;
+
+            chartGenerator.GenerateChart(data, seriesCollection, out labels, labelSelector);
         }
     }
 }

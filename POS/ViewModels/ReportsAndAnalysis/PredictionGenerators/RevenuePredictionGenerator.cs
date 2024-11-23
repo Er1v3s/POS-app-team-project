@@ -19,6 +19,17 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
             _mlContext = new MLContext();
         }
 
+        public List<RevenuePredictionDto> GeneratePrediction(List<RevenueReportDto> data, int windowSize, int seriesLength, int horizon, GroupBy groupBy)
+        {
+            var historicalData = ConvertToPredictionData(data);
+
+            TrainModel(historicalData, windowSize, seriesLength, horizon);
+
+            var revenuePredictions = Predict(groupBy);
+
+            return revenuePredictions;
+        }
+
         private void TrainModel(List<RevenuePredictionDto> revenueData, int windowSize, int seriesLength, int horizon)
         {
             var dataView = _mlContext.Data.LoadFromEnumerable(revenueData);
@@ -42,17 +53,6 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
             var formattedPrediction = SetDataFormat(forecast, groupBy);
 
             return formattedPrediction;
-        }
-
-        public List<RevenuePredictionDto> GeneratePrediction(List<RevenueReportDto> data, int windowSize, int seriesLength, int horizon, GroupBy groupBy)
-        {
-            var historicalData = ConvertToPredictionData(data);
-
-            TrainModel(historicalData, windowSize, seriesLength, horizon);
-
-            var revenuePredictions = Predict(groupBy);
-
-            return revenuePredictions;
         }
 
         private List<RevenuePredictionDto> ConvertToPredictionData(List<RevenueReportDto> reportData)

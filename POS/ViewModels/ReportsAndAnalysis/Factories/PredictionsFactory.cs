@@ -47,13 +47,6 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
             };
         }
 
-        private async Task GeneratePrediction<TInput, TOutput>(IPredictionGenerator<TInput, TOutput> predictionGenerator, int windowSize, int seriesLength, int horizon, GroupBy groupBy)
-        {
-            var data = _reportsFactory.GetReportData() as List<TInput>;
-
-            _revenuePredictions = predictionGenerator.GeneratePrediction(data, windowSize, seriesLength, horizon, groupBy);
-        }
-
         public async Task GeneratePrediction(int selectedReportIndex, SeriesCollection seriesCollection)
         {
             // Prediction for weeks requires daily report, not weekly 
@@ -67,6 +60,13 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
         public object GetPredictionData()
         {
             return _revenuePredictions;
+        }
+
+        private async Task GeneratePrediction<TInput, TOutput>(IPredictionGenerator<TInput, TOutput> predictionGenerator, int windowSize, int seriesLength, int horizon, GroupBy groupBy)
+        {
+            var data = _reportsFactory.GetReportData() as List<TInput>;
+
+            _revenuePredictions = predictionGenerator.GeneratePrediction(data, windowSize, seriesLength, horizon, groupBy);
         }
     }
 }
