@@ -35,32 +35,22 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
             _model = pipeline.Fit(dataView);
         }
 
-        private List<RevenuePredictionDto> Predict()
+        private List<RevenuePredictionDto> Predict(GroupBy groupBy)
         {
-            var forecastEngine = _model.CreateTimeSeriesEngine<RevenuePredictionInput, RevenuePredictionDataModel>(_mlContext);
-            var forecast = forecastEngine.Predict();
+            var forecast = GenerateForecast();
 
-            List<RevenuePredictionDto> predictions = new List<RevenuePredictionDto>();
+            var formattedPrediction = SetDataFormat(forecast, groupBy);
 
-            for (int i = 0; i < forecast.PredictedRevenue.Length; i++)
-            {
-                predictions.Add(new RevenuePredictionDto
-                {
-                    Date = DateTime.Now.AddDays(i + 1),
-                    TotalRevenue = forecast.PredictedRevenue[i]
-                });
-            }
-
-            return predictions;
+            return formattedPrediction;
         }
 
-        public List<RevenuePredictionDto> GeneratePrediction(List<RevenueReportDto> data, int windowSize, int seriesLength, int horizon)
+        public List<RevenuePredictionDto> GeneratePrediction(List<RevenueReportDto> data, int windowSize, int seriesLength, int horizon, GroupBy groupBy)
         {
             var historicalData = ConvertToPredictionData(data);
 
             TrainModel(historicalData, windowSize, seriesLength, horizon);
 
-            var revenuePredictions = Predict();
+            var revenuePredictions = Predict(groupBy);
 
             return revenuePredictions;
         }
@@ -72,6 +62,49 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
                 Date = report.Date,
                 TotalRevenue = report.TotalRevenue
             }).ToList();
+        }
+
+        private RevenuePredictionDataModel GenerateForecast()
+        {
+            var forecastEngine = _model.CreateTimeSeriesEngine<RevenuePredictionInput, RevenuePredictionDataModel>(_mlContext);
+            var forecast = forecastEngine.Predict();
+
+            return forecast;
+        }
+
+        private List<RevenuePredictionDto> SetDataFormat(RevenuePredictionDataModel forecast, GroupBy groupBy)
+        {
+            List<RevenuePredictionDto> predictions = new List<RevenuePredictionDto>();
+
+            for (int i = 0; i < forecast.PredictedRevenue.Length; i++)
+            {
+                switch (groupBy)
+                {
+                    case GroupBy.Day:
+                        predictions.Add(new RevenuePredictionDto
+                        {
+                            Date = DateTime.Now.AddDays(i + 1),
+                            TotalRevenue = forecast.PredictedRevenue[i]
+                        });
+                        break;
+                    case GroupBy.Month:
+                        predictions.Add(new RevenuePredictionDto
+                        {
+                            Date = DateTime.Now.AddMonths(i + 1),
+                            TotalRevenue = forecast.PredictedRevenue[i]
+                        });
+                        break;
+                    case GroupBy.Year:
+                        predictions.Add(new RevenuePredictionDto
+                        {
+                            Date = DateTime.Now.AddYears(i + 1),
+                            TotalRevenue = forecast.PredictedRevenue[i]
+                        });
+                        break;
+                }
+            }
+
+            return predictions;
         }
     }
 }

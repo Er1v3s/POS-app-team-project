@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LiveCharts;
-using Org.BouncyCastle.Asn1.Cms;
 using POS.Models.Reports.ReportsPredictions;
 using POS.Models.Reports;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
@@ -30,11 +29,11 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
 
             _predictionGenerators = new Dictionary<int, Func<Task>>
             {
-                { 0, async () => await GeneratePrediction(salePredictionGenerator, 7, 350, 7) }, // not implemented
-                { 1, async () => await GeneratePrediction(revenuePredictionGenerator, (absoluteDate - absoluteDate.AddMonths(-2)).Days, (absoluteDate - absoluteDate.AddYears(-1)).Days, 1) },
-                { 2, async () => await GeneratePrediction(revenuePredictionGenerator, (absoluteDate - absoluteDate.AddMonths(-2)).Days, (absoluteDate - absoluteDate.AddYears(-1)).Days, 7) },
-                { 3, async () => await GeneratePrediction(revenuePredictionGenerator, (absoluteDate - absoluteDate.AddYears(-1)).Days, (absoluteDate - absoluteDate.AddYears(-3)).Days, (absoluteDate.AddMonths(1) - absoluteDate).Days) }, // to change
-                { 4, async () => await GeneratePrediction(revenuePredictionGenerator, 7, 28, 365) }, // to change
+                { 0, async () => await GeneratePrediction(salePredictionGenerator, 7, 350, 7, GroupBy.Day) }, // not implemented
+                { 1, async () => await GeneratePrediction(revenuePredictionGenerator, (absoluteDate - absoluteDate.AddMonths(-2)).Days, (absoluteDate - absoluteDate.AddYears(-1)).Days, 1, GroupBy.Day) },
+                { 2, async () => await GeneratePrediction(revenuePredictionGenerator, (absoluteDate - absoluteDate.AddMonths(-2)).Days, (absoluteDate - absoluteDate.AddYears(-1)).Days, 7, GroupBy.Day) },
+                { 3, async () => await GeneratePrediction(revenuePredictionGenerator, 12, 36, 6, GroupBy.Month) },
+                { 4, async () => await GeneratePrediction(revenuePredictionGenerator, 2, 6, 1, GroupBy.Year) },
             };
 
             _predictionParameters = new Dictionary<int, Action>
@@ -43,22 +42,25 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
                 { 0, () => _reportsFactory.SetParameters(DateTime.Now, DateTime.Now) }, // not implemented 
                 { 1, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-1).AddMonths(-1), absoluteDate.AddMonths(-1)) },
                 { 2, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-1).AddMonths(-1), absoluteDate.AddMonths(-1)) },
-                { 3, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-3).AddYears(-1), absoluteDate.AddMonths(-1)) }, // to change
-                { 4, () => _reportsFactory.SetParameters(absoluteDate, absoluteDate) }, // to change
+                { 3, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-3).AddMonths(-(absoluteDate.Month - 1)).AddDays(-(absoluteDate.Day - 1)), absoluteDate.AddDays(-(absoluteDate.Day - 1))) },
+                { 4, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-6).AddMonths(-(absoluteDate.Month - 1)).AddDays(-(absoluteDate.Day - 1)), absoluteDate.AddMonths(-(absoluteDate.Month - 1)).AddDays(-(absoluteDate.Day - 1))) },
             };
         }
 
-        private async Task GeneratePrediction<TInput, TOutput>(IPredictionGenerator<TInput, TOutput> predictionGenerator, int windowSize, int seriesLength, int horizon)
+        private async Task GeneratePrediction<TInput, TOutput>(IPredictionGenerator<TInput, TOutput> predictionGenerator, int windowSize, int seriesLength, int horizon, GroupBy groupBy)
         {
             var data = _reportsFactory.GetReportData() as List<TInput>;
 
-            _revenuePredictions = predictionGenerator.GeneratePrediction(data, windowSize, seriesLength, horizon);
+            _revenuePredictions = predictionGenerator.GeneratePrediction(data, windowSize, seriesLength, horizon, groupBy);
         }
 
         public async Task GeneratePrediction(int selectedReportIndex, SeriesCollection seriesCollection)
         {
+            // Prediction for weeks requires daily report, not weekly 
+            var reportIndex = selectedReportIndex == 2 ? 1 : selectedReportIndex;
+
             _predictionParameters[selectedReportIndex]();
-            await _reportsFactory.GenerateReport(1); // THIS PARAMETR MUST BE 1, BECAUSE ONLY THIS RETURNS DATA WITH EACH DAYS.
+            await _reportsFactory.GenerateReport(reportIndex);
             await _predictionGenerators[selectedReportIndex]();
         }
 
