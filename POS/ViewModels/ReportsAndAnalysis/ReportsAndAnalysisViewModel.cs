@@ -99,9 +99,6 @@ namespace POS.ViewModels.ReportsAndAnalysis
         {
             seriesCollection.Clear();
 
-            _reportFactory.SetParameters(DateTime.Now.AddDays(-56), DateTime.Now.AddDays(-28)); // TO CHANGE
-
-            await _reportFactory.GenerateReport(selectedReportIndex);
             await _predictionsFactory.GeneratePrediction(selectedReportIndex, seriesCollection);
             await _chartFactory.GenerateChart(selectedReportIndex, seriesCollection, ChartType.Prediction);
 

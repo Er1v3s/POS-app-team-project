@@ -6,13 +6,13 @@ using LiveCharts.Wpf;
 using POS.Models.Reports.ReportsPredictions;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 
-namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators
+namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators.PredictionChartGenerators
 {
-    public class PredictionChart : IChartGenerator<RevenuePredictionDto>
+    public class RevenuePredictionChartGenerator : IChartGenerator<RevenuePredictionDto>
     {
         public void GenerateChart(List<RevenuePredictionDto> data, SeriesCollection seriesCollection, out List<string> labels, Func<dynamic, string>? labelSelector = null)
         {
-            seriesCollection.Add(new LineSeries()
+            seriesCollection.Add(new ColumnSeries()
             {
                 Title = "Prognozowany przychód",
                 Values = new ChartValues<float>(data.Select(p => p.TotalRevenue)),

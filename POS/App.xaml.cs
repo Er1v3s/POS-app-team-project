@@ -8,9 +8,12 @@ using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
 using POS.ViewModels;
 using POS.ViewModels.ReportsAndAnalysis;
-using POS.ViewModels.ReportsAndAnalysis.ChartGenerators;
+using POS.ViewModels.ReportsAndAnalysis.ChartGenerators.PredictionChartGenerators;
+using POS.ViewModels.ReportsAndAnalysis.ChartGenerators.ReportChartGenerators;
+using POS.ViewModels.ReportsAndAnalysis.Factories;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 using POS.ViewModels.ReportsAndAnalysis.PredictionGenerators;
+using POS.ViewModels.ReportsAndAnalysis.PredictionGenerators.POS.ViewModels.ReportsAndAnalysis.PredictionGenerators;
 using POS.ViewModels.ReportsAndAnalysis.ReportGenerators;
 
 namespace POS
@@ -35,20 +38,27 @@ namespace POS
         {
             servicesCollection.AddSingleton<ReportsAndAnalysisViewModel>();
 
+            // Reports
             servicesCollection.AddSingleton<IReportGenerator<ProductSalesDto>, SalesReportGenerator>();
             servicesCollection.AddSingleton<IReportGenerator<RevenueReportDto>, RevenueReportGenerator>();
             servicesCollection.AddSingleton<IReportGenerator<OrderReportDto>, NumberOfOrdersGenerator>();
             servicesCollection.AddSingleton<IReportGenerator<EmployeeProductivityDto>, EmployeeProductivityGenerator>();
             servicesCollection.AddSingleton<IReportGenerator<PaymentRatioDto>, CardToCashPaymentRatioGenerator>();
-            servicesCollection.AddSingleton<IPredictionGenerator<RevenueReportDto>, PredictionGenerator>();
 
             servicesCollection.AddSingleton<IChartGenerator<ProductSalesDto>, SalesChartGenerator>();
             servicesCollection.AddSingleton<IChartGenerator<RevenueReportDto>, RevenueChartGenerator>();
             servicesCollection.AddSingleton<IChartGenerator<OrderReportDto>, NumberOfOrdersChartGenerator>();
             servicesCollection.AddSingleton<IChartGenerator<EmployeeProductivityDto>, EmployeeProductivityChartGenerator>();
             servicesCollection.AddSingleton<IChartGenerator<PaymentRatioDto>, PaymentMethodRatioChartGenerator>();
-            servicesCollection.AddSingleton<IChartGenerator<RevenuePredictionDto>, PredictionChart>();
 
+            // Predictions
+            servicesCollection.AddSingleton<IPredictionGenerator<RevenueReportDto, RevenuePredictionDto>, RevenuePredictionGenerator>();
+            servicesCollection.AddSingleton<IPredictionGenerator<ProductSalesDto, ProductSalesPredictionDto>, ProductSalesPredictionGenerator>();
+
+            servicesCollection.AddSingleton<IChartGenerator<RevenuePredictionDto>, RevenuePredictionChartGenerator>();
+            servicesCollection.AddSingleton<IChartGenerator<ProductSalesPredictionDto>, SalesPredictionChartGenerator>();
+
+            // Factories
             servicesCollection.AddSingleton<IReportsFactory, ReportsFactory>();
             servicesCollection.AddSingleton<IChartsFactory, ChartsFactory>();
             servicesCollection.AddSingleton<IPredictionsFactory, PredictionsFactory>();
