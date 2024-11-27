@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.ML;
+using System.Linq;
 using Microsoft.ML.Transforms.TimeSeries;
 using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
@@ -9,17 +9,17 @@ using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 
 namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
 {
-    public class RevenuePredictionGenerator : IPredictionGenerator<RevenueReportDto, RevenuePredictionDto>
+    public class NumberOfOrdersPredictionGenerator : IPredictionGenerator<OrderReportDto, NumberOfOrdersPredictionDto>
     {
         private readonly MLContext _mlContext;
         private ITransformer _model;
 
-        public RevenuePredictionGenerator()
+        public NumberOfOrdersPredictionGenerator()
         {
             _mlContext = new MLContext();
         }
 
-        public List<RevenuePredictionDto> GeneratePrediction(List<RevenueReportDto> data, int windowSize, int seriesLength, int horizon, GroupBy groupBy)
+        public List<NumberOfOrdersPredictionDto> GeneratePrediction(List<OrderReportDto> data, int windowSize, int seriesLength, int horizon, GroupBy groupBy)
         {
             var historicalData = ConvertToPredictionData(data);
 
@@ -30,13 +30,13 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
             return revenuePredictions;
         }
 
-        private void TrainModel(List<RevenuePredictionDto> revenueData, int windowSize, int seriesLength, int horizon)
+        private void TrainModel(List<NumberOfOrdersPredictionDto> data, int windowSize, int seriesLength, int horizon)
         {
-            var dataView = _mlContext.Data.LoadFromEnumerable(revenueData);
+            var dataView = _mlContext.Data.LoadFromEnumerable(data);
 
             var pipeline = _mlContext.Forecasting.ForecastBySsa(
                 outputColumnName: nameof(PredictionDataModel.Total),
-                inputColumnName: nameof(RevenuePredictionDto.TotalRevenue),
+                inputColumnName: nameof(NumberOfOrdersPredictionDto.NumberOfOrders),
                 windowSize: windowSize,     // Define based on your time-series pattern
                 seriesLength: seriesLength,  // Series length should match the data pattern
                 trainSize: (int)Math.Round(seriesLength * 0.8),    // Number of records to train on
@@ -46,7 +46,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
             _model = pipeline.Fit(dataView);
         }
 
-        private List<RevenuePredictionDto> Predict(GroupBy groupBy)
+        private List<NumberOfOrdersPredictionDto> Predict(GroupBy groupBy)
         {
             var forecast = GenerateForecast();
 
@@ -55,50 +55,50 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
             return formattedPrediction;
         }
 
-        private List<RevenuePredictionDto> ConvertToPredictionData(List<RevenueReportDto> reportData)
+        private List<NumberOfOrdersPredictionDto> ConvertToPredictionData(List<OrderReportDto> reportData)
         {
-            return reportData.Select(report => new RevenuePredictionDto
+            return reportData.Select(report => new NumberOfOrdersPredictionDto
             {
                 Date = report.Date,
-                TotalRevenue = report.TotalRevenue
+                NumberOfOrders = report.OrderCount
             }).ToList();
         }
 
         private PredictionDataModel GenerateForecast()
         {
-            var forecastEngine = _model.CreateTimeSeriesEngine<RevenuePredictionInput, PredictionDataModel>(_mlContext);
+            var forecastEngine = _model.CreateTimeSeriesEngine<NumberOfOrdersPredictionDto, PredictionDataModel>(_mlContext);
             var forecast = forecastEngine.Predict();
 
             return forecast;
         }
 
-        private List<RevenuePredictionDto> SetDataFormat(PredictionDataModel forecast, GroupBy groupBy)
+        private List<NumberOfOrdersPredictionDto> SetDataFormat(PredictionDataModel forecast, GroupBy groupBy)
         {
-            List<RevenuePredictionDto> predictions = new List<RevenuePredictionDto>();
+            var predictions = new List<NumberOfOrdersPredictionDto>();
 
             for (int i = 0; i < forecast.Total.Length; i++)
             {
                 switch (groupBy)
                 {
                     case GroupBy.Day:
-                        predictions.Add(new RevenuePredictionDto
+                        predictions.Add(new NumberOfOrdersPredictionDto
                         {
                             Date = DateTime.Now.AddDays(i + 1),
-                            TotalRevenue = forecast.Total[i]
+                            NumberOfOrders = (int)forecast.Total[i]
                         });
                         break;
                     case GroupBy.Month:
-                        predictions.Add(new RevenuePredictionDto
+                        predictions.Add(new NumberOfOrdersPredictionDto
                         {
                             Date = DateTime.Now.AddMonths(i + 1),
-                            TotalRevenue = forecast.Total[i]
+                            NumberOfOrders = (int)forecast.Total[i]
                         });
                         break;
                     case GroupBy.Year:
-                        predictions.Add(new RevenuePredictionDto
+                        predictions.Add(new NumberOfOrdersPredictionDto
                         {
                             Date = DateTime.Now.AddYears(i + 1),
-                            TotalRevenue = forecast.Total[i]
+                            NumberOfOrders = (int)forecast.Total[i]
                         });
                         break;
                 }

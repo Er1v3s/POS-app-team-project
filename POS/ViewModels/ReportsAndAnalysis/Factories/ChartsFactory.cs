@@ -31,7 +31,8 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
             IChartGenerator<PaymentRatioDto> paymentRatioReportChartGenerator,
 
             IChartGenerator<ProductSalesPredictionDto> salesPredictionChartGenerator,
-            IChartGenerator<RevenuePredictionDto> revenuePredictionChartGenerator
+            IChartGenerator<RevenuePredictionDto> revenuePredictionChartGenerator,
+            IChartGenerator<NumberOfOrdersPredictionDto> numberOfOrdersPredictionChartGenerator
             )
         {
             _reportFactory = reportFactory;
@@ -59,6 +60,10 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
                 { 2, async () => await GeneratePredictionChart(revenuePredictionChartGenerator, r => r.Date.ToString("yyyy-MM-dd")) },
                 { 3, async () => await GeneratePredictionChart(revenuePredictionChartGenerator, r => r.Date.ToString("yyyy-MM")) },
                 { 4, async () => await GeneratePredictionChart(revenuePredictionChartGenerator, r => r.Date.ToString("yyyy")) },
+                { 5, async () => await GeneratePredictionChart(numberOfOrdersPredictionChartGenerator, r => r.Date.ToString("yyyy-MM-dd")) },
+                { 6, async () => await GeneratePredictionChart(numberOfOrdersPredictionChartGenerator, r => r.Date.ToString("yyyy-MM-dd")) },
+                { 7, async () => await GeneratePredictionChart(numberOfOrdersPredictionChartGenerator, r => r.Date.ToString("yyyy-MM")) },
+                { 8, async () => await GeneratePredictionChart(numberOfOrdersPredictionChartGenerator, r => r.Date.ToString("yyyy")) },
             };
         }
 

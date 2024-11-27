@@ -22,8 +22,9 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
         public PredictionsFactory(
             IReportsFactory reportFactory,
 
+            IPredictionGenerator<ProductSalesDto, ProductSalesPredictionDto> salePredictionGenerator,
             IPredictionGenerator<RevenueReportDto, RevenuePredictionDto> revenuePredictionGenerator,
-            IPredictionGenerator<ProductSalesDto, ProductSalesPredictionDto> salePredictionGenerator)
+            IPredictionGenerator<OrderReportDto, NumberOfOrdersPredictionDto> numberOfOrdersPredictionGenerator)
         {
             _reportsFactory = reportFactory;
 
@@ -34,6 +35,10 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
                 { 2, async () => await GeneratePrediction(revenuePredictionGenerator, (absoluteDate - absoluteDate.AddMonths(-2)).Days, (absoluteDate - absoluteDate.AddYears(-1)).Days, 7, GroupBy.Day) },
                 { 3, async () => await GeneratePrediction(revenuePredictionGenerator, 12, 36, 6, GroupBy.Month) },
                 { 4, async () => await GeneratePrediction(revenuePredictionGenerator, 2, 6, 1, GroupBy.Year) },
+                { 5, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, 2, 6, 1, GroupBy.Year) },
+                { 6, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, 2, 6, 1, GroupBy.Year) },
+                { 7, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, 2, 6, 1, GroupBy.Year) },
+                { 8, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, 2, 6, 1, GroupBy.Year) },
             };
 
             _predictionParameters = new Dictionary<int, Action>
@@ -44,6 +49,10 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
                 { 2, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-1).AddMonths(-1), absoluteDate.AddMonths(-1)) },
                 { 3, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-3).AddMonths(-(absoluteDate.Month - 1)).AddDays(-(absoluteDate.Day - 1)), absoluteDate.AddDays(-(absoluteDate.Day - 1))) },
                 { 4, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-6).AddMonths(-(absoluteDate.Month - 1)).AddDays(-(absoluteDate.Day - 1)), absoluteDate.AddMonths(-(absoluteDate.Month - 1)).AddDays(-(absoluteDate.Day - 1))) },
+                { 5, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-1).AddMonths(-1), absoluteDate.AddMonths(-1)) },
+                { 6, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-1).AddMonths(-1), absoluteDate.AddMonths(-1)) },
+                { 7, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-3).AddMonths(-(absoluteDate.Month - 1)).AddDays(-(absoluteDate.Day - 1)), absoluteDate.AddDays(-(absoluteDate.Day - 1))) },
+                { 8, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-6).AddMonths(-(absoluteDate.Month - 1)).AddDays(-(absoluteDate.Day - 1)), absoluteDate.AddMonths(-(absoluteDate.Month - 1)).AddDays(-(absoluteDate.Day - 1))) },
             };
         }
 
