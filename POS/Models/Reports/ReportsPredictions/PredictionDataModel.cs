@@ -2,9 +2,9 @@
 
 namespace POS.Models.Reports.ReportsPredictions
 {
-    public class RevenuePredictionDataModel
+    public class PredictionDataModel
     {
         [VectorType(7)] // The forecast horizon (e.g., predicting for the next 7 days)
-        public float[] PredictedRevenue { get; set; }
+        public float[] Total { get; set; }
     }
 }

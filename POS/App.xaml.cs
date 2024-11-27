@@ -3,17 +3,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
-using POS.ViewModels;
 using POS.ViewModels.ReportsAndAnalysis;
 using POS.ViewModels.ReportsAndAnalysis.ChartGenerators.PredictionChartGenerators;
 using POS.ViewModels.ReportsAndAnalysis.ChartGenerators.ReportChartGenerators;
 using POS.ViewModels.ReportsAndAnalysis.Factories;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 using POS.ViewModels.ReportsAndAnalysis.PredictionGenerators;
-using POS.ViewModels.ReportsAndAnalysis.PredictionGenerators.POS.ViewModels.ReportsAndAnalysis.PredictionGenerators;
 using POS.ViewModels.ReportsAndAnalysis.ReportGenerators;
 
 namespace POS
@@ -54,9 +51,11 @@ namespace POS
             // Predictions
             servicesCollection.AddSingleton<IPredictionGenerator<RevenueReportDto, RevenuePredictionDto>, RevenuePredictionGenerator>();
             servicesCollection.AddSingleton<IPredictionGenerator<ProductSalesDto, ProductSalesPredictionDto>, ProductSalesPredictionGenerator>();
+            servicesCollection.AddSingleton<IPredictionGenerator<OrderReportDto, NumberOfOrdersPredictionDto>, NumberOfOrdersPredictionGenerator>();
 
             servicesCollection.AddSingleton<IChartGenerator<RevenuePredictionDto>, RevenuePredictionChartGenerator>();
             servicesCollection.AddSingleton<IChartGenerator<ProductSalesPredictionDto>, SalesPredictionChartGenerator>();
+            servicesCollection.AddSingleton<IChartGenerator<NumberOfOrdersPredictionDto>, NumberOfOrdersPredictionChartGenerator>();
 
             // Factories
             servicesCollection.AddSingleton<IReportsFactory, ReportsFactory>();
