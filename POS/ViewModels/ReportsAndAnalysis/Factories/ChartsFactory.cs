@@ -67,14 +67,14 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
             };
         }
 
-        public async Task GenerateChart(int selectedReportIndex, SeriesCollection seriesCollection, ChartType type)
+        public async Task GenerateChart(int selectedReportIndex, SeriesCollection seriesCollection, ChartType chartType)
         {
             this.seriesCollection = seriesCollection;
 
-            if (type == ChartType.Report)
+            if (chartType == ChartType.Report)
                 await _reportChartGenerators[selectedReportIndex]();
 
-            if (type == ChartType.Prediction)
+            if (chartType == ChartType.Prediction)
                 await _predictionChartGenerators[selectedReportIndex]();
         }
 

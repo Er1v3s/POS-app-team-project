@@ -17,7 +17,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
 
         private object _revenuePredictions;
 
-        private DateTime absoluteDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+        private readonly DateTime absoluteDate = new (DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
 
         public PredictionsFactory(
             IReportsFactory reportFactory,
