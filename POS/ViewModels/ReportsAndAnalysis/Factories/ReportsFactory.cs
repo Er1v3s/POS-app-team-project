@@ -52,7 +52,6 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
 
         public object GetReportData()
         {
-
             return reportData;
         }
 
