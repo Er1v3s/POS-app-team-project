@@ -65,7 +65,54 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
                     throw new ArgumentException("Invalid groupBy value");
             }
 
-            return ordersReport.OrderBy(order => order.Date).ToList();
+            var orderedData = ordersReport.OrderBy(revenue => revenue.Date).ToList();
+
+            orderedData = CompleteMissingData(orderedData, startDate, endDate, groupBy);
+
+            return orderedData;
+        }
+
+        private List<OrderReportDto> CompleteMissingData(List<OrderReportDto> orderedData, DateTime startDate,
+            DateTime endDate, string groupBy)
+        {
+            switch (groupBy)
+            {
+                case "day":
+                    var allDates = Enumerable.Range(0, (endDate - startDate).Days + 1)
+                        .Select(offset => startDate.AddDays(offset))
+                        .ToList();
+
+                    return allDates.Select(date =>
+                    {
+                        var report = orderedData.FirstOrDefault(r => r.Date.Date == date.Date);
+                        return report ?? new OrderReportDto
+                        {
+                            Date = date,
+                            OrderCount = 0,
+                        };
+                    }).ToList();
+
+                case "week":
+                    var allDaysOfWeek = Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>();
+
+                    foreach (var dayOfWeek in allDaysOfWeek)
+                    {
+                        if (orderedData.All(data => data.DayOfWeek != dayOfWeek))
+                        {
+                            orderedData.Add(new OrderReportDto
+                            {
+                                DayOfWeek = dayOfWeek,
+                                OrderCount = 0,
+                            });
+                        }
+                    }
+
+                    var result = orderedData.OrderBy(data => data.DayOfWeek).ToList();
+                    return result;
+
+                default:
+                    return orderedData;
+            }
         }
     }
 }

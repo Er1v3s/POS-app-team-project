@@ -35,9 +35,9 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
                 { 2, async () => await GeneratePrediction(revenuePredictionGenerator, (absoluteDate - absoluteDate.AddMonths(-2)).Days, (absoluteDate - absoluteDate.AddYears(-1)).Days, 7, GroupBy.Day) },
                 { 3, async () => await GeneratePrediction(revenuePredictionGenerator, 12, 36, 6, GroupBy.Month) },
                 { 4, async () => await GeneratePrediction(revenuePredictionGenerator, 2, 6, 1, GroupBy.Year) },
-                { 5, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, 2, 6, 1, GroupBy.Year) },
-                { 6, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, 2, 6, 1, GroupBy.Year) },
-                { 7, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, 2, 6, 1, GroupBy.Year) },
+                { 5, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, (absoluteDate - absoluteDate.AddMonths(-2)).Days, (absoluteDate - absoluteDate.AddYears(-1)).Days, 1, GroupBy.Day) },
+                { 6, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, (absoluteDate - absoluteDate.AddMonths(-2)).Days, (absoluteDate - absoluteDate.AddYears(-1)).Days, 7, GroupBy.Day) },
+                { 7, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, 12, 36, 6, GroupBy.Month) },
                 { 8, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, 2, 6, 1, GroupBy.Year) },
             };
 
@@ -59,7 +59,12 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
         public async Task GeneratePrediction(int selectedReportIndex, SeriesCollection seriesCollection)
         {
             // Prediction for weeks requires daily report, not weekly 
-            var reportIndex = selectedReportIndex == 2 ? 1 : selectedReportIndex;
+            var reportIndex = selectedReportIndex;
+
+            if (selectedReportIndex == 2)
+                reportIndex = 1;
+            if (selectedReportIndex == 6)
+                reportIndex = 5;
 
             _predictionParameters[selectedReportIndex]();
             await _reportsFactory.GenerateReport(reportIndex);

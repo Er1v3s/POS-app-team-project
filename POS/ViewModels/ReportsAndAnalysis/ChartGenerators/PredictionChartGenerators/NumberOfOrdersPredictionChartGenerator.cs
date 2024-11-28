@@ -17,7 +17,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators.PredictionChartGener
                 Title = "Prognozowany przychód",
                 Values = new ChartValues<float>(data.Select(p => p.NumberOfOrders)),
                 PointGeometry = null,
-                LabelPoint = point => point.Y.ToString("N"),
+                LabelPoint = point => point.Y.ToString("N0"),
                 DataLabels = true,
             });
 
