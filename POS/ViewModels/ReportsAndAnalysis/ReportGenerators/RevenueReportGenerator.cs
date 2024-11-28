@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 using POS.Models.Reports;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 
@@ -14,13 +15,13 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
         {
             await using var dbContext = new AppDbContext();
 
-            var orders = dbContext.Orders
+            var orders = await dbContext.Orders
                 .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
                 .Join(dbContext.Payments,
                     order => order.OrderId,
                     payment => payment.OrderId,
                     (order, payment) => new { order.OrderTime, payment.Amount })
-                .AsEnumerable();
+                .ToListAsync();
 
             IEnumerable<RevenueReportDto> ordersReport;
 
