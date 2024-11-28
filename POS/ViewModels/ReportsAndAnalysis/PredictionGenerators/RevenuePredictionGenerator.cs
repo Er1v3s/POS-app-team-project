@@ -19,12 +19,23 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
             _mlContext = new MLContext();
         }
 
+        public List<RevenuePredictionDto> GeneratePrediction(List<RevenueReportDto> data, int windowSize, int seriesLength, int horizon, GroupBy groupBy)
+        {
+            var historicalData = ConvertToPredictionData(data);
+
+            TrainModel(historicalData, windowSize, seriesLength, horizon);
+
+            var revenuePredictions = Predict(groupBy);
+
+            return revenuePredictions;
+        }
+
         private void TrainModel(List<RevenuePredictionDto> revenueData, int windowSize, int seriesLength, int horizon)
         {
             var dataView = _mlContext.Data.LoadFromEnumerable(revenueData);
 
             var pipeline = _mlContext.Forecasting.ForecastBySsa(
-                outputColumnName: nameof(RevenuePredictionDataModel.PredictedRevenue),
+                outputColumnName: nameof(PredictionDataModel.Total),
                 inputColumnName: nameof(RevenuePredictionDto.TotalRevenue),
                 windowSize: windowSize,     // Define based on your time-series pattern
                 seriesLength: seriesLength,  // Series length should match the data pattern
@@ -44,17 +55,6 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
             return formattedPrediction;
         }
 
-        public List<RevenuePredictionDto> GeneratePrediction(List<RevenueReportDto> data, int windowSize, int seriesLength, int horizon, GroupBy groupBy)
-        {
-            var historicalData = ConvertToPredictionData(data);
-
-            TrainModel(historicalData, windowSize, seriesLength, horizon);
-
-            var revenuePredictions = Predict(groupBy);
-
-            return revenuePredictions;
-        }
-
         private List<RevenuePredictionDto> ConvertToPredictionData(List<RevenueReportDto> reportData)
         {
             return reportData.Select(report => new RevenuePredictionDto
@@ -64,19 +64,19 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
             }).ToList();
         }
 
-        private RevenuePredictionDataModel GenerateForecast()
+        private PredictionDataModel GenerateForecast()
         {
-            var forecastEngine = _model.CreateTimeSeriesEngine<RevenuePredictionInput, RevenuePredictionDataModel>(_mlContext);
+            var forecastEngine = _model.CreateTimeSeriesEngine<RevenuePredictionInput, PredictionDataModel>(_mlContext);
             var forecast = forecastEngine.Predict();
 
             return forecast;
         }
 
-        private List<RevenuePredictionDto> SetDataFormat(RevenuePredictionDataModel forecast, GroupBy groupBy)
+        private List<RevenuePredictionDto> SetDataFormat(PredictionDataModel forecast, GroupBy groupBy)
         {
             List<RevenuePredictionDto> predictions = new List<RevenuePredictionDto>();
 
-            for (int i = 0; i < forecast.PredictedRevenue.Length; i++)
+            for (int i = 0; i < forecast.Total.Length; i++)
             {
                 switch (groupBy)
                 {
@@ -84,21 +84,21 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
                         predictions.Add(new RevenuePredictionDto
                         {
                             Date = DateTime.Now.AddDays(i + 1),
-                            TotalRevenue = forecast.PredictedRevenue[i]
+                            TotalRevenue = forecast.Total[i]
                         });
                         break;
                     case GroupBy.Month:
                         predictions.Add(new RevenuePredictionDto
                         {
                             Date = DateTime.Now.AddMonths(i + 1),
-                            TotalRevenue = forecast.PredictedRevenue[i]
+                            TotalRevenue = forecast.Total[i]
                         });
                         break;
                     case GroupBy.Year:
                         predictions.Add(new RevenuePredictionDto
                         {
                             Date = DateTime.Now.AddYears(i + 1),
-                            TotalRevenue = forecast.PredictedRevenue[i]
+                            TotalRevenue = forecast.Total[i]
                         });
                         break;
                 }

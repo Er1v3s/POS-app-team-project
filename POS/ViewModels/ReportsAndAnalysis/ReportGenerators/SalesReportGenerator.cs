@@ -11,7 +11,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
 {
     public class SalesReportGenerator : IReportGenerator<ProductSalesDto>
     {
-        public async Task<List<ProductSalesDto>> GenerateData(DateTime startDate, DateTime endDate, string? orderBy = null)
+        public async Task<List<ProductSalesDto>> GenerateData(DateTime startDate, DateTime endDate, GroupBy? orderBy)
         {
             await using var dbContext = new AppDbContext();
 

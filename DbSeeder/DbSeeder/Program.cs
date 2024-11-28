@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using DbSeeder;
-using DataAccess.Models;
+﻿using DataAccess.Models;
 
 namespace DbSeeder
 {
@@ -13,20 +10,20 @@ namespace DbSeeder
         {
             using AppDbContext dbContext = new AppDbContext();
 
-            for (int i = 0; i <= 10; i++)
+            for (int i = 0; i <= 100000; i++)
             {
                 SeedDatabase(dbContext);
             }
         }
 
-        public static void SeedDatabase(AppDbContext dbContext)
+        private static void SeedDatabase(AppDbContext dbContext)
         {
             var order = GenerateOrder(dbContext);
             GenerateOrderItems(dbContext, order);
             GeneratePayment(dbContext, order);
         }
 
-        public static Orders GenerateOrder(AppDbContext dbContext)
+        private static Orders GenerateOrder(AppDbContext dbContext)
         {
             int employeeId = _random.Next(1, 4);
             DateTime randomDate = Randomizer.GenerateAlmostRandomDateTime();
@@ -44,7 +41,7 @@ namespace DbSeeder
             return order;
         }
 
-        public static void GenerateOrderItems(AppDbContext dbContext, Orders order)
+        private static void GenerateOrderItems(AppDbContext dbContext, Orders order)
         {
             int productSum = Randomizer.GenerateAlmostRandomInt();
 
@@ -68,7 +65,7 @@ namespace DbSeeder
             dbContext.SaveChanges();
         }
 
-        public static void GeneratePayment(AppDbContext dbContext, Orders order)
+        private static void GeneratePayment(AppDbContext dbContext, Orders order)
         {
             double amount = 0;
             string paymentMethod = Randomizer.GenerateRandomPaymentMethod();

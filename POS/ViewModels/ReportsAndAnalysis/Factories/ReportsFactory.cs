@@ -26,22 +26,17 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
             _reportDataGenerators = new Dictionary<int, Func<Task>>
             {
                 { 0, async () => await GenerateReportData(saleReportGenerator) },
-                { 1, async () => await GenerateReportData(revenueReportGenerator, "day")},
-                { 2, async () => await GenerateReportData(revenueReportGenerator, "week") },
-                { 3, async () => await GenerateReportData(revenueReportGenerator, "month") },
-                { 4, async () => await GenerateReportData(revenueReportGenerator, "year") },
-                { 5, async () => await GenerateReportData(numberOfOrdersReportGenerator, "day") },
-                { 6, async () => await GenerateReportData(numberOfOrdersReportGenerator, "week") },
-                { 7, async () => await GenerateReportData(numberOfOrdersReportGenerator, "month") },
-                { 8, async () => await GenerateReportData(numberOfOrdersReportGenerator, "year") },
+                { 1, async () => await GenerateReportData(revenueReportGenerator, GroupBy.Day)},
+                { 2, async () => await GenerateReportData(revenueReportGenerator, GroupBy.Week) },
+                { 3, async () => await GenerateReportData(revenueReportGenerator, GroupBy.Month) },
+                { 4, async () => await GenerateReportData(revenueReportGenerator, GroupBy.Year) },
+                { 5, async () => await GenerateReportData(numberOfOrdersReportGenerator, GroupBy.Day) },
+                { 6, async () => await GenerateReportData(numberOfOrdersReportGenerator, GroupBy.Week) },
+                { 7, async () => await GenerateReportData(numberOfOrdersReportGenerator, GroupBy.Month) },
+                { 8, async () => await GenerateReportData(numberOfOrdersReportGenerator, GroupBy.Year) },
                 { 9, async () => await GenerateReportData(employeeProductivityReportGenerator) },
                 { 10, async () => await GenerateReportData(paymentRatioReportGenerator) }
             };
-        }
-
-        private async Task GenerateReportData<T>(IReportGenerator<T> reportGenerator, string? groupBy = null)
-        {
-            reportData = await reportGenerator.GenerateData(startDate, endDate, groupBy);
         }
 
         public void SetParameters(DateTime startDate, DateTime endDate)
@@ -57,8 +52,12 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
 
         public object GetReportData()
         {
-
             return reportData;
+        }
+
+        private async Task GenerateReportData<T>(IReportGenerator<T> reportGenerator, GroupBy? groupBy = null)
+        {
+            reportData = await reportGenerator.GenerateData(startDate, endDate, groupBy);
         }
     }
 }

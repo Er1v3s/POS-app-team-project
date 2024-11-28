@@ -17,13 +17,14 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
 
         private object _revenuePredictions;
 
-        private DateTime absoluteDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+        private readonly DateTime absoluteDate = new (DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
 
         public PredictionsFactory(
             IReportsFactory reportFactory,
 
+            IPredictionGenerator<ProductSalesDto, ProductSalesPredictionDto> salePredictionGenerator,
             IPredictionGenerator<RevenueReportDto, RevenuePredictionDto> revenuePredictionGenerator,
-            IPredictionGenerator<ProductSalesDto, ProductSalesPredictionDto> salePredictionGenerator)
+            IPredictionGenerator<OrderReportDto, NumberOfOrdersPredictionDto> numberOfOrdersPredictionGenerator)
         {
             _reportsFactory = reportFactory;
 
@@ -34,6 +35,10 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
                 { 2, async () => await GeneratePrediction(revenuePredictionGenerator, (absoluteDate - absoluteDate.AddMonths(-2)).Days, (absoluteDate - absoluteDate.AddYears(-1)).Days, 7, GroupBy.Day) },
                 { 3, async () => await GeneratePrediction(revenuePredictionGenerator, 12, 36, 6, GroupBy.Month) },
                 { 4, async () => await GeneratePrediction(revenuePredictionGenerator, 2, 6, 1, GroupBy.Year) },
+                { 5, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, (absoluteDate - absoluteDate.AddMonths(-2)).Days, (absoluteDate - absoluteDate.AddYears(-1)).Days, 1, GroupBy.Day) },
+                { 6, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, (absoluteDate - absoluteDate.AddMonths(-2)).Days, (absoluteDate - absoluteDate.AddYears(-1)).Days, 7, GroupBy.Day) },
+                { 7, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, 12, 36, 6, GroupBy.Month) },
+                { 8, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, 2, 6, 1, GroupBy.Year) },
             };
 
             _predictionParameters = new Dictionary<int, Action>
@@ -44,20 +49,22 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
                 { 2, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-1).AddMonths(-1), absoluteDate.AddMonths(-1)) },
                 { 3, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-3).AddMonths(-(absoluteDate.Month - 1)).AddDays(-(absoluteDate.Day - 1)), absoluteDate.AddDays(-(absoluteDate.Day - 1))) },
                 { 4, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-6).AddMonths(-(absoluteDate.Month - 1)).AddDays(-(absoluteDate.Day - 1)), absoluteDate.AddMonths(-(absoluteDate.Month - 1)).AddDays(-(absoluteDate.Day - 1))) },
+                { 5, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-1).AddMonths(-1), absoluteDate.AddMonths(-1)) },
+                { 6, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-1).AddMonths(-1), absoluteDate.AddMonths(-1)) },
+                { 7, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-3).AddMonths(-(absoluteDate.Month - 1)).AddDays(-(absoluteDate.Day - 1)), absoluteDate.AddDays(-(absoluteDate.Day - 1))) },
+                { 8, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-6).AddMonths(-(absoluteDate.Month - 1)).AddDays(-(absoluteDate.Day - 1)), absoluteDate.AddMonths(-(absoluteDate.Month - 1)).AddDays(-(absoluteDate.Day - 1))) },
             };
-        }
-
-        private async Task GeneratePrediction<TInput, TOutput>(IPredictionGenerator<TInput, TOutput> predictionGenerator, int windowSize, int seriesLength, int horizon, GroupBy groupBy)
-        {
-            var data = _reportsFactory.GetReportData() as List<TInput>;
-
-            _revenuePredictions = predictionGenerator.GeneratePrediction(data, windowSize, seriesLength, horizon, groupBy);
         }
 
         public async Task GeneratePrediction(int selectedReportIndex, SeriesCollection seriesCollection)
         {
             // Prediction for weeks requires daily report, not weekly 
-            var reportIndex = selectedReportIndex == 2 ? 1 : selectedReportIndex;
+            var reportIndex = selectedReportIndex;
+
+            if (selectedReportIndex == 2)
+                reportIndex = 1;
+            if (selectedReportIndex == 6)
+                reportIndex = 5;
 
             _predictionParameters[selectedReportIndex]();
             await _reportsFactory.GenerateReport(reportIndex);
@@ -67,6 +74,13 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
         public object GetPredictionData()
         {
             return _revenuePredictions;
+        }
+
+        private async Task GeneratePrediction<TInput, TOutput>(IPredictionGenerator<TInput, TOutput> predictionGenerator, int windowSize, int seriesLength, int horizon, GroupBy groupBy)
+        {
+            var data = _reportsFactory.GetReportData() as List<TInput>;
+
+            _revenuePredictions = predictionGenerator.GeneratePrediction(data, windowSize, seriesLength, horizon, groupBy);
         }
     }
 }

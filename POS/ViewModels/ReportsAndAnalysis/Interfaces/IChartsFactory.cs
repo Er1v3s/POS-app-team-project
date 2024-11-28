@@ -8,6 +8,6 @@ namespace POS.ViewModels.ReportsAndAnalysis.Interfaces
     public interface IChartsFactory
     {
         List<string> GetUpdatedLabelsValues();
-        Task GenerateChart(int selectedReportIndex, SeriesCollection seriesCollection, ChartType type);
+        Task GenerateChart(int selectedReportIndex, SeriesCollection seriesCollection, ChartType chartType);
     }
 }

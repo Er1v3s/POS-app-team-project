@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DataAccess.Models;
+﻿using DataAccess.Models;
 
 namespace DbSeeder
 {
@@ -14,17 +9,17 @@ namespace DbSeeder
         public static DateTime GenerateAlmostRandomDateTime()
         {
             DateTime startDate = new DateTime(2018, 1, 1);
-            DateTime endDate = new DateTime(2024, 10, 25);
+            DateTime endDate = DateTime.Now;
 
             int range = (endDate - startDate).Days;
 
             List<DayOfWeek> weightedDays = new List<DayOfWeek>
             {
-                DayOfWeek.Sunday, DayOfWeek.Sunday,  // Niedziela 2x
+                DayOfWeek.Sunday, DayOfWeek.Sunday,  // Sunday 2x
                 DayOfWeek.Monday,
-                DayOfWeek.Thursday, DayOfWeek.Thursday, // Czwartek 2x
-                DayOfWeek.Friday, DayOfWeek.Friday, DayOfWeek.Friday, DayOfWeek.Friday, DayOfWeek.Friday, // Piątek 5x
-                DayOfWeek.Saturday, DayOfWeek.Saturday, DayOfWeek.Saturday  // Sobota 3x
+                DayOfWeek.Thursday, DayOfWeek.Thursday, // Thursday 2x
+                DayOfWeek.Friday, DayOfWeek.Friday, DayOfWeek.Friday, DayOfWeek.Friday, DayOfWeek.Friday, // Friday 5x
+                DayOfWeek.Saturday, DayOfWeek.Saturday, DayOfWeek.Saturday  // Saturday 3x
             };
 
             DayOfWeek randomDayOfWeek = weightedDays[_random.Next(weightedDays.Count)];
@@ -113,7 +108,7 @@ namespace DbSeeder
             return product;
         }
 
-        public static Products GenerateProduct(List<Products> productList, string categoryName)
+        private static Products GenerateProduct(List<Products> productList, string categoryName)
         {
             int threshold = categoryName switch
             {

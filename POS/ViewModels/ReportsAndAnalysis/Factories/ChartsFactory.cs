@@ -31,7 +31,8 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
             IChartGenerator<PaymentRatioDto> paymentRatioReportChartGenerator,
 
             IChartGenerator<ProductSalesPredictionDto> salesPredictionChartGenerator,
-            IChartGenerator<RevenuePredictionDto> revenuePredictionChartGenerator
+            IChartGenerator<RevenuePredictionDto> revenuePredictionChartGenerator,
+            IChartGenerator<NumberOfOrdersPredictionDto> numberOfOrdersPredictionChartGenerator
             )
         {
             _reportFactory = reportFactory;
@@ -59,7 +60,27 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
                 { 2, async () => await GeneratePredictionChart(revenuePredictionChartGenerator, r => r.Date.ToString("yyyy-MM-dd")) },
                 { 3, async () => await GeneratePredictionChart(revenuePredictionChartGenerator, r => r.Date.ToString("yyyy-MM")) },
                 { 4, async () => await GeneratePredictionChart(revenuePredictionChartGenerator, r => r.Date.ToString("yyyy")) },
+                { 5, async () => await GeneratePredictionChart(numberOfOrdersPredictionChartGenerator, r => r.Date.ToString("yyyy-MM-dd")) },
+                { 6, async () => await GeneratePredictionChart(numberOfOrdersPredictionChartGenerator, r => r.Date.ToString("yyyy-MM-dd")) },
+                { 7, async () => await GeneratePredictionChart(numberOfOrdersPredictionChartGenerator, r => r.Date.ToString("yyyy-MM")) },
+                { 8, async () => await GeneratePredictionChart(numberOfOrdersPredictionChartGenerator, r => r.Date.ToString("yyyy")) },
             };
+        }
+
+        public async Task GenerateChart(int selectedReportIndex, SeriesCollection seriesCollection, ChartType chartType)
+        {
+            this.seriesCollection = seriesCollection;
+
+            if (chartType == ChartType.Report)
+                await _reportChartGenerators[selectedReportIndex]();
+
+            if (chartType == ChartType.Prediction)
+                await _predictionChartGenerators[selectedReportIndex]();
+        }
+
+        public List<string> GetUpdatedLabelsValues()
+        {
+            return labels;
         }
 
         private async Task GenerateReportChart<T>(IChartGenerator<T> chartGenerator,
@@ -76,22 +97,6 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
             var data = _predictionsFactory.GetPredictionData() as List<T>;
 
             chartGenerator.GenerateChart(data, seriesCollection, out labels, labelSelector);
-        }
-
-        public async Task GenerateChart(int selectedReportIndex, SeriesCollection seriesCollection, ChartType type)
-        {
-            this.seriesCollection = seriesCollection;
-
-            if (type == ChartType.Report)
-                await _reportChartGenerators[selectedReportIndex]();
-
-            if (type == ChartType.Prediction)
-                await _predictionChartGenerators[selectedReportIndex]();
-        }
-
-        public List<string> GetUpdatedLabelsValues()
-        {
-            return labels;
         }
     }
 }
