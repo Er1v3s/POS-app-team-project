@@ -44,8 +44,8 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
 
         public void SetParameters(DateTime startDate, DateTime endDate)
         {
-            this.startDate = startDate;
-            this.endDate = endDate;
+            this.startDate = new DateTime(startDate.Year, startDate.Month, startDate.Day);
+            this.endDate = new DateTime(endDate.Year, endDate.Month, endDate.Day).AddDays(1).AddSeconds(-1);
         }
 
         public async Task GenerateReport(int selectedReportIndex)

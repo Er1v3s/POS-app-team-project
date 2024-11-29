@@ -17,7 +17,8 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
 
         private object _revenuePredictions;
 
-        private readonly DateTime absoluteDate = new (DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+        private readonly DateTime predictionRange = new (DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+        private readonly DateTime reportDateRange = new(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
 
         public PredictionsFactory(
             IReportsFactory reportFactory,
@@ -30,35 +31,43 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
 
             _predictionGenerators = new Dictionary<int, Func<Task>>
             {
+                // These parameters of GeneratePrediction method are correct and I shouldn't touch them
                 { 0, async () => await GeneratePrediction(salePredictionGenerator, 7, 350, 7, GroupBy.Day) }, // not implemented
                 { 1, async () => await GeneratePrediction(salePredictionGenerator, 7, 350, 7, GroupBy.Day) }, // not implemented
                 { 2, async () => await GeneratePrediction(salePredictionGenerator, 7, 350, 7, GroupBy.Day) }, // not implemented
                 { 3, async () => await GeneratePrediction(salePredictionGenerator, 7, 350, 7, GroupBy.Day) }, // not implemented
-                { 4, async () => await GeneratePrediction(revenuePredictionGenerator, (absoluteDate - absoluteDate.AddMonths(-2)).Days, (absoluteDate - absoluteDate.AddYears(-1)).Days, 1, GroupBy.Day) },
-                { 5, async () => await GeneratePrediction(revenuePredictionGenerator, (absoluteDate - absoluteDate.AddMonths(-2)).Days, (absoluteDate - absoluteDate.AddYears(-1)).Days, 7, GroupBy.Day) },
+                { 4, async () => await GeneratePrediction(revenuePredictionGenerator, (predictionRange - predictionRange.AddMonths(-2)).Days, (predictionRange - predictionRange.AddYears(-1)).Days, 1, GroupBy.Day) },
+                { 5, async () => await GeneratePrediction(revenuePredictionGenerator, (predictionRange - predictionRange.AddMonths(-2)).Days, (predictionRange - predictionRange.AddYears(-1)).Days, 7, GroupBy.Day) },
                 { 6, async () => await GeneratePrediction(revenuePredictionGenerator, 12, 36, 6, GroupBy.Month) },
                 { 7, async () => await GeneratePrediction(revenuePredictionGenerator, 2, 6, 1, GroupBy.Year) },
-                { 8, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, (absoluteDate - absoluteDate.AddMonths(-2)).Days, (absoluteDate - absoluteDate.AddYears(-1)).Days, 1, GroupBy.Day) },
-                { 9, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, (absoluteDate - absoluteDate.AddMonths(-2)).Days, (absoluteDate - absoluteDate.AddYears(-1)).Days, 7, GroupBy.Day) },
+                { 8, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, (predictionRange - predictionRange.AddMonths(-2)).Days, (predictionRange - predictionRange.AddYears(-1)).Days, 1, GroupBy.Day) },
+                { 9, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, (predictionRange - predictionRange.AddMonths(-2)).Days, (predictionRange - predictionRange.AddYears(-1)).Days, 7, GroupBy.Day) },
                 { 10, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, 12, 36, 6, GroupBy.Month) },
                 { 11, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, 2, 6, 1, GroupBy.Year) },
             };
 
+            // AddMonths(-2) is temporary because the database is no longer updated!!! when you seed database correctly you should delete this.
+            reportDateRange = reportDateRange.AddMonths(-2);
+            // AddMonths(-2) is temporary because the database is no longer updated!!! when you seed database correctly you should delete this.
+
             _predictionParameters = new Dictionary<int, Action>
             {
-                // The parameters of the SetParameters method should not be static, but they are, because the report generator could accept empty data because the database is no longer updated.
-                { 0, () => _reportsFactory.SetParameters(DateTime.Now, DateTime.Now) }, // not implemented 
-                { 1, () => _reportsFactory.SetParameters(DateTime.Now, DateTime.Now) }, // not implemented 
-                { 2, () => _reportsFactory.SetParameters(DateTime.Now, DateTime.Now) }, // not implemented 
-                { 3, () => _reportsFactory.SetParameters(DateTime.Now, DateTime.Now) }, // not implemented 
-                { 4, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-1).AddMonths(-1), absoluteDate.AddMonths(-1)) },
-                { 5, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-1).AddMonths(-1), absoluteDate.AddMonths(-1)) },
-                { 6, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-3).AddMonths(-(absoluteDate.Month - 1)).AddDays(-(absoluteDate.Day - 1)), absoluteDate.AddDays(-(absoluteDate.Day - 1))) },
-                { 7, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-6).AddMonths(-(absoluteDate.Month - 1)).AddDays(-(absoluteDate.Day - 1)), absoluteDate.AddMonths(-(absoluteDate.Month - 1)).AddDays(-(absoluteDate.Day - 1))) },
-                { 8, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-1).AddMonths(-1), absoluteDate.AddMonths(-1)) },
-                { 9, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-1).AddMonths(-1), absoluteDate.AddMonths(-1)) },
-                { 10, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-3).AddMonths(-(absoluteDate.Month - 1)).AddDays(-(absoluteDate.Day - 1)), absoluteDate.AddDays(-(absoluteDate.Day - 1))) },
-                { 11, () => _reportsFactory.SetParameters(absoluteDate.AddYears(-6).AddMonths(-(absoluteDate.Month - 1)).AddDays(-(absoluteDate.Day - 1)), absoluteDate.AddMonths(-(absoluteDate.Month - 1)).AddDays(-(absoluteDate.Day - 1))) },
+                // .AddDays(-(reportDateRange.Day - 1))
+                // .AddMonths(-(reportDateRange.Month - 1))
+                // Methods are required because when we generate report we want report from whole month or year. With this we get date like: 01.01.2023 not like 07.12.2023 as a start date.
+
+                { 0, () => _reportsFactory.SetParameters(reportDateRange, reportDateRange) }, // not implemented 
+                { 1, () => _reportsFactory.SetParameters(reportDateRange, reportDateRange) }, // not implemented 
+                { 2, () => _reportsFactory.SetParameters(reportDateRange, reportDateRange) }, // not implemented 
+                { 3, () => _reportsFactory.SetParameters(reportDateRange, reportDateRange) }, // not implemented 
+                { 4, () => _reportsFactory.SetParameters(reportDateRange.AddYears(-1), reportDateRange) },
+                { 5, () => _reportsFactory.SetParameters(reportDateRange.AddYears(-1), reportDateRange) },
+                { 6, () => _reportsFactory.SetParameters(reportDateRange.AddYears(-3).AddDays(-(reportDateRange.Day - 1)), reportDateRange.AddDays(-(reportDateRange.Day - 1))) },
+                { 7, () => _reportsFactory.SetParameters(reportDateRange.AddYears(-6).AddMonths(-(reportDateRange.Month - 1)).AddDays(-(reportDateRange.Day - 1)), reportDateRange.AddMonths(-(reportDateRange.Month - 1)).AddDays(-(reportDateRange.Day - 1))) },
+                { 8, () => _reportsFactory.SetParameters(reportDateRange.AddYears(-1), reportDateRange) },
+                { 9, () => _reportsFactory.SetParameters(reportDateRange.AddYears(-1), reportDateRange) },
+                { 10, () => _reportsFactory.SetParameters(reportDateRange.AddYears(-3).AddDays(-(reportDateRange.Day - 1)), reportDateRange.AddDays(-(reportDateRange.Day - 1))) },
+                { 11, () => _reportsFactory.SetParameters(reportDateRange.AddYears(-6).AddMonths(-(reportDateRange.Month - 1)).AddDays(-(reportDateRange.Day - 1)), reportDateRange.AddMonths(-(reportDateRange.Month - 1)).AddDays(-(reportDateRange.Day - 1))) },
             };
         }
 
