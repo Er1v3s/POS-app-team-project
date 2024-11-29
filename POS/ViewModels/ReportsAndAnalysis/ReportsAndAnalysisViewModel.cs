@@ -13,7 +13,7 @@ namespace POS.ViewModels.ReportsAndAnalysis
     public class ReportsAndAnalysisViewModel : ViewModelBase
     {
         private int selectedReportIndex;
-        private DateTime startDate = DateTime.Now.AddMonths(-1);
+        private DateTime startDate = DateTime.Now.AddMonths(-2);
         private DateTime endDate = DateTime.Now;
         private bool isDatePickerControlsEnabled = true;
         private bool isAiPredictionControlsEnabled;
@@ -41,7 +41,8 @@ namespace POS.ViewModels.ReportsAndAnalysis
             set
             {
                 SetField(ref selectedReportIndex, value);
-                UpdateControlsStatus();
+                UpdateControlsStatus(selectedReportIndex);
+                SetStartAndEndDate(selectedReportIndex);
             }
         }
 
@@ -105,7 +106,8 @@ namespace POS.ViewModels.ReportsAndAnalysis
 
             seriesCollection.Clear();
 
-            SetStartAndEndDateInReportsFactory(selectedReportIndex);
+            SetStartAndEndDate(selectedReportIndex);
+            _reportFactory.SetParameters(startDate, endDate);
             await _reportFactory.GenerateReport(selectedReportIndex);
             await _chartFactory.GenerateChart(selectedReportIndex, seriesCollection, ChartType.Report);
 
@@ -124,30 +126,32 @@ namespace POS.ViewModels.ReportsAndAnalysis
             OnPropertyChanged(nameof(labels));
         }
 
-        private void UpdateControlsStatus()
+        private void UpdateControlsStatus(int index)
         {
-            isDatePickerControlsEnabled = selectedReportIndex is not (11 or 12 or 13);
+            isDatePickerControlsEnabled = index is not (1 or 2 or 3);
             OnPropertyChanged(nameof(isDatePickerControlsEnabled));
 
-            isAiPredictionControlsEnabled = selectedReportIndex is not (0 or 9 or 10);
+            isAiPredictionControlsEnabled = selectedReportIndex is not (0 or 12 or 13);
             OnPropertyChanged(nameof(isAiPredictionControlsEnabled));
         }
 
-        private void SetStartAndEndDateInReportsFactory(int index)
+        private void SetStartAndEndDate(int index)
         {
             // AddMonths(-2) is temporary because there is no data in database
+
             startDate = index switch
             {
-                11 => DateTime.Now.AddDays(-7).AddMonths(-2),
-                12 => DateTime.Now.AddMonths(-2),
-                13 => DateTime.Now.AddYears(-1).AddMonths(-2),
-                _ => startDate
+                1 => DateTime.Now.AddDays(-7).AddMonths(-2),
+                2 => DateTime.Now.AddMonths(-1).AddMonths(-2),
+                3 => DateTime.Now.AddYears(-1).AddMonths(-2),
+                _ => StartDate
             };
 
-            if (index is 11 or 12 or 13)
+            if(index is 1 or 2 or 3)
                 endDate = DateTime.Now;
 
-            _reportFactory.SetParameters(startDate, endDate);
+            OnPropertyChanged(nameof(startDate));
+            OnPropertyChanged(nameof(endDate));
         }
     }
 }

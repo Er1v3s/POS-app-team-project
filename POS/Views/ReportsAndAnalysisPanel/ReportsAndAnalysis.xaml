@@ -34,6 +34,9 @@
                 <ComboBox Grid.Row="1" x:Name="reportTypeComboBox" Margin="20,5,5,5"
                           SelectedIndex="{Binding SelectedReportIndex, Mode=TwoWay}">
                     <ComboBoxItem Content="Raport sprzedaży produktów"/>
+                    <ComboBoxItem Content="Tygodniowy raport sprzedaży produktów"/>
+                    <ComboBoxItem Content="Miesięczny raport sprzedaży produktów"/>
+                    <ComboBoxItem Content="Roczny raport sprzedaży produktów"/>
                     <ComboBoxItem Content="Dzienny raport przychodów"/>
                     <ComboBoxItem Content="Tygodniowy raport przychodów"/>
                     <ComboBoxItem Content="Miesięczny raport przychodów"/>
@@ -44,9 +47,6 @@
                     <ComboBoxItem Content="Roczny raport ilości zamówień"/>
                     <ComboBoxItem Content="Raport produktywności pracowników"/>
                     <ComboBoxItem Content="Stosunek płatności kartą a gotówką"/>
-                    <ComboBoxItem Content="Tygodniowy raport sprzedaży produktów"/>
-                    <ComboBoxItem Content="Miesięczny raport sprzedaży produktów"/>
-                    <ComboBoxItem Content="Roczny raport sprzedaży produktów"/>
                 </ComboBox>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Grid.ColumnSpan="2">

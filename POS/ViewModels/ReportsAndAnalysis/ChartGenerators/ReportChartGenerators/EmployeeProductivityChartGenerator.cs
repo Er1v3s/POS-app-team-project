@@ -24,7 +24,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators.ReportChartGenerator
             {
                 Title = "Suma kwot zamówień: ",
                 Values = new ChartValues<double>(data.Select(p => p.TotalAmount)),
-                LabelPoint = point => point.Y.ToString("N0"),
+                LabelPoint = point => point.Y.ToString("C"),
                 DataLabels = true,
             });
 
