@@ -35,7 +35,10 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
                 { 7, async () => await GenerateReportData(numberOfOrdersReportGenerator, GroupBy.Month) },
                 { 8, async () => await GenerateReportData(numberOfOrdersReportGenerator, GroupBy.Year) },
                 { 9, async () => await GenerateReportData(employeeProductivityReportGenerator) },
-                { 10, async () => await GenerateReportData(paymentRatioReportGenerator) }
+                { 10, async () => await GenerateReportData(paymentRatioReportGenerator) },
+                { 11, async () => await GenerateReportData(saleReportGenerator) },
+                { 12, async () => await GenerateReportData(saleReportGenerator) },
+                { 13, async () => await GenerateReportData(saleReportGenerator) },
             };
         }
 

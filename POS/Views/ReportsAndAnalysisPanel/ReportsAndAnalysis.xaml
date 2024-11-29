@@ -44,10 +44,13 @@
                     <ComboBoxItem Content="Roczny raport ilości zamówień"/>
                     <ComboBoxItem Content="Raport produktywności pracowników"/>
                     <ComboBoxItem Content="Stosunek płatności kartą a gotówką"/>
+                    <ComboBoxItem Content="Tygodniowy raport sprzedaży produktów"/>
+                    <ComboBoxItem Content="Miesięczny raport sprzedaży produktów"/>
+                    <ComboBoxItem Content="Roczny raport sprzedaży produktów"/>
                 </ComboBox>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Grid.ColumnSpan="2">
-                    <StackPanel Orientation="Horizontal" Margin="5">
+                    <StackPanel Orientation="Horizontal" Margin="5" IsEnabled="{Binding IsDatePickerControlsEnabled}">
                         <TextBlock Text="Od:" VerticalAlignment="Center"/>
                         <DatePicker x:Name="datePickerFrom" SelectedDate="{Binding StartDate, Mode=TwoWay}" />
                         <TextBlock Text="Do:" VerticalAlignment="Center" Margin="5"/>
@@ -56,7 +59,7 @@
                 </StackPanel>
 
                 <Button Content="Generuj raport" Command="{Binding GenerateReportCommand}" Grid.Column="2" HorizontalAlignment="Left" Margin="8,5,0,5" Padding="10" Width="100"/>
-                <Button Content="Generuj predykcje (AI)" Command="{Binding GeneratePredictionCommand}" Grid.Column="3" HorizontalAlignment="Left" Margin="8,5,0,5" Padding="10" Width="150"/>
+                <Button Content="Generuj predykcje (AI)" Command="{Binding GeneratePredictionCommand}" IsEnabled="{ Binding IsAiPredictionControlsEnabled}" Grid.Column="3" HorizontalAlignment="Left" Margin="8,5,0,5" Padding="10" Width="150"/>
             </Grid>
 
             <GroupBox Header="Wyniki raportu" Grid.Row="2" Margin="20">

@@ -50,7 +50,10 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
                 { 7, async () => await GenerateReportChart(numberOfOrdersReportChartGenerator, o => o.Date.ToString("yyyy-MM")) },
                 { 8, async () => await GenerateReportChart(numberOfOrdersReportChartGenerator, o => o.Date.ToString("yyyy")) },
                 { 9, async () => await GenerateReportChart(employeeProductivityReportChartGenerator) },
-                { 10, async () => await GenerateReportChart(paymentRatioReportChartGenerator) }
+                { 10, async () => await GenerateReportChart(paymentRatioReportChartGenerator) },
+                { 11, async () => await GenerateReportChart(salesReportChartGenerator) },
+                { 12, async () => await GenerateReportChart(salesReportChartGenerator) },
+                { 13, async () => await GenerateReportChart(salesReportChartGenerator) },
             };
 
             _predictionChartGenerators = new Dictionary<int, Func<Task>>

@@ -15,6 +15,8 @@ namespace POS.ViewModels.ReportsAndAnalysis
         private int selectedReportIndex;
         private DateTime startDate = DateTime.Now.AddMonths(-1);
         private DateTime endDate = DateTime.Now;
+        private bool isDatePickerControlsEnabled = true;
+        private bool isAiPredictionControlsEnabled;
 
         private SeriesCollection seriesCollection;
         private List<string> labels = [];
@@ -36,7 +38,11 @@ namespace POS.ViewModels.ReportsAndAnalysis
         public int SelectedReportIndex
         {
             get => selectedReportIndex;
-            set => SetField(ref selectedReportIndex, value);
+            set
+            {
+                SetField(ref selectedReportIndex, value);
+                UpdateControlsStatus();
+            }
         }
 
         public DateTime StartDate
@@ -49,6 +55,18 @@ namespace POS.ViewModels.ReportsAndAnalysis
         {
             get => endDate;
             set => SetField(ref endDate, value);
+        }
+
+        public bool IsDatePickerControlsEnabled
+        {
+            get => isDatePickerControlsEnabled;
+            set => SetField(ref isDatePickerControlsEnabled, value);
+        }
+
+        public bool IsAiPredictionControlsEnabled
+        {
+            get => isAiPredictionControlsEnabled;
+            set => SetField(ref isAiPredictionControlsEnabled, value);
         }
 
         public SeriesCollection SeriesCollection
@@ -87,7 +105,7 @@ namespace POS.ViewModels.ReportsAndAnalysis
 
             seriesCollection.Clear();
 
-            _reportFactory.SetParameters(startDate, endDate);
+            SetStartAndEndDateInReportsFactory(selectedReportIndex);
             await _reportFactory.GenerateReport(selectedReportIndex);
             await _chartFactory.GenerateChart(selectedReportIndex, seriesCollection, ChartType.Report);
 
@@ -104,6 +122,32 @@ namespace POS.ViewModels.ReportsAndAnalysis
 
             labels = _chartFactory.GetUpdatedLabelsValues();
             OnPropertyChanged(nameof(labels));
+        }
+
+        private void UpdateControlsStatus()
+        {
+            isDatePickerControlsEnabled = selectedReportIndex is not (11 or 12 or 13);
+            OnPropertyChanged(nameof(isDatePickerControlsEnabled));
+
+            isAiPredictionControlsEnabled = selectedReportIndex is not (0 or 9 or 10);
+            OnPropertyChanged(nameof(isAiPredictionControlsEnabled));
+        }
+
+        private void SetStartAndEndDateInReportsFactory(int index)
+        {
+            // AddMonths(-2) is temporary because there is no data in database
+            startDate = index switch
+            {
+                11 => DateTime.Now.AddDays(-7).AddMonths(-2),
+                12 => DateTime.Now.AddMonths(-2),
+                13 => DateTime.Now.AddYears(-1).AddMonths(-2),
+                _ => startDate
+            };
+
+            if (index is 11 or 12 or 13)
+                endDate = DateTime.Now;
+
+            _reportFactory.SetParameters(startDate, endDate);
         }
     }
 }
