@@ -147,8 +147,13 @@ namespace POS.ViewModels.ReportsAndAnalysis
                 _ => StartDate
             };
 
-            if(index is 1 or 2 or 3)
-                endDate = DateTime.Now;
+            endDate = index switch
+            {
+                1 => DateTime.Now.AddMonths(-2),
+                2 => DateTime.Now.AddMonths(-2),
+                3 => DateTime.Now.AddMonths(-2),
+                _ => EndDate
+            };
 
             OnPropertyChanged(nameof(startDate));
             OnPropertyChanged(nameof(endDate));

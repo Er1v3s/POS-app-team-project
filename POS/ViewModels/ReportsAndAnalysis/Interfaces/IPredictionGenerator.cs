@@ -1,5 +1,4 @@
-﻿using POS.Models.Reports.ReportsPredictions;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using POS.Models.Reports;
 
 namespace POS.ViewModels.ReportsAndAnalysis.Interfaces

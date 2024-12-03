@@ -25,10 +25,10 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
         {
             _reportDataGenerators = new Dictionary<int, Func<Task>>
             {
-                { 0, async () => await GenerateReportData(saleReportGenerator) },
-                { 1, async () => await GenerateReportData(saleReportGenerator) },
-                { 2, async () => await GenerateReportData(saleReportGenerator) },
-                { 3, async () => await GenerateReportData(saleReportGenerator) },
+                { 0, async () => await GenerateReportData(saleReportGenerator, GroupBy.Day) },
+                { 1, async () => await GenerateReportData(saleReportGenerator, GroupBy.Day) },
+                { 2, async () => await GenerateReportData(saleReportGenerator, GroupBy.Month) },
+                { 3, async () => await GenerateReportData(saleReportGenerator, GroupBy.Year) },
                 { 4, async () => await GenerateReportData(revenueReportGenerator, GroupBy.Day)},
                 { 5, async () => await GenerateReportData(revenueReportGenerator, GroupBy.Week) },
                 { 6, async () => await GenerateReportData(revenueReportGenerator, GroupBy.Month) },

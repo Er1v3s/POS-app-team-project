@@ -25,9 +25,9 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
 
             TrainModel(historicalData, windowSize, seriesLength, horizon);
 
-            var revenuePredictions = Predict(groupBy);
+            var prediction = Predict(groupBy);
 
-            return revenuePredictions;
+            return prediction;
         }
 
         private void TrainModel(List<NumberOfOrdersPredictionDto> data, int windowSize, int seriesLength, int horizon)
