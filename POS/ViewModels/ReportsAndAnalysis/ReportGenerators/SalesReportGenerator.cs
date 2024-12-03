@@ -38,8 +38,6 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
 
 
             var productSalesConverted = ConvertDate(orderedItems);
-            //var productSalesGrouped = GroupDataByProductNames(productSalesConverted);
-            //var orderedData = productSalesConverted.OrderBy(sales => sales.Date).ToList();
 
             var ordersReport = new List<ProductSalesDto>();
 
@@ -48,9 +46,6 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
                 case GroupBy.Day:
                     ordersReport = GroupDataByDays(productSalesConverted);
                     break;
-                //case GroupBy.Week:
-                //    ordersReport = GroupDataByWeeks(data);
-                //    break;
                 case GroupBy.Month:
                     ordersReport = GroupDataByMonths(productSalesConverted);
                     break;
@@ -77,22 +72,6 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
                 .OrderBy(group => group.Date)
                 .ToList();
         }
-
-        //private List<ProductSalesDto> GroupDataByWeeks(List<ProductSalesDto> data)
-        //{
-        //    var groupedData = data
-        //        .GroupBy(dto => new { dto.ProductName, Date = dto.Date.Date })
-        //        .Select(group => new ProductSalesDto
-        //        {
-        //            ProductName = group.Key.ProductName,
-        //            Date = group.Key.Date,
-        //            Quantity = group.Sum(g => g.Quantity)
-        //        })
-        //        .OrderBy(dto => dto.Date)
-        //        .ToList();
-
-        //    return groupedData;
-        //}
 
         private List<ProductSalesDto> GroupDataByMonths(List<ProductSalesDto> data)
         {
