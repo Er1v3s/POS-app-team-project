@@ -19,8 +19,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
             _mlContext = new MLContext();
         }
 
-        public List<ProductSalesPredictionDto> GeneratePrediction(List<ProductSalesDto> data, int windowSize,
-            int seriesLength, int horizon, GroupBy groupBy)
+        public List<ProductSalesPredictionDto> GeneratePrediction(List<ProductSalesDto> data, int windowSize, int horizon, GroupBy groupBy)
         {
             var dataGroupedByName = data.GroupBy(d => d.ProductName).ToList();
 
@@ -32,7 +31,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
 
                 TrainModel(timeSeriesData, windowSize, horizon);
 
-                var productPredictions = Predict(groupedData.Key, groupBy);
+                var productPredictions = Predict(groupedData.Key);
                 predictions.AddRange(productPredictions);
             }
 
@@ -66,7 +65,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
             _model = pipeline.Fit(trainData);
         }
 
-        private List<ProductSalesPredictionDto> Predict(string productName, GroupBy groupBy)
+        private List<ProductSalesPredictionDto> Predict(string productName)
         {
             var forecast = GenerateForecast();
 

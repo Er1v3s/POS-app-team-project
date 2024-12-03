@@ -19,18 +19,18 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
             _mlContext = new MLContext();
         }
 
-        public List<NumberOfOrdersPredictionDto> GeneratePrediction(List<OrderReportDto> data, int windowSize, int seriesLength, int horizon, GroupBy groupBy)
+        public List<NumberOfOrdersPredictionDto> GeneratePrediction(List<OrderReportDto> data, int windowSize, int horizon, GroupBy groupBy)
         {
             var historicalData = ConvertToPredictionData(data);
 
-            TrainModel(historicalData, windowSize, seriesLength, horizon);
+            TrainModel(historicalData, windowSize, horizon);
 
             var prediction = Predict(groupBy);
 
             return prediction;
         }
 
-        private void TrainModel(List<NumberOfOrdersPredictionDto> data, int windowSize, int seriesLength, int horizon)
+        private void TrainModel(List<NumberOfOrdersPredictionDto> data, int windowSize, int horizon)
         {
             var dataView = _mlContext.Data.LoadFromEnumerable(data);
 
@@ -38,8 +38,8 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
                 outputColumnName: nameof(PredictionDataModel.Total),
                 inputColumnName: nameof(NumberOfOrdersPredictionDto.NumberOfOrders),
                 windowSize: windowSize,     // Define based on your time-series pattern
-                seriesLength: seriesLength,  // Series length should match the data pattern
-                trainSize: (int)Math.Round(seriesLength * 0.8),    // Number of records to train on
+                seriesLength: data.Count,  // Series length should match the data pattern
+                trainSize: (int)Math.Round(data.Count * 0.8),    // Number of records to train on
                 horizon: horizon         // Predicting one week ahead
             );
 
