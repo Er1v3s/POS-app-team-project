@@ -1,49 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.ML;
-using Microsoft.ML.Transforms.TimeSeries;
 using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 
 namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
 {
-    public class RevenuePredictionGenerator : IPredictionGenerator<RevenueReportDto, RevenuePredictionDto>
+    public class RevenuePredictionGenerator : PredictionGenerator<RevenueReportDto>, IPredictionGenerator<RevenueReportDto, RevenuePredictionDto>
     {
-        private readonly MLContext _mlContext;
-        private ITransformer _model;
-
-        public RevenuePredictionGenerator()
-        {
-            _mlContext = new MLContext();
-        }
-
         public List<RevenuePredictionDto> GeneratePrediction(List<RevenueReportDto> data, int windowSize, int horizon, GroupBy groupBy)
         {
-            var historicalData = ConvertToPredictionData(data);
+            var timeSeriesData = PrepareTimeSeriesData(data);
 
-            TrainModel(historicalData, windowSize, horizon);
+            TrainModel(timeSeriesData, windowSize, horizon);
 
-            var revenuePredictions = Predict(groupBy);
+            var prediction = Predict(groupBy);
 
-            return revenuePredictions;
-        }
-
-        private void TrainModel(List<RevenuePredictionDto> data, int windowSize, int horizon)
-        {
-            var dataView = _mlContext.Data.LoadFromEnumerable(data);
-
-            var pipeline = _mlContext.Forecasting.ForecastBySsa(
-                outputColumnName: nameof(PredictionDataModel.Total),
-                inputColumnName: nameof(RevenuePredictionDto.TotalRevenue),
-                windowSize: windowSize,     // Define based on your time-series pattern
-                seriesLength: data.Count,  // Series length should match the data pattern
-                trainSize: (int)Math.Round(data.Count * 0.8),    // Number of records to train on
-                horizon: horizon         // Predicting one week ahead
-            );
-
-            _model = pipeline.Fit(dataView);
+            return prediction;
         }
 
         private List<RevenuePredictionDto> Predict(GroupBy groupBy)
@@ -53,23 +26,6 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
             var formattedPrediction = SetDataFormat(forecast, groupBy);
 
             return formattedPrediction;
-        }
-
-        private List<RevenuePredictionDto> ConvertToPredictionData(List<RevenueReportDto> reportData)
-        {
-            return reportData.Select(report => new RevenuePredictionDto
-            {
-                Date = report.Date,
-                TotalRevenue = report.TotalRevenue
-            }).ToList();
-        }
-
-        private PredictionDataModel GenerateForecast()
-        {
-            var forecastEngine = _model.CreateTimeSeriesEngine<RevenuePredictionInput, PredictionDataModel>(_mlContext);
-            var forecast = forecastEngine.Predict();
-
-            return forecast;
         }
 
         private List<RevenuePredictionDto> SetDataFormat(PredictionDataModel forecast, GroupBy groupBy)

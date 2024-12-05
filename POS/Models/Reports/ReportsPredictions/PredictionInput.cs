@@ -2,9 +2,9 @@
 
 namespace POS.Models.Reports.ReportsPredictions
 {
-    public class SalesData
+    public class PredictionInput
     {
         public DateTime Date { get; set; }
-        public float Quantity { get; set; }
+        public float Value { get; set; }
     }
 }

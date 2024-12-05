@@ -1,7 +1,8 @@
-﻿namespace POS.Models.Reports;
-
-public enum ChartType
+﻿namespace POS.Models.Reports
 {
-    Report,
-    Prediction
+    public enum ChartType
+    {
+        Report,
+        Prediction
+    }
 }
