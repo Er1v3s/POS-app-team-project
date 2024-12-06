@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
@@ -92,7 +93,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
         private async Task GenerateReportChart<T>(IChartGenerator<T> chartGenerator,
                     Func<dynamic, string>? labelSelector = null)
         {
-            var data = _reportFactory.GetReportData() as List<T>;
+            var data = _reportFactory.GetReportData() as IQueryable<T>;
 
             chartGenerator.GenerateChart(data, seriesCollection, out labels, labelSelector);
         }
@@ -100,7 +101,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
         private async Task GeneratePredictionChart<T>(IChartGenerator<T> chartGenerator,
             Func<dynamic, string>? labelSelector = null)
         {
-            var data = _predictionsFactory.GetPredictionData() as List<T>;
+            var data = _predictionsFactory.GetPredictionData() as IQueryable<T>;
 
             chartGenerator.GenerateChart(data, seriesCollection, out labels, labelSelector);
         }

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DataAccess.Models;
-using Microsoft.EntityFrameworkCore;
 using POS.Models.Reports;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 
@@ -11,43 +9,38 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
 {
     public class NumberOfOrdersGenerator : IReportGenerator<OrderReportDto>
     {
-        public async Task<List<OrderReportDto>> GenerateData(DateTime startDate, DateTime endDate, GroupBy? groupBy = null)
+        public async Task<IQueryable<OrderReportDto>> GenerateData(DateTime startDate, DateTime endDate, GroupBy? groupBy = null)
         {
             await using var dbContext = new AppDbContext();
 
-            var orders = await dbContext.Orders
-                .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate)
-                .ToListAsync();
+            var orders = dbContext.Orders
+                .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate);
 
-            IEnumerable<OrderReportDto> ordersReport;
+            var ordersGrouped = GroupData(orders, groupBy);
 
+            var ordersGroupedWithMissingData = CompleteMissingData(ordersGrouped, startDate, endDate, groupBy);
+
+            return ordersGroupedWithMissingData.AsQueryable();
+        }
+
+        private IQueryable<OrderReportDto> GroupData(IQueryable<Orders> orders, GroupBy? groupBy)
+        {
             switch (groupBy)
             {
                 case GroupBy.Day:
-                    ordersReport = GroupDataByDays(orders);
-                    break;
+                    return GroupDataByDays(orders);
                 case GroupBy.Week:
-                    ordersReport = GroupDataByWeeks(orders);
-                    break;
+                    return GroupDataByWeeks(orders);
                 case GroupBy.Month:
-                    ordersReport = GroupDataByMonths(orders);
-                    break;
-
+                    return GroupDataByMonths(orders);
                 case GroupBy.Year:
-                    ordersReport = GroupDataByYears(orders);
-                    break;
+                    return GroupDataByYears(orders);
                 default:
-                    throw new ArgumentException("Invalid groupBy value");
+                    throw new Exception("Invalid groupBy argument");
             }
-
-            var orderedData = ordersReport.OrderBy(revenue => revenue.Date).ToList();
-
-            orderedData = CompleteMissingData(orderedData, startDate, endDate, groupBy);
-
-            return orderedData;
         }
 
-        private IEnumerable<OrderReportDto> GroupDataByDays(List<Orders> orders)
+        private IQueryable<OrderReportDto> GroupDataByDays(IQueryable<Orders> orders)
         {
             return orders
                 .GroupBy(order => order.OrderTime.Date)
@@ -55,10 +48,12 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
                 {
                     Date = group.Key,
                     OrderCount = group.Count()
-                });
+                })
+                .OrderBy(order => order.Date)
+                .AsQueryable();
         }
 
-        private IEnumerable<OrderReportDto> GroupDataByWeeks(List<Orders> orders)
+        private IQueryable<OrderReportDto> GroupDataByWeeks(IQueryable<Orders> orders)
         {
             return orders.GroupBy(order => order.DayOfWeek)
                 .Select(group => new OrderReportDto
@@ -66,34 +61,41 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
                     DayOfWeek = group.Key,
                     OrderCount = group.Count()
                 })
-                .OrderBy(order => order.DayOfWeek);
+                .OrderBy(order => order.DayOfWeek)
+                .AsQueryable();
         }
 
-        private IEnumerable<OrderReportDto> GroupDataByMonths(List<Orders> orders)
+        private IQueryable<OrderReportDto> GroupDataByMonths(IQueryable<Orders> orders)
         {
-            return orders
+            return orders.ToList()
                 .GroupBy(order => new { order.OrderTime.Year, order.OrderTime.Month })
                 .Select(group => new OrderReportDto
                 {
                     Date = new DateTime(group.Key.Year, group.Key.Month, 1),
                     OrderCount = group.Count()
-                });
+                })
+                .OrderBy(order => order.Date)
+                .AsQueryable();
         }
 
-        private IEnumerable<OrderReportDto> GroupDataByYears(List<Orders> orders)
+        private IQueryable<OrderReportDto> GroupDataByYears(IQueryable<Orders> orders)
         {
-            return orders
+            return orders.ToList()
                 .GroupBy(order => order.OrderTime.Year)
                 .Select(group => new OrderReportDto
                 {
                     Date = new DateTime(group.Key, 1, 1),
                     OrderCount = group.Count()
-                });
+                })
+                .OrderBy(order => order.Date)
+                .AsQueryable();
         }
 
-        private List<OrderReportDto> CompleteMissingData(List<OrderReportDto> orderedData, DateTime startDate,
+        private IQueryable<OrderReportDto> CompleteMissingData(IQueryable<OrderReportDto> orders, DateTime startDate,
             DateTime endDate, GroupBy? groupBy)
         {
+            var ordersList = orders.ToList();
+
             switch (groupBy)
             {
                 case GroupBy.Day:
@@ -103,22 +105,22 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
 
                     return allDates.Select(date =>
                     {
-                        var report = orderedData.FirstOrDefault(r => r.Date.Date == date.Date);
+                        var report = ordersList.FirstOrDefault(r => r.Date.Date == date.Date);
                         return report ?? new OrderReportDto
                         {
                             Date = date,
                             OrderCount = 0,
                         };
-                    }).ToList();
+                    }).AsQueryable();
 
                 case GroupBy.Week:
                     var allDaysOfWeek = Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>();
 
                     foreach (var dayOfWeek in allDaysOfWeek)
                     {
-                        if (orderedData.All(data => data.DayOfWeek != dayOfWeek))
+                        if (ordersList.All(data => data.DayOfWeek != dayOfWeek))
                         {
-                            orderedData.Add(new OrderReportDto
+                            ordersList.Add(new OrderReportDto
                             {
                                 DayOfWeek = dayOfWeek,
                                 OrderCount = 0,
@@ -126,11 +128,11 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
                         }
                     }
 
-                    var result = orderedData.OrderBy(data => data.DayOfWeek).ToList();
+                    var result = ordersList.OrderBy(data => data.DayOfWeek).AsQueryable();
                     return result;
 
                 default:
-                    return orderedData;
+                    return orders;
             }
         }
     }

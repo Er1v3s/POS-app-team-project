@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DataAccess.Models;
-using Microsoft.EntityFrameworkCore;
 using POS.Models.Reports;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 
@@ -11,13 +9,13 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
 {
     public class SalesReportGenerator : IReportGenerator<ProductSalesDto>
     {
-        public async Task<List<ProductSalesDto>> GenerateData(DateTime startDate, DateTime endDate, GroupBy? groupBy)
+        public async Task<IQueryable<ProductSalesDto>> GenerateData(DateTime startDate, DateTime endDate, GroupBy? groupBy)
         {
             await using var dbContext = new AppDbContext();
 
-            var orderedItems = await dbContext.OrderItems
+            var orderedItems = dbContext.OrderItems
                 .Join(
-                    dbContext.Orders,
+                    dbContext.Orders.Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate),
                     orderItem => orderItem.OrderId,
                     order => order.OrderId,
                     (orderItem, order) => new { orderItem, order }
@@ -32,36 +30,33 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
                         ProductName = product.ProductName,
                         Quantity = combined.orderItem.Quantity
                     }
-                )
-                .Where(data => data.Date >= startDate && data.Date <= endDate)
-                .ToListAsync();
+                );
 
+            var orderedItemsConverted = ConvertDate(orderedItems);
 
-            var productSalesConverted = ConvertDate(orderedItems);
+            var orderedItemsGrouped = GroupData(orderedItemsConverted, groupBy);
 
-            var ordersReport = new List<ProductSalesDto>();
+            return orderedItemsGrouped;
+        }
 
+        private IQueryable<ProductSalesDto> GroupData(IQueryable<ProductSalesDto> orderedItems, GroupBy? groupBy)
+        {
             switch (groupBy)
             {
                 case GroupBy.Day:
-                    ordersReport = GroupDataByDays(productSalesConverted);
-                    break;
+                    return GroupDataByDays(orderedItems);
                 case GroupBy.Month:
-                    ordersReport = GroupDataByMonths(productSalesConverted);
-                    break;
+                    return GroupDataByMonths(orderedItems);
                 case GroupBy.Year:
-                    ordersReport = GroupDataByYears(productSalesConverted);
-                    break;
+                    return GroupDataByYears(orderedItems);
                 default:
-                    throw new ArgumentException("Invalid groupBy value");
+                    return orderedItems;
             }
-
-            return ordersReport;
         }
 
-        private List<ProductSalesDto> GroupDataByDays(List<ProductSalesDto> data)
+        private IQueryable<ProductSalesDto> GroupDataByDays(IQueryable<ProductSalesDto> orderedItems)
         {
-            return data
+            return orderedItems.ToList()
                 .GroupBy(dto => new { dto.ProductName, Date = dto.Date.Date })
                 .Select(group => new ProductSalesDto
                 {
@@ -70,12 +65,12 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
                     Quantity = group.Sum(g => g.Quantity)
                 })
                 .OrderBy(group => group.Date)
-                .ToList();
+                .AsQueryable();
         }
 
-        private List<ProductSalesDto> GroupDataByMonths(List<ProductSalesDto> data)
+        private IQueryable<ProductSalesDto> GroupDataByMonths(IQueryable<ProductSalesDto> orderedItems)
         {
-            return data
+            return orderedItems.ToList()
                 .GroupBy(dto => new { dto.ProductName, dto.Date.Year, dto.Date.Month })
                 .Select(group => new ProductSalesDto
                 {
@@ -84,12 +79,12 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
                     Quantity = group.Sum(g => g.Quantity)
                 })
                 .OrderBy(group => group.Date)
-                .ToList();
+                .AsQueryable();
         }
 
-        private List<ProductSalesDto> GroupDataByYears(List<ProductSalesDto> data)
+        private IQueryable<ProductSalesDto> GroupDataByYears(IQueryable<ProductSalesDto> orderedItems)
         {
-            return data
+            return orderedItems.ToList()
                 .GroupBy(dto => new { dto.ProductName, dto.Date.Year })
                 .Select(group => new ProductSalesDto
                 {
@@ -98,11 +93,11 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
                     Quantity = group.Sum(g => g.Quantity)
                 })
                 .OrderBy(group => group.Date)
-                .ToList();
+                .AsQueryable();
         }
 
 
-        private List<ProductSalesDto> ConvertDate(List<ProductSalesDto> orderedItems)
+        private IQueryable<ProductSalesDto> ConvertDate(IQueryable<ProductSalesDto> orderedItems)
         {
             return orderedItems
                 .Select(group => new ProductSalesDto
@@ -110,7 +105,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
                     Date = new DateTime(group.Date.Year, group.Date.Month, group.Date.Day),
                     ProductName = group.ProductName,
                     Quantity = group.Quantity
-                }).ToList();
+                });
         }
     }
 }

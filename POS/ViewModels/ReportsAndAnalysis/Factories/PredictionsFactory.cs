@@ -5,6 +5,7 @@ using LiveCharts;
 using POS.Models.Reports.ReportsPredictions;
 using POS.Models.Reports;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
+using System.Linq;
 
 namespace POS.ViewModels.ReportsAndAnalysis.Factories
 {
@@ -15,7 +16,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
 
         private readonly IReportsFactory _reportsFactory;
 
-        private object _prediction;
+        private object prediction;
 
         private readonly DateTime predictionRange = new (DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
         private readonly DateTime reportDateRange = new(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
@@ -88,14 +89,14 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
 
         public object GetPredictionData()
         {
-            return _prediction;
+            return prediction;
         }
 
         private async Task GeneratePrediction<TInput, TOutput>(IPredictionGenerator<TInput, TOutput> predictionGenerator, int windowSize, int horizon, GroupBy groupBy)
         {
-            var data = _reportsFactory.GetReportData() as List<TInput>;
+            var data = _reportsFactory.GetReportData() as IQueryable<TInput>;
 
-            _prediction = predictionGenerator.GeneratePrediction(data, windowSize, horizon, groupBy);
+            prediction = predictionGenerator.GeneratePrediction(data, windowSize, horizon, groupBy);
         }
     }
 }

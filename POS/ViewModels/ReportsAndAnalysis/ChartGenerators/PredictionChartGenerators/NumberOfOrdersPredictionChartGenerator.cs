@@ -10,7 +10,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators.PredictionChartGener
 {
     public class NumberOfOrdersPredictionChartGenerator : IChartGenerator<NumberOfOrdersPredictionDto>
     {
-        public void GenerateChart(List<NumberOfOrdersPredictionDto> data, SeriesCollection seriesCollection, out List<string> labels, Func<dynamic, string>? labelSelector = null)
+        public void GenerateChart(IQueryable<NumberOfOrdersPredictionDto> data, SeriesCollection seriesCollection, out List<string> labels, Func<dynamic, string>? labelSelector = null)
         {
             seriesCollection.Add(new ColumnSeries()
             {

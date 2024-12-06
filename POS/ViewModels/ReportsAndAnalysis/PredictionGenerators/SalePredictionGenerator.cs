@@ -7,22 +7,17 @@ using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 
 namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
 {
-    // TO DO 
-    // 1. Poprawić wydajność działania Generatorów predykcji stosując IEnumerable
-    // 3. Poprawić czytelność kodu 
-    // 4. Ogarnąć temat z niezaseedowaną bazą danych!
-
     public class ProductSalesPredictionGenerator : PredictionGenerator<ProductSalesDto>, IPredictionGenerator<ProductSalesDto, ProductSalesPredictionDto>
     {
-        public List<ProductSalesPredictionDto> GeneratePrediction(List<ProductSalesDto> data, int windowSize, int horizon, GroupBy groupBy)
+        public IQueryable<ProductSalesPredictionDto> GeneratePrediction(IQueryable<ProductSalesDto> data, int windowSize, int horizon, GroupBy groupBy)
         {
-            var dataGroupedByName = data.GroupBy(d => d.ProductName).ToList();
+            var dataGroupedByName = data.GroupBy(d => d.ProductName);
 
             var predictions = new List<ProductSalesPredictionDto>();
 
             foreach (var groupedData in dataGroupedByName)
             {
-                var timeSeriesData = PrepareTimeSeriesData(groupedData.ToList());
+                var timeSeriesData = PrepareTimeSeriesData(groupedData.AsQueryable());
 
                 TrainModel(timeSeriesData, windowSize, horizon);
 
@@ -30,10 +25,10 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
                 predictions.AddRange(prediction);
             }
 
-            return predictions;
+            return predictions.AsQueryable();
         }
 
-        private List<ProductSalesPredictionDto> Predict(string productName)
+        private IQueryable<ProductSalesPredictionDto> Predict(string productName)
         {
             var forecast = GenerateForecast();
 
@@ -42,7 +37,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
             return formattedPrediction;
         }
 
-        private List<ProductSalesPredictionDto> SetDataFormat(PredictionDataModel forecast, string productName)
+        private IQueryable<ProductSalesPredictionDto> SetDataFormat(PredictionDataModel forecast, string productName)
         {
             return Enumerable.Range(0, forecast.Total.Length)
                 .Select(i => new ProductSalesPredictionDto
@@ -55,8 +50,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
                 {
                     ProductName = group.Key,
                     PredictedQuantity = (int)Math.Round(group.Sum(p => p.PredictedQuantity))
-                })
-                .ToList();
+                }).AsQueryable();
         }
     }
 }

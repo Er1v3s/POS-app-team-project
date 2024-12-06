@@ -18,7 +18,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
             _mlContext = new MLContext();
         }
 
-        protected void TrainModel(List<PredictionInput> data, int windowSize, int horizon)
+        protected void TrainModel(IEnumerable<PredictionInput> data, int windowSize, int horizon)
         {
             var trainData = _mlContext.Data.LoadFromEnumerable(data);
 
@@ -26,23 +26,22 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
                 outputColumnName: nameof(PredictionDataModel.Total),
                 inputColumnName: nameof(PredictionInput.Value),
                 windowSize: windowSize,
-                seriesLength: data.Count,
-                trainSize: (int)Math.Round(data.Count * 0.8),
+                seriesLength: data.Count(),
+                trainSize: (int)Math.Round(data.Count() * 0.8),
                 horizon: horizon);
 
             _model = pipeline.Fit(trainData);
         }
 
-        protected List<PredictionInput> PrepareTimeSeriesData(List<TDto> data)
+        protected IEnumerable<PredictionInput> PrepareTimeSeriesData(IQueryable<TDto> data)
         {
             return data
-
                 .Select(g => new PredictionInput
                 {
                     Date = g.Date,
                     Value = g.Value
                 })
-                .ToList();
+                .AsEnumerable();
         }
 
         protected PredictionDataModel GenerateForecast()

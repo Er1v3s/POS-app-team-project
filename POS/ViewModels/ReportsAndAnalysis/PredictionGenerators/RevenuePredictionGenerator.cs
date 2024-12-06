@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
@@ -8,7 +9,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
 {
     public class RevenuePredictionGenerator : PredictionGenerator<RevenueReportDto>, IPredictionGenerator<RevenueReportDto, RevenuePredictionDto>
     {
-        public List<RevenuePredictionDto> GeneratePrediction(List<RevenueReportDto> data, int windowSize, int horizon, GroupBy groupBy)
+        public IQueryable<RevenuePredictionDto> GeneratePrediction(IQueryable<RevenueReportDto> data, int windowSize, int horizon, GroupBy groupBy)
         {
             var timeSeriesData = PrepareTimeSeriesData(data);
 
@@ -19,7 +20,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
             return prediction;
         }
 
-        private List<RevenuePredictionDto> Predict(GroupBy groupBy)
+        private IQueryable<RevenuePredictionDto> Predict(GroupBy groupBy)
         {
             var forecast = GenerateForecast();
 
@@ -28,9 +29,9 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
             return formattedPrediction;
         }
 
-        private List<RevenuePredictionDto> SetDataFormat(PredictionDataModel forecast, GroupBy groupBy)
+        private IQueryable<RevenuePredictionDto> SetDataFormat(PredictionDataModel forecast, GroupBy groupBy)
         {
-            List<RevenuePredictionDto> predictions = new List<RevenuePredictionDto>();
+            var predictions = new List<RevenuePredictionDto>();
 
             for (int i = 0; i < forecast.Total.Length; i++)
             {
@@ -60,7 +61,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
                 }
             }
 
-            return predictions;
+            return predictions.AsQueryable();
         }
     }
 }
