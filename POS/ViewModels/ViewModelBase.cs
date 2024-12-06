@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+
 namespace POS.ViewModels
 {
     public class ViewModelBase : INotifyPropertyChanged

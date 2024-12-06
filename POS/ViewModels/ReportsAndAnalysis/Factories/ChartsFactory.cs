@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
@@ -41,29 +42,35 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
             _reportChartGenerators = new Dictionary<int, Func<Task>>
             {
                 { 0, async () => await GenerateReportChart(salesReportChartGenerator) },
-                { 1, async () => await GenerateReportChart(revenueReportChartGenerator,r => r.Date.ToString("yyyy-MM-dd")) },
-                { 2, async () => await GenerateReportChart(revenueReportChartGenerator, r => r.DayOfWeek.ToString()) },
-                { 3, async () => await GenerateReportChart(revenueReportChartGenerator, r => r.Date.ToString("yyyy-MM")) },
-                { 4, async () => await GenerateReportChart(revenueReportChartGenerator, r => r.Date.ToString("yyyy")) },
-                { 5, async () => await GenerateReportChart(numberOfOrdersReportChartGenerator, o => o.Date.ToString("yyyy-MM-dd")) },
-                { 6, async () => await GenerateReportChart(numberOfOrdersReportChartGenerator, o => o.DayOfWeek.ToString()) },
-                { 7, async () => await GenerateReportChart(numberOfOrdersReportChartGenerator, o => o.Date.ToString("yyyy-MM")) },
-                { 8, async () => await GenerateReportChart(numberOfOrdersReportChartGenerator, o => o.Date.ToString("yyyy")) },
-                { 9, async () => await GenerateReportChart(employeeProductivityReportChartGenerator) },
-                { 10, async () => await GenerateReportChart(paymentRatioReportChartGenerator) }
+                { 1, async () => await GenerateReportChart(salesReportChartGenerator) },
+                { 2, async () => await GenerateReportChart(salesReportChartGenerator) },
+                { 3, async () => await GenerateReportChart(salesReportChartGenerator) },
+                { 4, async () => await GenerateReportChart(revenueReportChartGenerator,r => r.Date.ToString("yyyy-MM-dd")) },
+                { 5, async () => await GenerateReportChart(revenueReportChartGenerator, r => r.DayOfWeek.ToString()) },
+                { 6, async () => await GenerateReportChart(revenueReportChartGenerator, r => r.Date.ToString("yyyy-MM")) },
+                { 7, async () => await GenerateReportChart(revenueReportChartGenerator, r => r.Date.ToString("yyyy")) },
+                { 8, async () => await GenerateReportChart(numberOfOrdersReportChartGenerator, o => o.Date.ToString("yyyy-MM-dd")) },
+                { 9, async () => await GenerateReportChart(numberOfOrdersReportChartGenerator, o => o.DayOfWeek.ToString()) },
+                { 10, async () => await GenerateReportChart(numberOfOrdersReportChartGenerator, o => o.Date.ToString("yyyy-MM")) },
+                { 11, async () => await GenerateReportChart(numberOfOrdersReportChartGenerator, o => o.Date.ToString("yyyy")) },
+                { 12, async () => await GenerateReportChart(employeeProductivityReportChartGenerator) },
+                { 13, async () => await GenerateReportChart(paymentRatioReportChartGenerator) },
             };
 
             _predictionChartGenerators = new Dictionary<int, Func<Task>>
             {
                 { 0, async () => await GeneratePredictionChart(salesPredictionChartGenerator) },
-                { 1, async () => await GeneratePredictionChart(revenuePredictionChartGenerator, r => r.Date.ToString("yyyy-MM-dd")) },
-                { 2, async () => await GeneratePredictionChart(revenuePredictionChartGenerator, r => r.Date.ToString("yyyy-MM-dd")) },
-                { 3, async () => await GeneratePredictionChart(revenuePredictionChartGenerator, r => r.Date.ToString("yyyy-MM")) },
-                { 4, async () => await GeneratePredictionChart(revenuePredictionChartGenerator, r => r.Date.ToString("yyyy")) },
-                { 5, async () => await GeneratePredictionChart(numberOfOrdersPredictionChartGenerator, r => r.Date.ToString("yyyy-MM-dd")) },
-                { 6, async () => await GeneratePredictionChart(numberOfOrdersPredictionChartGenerator, r => r.Date.ToString("yyyy-MM-dd")) },
-                { 7, async () => await GeneratePredictionChart(numberOfOrdersPredictionChartGenerator, r => r.Date.ToString("yyyy-MM")) },
-                { 8, async () => await GeneratePredictionChart(numberOfOrdersPredictionChartGenerator, r => r.Date.ToString("yyyy")) },
+                { 1, async () => await GeneratePredictionChart(salesPredictionChartGenerator) },
+                { 2, async () => await GeneratePredictionChart(salesPredictionChartGenerator) },
+                { 3, async () => await GeneratePredictionChart(salesPredictionChartGenerator) },
+                { 4, async () => await GeneratePredictionChart(revenuePredictionChartGenerator, r => r.Date.ToString("yyyy-MM-dd")) },
+                { 5, async () => await GeneratePredictionChart(revenuePredictionChartGenerator, r => r.Date.ToString("yyyy-MM-dd")) },
+                { 6, async () => await GeneratePredictionChart(revenuePredictionChartGenerator, r => r.Date.ToString("yyyy-MM")) },
+                { 7, async () => await GeneratePredictionChart(revenuePredictionChartGenerator, r => r.Date.ToString("yyyy")) },
+                { 8, async () => await GeneratePredictionChart(numberOfOrdersPredictionChartGenerator, r => r.Date.ToString("yyyy-MM-dd")) },
+                { 9, async () => await GeneratePredictionChart(numberOfOrdersPredictionChartGenerator, r => r.Date.ToString("yyyy-MM-dd")) },
+                { 10, async () => await GeneratePredictionChart(numberOfOrdersPredictionChartGenerator, r => r.Date.ToString("yyyy-MM")) },
+                { 11, async () => await GeneratePredictionChart(numberOfOrdersPredictionChartGenerator, r => r.Date.ToString("yyyy")) },
             };
         }
 
@@ -86,7 +93,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
         private async Task GenerateReportChart<T>(IChartGenerator<T> chartGenerator,
                     Func<dynamic, string>? labelSelector = null)
         {
-            var data = _reportFactory.GetReportData() as List<T>;
+            var data = _reportFactory.GetReportData() as IQueryable<T>;
 
             chartGenerator.GenerateChart(data, seriesCollection, out labels, labelSelector);
         }
@@ -94,7 +101,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
         private async Task GeneratePredictionChart<T>(IChartGenerator<T> chartGenerator,
             Func<dynamic, string>? labelSelector = null)
         {
-            var data = _predictionsFactory.GetPredictionData() as List<T>;
+            var data = _predictionsFactory.GetPredictionData() as IQueryable<T>;
 
             chartGenerator.GenerateChart(data, seriesCollection, out labels, labelSelector);
         }

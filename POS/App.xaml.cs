@@ -40,7 +40,7 @@ namespace POS
             servicesCollection.AddTransient<IReportGenerator<RevenueReportDto>, RevenueReportGenerator>();
             servicesCollection.AddTransient<IReportGenerator<OrderReportDto>, NumberOfOrdersGenerator>();
             servicesCollection.AddTransient<IReportGenerator<EmployeeProductivityDto>, EmployeeProductivityGenerator>();
-            servicesCollection.AddTransient<IReportGenerator<PaymentRatioDto>, CardToCashPaymentRatioGenerator>();
+            servicesCollection.AddTransient<IReportGenerator<PaymentRatioDto>, PaymentMethodRatioGenerator>();
 
             servicesCollection.AddTransient<IChartGenerator<ProductSalesDto>, SalesChartGenerator>();
             servicesCollection.AddTransient<IChartGenerator<RevenueReportDto>, RevenueChartGenerator>();

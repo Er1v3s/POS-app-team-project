@@ -10,7 +10,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators.ReportChartGenerator
 {
     public class EmployeeProductivityChartGenerator : IChartGenerator<EmployeeProductivityDto>
     {
-        public void GenerateChart(List<EmployeeProductivityDto> data, SeriesCollection seriesCollection, out List<string> labels, Func<dynamic, string>? labelSelector = null)
+        public void GenerateChart(IQueryable<EmployeeProductivityDto> data, SeriesCollection seriesCollection, out List<string> labels, Func<dynamic, string>? labelSelector = null)
         {
             seriesCollection.Add(new ColumnSeries
             {
@@ -24,7 +24,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators.ReportChartGenerator
             {
                 Title = "Suma kwot zamówień: ",
                 Values = new ChartValues<double>(data.Select(p => p.TotalAmount)),
-                LabelPoint = point => point.Y.ToString("N0"),
+                LabelPoint = point => point.Y.ToString("C"),
                 DataLabels = true,
             });
 
