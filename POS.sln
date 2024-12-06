@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POS", "POS\POS.csproj", "{357EA244-05A0-4421-9AE5-A4250A253D0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "POS", "POS\POS.csproj", "{357EA244-05A0-4421-9AE5-A4250A253D0A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{F5A08902-2B4F-449F-AF83-35B703243BDF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbSeeder", "DbSeeder\DbSeeder\DbSeeder.csproj", "{50E68999-78B3-4F03-99A9-4923C1992D1F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{357EA244-05A0-4421-9AE5-A4250A253D0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{357EA244-05A0-4421-9AE5-A4250A253D0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{357EA244-05A0-4421-9AE5-A4250A253D0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5A08902-2B4F-449F-AF83-35B703243BDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5A08902-2B4F-449F-AF83-35B703243BDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5A08902-2B4F-449F-AF83-35B703243BDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5A08902-2B4F-449F-AF83-35B703243BDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50E68999-78B3-4F03-99A9-4923C1992D1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50E68999-78B3-4F03-99A9-4923C1992D1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50E68999-78B3-4F03-99A9-4923C1992D1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50E68999-78B3-4F03-99A9-4923C1992D1F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,26 +1,31 @@
-﻿using POS.Models;
-using POS.Views;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using DataAccess.Models;
+using POS.Services;
+using POS.Views.RegisterSale;
+using POS.Views.StartFinishWorkPanel;
+using POS.Views.WarehouseFunctionsPanel;
 
-namespace POS
+namespace POS.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        private DispatcherTimer timer;
+        private readonly TimerService _timerService;
 
         public MainWindow()
         {
             InitializeComponent();
-            StartTimer();
+
+            _timerService = new TimerService(UpdateDateTime);
+            _timerService.Start();
         }
 
         private void MoveToSalesPanel_ButtonClick(object sender, RoutedEventArgs e)
@@ -76,11 +81,11 @@ namespace POS
         {
             if (sender is Button button && button.Tag is string uri)
             {
-                if (uri == "./WorkTimeSummaryControl.xaml" || uri == "./RunningOutOfIngredients.xaml" || uri == "./ReportsAndAnalysis.xaml")
+                if (uri == "./WorkTimeSummaryPanel/WorkTimeSummaryControl.xaml" || uri == "./WarehouseFunctionsPanel/RunningOutOfIngredients.xaml" || uri == "./ReportsAndAnalysisPanel/ReportsAndAnalysis.xaml")
                 {
                     ChangeFrameSource(uri);
                 }
-                else if (uri == "./AdministratorFuncions.xaml")
+                else if (uri == "./AdminFunctionsPanel/AdministratorFunctions.xaml")
                 {
                     ShowLoginPanelAndChangeSource(uri);
                 }
@@ -91,34 +96,17 @@ namespace POS
             }
         }
 
-        private async void StartTimer() 
+        private void UpdateDateTime(string date, string time)
         {
-            timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(1);
-            timer.Tick += TimerTick;
-            timer.Start();
-
-            await UpdateDateTimeAsync();
-
-            ScheduleDelayedExecution(CheckIngredientLevels, TimeSpan.FromSeconds(60));
-            ScheduleDelayedExecution(CheckIngredientExpiration, TimeSpan.FromSeconds(60));
-        }
-
-        private async void TimerTick(object sender, EventArgs e)
-        {
-            await UpdateDateTimeAsync();
-        }
-
-        private async Task UpdateDateTimeAsync()
-        {
-            await Task.Run(() =>
+            if (dateTextBlock.Dispatcher.CheckAccess())
             {
-                Dispatcher.Invoke(() =>
-                {
-                    dateTextBlock.Text = DateTime.Now.ToString("dd.MM.yyyy");
-                    timeTextBlock.Text = DateTime.Now.ToString("HH:mm:ss");
-                });
-            });
+                dateTextBlock.Text = date;
+                timeTextBlock.Text = time;
+            }
+            else
+            {
+                dateTextBlock.Dispatcher.Invoke(() => UpdateDateTime(date, time));
+            }
         }
 
         private void ScheduleDelayedExecution(Action action, TimeSpan delay)
@@ -131,7 +119,7 @@ namespace POS
             using (var dbContext = new AppDbContext())
             {
                 var lowIngredients = dbContext.Ingredients
-                    .Where(i => i.Stock.HasValue && i.Stock.Value < i.Safety_stock)
+                    .Where(i => i.Stock.HasValue && i.Stock.Value < i.SafetyStock)
                     .ToList();
 
                 if (lowIngredients.Any())
@@ -161,7 +149,7 @@ namespace POS
             {
                 var expiringIngredients = dbContext.Ingredients
                 .AsEnumerable()
-                .Where(i => i.Expiration_date != null && DateTime.ParseExact(i.Expiration_date, "yyyy-MM-dd", CultureInfo.InvariantCulture) <= DateTime.Now.AddDays(7))
+                .Where(i => i.ExpirationDate != null && DateTime.ParseExact(i.ExpirationDate, "yyyy-MM-dd", CultureInfo.InvariantCulture) <= DateTime.Now.AddDays(7))
                 .ToList();
 
 
@@ -170,7 +158,7 @@ namespace POS
                     string alertMessage = "Uwaga! Niektóre ze składników tracą na ważności:\n";
                     foreach (var ingredient in expiringIngredients)
                     {
-                        alertMessage += $"{ingredient.Name} (Data ważności: {ingredient.Expiration_date})\n";
+                        alertMessage += $"{ingredient.Name} (Data ważności: {ingredient.ExpirationDate})\n";
                     }
 
                     MessageBoxButton button = MessageBoxButton.OKCancel;
