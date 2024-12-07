@@ -48,7 +48,8 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
             };
 
             // AddMonths(-2) is temporary because the database is no longer updated!!! when you seed database correctly you should delete this.
-            reportDateRange = reportDateRange.AddMonths(-2);
+//reportDateRange = reportDateRange.AddMonths(-2).AddDays(1);
+reportDateRange = reportDateRange.AddDays(3);
             // AddMonths(-2) is temporary because the database is no longer updated!!! when you seed database correctly you should delete this.
 
             _predictionParameters = new Dictionary<int, Action>

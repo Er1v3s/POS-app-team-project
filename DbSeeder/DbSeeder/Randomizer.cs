@@ -9,7 +9,7 @@ namespace DbSeeder
         public static DateTime GenerateAlmostRandomDateTime()
         {
             DateTime startDate = new DateTime(2018, 1, 1);
-            DateTime endDate = DateTime.Now;
+            DateTime endDate = DateTime.Now.AddDays(1);
 
             int range = (endDate - startDate).Days;
 

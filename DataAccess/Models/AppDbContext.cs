@@ -4,33 +4,33 @@ namespace DataAccess.Models
 {
     public class AppDbContext : DbContext
     {
-        // Azure production database
-        //private static readonly string ConnectionString = "Server=tcp:pos-app-team-project.database.windows.net,1433;Initial Catalog=barmanagementdb;Persist Security Info=False;User ID=DatabaseUser;Password=!Q@w#E123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseSqlServer(ConnectionString);
-        //}
-
-
-        // Local dev database
-        public static string DatabasePath { get; private set; }
-
-        static AppDbContext()
-        {
-            //string databaseLocation = @"..\..\..\Database\barmanagement.db";
-            //string databaseLocation = "C:\\Users\\filip\\Programing\\C#\\DbSeeder\\DbSeeder\\Database\\barmanagement.db";
-            string databaseLocation = @"C:\Users\filip\Programing\C#\POS-app\POS-app-team-project\POS\Database\barmanagement.db";
-            string projectPath = Directory.GetCurrentDirectory();
-            string absolutePath = Path.Combine(projectPath, databaseLocation);
-
-            DatabasePath = $"Data Source=" + absolutePath;
-        }
+        //Azure production database 75000
+        private static readonly string ConnectionString = "Server=tcp:pos-app-team-project.database.windows.net,1433;Initial Catalog=barmanagementdb;Persist Security Info=False;User ID=DatabaseUser;Password=!Q@w#E123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(DatabasePath, b => b.MigrationsAssembly("DbSeeder"));
+            optionsBuilder.UseSqlServer(ConnectionString);
         }
+
+
+        // Local dev database
+        //public static string DatabasePath { get; private set; }
+
+        //static AppDbContext()
+        //{
+        //    //string databaseLocation = @"..\..\..\Database\barmanagement.db";
+        //    //string databaseLocation = "C:\\Users\\filip\\Programing\\C#\\DbSeeder\\DbSeeder\\Database\\barmanagement.db";
+        //    string databaseLocation = @"C:\Users\filip\Programing\C#\POS-app\POS-app-team-project\POS\Database\barmanagement2.db";
+        //    string projectPath = Directory.GetCurrentDirectory();
+        //    string absolutePath = Path.Combine(projectPath, databaseLocation);
+
+        //    DatabasePath = $"Data Source=" + absolutePath;
+        //}
+
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlite(DatabasePath, b => b.MigrationsAssembly("DbSeeder"));
+        //}
 
         public DbSet<Products> Products { get; set; }
         public DbSet<Employees> Employees { get; set; }

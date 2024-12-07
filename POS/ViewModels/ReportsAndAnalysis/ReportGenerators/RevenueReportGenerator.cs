@@ -49,18 +49,19 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
 
         private IQueryable<RevenueReportDto> GroupDataByDays(IQueryable<RevenueReportDto> revenue)
         {
-            return revenue
+            return revenue.ToList()
                 .GroupBy(x => new { x.Date.Year, x.Date.Month, x.Date.Day })
                 .Select(g => new RevenueReportDto
                 {
                     Date = new DateTime(g.Key.Year, g.Key.Month, g.Key.Day),
                     TotalRevenue = g.Sum(x => x.TotalRevenue)
-                });
+                })
+                .AsQueryable();
         }
 
         private IQueryable<RevenueReportDto> GroupDataByWeeks(IQueryable<RevenueReportDto> revenue)
         {
-            return revenue
+            return revenue.ToList()
                 .GroupBy(x => x.Date.DayOfWeek)
                 .Select(g => new RevenueReportDto
                 {

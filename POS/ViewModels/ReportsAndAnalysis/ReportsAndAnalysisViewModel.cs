@@ -13,7 +13,8 @@ namespace POS.ViewModels.ReportsAndAnalysis
     public class ReportsAndAnalysisViewModel : ViewModelBase
     {
         private int selectedReportIndex;
-        private DateTime startDate = DateTime.Now.AddMonths(-2);
+        //private DateTime startDate = DateTime.Now.AddMonths(-2);
+        private DateTime startDate = DateTime.Now.AddDays(-1);
         private DateTime endDate = DateTime.Now;
         private bool isDatePickerControlsEnabled = true;
         private bool isAiPredictionControlsEnabled;
@@ -139,19 +140,35 @@ namespace POS.ViewModels.ReportsAndAnalysis
         {
             // AddMonths(-2) is temporary because there is no data in database
 
+            //startDate = index switch
+            //{
+            //    1 => DateTime.Now.AddDays(-7).AddMonths(-2),
+            //    2 => DateTime.Now.AddMonths(-1).AddMonths(-2),
+            //    3 => DateTime.Now.AddYears(-1).AddMonths(-2),
+            //    _ => StartDate
+            //};
+
+            //endDate = index switch
+            //{
+            //    1 => DateTime.Now.AddMonths(-2),
+            //    2 => DateTime.Now.AddMonths(-2),
+            //    3 => DateTime.Now.AddMonths(-2),
+            //    _ => EndDate
+            //};
+
             startDate = index switch
             {
-                1 => DateTime.Now.AddDays(-7).AddMonths(-2),
-                2 => DateTime.Now.AddMonths(-1).AddMonths(-2),
-                3 => DateTime.Now.AddYears(-1).AddMonths(-2),
+                1 => DateTime.Now.AddDays(-7),
+                2 => DateTime.Now.AddMonths(-1),
+                3 => DateTime.Now.AddYears(-1),
                 _ => StartDate
             };
 
             endDate = index switch
             {
-                1 => DateTime.Now.AddMonths(-2),
-                2 => DateTime.Now.AddMonths(-2),
-                3 => DateTime.Now.AddMonths(-2),
+                1 => DateTime.Now,
+                2 => DateTime.Now,
+                3 => DateTime.Now,
                 _ => EndDate
             };
 
