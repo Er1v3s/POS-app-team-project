@@ -12,6 +12,7 @@ using POS.ViewModels.ReportsAndAnalysis.Factories;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 using POS.ViewModels.ReportsAndAnalysis.PredictionGenerators;
 using POS.ViewModels.ReportsAndAnalysis.ReportGenerators;
+using POS.ViewModels.ToDoList;
 
 namespace POS
 {
@@ -33,6 +34,8 @@ namespace POS
 
         private void ConfigureServices(ServiceCollection servicesCollection)
         {
+            #region ReportsAndAnalysis
+
             servicesCollection.AddTransient<ReportsAndAnalysisViewModel>();
 
             // Reports
@@ -61,6 +64,10 @@ namespace POS
             servicesCollection.AddSingleton<IReportsFactory, ReportsFactory>();
             servicesCollection.AddTransient<IChartsFactory, ChartsFactory>();
             servicesCollection.AddSingleton<IPredictionsFactory, PredictionsFactory>();
+
+            #endregion
+
+            servicesCollection.AddTransient<ToDoListViewModel>();
         }
 
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

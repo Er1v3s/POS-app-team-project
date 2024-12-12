@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using DataAccess;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
-using POS.Converter;
+using POS.Helpers;
 
 namespace POS.Views.WarehouseFunctionsPanel
 {
