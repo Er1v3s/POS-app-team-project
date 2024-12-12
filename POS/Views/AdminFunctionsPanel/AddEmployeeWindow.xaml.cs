@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
+using DataAccess;
 using DataAccess.Models;
 using POS.Helpers;
 
@@ -75,12 +76,11 @@ namespace POS.Views.AdminFunctionsPanel
 
         private void AddEmployee()
         {
-            using (var dbContext = new AppDbContext())
-            {
-                Employees newEmployee = CreateEmployeeObject();
-                dbContext.Employees.Add(newEmployee);
-                dbContext.SaveChanges();
-            }
+            using var dbContext = new AppDbContext();
+
+            Employees newEmployee = CreateEmployeeObject();
+            dbContext.Employees.Add(newEmployee);
+            dbContext.SaveChanges();
         }
 
         private void FormInput_LostFocus(object sender, RoutedEventArgs e)

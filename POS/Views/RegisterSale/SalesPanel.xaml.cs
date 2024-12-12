@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using DataAccess;
 using DataAccess.Models;
 using POS.Converter;
 using POS.Models.Invoices;
