@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using DataAccess.Models;
-using DataAccess;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using POS.Services.ToDoList;
 
 namespace POS.ViewModels.ToDoList
 {
     public class ToDoListViewModel : ViewModelBase
     {
+        private readonly TaskManagerService _taskManager;
+
         private string newTaskContent;
         private ObservableCollection<ToDoListTask> todoListTaskCollection;
 
@@ -28,9 +28,11 @@ namespace POS.ViewModels.ToDoList
         public ICommand AddTaskCommand { get; }
         public ICommand DeleteTaskCommand { get; }
 
-        public ToDoListViewModel()
+        public ToDoListViewModel(TaskManagerService taskManager)
         {
-            TodoListTaskCollection = new ObservableCollection<ToDoListTask>();
+            _taskManager = taskManager;
+
+            TodoListTaskCollection = [];
             AddTaskCommand = new RelayCommand(async _ => await AddTaskAsync());
             DeleteTaskCommand = new RelayCommand<ToDoListTask>(async (task) => await DeleteTaskAsync(task));
 
@@ -40,10 +42,7 @@ namespace POS.ViewModels.ToDoList
         private async Task LoadTasksAsync()
         {
             TodoListTaskCollection.Clear();
-
-            await using var dbContext = new AppDbContext();
-
-            var tasks = dbContext.ToDoListTasks.Where(p => p.CompletionDate == null).ToList();
+            var tasks = await _taskManager.GetTaskList();
 
             foreach (var task in tasks)
             {
@@ -53,20 +52,7 @@ namespace POS.ViewModels.ToDoList
 
         private async Task AddTaskAsync()
         {
-            if(string.IsNullOrWhiteSpace(NewTaskContent) || NewTaskContent.Equals("Dodaj zadanie"))
-                return;
-
-            var newTask = new ToDoListTask
-            {
-                Content = NewTaskContent,
-                CreationDate = DateTime.Now,
-                CompletionDate = null,
-            };
-
-            await using var dbContext = new AppDbContext();
-            await dbContext.ToDoListTasks.AddAsync(newTask);
-            await dbContext.SaveChangesAsync();
-            
+            await _taskManager.CreateTask(NewTaskContent);
             NewTaskContent = string.Empty;
             await LoadTasksAsync();
         }
@@ -74,15 +60,7 @@ namespace POS.ViewModels.ToDoList
         private async Task DeleteTaskAsync(ToDoListTask task)
         {
             TodoListTaskCollection.Remove(task);
-
-            await using var dbContext = new AppDbContext();
-
-            var taskFromDb = await dbContext.ToDoListTasks.FindAsync(task.TodoTaskId);
-            if (taskFromDb != null)
-            {
-                taskFromDb.CompletionDate = DateTime.Now;
-                await dbContext.SaveChangesAsync();
-            }
+            await _taskManager.DeleteTask(task);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using DataAccess;
 using Microsoft.Extensions.DependencyInjection;
 using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
@@ -34,6 +35,8 @@ namespace POS
 
         private void ConfigureServices(ServiceCollection servicesCollection)
         {
+            servicesCollection.AddSingleton<AppDbContext>();
+
             #region ReportsAndAnalysis
 
             servicesCollection.AddTransient<ReportsAndAnalysisViewModel>();
