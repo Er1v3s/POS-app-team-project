@@ -6,6 +6,7 @@ using DataAccess;
 using Microsoft.Extensions.DependencyInjection;
 using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
+using POS.Services.ToDoList;
 using POS.ViewModels.ReportsAndAnalysis;
 using POS.ViewModels.ReportsAndAnalysis.ChartGenerators.PredictionChartGenerators;
 using POS.ViewModels.ReportsAndAnalysis.ChartGenerators.ReportChartGenerators;
@@ -70,6 +71,7 @@ namespace POS
 
             #endregion
 
+            servicesCollection.AddTransient<TaskManagerService>();
             servicesCollection.AddTransient<ToDoListViewModel>();
         }
 

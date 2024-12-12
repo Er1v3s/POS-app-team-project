@@ -8,13 +8,11 @@ using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 
 namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
 {
-    public class NumberOfOrdersGenerator : IReportGenerator<OrderReportDto>
+    public class NumberOfOrdersGenerator(AppDbContext dbContext) : ReportGenerator(dbContext), IReportGenerator<OrderReportDto>
     {
         public async Task<IQueryable<OrderReportDto>> GenerateData(DateTime startDate, DateTime endDate, GroupBy? groupBy = null)
         {
-            await using var dbContext = new AppDbContext();
-
-            var orders = dbContext.Orders
+            var orders = _dbContext.Orders
                 .Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate);
 
             var ordersGrouped = GroupData(orders, groupBy);

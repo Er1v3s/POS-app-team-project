@@ -7,21 +7,19 @@ using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 
 namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
 {
-    public class SalesReportGenerator : IReportGenerator<ProductSalesDto>
+    public class SalesReportGenerator(AppDbContext dbContext) : ReportGenerator(dbContext), IReportGenerator<ProductSalesDto>
     {
         public async Task<IQueryable<ProductSalesDto>> GenerateData(DateTime startDate, DateTime endDate, GroupBy? groupBy)
         {
-            await using var dbContext = new AppDbContext();
-
-            var orderedItems = dbContext.OrderItems
+            var orderedItems = _dbContext.OrderItems
                 .Join(
-                    dbContext.Orders.Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate),
+                    _dbContext.Orders.Where(order => order.OrderTime >= startDate && order.OrderTime <= endDate),
                     orderItem => orderItem.OrderId,
                     order => order.OrderId,
                     (orderItem, order) => new { orderItem, order }
                 )
                 .Join(
-                    dbContext.Products,
+                    _dbContext.Products,
                     combined => combined.orderItem.ProductId,
                     product => product.ProductId,
                     (combined, product) => new ProductSalesDto
