@@ -10,7 +10,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators.ReportChartGenerator
 {
     public class PaymentMethodRatioChartGenerator : IChartGenerator<PaymentRatioDto>
     {
-        public void GenerateChart(IQueryable<PaymentRatioDto> data, SeriesCollection seriesCollection, out List<string> labels, Func<dynamic, string>? labelSelector = null)
+        public void GenerateChart(List<PaymentRatioDto> data, SeriesCollection seriesCollection, out List<string> labels, Func<dynamic, string>? labelSelector = null)
         {
             seriesCollection.Add(new ColumnSeries()
             {

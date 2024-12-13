@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using POS.Models.Reports;
 
@@ -7,6 +7,6 @@ namespace POS.ViewModels.ReportsAndAnalysis.Interfaces
 {
     public interface IReportGenerator<T>
     {
-        Task<IQueryable<T>> GenerateData(DateTime startDate, DateTime endDate, GroupBy? groupBy = null);
+        Task<List<T>> GenerateData(DateTime startDate, DateTime endDate, GroupBy? groupBy = null);
     }
 }

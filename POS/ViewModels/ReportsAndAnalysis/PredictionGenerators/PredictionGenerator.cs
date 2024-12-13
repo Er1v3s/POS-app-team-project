@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.ML;
 using Microsoft.ML.Transforms.TimeSeries;
 using POS.Models.Reports;
@@ -33,21 +34,20 @@ namespace POS.ViewModels.ReportsAndAnalysis.PredictionGenerators
             _model = pipeline.Fit(trainData);
         }
 
-        protected IEnumerable<PredictionInput> PrepareTimeSeriesData(IQueryable<TDto> data)
+        protected IEnumerable<PredictionInput> PrepareTimeSeriesData(IEnumerable<TDto> data)
         {
             return data
                 .Select(g => new PredictionInput
                 {
                     Date = g.Date,
                     Value = g.Value
-                })
-                .AsEnumerable();
+                });
         }
 
-        protected PredictionDataModel GenerateForecast()
+        protected async Task<PredictionDataModel> GenerateForecast()
         {
             var forecastEngine = _model.CreateTimeSeriesEngine<PredictionInput, PredictionDataModel>(_mlContext);
-            var forecast = forecastEngine.Predict();
+            var forecast = await Task.Run(() => forecastEngine.Predict());
 
             return forecast;
         }

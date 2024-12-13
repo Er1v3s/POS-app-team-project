@@ -5,7 +5,6 @@ using LiveCharts;
 using POS.Models.Reports.ReportsPredictions;
 using POS.Models.Reports;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
-using System.Linq;
 
 namespace POS.ViewModels.ReportsAndAnalysis.Factories
 {
@@ -33,18 +32,18 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
             _predictionGenerators = new Dictionary<int, Func<Task>>
             {
                 // These parameters of GeneratePrediction method are correct and I shouldn't touch them
-                { 0, async () => await GeneratePrediction(salePredictionGenerator, (predictionRange - predictionRange.AddMonths(-2)).Days, 1, GroupBy.Day) },
-                { 1, async () => await GeneratePrediction(salePredictionGenerator, (predictionRange - predictionRange.AddMonths(-2)).Days, 7, GroupBy.Day) }, // testing seriesLength
-                { 2, async () => await GeneratePrediction(salePredictionGenerator, 12, 1, GroupBy.Month) }, 
-                { 3, async () => await GeneratePrediction(salePredictionGenerator, 2,1, GroupBy.Year) }, 
-                { 4, async () => await GeneratePrediction(revenuePredictionGenerator, (predictionRange - predictionRange.AddMonths(-2)).Days, 1, GroupBy.Day) },
-                { 5, async () => await GeneratePrediction(revenuePredictionGenerator, (predictionRange - predictionRange.AddMonths(-2)).Days, 7, GroupBy.Day) },
-                { 6, async () => await GeneratePrediction(revenuePredictionGenerator, 12, 6, GroupBy.Month) },
-                { 7, async () => await GeneratePrediction(revenuePredictionGenerator, 2, 1, GroupBy.Year) },
-                { 8, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, (predictionRange - predictionRange.AddMonths(-2)).Days, 1, GroupBy.Day) },
-                { 9, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, (predictionRange - predictionRange.AddMonths(-2)).Days, 7, GroupBy.Day) },
-                { 10, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, 12, 6, GroupBy.Month) },
-                { 11, async () => await GeneratePrediction(numberOfOrdersPredictionGenerator, 2, 1, GroupBy.Year) },
+                { 0, async () => await GeneratePredictionAsync(salePredictionGenerator, (predictionRange - predictionRange.AddMonths(-2)).Days, 1, GroupBy.Day) },
+                { 1, async () => await GeneratePredictionAsync(salePredictionGenerator, (predictionRange - predictionRange.AddMonths(-2)).Days, 7, GroupBy.Day) }, // testing seriesLength
+                { 2, async () => await GeneratePredictionAsync(salePredictionGenerator, 12, 1, GroupBy.Month) }, 
+                { 3, async () => await GeneratePredictionAsync(salePredictionGenerator, 2,1, GroupBy.Year) }, 
+                { 4, async () => await GeneratePredictionAsync(revenuePredictionGenerator, (predictionRange - predictionRange.AddMonths(-2)).Days, 1, GroupBy.Day) },
+                { 5, async () => await GeneratePredictionAsync(revenuePredictionGenerator, (predictionRange - predictionRange.AddMonths(-2)).Days, 7, GroupBy.Day) },
+                { 6, async () => await GeneratePredictionAsync(revenuePredictionGenerator, 12, 6, GroupBy.Month) },
+                { 7, async () => await GeneratePredictionAsync(revenuePredictionGenerator, 2, 1, GroupBy.Year) },
+                { 8, async () => await GeneratePredictionAsync(numberOfOrdersPredictionGenerator, (predictionRange - predictionRange.AddMonths(-2)).Days, 1, GroupBy.Day) },
+                { 9, async () => await GeneratePredictionAsync(numberOfOrdersPredictionGenerator, (predictionRange - predictionRange.AddMonths(-2)).Days, 7, GroupBy.Day) },
+                { 10, async () => await GeneratePredictionAsync(numberOfOrdersPredictionGenerator, 12, 6, GroupBy.Month) },
+                { 11, async () => await GeneratePredictionAsync(numberOfOrdersPredictionGenerator, 2, 1, GroupBy.Year) },
             };
 
             // AddMonths(-2) is temporary because the database is no longer updated!!! when you seed database correctly you should delete this.
@@ -93,11 +92,11 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
             return prediction;
         }
 
-        private async Task GeneratePrediction<TInput, TOutput>(IPredictionGenerator<TInput, TOutput> predictionGenerator, int windowSize, int horizon, GroupBy groupBy)
+        private async Task GeneratePredictionAsync<TInput, TOutput>(IPredictionGenerator<TInput, TOutput> predictionGenerator, int windowSize, int horizon, GroupBy groupBy)
         {
-            var data = _reportsFactory.GetReportData() as IQueryable<TInput>;
+            var data = _reportsFactory.GetReportData() as List<TInput>;
 
-            prediction = predictionGenerator.GeneratePrediction(data, windowSize, horizon, groupBy);
+            prediction = await predictionGenerator.GeneratePrediction(data, windowSize, horizon, groupBy);
         }
     }
 }

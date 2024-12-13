@@ -82,8 +82,8 @@ namespace POS.ViewModels.ReportsAndAnalysis
 
         public ReportsAndAnalysisViewModel(IReportsFactory reportFactory, IChartsFactory chartFactory, IPredictionsFactory predictionsFactory)
         {
-            GenerateReportCommand = new RelayCommand(async _ => await GenerateReport());
-            GeneratePredictionCommand = new RelayCommand(async _ => await GeneratePrediction());
+            GenerateReportCommand = new RelayCommand(async => _ = GenerateReport());
+            GeneratePredictionCommand = new RelayCommand( async => _ = GeneratePrediction());
 
             _reportFactory = reportFactory;
             _chartFactory = chartFactory;
@@ -110,7 +110,7 @@ namespace POS.ViewModels.ReportsAndAnalysis
             SetStartAndEndDate(selectedReportIndex);
             _reportFactory.SetParameters(startDate, endDate);
             await _reportFactory.GenerateReport(selectedReportIndex);
-            await _chartFactory.GenerateChart(selectedReportIndex, seriesCollection, ChartType.Report);
+            _chartFactory.GenerateChart(selectedReportIndex, seriesCollection, ChartType.Report);
 
             labels = _chartFactory.GetUpdatedLabelsValues();
             OnPropertyChanged(nameof(labels));
@@ -121,7 +121,7 @@ namespace POS.ViewModels.ReportsAndAnalysis
             seriesCollection.Clear();
 
             await _predictionsFactory.GeneratePrediction(selectedReportIndex, seriesCollection);
-            await _chartFactory.GenerateChart(selectedReportIndex, seriesCollection, ChartType.Prediction);
+            _chartFactory.GenerateChart(selectedReportIndex, seriesCollection, ChartType.Prediction);
 
             labels = _chartFactory.GetUpdatedLabelsValues();
             OnPropertyChanged(nameof(labels));
