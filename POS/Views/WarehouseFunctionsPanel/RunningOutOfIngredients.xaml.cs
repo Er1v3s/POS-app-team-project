@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using DataAccess.Models;
+using DataAccess;
 using POS.Views.StartFinishWorkPanel;
 
 namespace POS.Views.WarehouseFunctionsPanel

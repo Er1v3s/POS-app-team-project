@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:POS.Views"
+        xmlns:todolist="clr-namespace:POS.Views.ToDoList"
+        d:DataContext="{d:DesignInstance Type=todolist:ToDoList}"
         mc:Ignorable="d"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         Title="MainWindow" Height="768" Width="1366" WindowState="Maximized" WindowStyle="None" FontFamily="Lato" FontSize="16">
@@ -107,7 +108,7 @@
                         </Grid.RowDefinitions>
 
                         <Grid Grid.Row="1">
-                            <local:ToDoList/>
+                            <todolist:ToDoList/>
                         </Grid>
 
                     </Grid>

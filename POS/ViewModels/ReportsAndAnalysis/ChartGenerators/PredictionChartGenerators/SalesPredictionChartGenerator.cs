@@ -10,7 +10,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators.PredictionChartGener
 {
     public class SalesPredictionChartGenerator : IChartGenerator<ProductSalesPredictionDto>
     {
-        public void GenerateChart(IQueryable<ProductSalesPredictionDto> data, SeriesCollection seriesCollection, out List<string> labels, Func<dynamic, string>? labelSelector = null)
+        public void GenerateChart(List<ProductSalesPredictionDto> data, SeriesCollection seriesCollection, out List<string> labels, Func<dynamic, string>? labelSelector = null)
         {
             var dataGrouped = GroupDataByProductNames(data);
 
@@ -25,7 +25,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators.PredictionChartGener
             labels = dataGrouped.Select(p => p.ProductName).ToList();
         }
 
-        private IQueryable<ProductSalesPredictionDto> GroupDataByProductNames(IQueryable<ProductSalesPredictionDto> orderedItems)
+        private List<ProductSalesPredictionDto> GroupDataByProductNames(List<ProductSalesPredictionDto> orderedItems)
         {
             return orderedItems
                 .GroupBy(item => item.ProductName)
@@ -33,7 +33,8 @@ namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators.PredictionChartGener
                 {
                     ProductName = group.First().ProductName,
                     PredictedQuantity = group.Sum(item => item.PredictedQuantity)
-                });
+                })
+                .ToList();
         }
     }
 

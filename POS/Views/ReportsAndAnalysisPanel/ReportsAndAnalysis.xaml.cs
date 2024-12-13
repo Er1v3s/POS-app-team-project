@@ -9,7 +9,6 @@ namespace POS.Views.ReportsAndAnalysisPanel
     /// </summary>
     public partial class ReportsAndAnalysis : Page
     {
-
         public ReportsAndAnalysis()
         {
             InitializeComponent();

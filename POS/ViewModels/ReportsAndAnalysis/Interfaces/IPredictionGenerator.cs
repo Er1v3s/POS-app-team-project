@@ -1,10 +1,11 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using POS.Models.Reports;
 
 namespace POS.ViewModels.ReportsAndAnalysis.Interfaces
 {
-    public interface IPredictionGenerator<in TInput, out TOutput>
+    public interface IPredictionGenerator<TInput, TOutput>
     {
-        IQueryable<TOutput> GeneratePrediction(IQueryable<TInput> data, int windowSize, int horizon, GroupBy groupBy);
+        Task<List<TOutput>> GeneratePrediction(List<TInput> data, int windowSize, int horizon, GroupBy groupBy);
     }
 }

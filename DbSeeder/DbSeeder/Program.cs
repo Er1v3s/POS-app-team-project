@@ -1,31 +1,34 @@
-﻿using DataAccess.Models;
+﻿using DataAccess;
+using DataAccess.Models;
 
 namespace DbSeeder
 {
     class Program
     {
-        static Random _random = new Random();
+        static Random random = new();
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            using AppDbContext dbContext = new AppDbContext();
+            await using AppDbContext dbContext = new AppDbContext();
 
-            for (int i = 0; i <= 100000; i++)
+            for (int i = 0; i <= 5000; i++)
             {
-                SeedDatabase(dbContext);
+                await SeedDatabase(dbContext);
+
+                Console.WriteLine($"Dodano element nr: {i}");
             }
         }
 
-        private static void SeedDatabase(AppDbContext dbContext)
+        private static async Task SeedDatabase(AppDbContext dbContext)
         {
-            var order = GenerateOrder(dbContext);
-            GenerateOrderItems(dbContext, order);
-            GeneratePayment(dbContext, order);
+            var order = await GenerateOrder(dbContext);
+            await GenerateOrderItems(dbContext, order);
+            await GeneratePayment(dbContext, order);
         }
 
-        private static Orders GenerateOrder(AppDbContext dbContext)
+        private static async Task<Orders> GenerateOrder(AppDbContext dbContext)
         {
-            int employeeId = _random.Next(1, 4);
+            int employeeId = random.Next(1, 4);
             DateTime randomDate = Randomizer.GenerateAlmostRandomDateTime();
 
             Orders order = new Orders
@@ -35,13 +38,13 @@ namespace DbSeeder
                 DayOfWeek = randomDate.DayOfWeek,
             };
 
-            dbContext.Orders.AddAsync(order);
-            dbContext.SaveChangesAsync();
+            await dbContext.Orders.AddAsync(order);
+            await dbContext.SaveChangesAsync();
 
             return order;
         }
 
-        private static void GenerateOrderItems(AppDbContext dbContext, Orders order)
+        private static async Task GenerateOrderItems(AppDbContext dbContext, Orders order)
         {
             int productSum = Randomizer.GenerateAlmostRandomInt();
 
@@ -58,14 +61,14 @@ namespace DbSeeder
                     EmployeeId = order.EmployeeId,
                 };
                 
-                dbContext.OrderItems.AddAsync(orderItem);
+                await dbContext.OrderItems.AddAsync(orderItem);
                 productSum--;
             }
 
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
         }
 
-        private static void GeneratePayment(AppDbContext dbContext, Orders order)
+        private static async Task GeneratePayment(AppDbContext dbContext, Orders order)
         {
             double amount = 0;
             string paymentMethod = Randomizer.GenerateRandomPaymentMethod();
@@ -92,8 +95,8 @@ namespace DbSeeder
                 Amount = Math.Round(amount, 2)
             };
 
-            dbContext.Payments.Add(payment);
-            dbContext.SaveChanges();
+            await dbContext.Payments.AddAsync(payment);
+            await dbContext.SaveChangesAsync();
         }
     }
 }

@@ -14,6 +14,7 @@ namespace POS.ViewModels.ReportsAndAnalysis
     {
         private int selectedReportIndex;
         private DateTime startDate = DateTime.Now.AddMonths(-2);
+        //private DateTime startDate = DateTime.Now.AddDays(-1);
         private DateTime endDate = DateTime.Now;
         private bool isDatePickerControlsEnabled = true;
         private bool isAiPredictionControlsEnabled;
@@ -81,8 +82,8 @@ namespace POS.ViewModels.ReportsAndAnalysis
 
         public ReportsAndAnalysisViewModel(IReportsFactory reportFactory, IChartsFactory chartFactory, IPredictionsFactory predictionsFactory)
         {
-            GenerateReportCommand = new RelayCommand(async _ => await GenerateReport());
-            GeneratePredictionCommand = new RelayCommand(async _ => await GeneratePrediction());
+            GenerateReportCommand = new RelayCommand(async => _ = GenerateReport());
+            GeneratePredictionCommand = new RelayCommand( async => _ = GeneratePrediction());
 
             _reportFactory = reportFactory;
             _chartFactory = chartFactory;
@@ -109,7 +110,7 @@ namespace POS.ViewModels.ReportsAndAnalysis
             SetStartAndEndDate(selectedReportIndex);
             _reportFactory.SetParameters(startDate, endDate);
             await _reportFactory.GenerateReport(selectedReportIndex);
-            await _chartFactory.GenerateChart(selectedReportIndex, seriesCollection, ChartType.Report);
+            _chartFactory.GenerateChart(selectedReportIndex, seriesCollection, ChartType.Report);
 
             labels = _chartFactory.GetUpdatedLabelsValues();
             OnPropertyChanged(nameof(labels));
@@ -120,7 +121,7 @@ namespace POS.ViewModels.ReportsAndAnalysis
             seriesCollection.Clear();
 
             await _predictionsFactory.GeneratePrediction(selectedReportIndex, seriesCollection);
-            await _chartFactory.GenerateChart(selectedReportIndex, seriesCollection, ChartType.Prediction);
+            _chartFactory.GenerateChart(selectedReportIndex, seriesCollection, ChartType.Prediction);
 
             labels = _chartFactory.GetUpdatedLabelsValues();
             OnPropertyChanged(nameof(labels));
@@ -154,6 +155,22 @@ namespace POS.ViewModels.ReportsAndAnalysis
                 3 => DateTime.Now.AddMonths(-2),
                 _ => EndDate
             };
+
+            //startDate = index switch
+            //{
+            //    1 => DateTime.Now.AddDays(-7),
+            //    2 => DateTime.Now.AddMonths(-1),
+            //    3 => DateTime.Now.AddYears(-1),
+            //    _ => StartDate
+            //};
+
+            //endDate = index switch
+            //{
+            //    1 => DateTime.Now,
+            //    2 => DateTime.Now,
+            //    3 => DateTime.Now,
+            //    _ => EndDate
+            //};
 
             OnPropertyChanged(nameof(startDate));
             OnPropertyChanged(nameof(endDate));

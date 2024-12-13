@@ -2,9 +2,11 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using DataAccess;
 using Microsoft.Extensions.DependencyInjection;
 using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
+using POS.Services.ToDoList;
 using POS.ViewModels.ReportsAndAnalysis;
 using POS.ViewModels.ReportsAndAnalysis.ChartGenerators.PredictionChartGenerators;
 using POS.ViewModels.ReportsAndAnalysis.ChartGenerators.ReportChartGenerators;
@@ -12,6 +14,7 @@ using POS.ViewModels.ReportsAndAnalysis.Factories;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 using POS.ViewModels.ReportsAndAnalysis.PredictionGenerators;
 using POS.ViewModels.ReportsAndAnalysis.ReportGenerators;
+using POS.ViewModels.ToDoList;
 
 namespace POS
 {
@@ -33,6 +36,10 @@ namespace POS
 
         private void ConfigureServices(ServiceCollection servicesCollection)
         {
+            servicesCollection.AddSingleton<AppDbContext>();
+
+            #region ReportsAndAnalysis
+
             servicesCollection.AddTransient<ReportsAndAnalysisViewModel>();
 
             // Reports
@@ -61,6 +68,11 @@ namespace POS
             servicesCollection.AddSingleton<IReportsFactory, ReportsFactory>();
             servicesCollection.AddTransient<IChartsFactory, ChartsFactory>();
             servicesCollection.AddSingleton<IPredictionsFactory, PredictionsFactory>();
+
+            #endregion
+
+            servicesCollection.AddTransient<TaskManagerService>();
+            servicesCollection.AddTransient<ToDoListViewModel>();
         }
 
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

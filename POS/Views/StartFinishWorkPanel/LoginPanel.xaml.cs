@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using DataAccess.Models;
+using DataAccess;
 
 namespace POS.Views.StartFinishWorkPanel
 {

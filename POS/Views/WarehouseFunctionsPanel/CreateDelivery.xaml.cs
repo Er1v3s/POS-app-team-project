@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using DataAccess;
 using DataAccess.Models;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.Win32;
-using POS.Converter;
+using POS.Helpers;
 using POS.Models.Warehouse;
 using Paragraph = iTextSharp.text.Paragraph;
 

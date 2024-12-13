@@ -10,7 +10,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators.PredictionChartGener
 {
     public class RevenuePredictionChartGenerator : IChartGenerator<RevenuePredictionDto>
     {
-        public void GenerateChart(IQueryable<RevenuePredictionDto> data, SeriesCollection seriesCollection, out List<string> labels, Func<dynamic, string>? labelSelector = null)
+        public void GenerateChart(List<RevenuePredictionDto> data, SeriesCollection seriesCollection, out List<string> labels, Func<dynamic, string>? labelSelector = null)
         {
             seriesCollection.Add(new ColumnSeries()
             {

@@ -10,7 +10,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators.ReportChartGenerator
 {
     public class SalesChartGenerator : IChartGenerator<ProductSalesDto>
     {
-        public void GenerateChart(IQueryable<ProductSalesDto> data, SeriesCollection seriesCollection, out List<string> labels, Func<dynamic, string>? labelSelector = null)
+        public void GenerateChart(List<ProductSalesDto> data, SeriesCollection seriesCollection, out List<string> labels, Func<dynamic, string>? labelSelector = null)
         {
             var dataGrouped = GroupDataByProductNames(data);
 
@@ -25,7 +25,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators.ReportChartGenerator
             labels = dataGrouped.Select(p => p.ProductName).ToList();
         }
 
-        private IQueryable<ProductSalesDto> GroupDataByProductNames(IQueryable<ProductSalesDto> orderedItems)
+        private List<ProductSalesDto> GroupDataByProductNames(List<ProductSalesDto> orderedItems)
         {
             return orderedItems
                 .GroupBy(item => item.ProductName)
@@ -33,7 +33,8 @@ namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators.ReportChartGenerator
                 {
                     ProductName = group.First().ProductName,
                     Quantity = group.Sum(item => item.Quantity)
-                });
+                })
+                .ToList();
         }
     }
 }

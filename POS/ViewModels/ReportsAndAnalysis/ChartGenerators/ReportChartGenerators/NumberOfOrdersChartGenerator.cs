@@ -10,7 +10,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ChartGenerators.ReportChartGenerator
 {
     public class NumberOfOrdersChartGenerator : IChartGenerator<OrderReportDto>
     {
-        public void GenerateChart(IQueryable<OrderReportDto> data, SeriesCollection seriesCollection, out List<string> labels, Func<dynamic, string>? labelSelector = null)
+        public void GenerateChart(List<OrderReportDto> data, SeriesCollection seriesCollection, out List<string> labels, Func<dynamic, string>? labelSelector = null)
         {
             seriesCollection.Add(new ColumnSeries
             {

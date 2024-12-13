@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Windows;
 using System.Windows.Input;
-using DataAccess.Models;
+using DataAccess;
 using POS.Models.Orders;
 
 namespace POS.Views.RegisterSale
