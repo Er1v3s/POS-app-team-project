@@ -3,6 +3,9 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using DataAccess;
+using DataAccess.Models;
+using POS.Services.Login;
+using POS.Views.RegisterSale;
 using POS.Views.StartFinishWorkPanel;
 
 namespace POS.Views.WarehouseFunctionsPanel
@@ -28,12 +31,12 @@ namespace POS.Views.WarehouseFunctionsPanel
             LoginPanel loginPanel = new LoginPanel();
             loginPanel.ShowDialog();
 
-            if (loginPanel.isLoginValid)
-            {
-                int employeeId = loginPanel.employeeId;
-                StockManagement stockManagment = new StockManagement(employeeId);
-                stockManagment.Show();
-            }
+            //if (loginPanel.isLoginValid)
+            //{
+            //    int employeeId = loginPanel.employeeId;
+            //    StockManagement stockManagment = new StockManagement(employeeId);
+            //    stockManagment.Show();
+            //}
         }
 
         private void OpenCreateDeliveryWindow_ButtonClick(object sender, RoutedEventArgs e)
@@ -41,26 +44,26 @@ namespace POS.Views.WarehouseFunctionsPanel
             LoginPanel loginPanel = new LoginPanel();
             loginPanel.ShowDialog();
 
-            if (loginPanel.isLoginValid)
-            {
-                int employeeId = loginPanel.employeeId;
-                CreateDelivery createDelivery = new CreateDelivery(employeeId);
-                createDelivery.Show();
-            }
+            //if (loginPanel.isLoginValid)
+            //{
+            //    int employeeId = loginPanel.employeeId;
+            //    CreateDelivery createDelivery = new CreateDelivery(employeeId);
+            //    createDelivery.Show();
+            //}
         }
 
         private void LoadRunningOutOfIngredients()
         {
             try
             {
-                using (var dbContext = new AppDbContext())
-                {
-                    var runningOutOfIngredients = dbContext.Ingredients
-                        .Where(ingredient => ingredient.Stock < ingredient.SafetyStock)
-                        .ToList();
+                using var dbContext = new AppDbContext();
 
-                    runningOutOfIngredientsDataGrid.ItemsSource = runningOutOfIngredients;
-                }
+                var runningOutOfIngredients = dbContext.Ingredients
+                    .Where(ingredient => ingredient.Stock < ingredient.SafetyStock)
+                    .ToList();
+
+                runningOutOfIngredientsDataGrid.ItemsSource = runningOutOfIngredients;
+
             }
             catch (Exception ex)
             {

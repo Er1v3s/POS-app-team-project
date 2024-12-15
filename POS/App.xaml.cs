@@ -6,7 +6,9 @@ using DataAccess;
 using Microsoft.Extensions.DependencyInjection;
 using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
+using POS.Services.Login;
 using POS.Services.ToDoList;
+using POS.ViewModels;
 using POS.ViewModels.ReportsAndAnalysis;
 using POS.ViewModels.ReportsAndAnalysis.ChartGenerators.PredictionChartGenerators;
 using POS.ViewModels.ReportsAndAnalysis.ChartGenerators.ReportChartGenerators;
@@ -14,7 +16,9 @@ using POS.ViewModels.ReportsAndAnalysis.Factories;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 using POS.ViewModels.ReportsAndAnalysis.PredictionGenerators;
 using POS.ViewModels.ReportsAndAnalysis.ReportGenerators;
+using POS.ViewModels.StartFinishWork;
 using POS.ViewModels.ToDoList;
+using POS.ViewModels.WorkTimeSummaryControl;
 
 namespace POS
 {
@@ -71,8 +75,23 @@ namespace POS
 
             #endregion
 
-            servicesCollection.AddTransient<TaskManagerService>();
+            #region ToDoList
+
             servicesCollection.AddTransient<ToDoListViewModel>();
+            servicesCollection.AddTransient<TaskManagerService>();
+
+            #endregion
+
+            #region LoginPanel
+
+            servicesCollection.AddTransient<SessionService>();
+            servicesCollection.AddTransient<LoginManager>();
+            servicesCollection.AddTransient<LoginService>();
+            servicesCollection.AddTransient<LoginPanelViewModel>();
+            servicesCollection.AddTransient<StartFinishWorkViewModel>();
+            servicesCollection.AddTransient<WorkTimeSummaryControlViewModel>();
+
+            #endregion
         }
 
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
