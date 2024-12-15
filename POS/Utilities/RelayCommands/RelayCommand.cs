@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace POS.ViewModels
+namespace POS.Utilities.RelayCommands
 {
     public class RelayCommand : ICommand
     {
