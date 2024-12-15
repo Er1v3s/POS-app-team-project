@@ -5,6 +5,8 @@ using System.Windows;
 using System.Windows.Input;
 using LiveCharts;
 using POS.Models.Reports;
+using POS.Utilities;
+using POS.Utilities.RelayCommands;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 using POS.ViewModels.ReportsAndAnalysis.Validators;
 
@@ -82,8 +84,8 @@ namespace POS.ViewModels.ReportsAndAnalysis
 
         public ReportsAndAnalysisViewModel(IReportsFactory reportFactory, IChartsFactory chartFactory, IPredictionsFactory predictionsFactory)
         {
-            GenerateReportCommand = new RelayCommand(async => _ = GenerateReport());
-            GeneratePredictionCommand = new RelayCommand( async => _ = GeneratePrediction());
+            GenerateReportCommand = new RelayCommandAsync(GenerateReport);
+            GeneratePredictionCommand = new RelayCommandAsync(GeneratePrediction);
 
             _reportFactory = reportFactory;
             _chartFactory = chartFactory;

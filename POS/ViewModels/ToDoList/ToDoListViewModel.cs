@@ -3,6 +3,8 @@ using DataAccess.Models;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using POS.Services.ToDoList;
+using POS.Utilities;
+using POS.Utilities.RelayCommands;
 
 namespace POS.ViewModels.ToDoList
 {
@@ -33,7 +35,7 @@ namespace POS.ViewModels.ToDoList
             _taskManager = taskManager;
 
             TodoListTaskCollection = [];
-            AddTaskCommand = new RelayCommand(async _ => await AddTaskAsync());
+            AddTaskCommand = new RelayCommandAsync(AddTaskAsync);
             DeleteTaskCommand = new RelayCommand<ToDoListTask>(async (task) => await DeleteTaskAsync(task));
 
             _ = LoadTasksAsync();

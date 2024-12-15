@@ -6,8 +6,8 @@ using System.Windows;
 using System.Windows.Controls;
 using DataAccess;
 using POS.Services;
+using POS.Services.Login;
 using POS.Views.RegisterSale;
-using POS.Views.StartFinishWorkPanel;
 using POS.Views.WarehouseFunctionsPanel;
 
 namespace POS.Views
@@ -29,21 +29,31 @@ namespace POS.Views
 
         private void MoveToSalesPanel_ButtonClick(object sender, RoutedEventArgs e)
         {
-            LoginPanel loginPanel = new LoginPanel();
-            loginPanel.ShowDialog();
-            
-            if (loginPanel.isLoginValid)
+            LoginManager.Instance.IsAuthenticationOnlyRequired = true;
+            LoginManager.OpenLoginWindow();
+
+            if (LoginManager.Instance.SuccessfullyLoggedIn && LoginManager.Instance.Employee!.IsUserLoggedIn)
             {
-                int employeeId = loginPanel.employeeId;
-                SalesPanel salesPanel = new SalesPanel(employeeId);
+                LoginManager.Instance.IsAuthenticationOnlyRequired = false;
+                LoginManager.Instance.SuccessfullyLoggedIn = false;
+
+                SalesPanel salesPanel = new SalesPanel(LoginManager.Instance.Employee.EmployeeId);
                 salesPanel.Show();
-                this.Close();
+                Close();
             }
         }
 
-        private void TurnOffApplication_ButtonClick(object sender, RoutedEventArgs e)
+        private void ChangeSource_ButtonClick(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            if (sender is Button button && button.Tag is string uri)
+            {
+                if (uri == "./WorkTimeSummaryPanel/WorkTimeSummaryControl.xaml")
+                    ChangeFrameSource(uri);
+                else if (uri == "./AdminFunctionsPanel/AdministratorFunctions.xaml" || uri == "./WarehouseFunctionsPanel/RunningOutOfIngredients.xaml" || uri == "./ReportsAndAnalysisPanel/ReportsAndAnalysis.xaml")
+                    CheckIfUserIsLoggedInAndChangeSource(uri);
+                else
+                    LoginManager.OpenLoginWindow();
+            }
         }
 
         private void ChangeFrameSource(string uri)
@@ -59,40 +69,17 @@ namespace POS.Views
             }
         }
 
-        private void ShowLoginPanel(string uri)
+        private void CheckIfUserIsLoggedInAndChangeSource(string uri)
         {
-            LoginPanel loginPanel = new LoginPanel(uri);
-            loginPanel.ShowDialog();
-        }
-
-        private void ShowLoginPanelAndChangeSource(string uri)
-        {
-            LoginPanel loginPanel = new LoginPanel(uri);
-            loginPanel.ShowDialog();
-
-            if(loginPanel.isLoginValid)
-            {
+            if (LoginManager.Instance.IsAnySessionActive)
                 ChangeFrameSource(uri);
-            } 
+            else
+                LoginManager.OpenLoginWindow();
         }
 
-        private void ChangeSource_ButtonClick(object sender, RoutedEventArgs e)
+        private void TurnOffApplication_ButtonClick(object sender, RoutedEventArgs e)
         {
-            if (sender is Button button && button.Tag is string uri)
-            {
-                if (uri == "./WorkTimeSummaryPanel/WorkTimeSummaryControl.xaml" || uri == "./WarehouseFunctionsPanel/RunningOutOfIngredients.xaml" || uri == "./ReportsAndAnalysisPanel/ReportsAndAnalysis.xaml")
-                {
-                    ChangeFrameSource(uri);
-                }
-                else if (uri == "./AdminFunctionsPanel/AdministratorFunctions.xaml")
-                {
-                    ShowLoginPanelAndChangeSource(uri);
-                }
-                else
-                {
-                    ShowLoginPanel(uri);
-                }
-            }
+            Application.Current.Shutdown();
         }
 
         private void UpdateDateTime(string date, string time)
