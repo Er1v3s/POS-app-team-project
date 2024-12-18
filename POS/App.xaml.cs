@@ -6,9 +6,10 @@ using DataAccess;
 using Microsoft.Extensions.DependencyInjection;
 using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
+using POS.Services.AdminFunctions;
 using POS.Services.Login;
 using POS.Services.ToDoList;
-using POS.ViewModels;
+using POS.ViewModels.AdminFunctionsPanel;
 using POS.ViewModels.ReportsAndAnalysis;
 using POS.ViewModels.ReportsAndAnalysis.ChartGenerators.PredictionChartGenerators;
 using POS.ViewModels.ReportsAndAnalysis.ChartGenerators.ReportChartGenerators;
@@ -92,6 +93,16 @@ namespace POS
             servicesCollection.AddTransient<WorkTimeSummaryControlViewModel>();
 
             #endregion
+
+            #region AdministratorFunctions
+
+            servicesCollection.AddTransient<AdminFunctionsService>();
+            servicesCollection.AddTransient<AdministratorFunctionsViewModel>();
+            servicesCollection.AddTransient<AddEmployeeViewModel>();
+            servicesCollection.AddTransient<EditEmployeeViewModel>();
+
+            #endregion
+
         }
 
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
