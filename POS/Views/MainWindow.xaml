@@ -3,8 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mainWindow="clr-namespace:POS.ViewModels.MainWindow"
         xmlns:todolist="clr-namespace:POS.Views.ToDoList"
-        d:DataContext="{d:DesignInstance Type=todolist:ToDoList}"
+        d:DataContext="{d:DesignInstance Type=mainWindow:MainWindowViewModel}"
         mc:Ignorable="d"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         Title="MainWindow" Height="768" Width="1366" WindowState="Maximized" WindowStyle="None" FontFamily="Lato" FontSize="16">
@@ -86,7 +87,7 @@
                     <TextBlock x:Name="timeTextBlock" Text="" HorizontalAlignment="Center" FontSize="20" Foreground="White"/>
                 </StackPanel>
                 <Grid Grid.Column="4">
-                    <Button Style="{StaticResource TurnOffAppButton}" Click="TurnOffApplication_ButtonClick">
+                    <Button Command="{Binding TurnOffApplicationCommand}" Style="{StaticResource TurnOffAppButton}">
                         <fa:ImageAwesome Icon="PowerOff" Foreground="White" Width="24" Height="24"/>
                     </Button>
                 </Grid>

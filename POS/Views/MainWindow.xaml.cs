@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using DataAccess;
+using Microsoft.Extensions.DependencyInjection;
 using POS.Services;
 using POS.Services.Login;
+using POS.ViewModels.MainWindow;
 using POS.Views.RegisterSale;
 using POS.Views.WarehouseFunctionsPanel;
 
@@ -22,6 +24,10 @@ namespace POS.Views
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = App.ServiceProvider.GetRequiredService<MainWindowViewModel>();
+
+            var viewModel = (MainWindowViewModel)DataContext;
+            viewModel.TurnOffApplicationAction = Application.Current.Shutdown;
 
             _timerService = new TimerService(UpdateDateTime);
             _timerService.Start();
@@ -75,11 +81,6 @@ namespace POS.Views
                 ChangeFrameSource(uri);
             else
                 LoginManager.OpenLoginWindow();
-        }
-
-        private void TurnOffApplication_ButtonClick(object sender, RoutedEventArgs e)
-        {
-            Application.Current.Shutdown();
         }
 
         private void UpdateDateTime(string date, string time)

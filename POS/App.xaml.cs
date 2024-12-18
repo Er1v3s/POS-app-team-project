@@ -10,6 +10,7 @@ using POS.Services.AdminFunctions;
 using POS.Services.Login;
 using POS.Services.ToDoList;
 using POS.ViewModels.AdminFunctionsPanel;
+using POS.ViewModels.MainWindow;
 using POS.ViewModels.ReportsAndAnalysis;
 using POS.ViewModels.ReportsAndAnalysis.ChartGenerators.PredictionChartGenerators;
 using POS.ViewModels.ReportsAndAnalysis.ChartGenerators.ReportChartGenerators;
@@ -42,6 +43,12 @@ namespace POS
         private void ConfigureServices(ServiceCollection servicesCollection)
         {
             servicesCollection.AddSingleton<AppDbContext>();
+
+            #region MainWindow
+
+            servicesCollection.AddTransient<MainWindowViewModel>();
+
+            #endregion
 
             #region ReportsAndAnalysis
 
