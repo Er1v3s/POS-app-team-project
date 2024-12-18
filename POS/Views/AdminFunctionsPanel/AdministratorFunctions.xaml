@@ -3,8 +3,10 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:POS.Views"
       mc:Ignorable="d" 
+      xmlns:adminfunctions="clr-namespace:POS.ViewModels.AdminFunctionsPanel"
+      d:DataContext="{d:DesignInstance Type=adminfunctions:AdministratorFunctionsViewModel}"
+      DataContext="{Binding AdministratorFunctionsViewModel}"
       d:DesignHeight="800" d:DesignWidth="800"
       Title="AdministratorFunctions"
       xmlns:fa="http://schemas.fontawesome.io/icons/"
@@ -29,7 +31,7 @@
                     <Button Style="{StaticResource topButton}" Background="#4BAEA0">
                         <TextBlock Text="ROZPOCZNIJ DZIEŃ" Style="{StaticResource topButtonTextBlock}"/>
                     </Button>
-                    <Button Style="{StaticResource topButton}" Background="#FF7286D3" Click="ShowCashBalance_ButtonClick">
+                    <Button Style="{StaticResource topButton}" Background="#FF7286D3" Command="{Binding ShowCashBalanceCommand}">
                         <TextBlock Text="KONTROLA GOTÓWKI" Style="{StaticResource topButtonTextBlock}"/>
                     </Button>
                     <Button Style="{StaticResource topButton}" Background="#AE4B59">
@@ -43,7 +45,7 @@
                     <TextBlock Text="ZARZĄDZANIE KADRĄ PRACOWNICZĄ" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="24" />
 
                     <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0">
-                        <Button Click="RefreshEmployeesList_ButtonClick" Style="{StaticResource refreshButton}" HorizontalAlignment="Right" Margin="0,0,00,0">
+                        <Button Command="{Binding LoadEmployeeInfoListCommand}" Style="{StaticResource refreshButton}" HorizontalAlignment="Right" Margin="0,0,00,0">
                             <fa:ImageAwesome Icon="Refresh" Height="20" Foreground="White" />
                         </Button>
                     </StackPanel>
@@ -52,7 +54,7 @@
 
             <Grid Grid.Row="3">
                 <Border BorderThickness="0, 1, 0 ,0" BorderBrush="Black">
-                    <DataGrid x:Name="employeesInfoDataGrid" SelectionMode="Single" SelectionChanged="EmployeesInfoDataGrid_SelectionChanged" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}">
+                    <DataGrid ItemsSource="{Binding EmployeesCollection}" SelectedItem="{Binding SelectedEmployee, Mode=TwoWay}" x:Name="employeesInfoDataGrid" SelectionMode="Single" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="PRACOWNIK"  Width="3*" CanUserResize="False" CanUserReorder="False" Binding="{Binding EmployeeName}"  />
                             <DataGridTextColumn Header="STANOWISKO"  Width="1.5*" CanUserResize="False" CanUserReorder="False" Binding="{Binding JobTitle}" />
@@ -70,13 +72,13 @@
 
             <Grid Grid.Row="4">
                 <UniformGrid Rows="1" Columns="3"  VerticalAlignment="Stretch" Margin="10, 0, 10, 10">
-                    <Button Style="{StaticResource bottomButton}" Click="OpenAddEmployeeWindow_ButtonClick">
+                    <Button Style="{StaticResource bottomButton}" Command="{Binding AddEmployeeCommand}">
                         <TextBlock Text="DODAJ PRACOWNIKA" Style="{StaticResource topButtonTextBlock}"/>
                     </Button>
-                    <Button Style="{StaticResource bottomButton}" x:Name="btnEdit"  IsEnabled="False" Click="EditEmployee_ButtonClick">
+                    <Button Style="{StaticResource bottomButton}" IsEnabled="{ Binding IsEditButtonEnabled}" Command="{Binding EditEmployeeCommand}">
                         <TextBlock Text="EDYTUJ PRACOWNIKA" Style="{StaticResource topButtonTextBlock}"/>
                     </Button>
-                    <Button Style="{StaticResource bottomButton}" x:Name="btnDelete"  IsEnabled="False" Click="DeleteEmployee_ButtonClick">
+                    <Button Style="{StaticResource bottomButton}" IsEnabled="{ Binding IsDeleteButtonEnabled}" Command="{Binding DeleteEmployeeCommand}">
                         <TextBlock Text="USUŃ PRACOWNIKA" Style="{StaticResource topButtonTextBlock}" Width="120"/>
                     </Button>
                 </UniformGrid>

@@ -3,34 +3,38 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Microsoft.IdentityModel.Tokens;
 
 namespace POS.Helpers
 {
-    class FormValidatorHelper
+    public class FormValidatorHelper
     {
-        public static string ValidateTextBox(object sender)
+        public static string ValidateString(string stringToValidate)
         {
-            TextBox textBox = sender as TextBox;
-            textBox.BorderThickness = new Thickness(2);
+            if (stringToValidate.IsNullOrEmpty())
+                throw new Exception("Niekompletne dane");
+            
+            return stringToValidate;
+        }
 
-            if (textBox != null)
-            {
-                if (textBox.Text.Length < 1)
-                {
-                    textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(174, 75, 89));
-                    throw new Exception("Niekompletne dane");
-                }
-                else
-                {
-                    textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(55, 154, 140));
-                }
-            }
-            else
-            {
-                throw new Exception("Błąd podczas przetwarzania formularza");
-            }
+        public static string ValidateEmailAddress(string email)
+        {
+            var emailValidated = ValidateString(email);
 
-            return textBox.Text;
+            if (!IsEmailValid(emailValidated))
+                throw new Exception("Niepoprawny adres email");
+
+            return emailValidated;
+        }
+
+        public static string ValidatePhoneNumber(string phoneNumber)
+        {
+            var phoneNumberValidated = ValidateString(phoneNumber);
+
+            if (!IsPhoneNumberValid(phoneNumberValidated))
+                throw new Exception("Niepoprawny numer telefonu");
+
+            return phoneNumberValidated;
         }
 
         public static void ValidateTextBox(object sender, RoutedEventArgs e)
@@ -38,56 +42,13 @@ namespace POS.Helpers
             TextBox textBox = sender as TextBox;
             textBox.BorderThickness = new Thickness(2);
 
-            if(textBox != null)
+            if (textBox != null)
             {
                 if (textBox.Text.Length < 1)
-                {
                     textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(174, 75, 89));
-                }
                 else
-                {
                     textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(55, 154, 140));
-                }
             }
-        }
-
-        public static string ValidateComboBox(object sender)
-        {
-            ComboBox comboBox = (sender as ComboBox);
-            comboBox.BorderThickness = new Thickness(2);
-
-            if(comboBox.SelectedItem != null)
-            {
-                comboBox.BorderBrush = new SolidColorBrush(Color.FromRgb(55, 154, 140));
-            }
-            else
-            {
-                comboBox.BorderBrush = new SolidColorBrush(Color.FromRgb(174, 75, 89));
-                throw new Exception("Nie wybrano żadnej wartości w jednym z pól");
-            }
-
-            return (comboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
-        }
-
-        public static string ValidateEmailAddress(object sender)
-        {
-            TextBox textBox = sender as TextBox;
-            string textBoxValue = ValidateTextBox(textBox);
-
-            if (textBoxValue != null) 
-            {
-                if(IsEmailValid(textBoxValue))
-                {
-                    return textBoxValue;
-                }
-                else
-                {
-                    textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(174, 75, 89));
-                    throw new Exception("Niepoprawny adres email");
-                }
-            }
-
-            return textBoxValue;
         }
 
         public static void ValidateEmailAddress(object sender, RoutedEventArgs e)
@@ -98,43 +59,10 @@ namespace POS.Helpers
             if (textBox != null || textBox.Text.Length >= 1)
             {
                 if (IsEmailValid(textBox.Text))
-                {
                     textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(55, 154, 140));
-                }
                 else
-                {
                     textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(174, 75, 89));
-                }
             }
-        }
-
-        private static bool IsEmailValid(string email)
-        {
-            string regexPattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-
-            Regex regex = new Regex(regexPattern);
-            return regex.IsMatch(email);
-        }
-
-        public static string ValidatePhoneNumber(object sender)
-        {
-            TextBox textBox = sender as TextBox;
-            string textBoxValue = ValidateTextBox(textBox);
-
-            if (textBoxValue != null)
-            {
-                if (IsPhoneNumberValid(textBoxValue))
-                {
-                    return textBoxValue;
-                }
-                else
-                {
-                    textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(174, 75, 89));
-                    throw new Exception("Niepoprawny numer telefonu");
-                }
-            }
-
-            return textBoxValue;
         }
 
         public static void ValidatePhoneNumber(object sender, RoutedEventArgs e)
@@ -145,14 +73,18 @@ namespace POS.Helpers
             if (textBox != null)
             {
                 if (IsPhoneNumberValid(textBox.Text))
-                {
                     textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(55, 154, 140));
-                }
                 else
-                {
                     textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(174, 75, 89));
-                }
             }
+        }
+
+        private static bool IsEmailValid(string email)
+        {
+            string regexPattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+
+            Regex regex = new Regex(regexPattern);
+            return regex.IsMatch(email);
         }
 
         private static bool IsPhoneNumberValid(string phoneNumber)
