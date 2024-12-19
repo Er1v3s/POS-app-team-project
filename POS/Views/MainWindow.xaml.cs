@@ -28,26 +28,27 @@ namespace POS.Views
 
             var viewModel = (MainWindowViewModel)DataContext;
             viewModel.TurnOffApplicationAction = Application.Current.Shutdown;
+            viewModel.CloseWindowsAction = Close;
 
             _timerService = new TimerService(UpdateDateTime);
             _timerService.Start();
         }
 
-        private void MoveToSalesPanel_ButtonClick(object sender, RoutedEventArgs e)
-        {
-            LoginManager.Instance.IsAuthenticationOnlyRequired = true;
-            LoginManager.OpenLoginWindow();
+        //private void MoveToSalesPanel_ButtonClick(object sender, RoutedEventArgs e)
+        //{
+        //    LoginManager.Instance.IsAuthenticationOnlyRequired = true;
+        //    LoginManager.OpenLoginWindow();
 
-            if (LoginManager.Instance.SuccessfullyLoggedIn && LoginManager.Instance.Employee!.IsUserLoggedIn)
-            {
-                LoginManager.Instance.IsAuthenticationOnlyRequired = false;
-                LoginManager.Instance.SuccessfullyLoggedIn = false;
+        //    if (LoginManager.Instance.SuccessfullyLoggedIn && LoginManager.Instance.Employee!.IsUserLoggedIn)
+        //    {
+        //        LoginManager.Instance.IsAuthenticationOnlyRequired = false;
+        //        LoginManager.Instance.SuccessfullyLoggedIn = false;
 
-                SalesPanel salesPanel = new SalesPanel(LoginManager.Instance.Employee.EmployeeId);
-                salesPanel.Show();
-                Close();
-            }
-        }
+        //        SalesPanel salesPanel = new SalesPanel(LoginManager.Instance.Employee.EmployeeId);
+        //        salesPanel.Show();
+        //        Close();
+        //    }
+        //}
 
         private void ChangeSource_ButtonClick(object sender, RoutedEventArgs e)
         {

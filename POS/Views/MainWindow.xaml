@@ -117,7 +117,7 @@
             </Border>
 
             <Grid Grid.Row="2" >
-                <Button Style="{StaticResource registerSellButton}" Click="MoveToSalesPanel_ButtonClick">
+                <Button Command="{Binding NavigateToSalesPanelCommand}" Style="{StaticResource registerSellButton}">
                     <StackPanel Orientation="Vertical">
                         <fa:ImageAwesome Icon="ShoppingBasket" Width="50" Height="50" Foreground="White" Margin="0, 0, 0, 10"/>
                         <TextBlock Text="ZAREJESTRUJ SPRZEDAŻ" Width="200" TextWrapping="Wrap" TextAlignment="Center" FontSize="24" FontWeight="Bold"/>
