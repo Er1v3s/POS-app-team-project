@@ -4,8 +4,10 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using DataAccess;
 using Microsoft.Extensions.DependencyInjection;
+using POS.Factories;
 using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
+using POS.Services;
 using POS.Services.AdminFunctions;
 using POS.Services.Login;
 using POS.Services.ToDoList;
@@ -46,6 +48,9 @@ namespace POS
 
             #region MainWindow
 
+            servicesCollection.AddTransient<TimeService>();
+            servicesCollection.AddTransient<ViewFactory>();
+            servicesCollection.AddTransient<NavigationService>();
             servicesCollection.AddTransient<MainWindowViewModel>();
 
             #endregion

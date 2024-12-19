@@ -1,4 +1,4 @@
-﻿<Page x:Class="POS.Views.AdminFunctionsPanel.AdministratorFunctions"
+﻿<UserControl x:Class="POS.Views.AdminFunctionsPanel.AdministratorFunctions"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -8,7 +8,6 @@
       d:DataContext="{d:DesignInstance Type=adminfunctions:AdministratorFunctionsViewModel}"
       DataContext="{Binding AdministratorFunctionsViewModel}"
       d:DesignHeight="800" d:DesignWidth="800"
-      Title="AdministratorFunctions"
       xmlns:fa="http://schemas.fontawesome.io/icons/"
       FontSize="16" FontFamily="Lato">
 
@@ -85,4 +84,4 @@
             </Grid>
         </Grid>
     </Border>
-</Page>
+</UserControl>
