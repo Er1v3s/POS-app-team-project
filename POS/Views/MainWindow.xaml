@@ -54,10 +54,7 @@
 
         <Grid Grid.Column="1" >
             <Border BorderBrush="Black" BorderThickness="1, 0, 1, 0" Padding="30">
-                <ContentControl >
-                    <!--<Frame x:Name="frame" NavigationUIVisibility="Hidden" Source="./WorkTimeSummaryPanel/WorkTimeSummaryControl.xaml"/>-->
-                    <ContentControl Content="{Binding ContentSource}"/>
-                </ContentControl>
+                <ContentControl Content="{Binding ContentSource}"/>
             </Border>
         </Grid>
 
