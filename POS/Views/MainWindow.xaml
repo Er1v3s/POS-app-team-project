@@ -3,8 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mainWindow="clr-namespace:POS.ViewModels.MainWindow"
         xmlns:todolist="clr-namespace:POS.Views.ToDoList"
-        d:DataContext="{d:DesignInstance Type=todolist:ToDoList}"
+        d:DataContext="{d:DesignInstance Type=mainWindow:MainWindowViewModel}"
         mc:Ignorable="d"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         Title="MainWindow" Height="768" Width="1366" WindowState="Maximized" WindowStyle="None" FontFamily="Lato" FontSize="16">
@@ -18,31 +19,31 @@
 
         <Grid Grid.Column="0" Background="#8EA7E9">
             <UniformGrid Rows="5" Columns="1"  VerticalAlignment="Stretch" Margin="0, 12.5, 0, 12.5" >
-                <Button Style="{StaticResource sideBarButton}" Click="ChangeSource_ButtonClick" Tag="./WorkTimeSummaryPanel/WorkTimeSummaryControl.xaml">
+                <Button Command="{Binding ChangeContentSourceCommand}" CommandParameter="0" Style="{StaticResource sideBarButton}">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="ClockOutline" Width="30" Height="30" Foreground="White"/>
                         <TextBlock Text="PODSUMOWANIE CZASU PRACY" Style="{StaticResource sideBarButtonTextBlock}"/>
                     </StackPanel>
                 </Button>
-                <Button Style="{StaticResource sideBarButton}" Click="ChangeSource_ButtonClick" Tag="./StartFinishWorkPanel/StartFinishWork.xaml">
+                <Button Command="{Binding OpenLoginPanelWindowCommand}" Style="{StaticResource sideBarButton}">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="User" Width="30" Height="30" Foreground="White"/>
                         <TextBlock Text="ROZPOCZĘCIE I ZAKOŃCZENIE PRACY" Style="{StaticResource sideBarButtonTextBlock}"/>
                     </StackPanel>
                 </Button>
-                <Button Style="{StaticResource sideBarButton}" Click="ChangeSource_ButtonClick" Tag="./WarehouseFunctionsPanel/RunningOutOfIngredients.xaml" >
+                <Button Command="{Binding ChangeContentSourceCommand}" CommandParameter="1" Style="{StaticResource sideBarButton}">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Dropbox" Width="30" Height="30" Foreground="White" />
                         <TextBlock Text="FUNKCJE MAGAZYNOWE" Style="{StaticResource sideBarButtonTextBlock}"/>
                     </StackPanel>
                 </Button>
-                <Button Style="{StaticResource sideBarButton}" Click="ChangeSource_ButtonClick" Tag="./ReportsAndAnalysisPanel/ReportsAndAnalysis.xaml">
+                <Button Command="{Binding ChangeContentSourceCommand}" CommandParameter="2" Style="{StaticResource sideBarButton}">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="BarChart"  Width="30" Height="30" Foreground="White"/>
                         <TextBlock Text="RAPORTY I ANALIZY" Style="{StaticResource sideBarButtonTextBlock}"/>
                     </StackPanel>
                 </Button>
-                <Button Style="{StaticResource sideBarButton}" Click="ChangeSource_ButtonClick" Tag="./AdminFunctionsPanel/AdministratorFunctions.xaml">
+                <Button Command="{Binding ChangeContentSourceCommand}" CommandParameter="3" Style="{StaticResource sideBarButton}">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Shield" Width="30" Height="30" Foreground="White"/>
                         <TextBlock Text="FUNKCJE ADMINISTRATORA" Style="{StaticResource sideBarButtonTextBlock}"/>
@@ -53,9 +54,7 @@
 
         <Grid Grid.Column="1" >
             <Border BorderBrush="Black" BorderThickness="1, 0, 1, 0" Padding="30">
-                <ContentControl>
-                    <Frame x:Name="frame" NavigationUIVisibility="Hidden" Source="./WorkTimeSummaryPanel/WorkTimeSummaryControl.xaml"/>
-                </ContentControl>
+                <ContentControl Content="{Binding ContentSource}"/>
             </Border>
         </Grid>
 
@@ -82,11 +81,11 @@
                     <fa:ImageAwesome Icon="Database" Foreground="White" Width="24" Height="24"/>
                 </Grid>
                 <StackPanel Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock x:Name="dateTextBlock" Text="" FontSize="14" Foreground="White"/>
-                    <TextBlock x:Name="timeTextBlock" Text="" HorizontalAlignment="Center" FontSize="20" Foreground="White"/>
+                    <TextBlock Text="{Binding Date, StringFormat=dd/MM/yyyy}" FontSize="16" Foreground="White"/>
+                    <TextBlock Text="{Binding Time, StringFormat=HH:mm}" FontSize="24" Foreground="White" HorizontalAlignment="Center"/>
                 </StackPanel>
                 <Grid Grid.Column="4">
-                    <Button Style="{StaticResource TurnOffAppButton}" Click="TurnOffApplication_ButtonClick">
+                    <Button Command="{Binding TurnOffApplicationCommand}" Style="{StaticResource TurnOffAppButton}">
                         <fa:ImageAwesome Icon="PowerOff" Foreground="White" Width="24" Height="24"/>
                     </Button>
                 </Grid>
@@ -116,7 +115,7 @@
             </Border>
 
             <Grid Grid.Row="2" >
-                <Button Style="{StaticResource registerSellButton}" Click="MoveToSalesPanel_ButtonClick">
+                <Button Command="{Binding OpenSalesPanelWindowCommand}" Style="{StaticResource registerSellButton}">
                     <StackPanel Orientation="Vertical">
                         <fa:ImageAwesome Icon="ShoppingBasket" Width="50" Height="50" Foreground="White" Margin="0, 0, 0, 10"/>
                         <TextBlock Text="ZAREJESTRUJ SPRZEDAŻ" Width="200" TextWrapping="Wrap" TextAlignment="Center" FontSize="24" FontWeight="Bold"/>

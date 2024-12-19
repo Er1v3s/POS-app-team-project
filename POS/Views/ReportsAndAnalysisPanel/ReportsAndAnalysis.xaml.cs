@@ -7,7 +7,7 @@ namespace POS.Views.ReportsAndAnalysisPanel
     /// <summary>
     /// Logika interakcji dla klasy ReportsAndAnalysis.xaml
     /// </summary>
-    public partial class ReportsAndAnalysis : Page
+    public partial class ReportsAndAnalysis : UserControl
     {
         public ReportsAndAnalysis()
         {

@@ -9,7 +9,7 @@ namespace POS.Views.AdminFunctionsPanel
     /// <summary>
     /// Logika interakcji dla klasy AdministratorFuncions.xaml
     /// </summary>
-    public partial class AdministratorFunctions : Page
+    public partial class AdministratorFunctions : UserControl
     {
         public AdministratorFunctions()
         {

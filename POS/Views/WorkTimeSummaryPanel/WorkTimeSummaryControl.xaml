@@ -7,7 +7,7 @@
              xmlns:worktimesummarycontrol="clr-namespace:POS.ViewModels.WorkTimeSummaryControl"
              d:DataContext="{d:DesignInstance Type=worktimesummarycontrol:WorkTimeSummaryControlViewModel}"
              DataContext="{Binding WorkTimeSummaryControlViewModel}"
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="800" d:DesignWidth="800"
              xmlns:fa="http://schemas.fontawesome.io/icons/">
 
     <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" CornerRadius="8" Background="White">

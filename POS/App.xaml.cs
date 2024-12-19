@@ -4,12 +4,15 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using DataAccess;
 using Microsoft.Extensions.DependencyInjection;
+using POS.Factories;
 using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
+using POS.Services;
 using POS.Services.AdminFunctions;
 using POS.Services.Login;
 using POS.Services.ToDoList;
 using POS.ViewModels.AdminFunctionsPanel;
+using POS.ViewModels.MainWindow;
 using POS.ViewModels.ReportsAndAnalysis;
 using POS.ViewModels.ReportsAndAnalysis.ChartGenerators.PredictionChartGenerators;
 using POS.ViewModels.ReportsAndAnalysis.ChartGenerators.ReportChartGenerators;
@@ -42,6 +45,15 @@ namespace POS
         private void ConfigureServices(ServiceCollection servicesCollection)
         {
             servicesCollection.AddSingleton<AppDbContext>();
+
+            #region MainWindow
+
+            servicesCollection.AddTransient<TimeService>();
+            servicesCollection.AddTransient<ViewFactory>();
+            servicesCollection.AddTransient<NavigationService>();
+            servicesCollection.AddTransient<MainWindowViewModel>();
+
+            #endregion
 
             #region ReportsAndAnalysis
 
