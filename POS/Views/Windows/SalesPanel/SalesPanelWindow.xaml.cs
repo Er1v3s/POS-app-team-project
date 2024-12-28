@@ -36,6 +36,9 @@ namespace POS.Views.Windows.SalesPanel
             //
             InitializeComponent();
             DataContext = App.ServiceProvider.GetRequiredService<SalesPanelViewModel>();
+
+            var viewModel = (SalesPanelViewModel)DataContext;
+            viewModel.CloseWindowAction = Close;
             //
 
 
@@ -52,13 +55,13 @@ namespace POS.Views.Windows.SalesPanel
             EmployeeId = employeeId;
         }
 
-        private void MoveToMainWindow_ButtonClick(object sender, RoutedEventArgs e)
-        {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
+        //private void MoveToMainWindow_ButtonClick(object sender, RoutedEventArgs e)
+        //{
+        //    MainWindow mainWindow = new MainWindow();
+        //    mainWindow.Show();
 
-            Window.GetWindow(this).Close();
-        }
+        //    Window.GetWindow(this).Close();
+        //}
 
         private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using POS.Factories;
 using POS.Services.Login;
+using POS.Views.Windows;
 using POS.Views.Windows.SalesPanel;
 
 namespace POS.Services
@@ -33,6 +34,14 @@ namespace POS.Services
                 var salesPanel = new SalesPanelWindow(LoginManager.Instance.Employee.EmployeeId);
                 salesPanel.Show();
             }
+        }
+
+        public void OpenMainWindow()
+        {
+            LoginManager.Instance.LogOut();
+
+            var mainWindow = new MainWindow();
+            mainWindow.Show();
         }
 
         public object GetViewSource(object commandParameter)
