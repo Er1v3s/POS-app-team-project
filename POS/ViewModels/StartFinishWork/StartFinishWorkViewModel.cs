@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Input;
 using POS.Services.Login;
-using POS.Utilities;
 using POS.Utilities.RelayCommands;
+using POS.ViewModels.Base;
 
 namespace POS.ViewModels.StartFinishWork
 {

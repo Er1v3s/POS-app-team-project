@@ -1,7 +1,7 @@
 ﻿using System;
 using POS.Factories;
 using POS.Services.Login;
-using POS.Views.RegisterSale;
+using POS.Views.Windows;
 
 namespace POS.Services
 {
@@ -30,7 +30,7 @@ namespace POS.Services
                 LoginManager.Instance.IsAuthenticationOnlyRequired = false;
                 LoginManager.Instance.SuccessfullyLoggedIn = false;
 
-                var salesPanel = new SalesPanel(LoginManager.Instance.Employee.EmployeeId);
+                var salesPanel = new SalesPanelWindow(LoginManager.Instance.Employee.EmployeeId);
                 salesPanel.Show();
             }
         }

@@ -1,9 +1,6 @@
-﻿using POS.Views.AdminFunctionsPanel;
-using POS.Views.ReportsAndAnalysisPanel;
-using POS.Views.WarehouseFunctionsPanel;
-using POS.Views.WorkTimeSummaryPanel;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using POS.Views.UserControls.MainWindow;
 
 namespace POS.Factories
 {
@@ -15,10 +12,10 @@ namespace POS.Factories
         {
             viewFactoryDictionary = new Dictionary<int, Func<object>>
             {
-                { 0, () => new WorkTimeSummaryControl() },
-                { 1, () => new RunningOutOfIngredients() },
-                { 2, () => new ReportsAndAnalysis() },
-                { 3, () => new AdministratorFunctions() }
+                { 0, () => new WorkTimeSummaryUserControl() },
+                { 1, () => new WarehouseFunctionsUserControl() },
+                { 2, () => new ReportsAndAnalysisUserControl() },
+                { 3, () => new AdminFunctionsUserControl() }
             };
         }
 

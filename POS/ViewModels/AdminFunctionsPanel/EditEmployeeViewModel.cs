@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using POS.Services.AdminFunctions;
 using System.Windows;
 using System.Windows.Input;
 using DataAccess.Models;
 using POS.Helpers;
 using POS.Models.AdminFunctions;
+using POS.Services.AdminFunctions;
 using POS.Utilities.RelayCommands;
 
 namespace POS.ViewModels.AdminFunctionsPanel

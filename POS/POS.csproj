@@ -39,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\ReportsAndAnalysisPanel\ReportsAndAnalysis.xaml.cs">
+    <Compile Update="Views\UserControls\MainWindow\ReportsAndAnalysisUserControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
