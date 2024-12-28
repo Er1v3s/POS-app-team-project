@@ -7,9 +7,11 @@ using System.Windows;
 using System.Windows.Controls;
 using DataAccess;
 using DataAccess.Models;
+using Microsoft.Extensions.DependencyInjection;
 using POS.Helpers;
 using POS.Models.Invoices;
 using POS.Models.Orders;
+using POS.ViewModels.SalesPanel;
 
 namespace POS.Views.Windows.SalesPanel
 {
@@ -18,27 +20,32 @@ namespace POS.Views.Windows.SalesPanel
     /// </summary>
     public partial class SalesPanelWindow : Window
     {
-        private Employees currentUser;
+        //private Employees currentUser;
         public int EmployeeId;
         private double totalPrice = 0;
         private int currentOrderId = 0;
         private bool discountApplied = false;
 
-        ObservableCollection<OrderItemDto> orderList = new ObservableCollection<OrderItemDto>();
-        ObservableCollection<ObservableCollection<OrderItemDto>> orderListCollection = new ObservableCollection<ObservableCollection<OrderItemDto>>();
+        ObservableCollection<OrderItemDto> orderList = [];
+        ObservableCollection<ObservableCollection<OrderItemDto>> orderListCollection = [];
 
         public SalesPanelWindow(int employeeId)
         {
             orderListCollection.Add(orderList);
+
+            //
             InitializeComponent();
+            DataContext = App.ServiceProvider.GetRequiredService<SalesPanelViewModel>();
+            //
 
-            using (var dbContext = new AppDbContext())
-            {
-                currentUser = dbContext.Employees.FirstOrDefault(e => e.EmployeeId == employeeId);
-            }
 
-            string welcomeMessage = $"{currentUser.FirstName} {currentUser.LastName}";
-            SetWelcomeMessage(welcomeMessage);
+            //using (var dbContext = new AppDbContext())
+            //{
+            //    currentUser = dbContext.Employees.FirstOrDefault(e => e.EmployeeId == employeeId);
+            //}
+
+            //string welcomeMessage = $"{currentUser.FirstName} {currentUser.LastName}";
+            //SetWelcomeMessage(welcomeMessage);
             LoadAllProducts();
             orderListDataGrid.ItemsSource = orderListCollection[currentOrderId];
             UpdateTotalPrice();
@@ -513,10 +520,10 @@ namespace POS.Views.Windows.SalesPanel
             discountApplied = false;
         }
 
-        private void SetWelcomeMessage(string message)
-        {
-            welcomeLabel.Content = message;
-        }
+        //private void SetWelcomeMessage(string message)
+        //{
+        //    welcomeLabel.Content = message;
+        //}
         
         private void ApplyDiscount_ButtonClick(object sender, RoutedEventArgs e)
         {

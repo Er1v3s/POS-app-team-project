@@ -3,6 +3,8 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:salesPanel="clr-namespace:POS.ViewModels.SalesPanel"
+      d:DataContext="{d:DesignInstance Type=salesPanel:SalesPanelViewModel}"
       mc:Ignorable="d" 
       xmlns:fa="http://schemas.fontawesome.io/icons/"
       d:DesignHeight="768" d:DesignWidth="1366"
@@ -34,7 +36,7 @@
                     </TextBox>
 
                     <Border BorderBrush="#FF7286D3" BorderThickness="1" Width="200" Height="42" HorizontalAlignment="Right" Margin="0,0,10,0" Background="#FF7286D3" CornerRadius="8">
-                        <Label x:Name="welcomeLabel"  VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="White" Margin="-1,-1,0,-1"/>
+                        <TextBlock Text="{Binding LoggedInUserName}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Margin="-1,-1,0,-1"/>
                     </Border>
                 </Grid>
 

@@ -20,6 +20,7 @@ using POS.ViewModels.ReportsAndAnalysis.Factories;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 using POS.ViewModels.ReportsAndAnalysis.PredictionGenerators;
 using POS.ViewModels.ReportsAndAnalysis.ReportGenerators;
+using POS.ViewModels.SalesPanel;
 using POS.ViewModels.StartFinishWork;
 using POS.ViewModels.ToDoList;
 using POS.ViewModels.WorkTimeSummaryControl;
@@ -112,6 +113,12 @@ namespace POS
             servicesCollection.AddTransient<AdminFunctionsViewModel>();
             servicesCollection.AddTransient<AddEmployeeViewModel>();
             servicesCollection.AddTransient<EditEmployeeViewModel>();
+
+            #endregion
+
+            #region SalesPanel
+
+            servicesCollection.AddTransient<SalesPanelViewModel>();
 
             #endregion
 

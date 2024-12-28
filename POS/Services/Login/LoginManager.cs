@@ -1,4 +1,5 @@
-﻿using DataAccess.Models;
+﻿using System;
+using DataAccess.Models;
 using POS.Views.Windows;
 
 namespace POS.Services.Login
@@ -20,6 +21,14 @@ namespace POS.Services.Login
         public void LogOut()
         {
             Employee = null;
+        }
+
+        public string GetLoggedInUserFullName()
+        {
+            if(Employee != null)
+                return Employee.FirstName + " " + Employee.LastName;
+
+            return String.Empty;
         }
 
         public static void OpenLoginWindow()
