@@ -1,7 +1,7 @@
 ﻿using System;
 using POS.Factories;
 using POS.Services.Login;
-using POS.Views.Windows;
+using POS.Views.Windows.SalesPanel;
 
 namespace POS.Services
 {

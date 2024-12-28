@@ -1,4 +1,4 @@
-﻿<Window x:Class="POS.Views.Windows.SalesPanelWindow"
+﻿<Window x:Class="POS.Views.Windows.SalesPanel.SalesPanelWindow"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 

@@ -10,9 +10,8 @@ using DataAccess.Models;
 using POS.Helpers;
 using POS.Models.Invoices;
 using POS.Models.Orders;
-using POS.Views.Windows.SalesPanel;
 
-namespace POS.Views.Windows
+namespace POS.Views.Windows.SalesPanel
 {
     /// <summary>
     /// Logika interakcji dla klasy SalesPanel.xaml

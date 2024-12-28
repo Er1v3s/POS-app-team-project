@@ -5,7 +5,7 @@ using System.Windows.Input;
 using POS.Services;
 using POS.Utilities.RelayCommands;
 using POS.ViewModels.Base;
-using POS.Views.Windows;
+using POS.Views.Windows.SalesPanel;
 
 namespace POS.ViewModels.MainWindow
 {
