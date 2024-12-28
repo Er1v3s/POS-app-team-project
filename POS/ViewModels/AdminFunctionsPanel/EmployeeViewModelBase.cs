@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
-using POS.Utilities;
 using POS.Utilities.RelayCommands;
+using POS.ViewModels.Base;
 
 namespace POS.ViewModels.AdminFunctionsPanel
 {

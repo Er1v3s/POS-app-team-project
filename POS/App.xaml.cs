@@ -109,7 +109,7 @@ namespace POS
             #region AdministratorFunctions
 
             servicesCollection.AddTransient<AdminFunctionsService>();
-            servicesCollection.AddTransient<AdministratorFunctionsViewModel>();
+            servicesCollection.AddTransient<AdminFunctionsViewModel>();
             servicesCollection.AddTransient<AddEmployeeViewModel>();
             servicesCollection.AddTransient<EditEmployeeViewModel>();
 

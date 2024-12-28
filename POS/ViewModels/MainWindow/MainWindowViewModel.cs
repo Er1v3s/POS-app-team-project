@@ -3,9 +3,9 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using POS.Services;
-using POS.Utilities;
 using POS.Utilities.RelayCommands;
-using POS.Views.RegisterSale;
+using POS.ViewModels.Base;
+using POS.Views.Windows;
 
 namespace POS.ViewModels.MainWindow
 {
@@ -55,7 +55,7 @@ namespace POS.ViewModels.MainWindow
         {
             _navigationService.OpenSalesPanelWindow();
 
-            if (Application.Current.Windows.OfType<SalesPanel>().Any())
+            if (Application.Current.Windows.OfType<SalesPanelWindow>().Any())
                 CloseWindowsAction.Invoke();
         }
 

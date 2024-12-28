@@ -5,8 +5,8 @@ using System.Windows;
 using System.Windows.Input;
 using LiveCharts;
 using POS.Models.Reports;
-using POS.Utilities;
 using POS.Utilities.RelayCommands;
+using POS.ViewModels.Base;
 using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 using POS.ViewModels.ReportsAndAnalysis.Validators;
 

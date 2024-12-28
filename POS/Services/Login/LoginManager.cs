@@ -1,5 +1,5 @@
-﻿using POS.Views.StartFinishWorkPanel;
-using DataAccess.Models;
+﻿using DataAccess.Models;
+using POS.Views.Windows;
 
 namespace POS.Services.Login
 {
@@ -24,7 +24,7 @@ namespace POS.Services.Login
 
         public static void OpenLoginWindow()
         {
-            var loginView = new LoginPanel();
+            var loginView = new LoginPanelWindow();
             loginView.ShowDialog();
         }
     }

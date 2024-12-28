@@ -1,0 +1,249 @@
+﻿<Window x:Class="POS.Views.Windows.SalesPanelWindow"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      xmlns:fa="http://schemas.fontawesome.io/icons/"
+      d:DesignHeight="768" d:DesignWidth="1366"
+      Title="SalesPanel" WindowState="Maximized" WindowStyle="None" Background="#FFD9D9D9" FontFamily="Lato" FontSize="16">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="205*"/>
+            <ColumnDefinition Width="478*"/>
+        </Grid.ColumnDefinitions>
+
+        <!--#region right bar -->
+
+        <Border Grid.Column="1" BorderBrush="Black" BorderThickness="1, 0, 0, 0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1.5*"/>
+                    <RowDefinition Height="18.5*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Background="#FF8EA7E9">
+                    <TextBox x:Name="searchTextBox" Style="{StaticResource searchBar}" Margin="20,0,0,0" Text="Szukaj" Tag="Szukaj" Width="360"
+                            Height="42" TextChanged="SearchTextBox_KeyUp" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="16"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+
+                    <Border BorderBrush="#FF7286D3" BorderThickness="1" Width="200" Height="42" HorizontalAlignment="Right" Margin="0,0,10,0" Background="#FF7286D3" CornerRadius="8">
+                        <Label x:Name="welcomeLabel"  VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="White" Margin="-1,-1,0,-1"/>
+                    </Border>
+                </Grid>
+
+                <Border Grid.Row="1" BorderBrush="Black" BorderThickness="1" Margin="20" CornerRadius="8">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="17*" />
+                            <RowDefinition Height="2*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" d:IsLocked="True" Margin="-1, -1, -1, 0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Column="0" Content="Whisky" Click="FilterByCategory_ButtonClick" Style="{StaticResource cocktailCategoryButton}">
+                                <Button.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius">
+                                            <Setter.Value>
+                                                <CornerRadius TopLeft="8" TopRight="0" BottomLeft="0" BottomRight="0"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Button.Resources>
+                            </Button>
+                            <Button Grid.Column="1" Content="Gin" Click="FilterByCategory_ButtonClick" Style="{StaticResource cocktailCategoryButton}"/>
+                            <Button Grid.Column="2" Content="Wódka" Click="FilterByCategory_ButtonClick" Style="{StaticResource cocktailCategoryButton}"/>
+                            <Button Grid.Column="3" Content="Rum" Click="FilterByCategory_ButtonClick" Style="{StaticResource cocktailCategoryButton}"/>
+                            <Button Grid.Column="4" Content="Tequila" Click="FilterByCategory_ButtonClick" Style="{StaticResource cocktailCategoryButton}">
+                                <Button.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius">
+                                            <Setter.Value>
+                                                <CornerRadius TopLeft="0" TopRight="8" BottomLeft="0" BottomRight="0"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Button.Resources>
+                            </Button>
+                        </Grid>
+
+                        <Grid Grid.Row="1" Background="#FFD9D9D9">
+                            <ScrollViewer>
+                                <WrapPanel Margin="10">
+                                    <UniformGrid x:Name="ProductsUnifromGrid" Columns="5">
+                                    </UniformGrid>
+                                </WrapPanel>
+                            </ScrollViewer>
+                        </Grid>
+
+                        <Border BorderBrush="Black" Grid.Row="2" Background="#FF7286D3" CornerRadius="0,0,8,8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="6*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Column="0" Content="Anuluj" Style="{StaticResource cancelButton}" Click="DeleteCurrentOrder_ButtonClick" Grid.Row="2" d:IsLocked="True" />
+                                <Button x:Name="showRecipes_Button" Grid.Column="1" Content="Przepisy" Style="{StaticResource recipeButton}" Click="ShowRecipes_ButtonClick" Grid.Row="2" d:IsLocked="True" />
+                                <Button x:Name="showDrinks_Button" Grid.Column="2" Content="Drinki" Style="{StaticResource payButton}" Click="ShowDrinks_ButtonClick" Grid.Row="2" d:IsLocked="True" />
+
+
+                                <Button Grid.Column="5" Style="{StaticResource homeButton}" d:IsLocked="True" Click="MoveToMainWindow_ButtonClick">
+                                    <fa:ImageAwesome Icon="Home" Height="24" Foreground="White"/>
+                                </Button>
+
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Border>
+
+            </Grid>
+        </Border>
+
+        <!--#endregion-->
+
+        <!--#region left bar -->
+
+        <Grid Grid.Column="0" Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="12*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+
+            <Border BorderThickness="1" BorderBrush="Black" Grid.RowSpan="4" CornerRadius="8" d:IsLocked="True"></Border>
+            <Grid Grid.Row="0" d:IsLocked="True">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Style="{StaticResource leftBarButton}" Click="ShowFinishedOrders_ButtonClick">
+                    <fa:ImageAwesome Icon="ListOl" Height="24" Foreground="White"/>
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius">
+                                <Setter.Value>
+                                    <CornerRadius TopLeft="8" TopRight="0" BottomLeft="0" BottomRight="0"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
+                <Button Grid.Column="1" Style="{StaticResource leftBarButton}" Click="AddInvoice_ButtonClick">
+                    <fa:ImageAwesome Icon="File" Height="24" Foreground="White"/>
+                </Button>
+
+                <Button Grid.Column="2" Click="ShowOpenOrders_ButtonClick" Style="{StaticResource leftBarButton}">
+                    <fa:ImageAwesome Icon="Save" Height="24" Foreground="White"/>
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius">
+                                <Setter.Value>
+                                    <CornerRadius TopLeft="0" TopRight="8" BottomLeft="0" BottomRight="0"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </Grid>
+
+            <Grid Grid.Row="1" d:IsLocked="True">
+                <DataGrid x:Name="orderListDataGrid" Style="{DynamicResource DataGridStyle3}" RowStyle="{DynamicResource DataGridRowStyle3}" CellStyle="{DynamicResource DataGridCellStyle3}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle3}" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Nazwa" Width="6*" Binding="{Binding Name}" />
+                        <DataGridTextColumn Header="Ilość" Width="1.5*" Binding="{Binding Amount}"/>
+                        <DataGridTextColumn Header="Cena" Width="1.5*" Binding="{Binding Price}"/>
+                        <DataGridTemplateColumn Header="" Width="1*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource deleteItemButton}" Click="DeleteProductFromOrderList_ButtonClick">
+                                        <StackPanel Orientation="Horizontal">
+                                            <fa:ImageAwesome Style="{StaticResource deleteItemIcon}" Icon="Close"/>
+                                        </StackPanel>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+            <Grid Grid.Row="2" d:IsLocked="True" Background="#FF969696" Margin="1,0,1,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="SUMA:" FontSize="24" Foreground="White" Margin="20,0,0,0" VerticalAlignment="Center"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Label x:Name="totalAmountLabel" Content="0.00" FontSize="24" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="3" d:IsLocked="True">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Style="{StaticResource leftBarButton}" Click="PayForOrder_ButtonClick" Tag="Gotówka">
+                    <fa:ImageAwesome Icon="Money" Height="24" Foreground="White"/>
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius">
+                                <Setter.Value>
+                                    <CornerRadius TopLeft="0" TopRight="0" BottomLeft="8" BottomRight="0"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
+                <Button Grid.Column="1" Style="{StaticResource leftBarButton}" Click="PayForOrder_ButtonClick" Tag="Karta debetowa">
+                    <fa:ImageAwesome Icon="CreditCard" Height="24" Foreground="White"/>
+                </Button>
+
+                <Button Grid.Column="2" Style="{StaticResource leftBarButton}" Click="ApplyDiscount_ButtonClick">
+                    <fa:ImageAwesome Icon="Percent" Height="24" Foreground="White"/>
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius">
+                                <Setter.Value>
+                                    <CornerRadius TopLeft="0" TopRight="0" BottomLeft="0" BottomRight="8"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
+            </Grid>
+        </Grid>
+
+        <!--#endregion-->
+    </Grid>
+
+</Window>

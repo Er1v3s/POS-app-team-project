@@ -3,8 +3,8 @@ using DataAccess.Models;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using POS.Services.ToDoList;
-using POS.Utilities;
 using POS.Utilities.RelayCommands;
+using POS.ViewModels.Base;
 
 namespace POS.ViewModels.ToDoList
 {
