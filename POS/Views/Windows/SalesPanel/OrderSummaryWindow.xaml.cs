@@ -49,7 +49,7 @@ namespace POS.Views.Windows.SalesPanel
         {
             foreach (var orderItem in orderList)
             {
-                orderItem.TotalPrice = orderItem.Price * orderItem.Amount;
+                //orderItem.TotalPrice = orderItem.Price * orderItem.Amount;
             }
         }
 
@@ -57,7 +57,7 @@ namespace POS.Views.Windows.SalesPanel
         {
             foreach (var orderItem in orderList)
             {
-                totalOrderPrice += orderItem.TotalPrice;
+                //totalOrderPrice += orderItem.TotalPrice;
             }
         }
 

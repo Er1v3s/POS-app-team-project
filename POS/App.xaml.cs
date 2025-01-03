@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using DataAccess;
+using DataAccess.Models;
 using Microsoft.Extensions.DependencyInjection;
 using POS.Factories;
 using POS.Models.Reports;
@@ -10,6 +11,7 @@ using POS.Models.Reports.ReportsPredictions;
 using POS.Services;
 using POS.Services.AdminFunctions;
 using POS.Services.Login;
+using POS.Services.SalesPanel;
 using POS.Services.ToDoList;
 using POS.ViewModels.AdminFunctionsPanel;
 using POS.ViewModels.MainWindow;
@@ -118,6 +120,8 @@ namespace POS
 
             #region SalesPanel
 
+            servicesCollection.AddTransient<ProductsService>();
+            servicesCollection.AddTransient<OrdersService>();
             servicesCollection.AddTransient<SalesPanelViewModel>();
 
             #endregion
