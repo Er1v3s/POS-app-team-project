@@ -21,8 +21,11 @@ namespace POS.ViewModels.SalesPanel
         private readonly ProductsService _productsService;
         //private readonly OrdersService _ordersService;
 
+        private const string DefaultPlaceholder = "Wpisz nazwę...";
+
         private string loggedInUserName;
-        private string searchPhrase;
+        private string searchPhrase = DefaultPlaceholder;
+        private string placeholder = DefaultPlaceholder;
 
         private ObservableCollection<Products> productsCollection = new();
         private ObservableCollection<OrderItemDto> orderItemsCollection = new();
@@ -38,9 +41,18 @@ namespace POS.ViewModels.SalesPanel
             get => searchPhrase;
             set
             {
-                SetField(ref searchPhrase, value);
-                _ = FilterProductsBySearchPhrase(value);
+                if (SetField(ref searchPhrase, value))
+                {
+                    HandlePlaceholder();
+                    HandleProductFiltering(value);
+                }
             }
+        }
+
+        public string Placeholder
+        {
+            get => placeholder;
+            set => SetField(ref placeholder, value);
         }
 
         public ObservableCollection<Products> ProductsCollection
@@ -105,6 +117,21 @@ namespace POS.ViewModels.SalesPanel
             var products = await _productsService.LoadProductsByCategory(categoryCommandParameter);
 
             LoadProducts(products);
+        }
+
+        private void HandlePlaceholder()
+        {
+            Placeholder = string.IsNullOrEmpty(SearchPhrase) || SearchPhrase == DefaultPlaceholder
+                ? DefaultPlaceholder
+                : string.Empty;
+        }
+
+        private void HandleProductFiltering(string searchPhraseArg)
+        {
+            if (string.IsNullOrEmpty(searchPhraseArg) || searchPhraseArg == DefaultPlaceholder)
+                _ = LoadAllProducts();
+            else
+                _ = FilterProductsBySearchPhrase(searchPhraseArg);
         }
 
         private void AddProductToOrderItemsCollection(Products product)

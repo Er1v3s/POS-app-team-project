@@ -49,19 +49,19 @@ namespace POS.Views.Windows.SalesPanel
 
         private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            PlaceholderTextBoxHelper.SetPlaceholderOnFocus(sender, e);
+            ////PlaceholderTextBoxHelper.SetPlaceholderOnFocus(sender, e);
         }
 
         private void SearchTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            PlaceholderTextBoxHelper.SetPlaceholderOnLostFocus(sender, e);
+            //PlaceholderTextBoxHelper.SetPlaceholderOnLostFocus(sender, e);
         }
 
         private void SearchTextBox_KeyUp(object sender, TextChangedEventArgs e)
         {
             //var searchText = searchTextBox.Text.ToLower();
 
-            //if(searchText != null)
+            //if (searchText != null)
             //{
             //    LoadProductsBySearch(searchText);
             //}

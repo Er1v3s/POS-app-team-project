@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:POS.Helpers"
       xmlns:salesPanel="clr-namespace:POS.ViewModels.SalesPanel"
       d:DataContext="{d:DesignInstance Type=salesPanel:SalesPanelViewModel}"
       mc:Ignorable="d" 
@@ -26,27 +27,18 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Background="#FF8EA7E9">
-                    <TextBox Text="{Binding SearchPhrase, UpdateSourceTrigger=PropertyChanged}" 
-                             Style="{StaticResource searchBar}" 
+                    <TextBox Text="{Binding SearchPhrase, UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                             Style="{StaticResource searchBar}"
                              Margin="20,0,0,0" 
                              Width="360" 
                              Height="42"
-                             Tag="Szukaj">
+                             local:TextBoxHelper.Placeholder="{Binding Placeholder}">
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="16"/>
                             </Style>
                         </TextBox.Resources>
                     </TextBox>
-
-                    <!--<TextBox TextInput="{Binding SearchPhrase}" Style="{StaticResource searchBar}" Margin="20,0,0,0" Text="Szukaj" Tag="Szukaj" Width="360"
-                            Height="42" TextChanged="SearchTextBox_KeyUp" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus">
-                        <TextBox.Resources>
-                            <Style TargetType="{x:Type Border}">
-                                <Setter Property="CornerRadius" Value="16"/>
-                            </Style>
-                        </TextBox.Resources>
-                    </TextBox>-->
 
                     <Border BorderBrush="#FF7286D3" BorderThickness="1" Width="200" Height="42" HorizontalAlignment="Right" Margin="0,0,10,0" Background="#FF7286D3" CornerRadius="8">
                         <TextBlock Text="{Binding LoggedInUserName}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Margin="-1,-1,0,-1"/>

@@ -18,9 +18,7 @@ namespace POS.Helpers
         {
             var textBox = (TextBox)sender;
             if (string.IsNullOrWhiteSpace(textBox.Text))
-            {
                 textBox.Text = textBox.Tag.ToString();
-            }
         }
     }
 }
