@@ -51,7 +51,7 @@ namespace DbSeeder
             while (productSum > 0)
             {
                 int quantity = Randomizer.GenerateAlmostRandomInt();
-                Products product = Randomizer.GenerateAlmostRandomProduct(dbContext, order.DayOfWeek);
+                Product product = Randomizer.GenerateAlmostRandomProduct(dbContext, order.DayOfWeek);
 
                 OrderItems orderItem = new OrderItems 
                 {
@@ -77,7 +77,7 @@ namespace DbSeeder
 
             foreach (var orderItem in orderItems)
             {
-                var price = dbContext.Products
+                var price = dbContext.Product
                     .Where(a => a.ProductId == orderItem.ProductId)
                     .Select(a => a.Price)
                     .FirstOrDefault();

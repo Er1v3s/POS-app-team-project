@@ -21,7 +21,7 @@ namespace DataAccess
             optionsBuilder.UseSqlite(ConnectionString, b => b.MigrationsAssembly("DbSeeder"));
         }
 
-        public DbSet<Products> Products { get; set; }
+        public DbSet<Product> Product { get; set; }
         public DbSet<Employees> Employees { get; set; }
         public DbSet<Orders> Orders { get; set; }
         public DbSet<OrderItems> OrderItems { get; set; }
@@ -35,7 +35,7 @@ namespace DataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Employees>().HasKey(e => e.EmployeeId);
-            modelBuilder.Entity<Products>().HasKey(e => e.ProductId);
+            modelBuilder.Entity<Product>().ToTable("Products").HasKey(e => e.ProductId);
             modelBuilder.Entity<Orders>().HasKey(e => e.OrderId);
             modelBuilder.Entity<Ingredients>().HasKey(e => e.IngredientId);
             modelBuilder.Entity<Payments>().HasKey(e => e.PaymentId);

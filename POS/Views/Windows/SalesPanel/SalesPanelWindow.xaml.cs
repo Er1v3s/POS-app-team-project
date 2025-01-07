@@ -47,32 +47,32 @@ namespace POS.Views.Windows.SalesPanel
             EmployeeId = employeeId;
         }
 
-        private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            ////PlaceholderTextBoxHelper.SetPlaceholderOnFocus(sender, e);
-        }
+        //private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
+        //{
+        //    ////PlaceholderTextBoxHelper.SetPlaceholderOnFocus(sender, e);
+        //}
 
-        private void SearchTextBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            //PlaceholderTextBoxHelper.SetPlaceholderOnLostFocus(sender, e);
-        }
+        //private void SearchTextBox_LostFocus(object sender, RoutedEventArgs e)
+        //{
+        //    //PlaceholderTextBoxHelper.SetPlaceholderOnLostFocus(sender, e);
+        //}
 
-        private void SearchTextBox_KeyUp(object sender, TextChangedEventArgs e)
-        {
-            //var searchText = searchTextBox.Text.ToLower();
+        //private void SearchTextBox_KeyUp(object sender, TextChangedEventArgs e)
+        //{
+        //    //var searchText = searchTextBox.Text.ToLower();
 
-            //if (searchText != null)
-            //{
-            //    LoadProductsBySearch(searchText);
-            //}
-        }
+        //    //if (searchText != null)
+        //    //{
+        //    //    LoadProductsBySearch(searchText);
+        //    //}
+        //}
 
-        private void FilterByCategory_ButtonClick(object sender, RoutedEventArgs e)
-        {
+        //private void FilterByCategory_ButtonClick(object sender, RoutedEventArgs e)
+        //{
             //Button categoryButton = sender as Button;
             //string category = categoryButton.Content.ToString();
             //LoadProductsByCategory(category);
-        }
+        //}
 
         private void PayForOrder_ButtonClick(object sender, RoutedEventArgs e)
         {
@@ -102,7 +102,7 @@ namespace POS.Views.Windows.SalesPanel
             {
                 foreach (var item in orderList)
                 {
-                    var recipeId = dbContext.Products
+                    var recipeId = dbContext.Product
                                             .Where(p => p.ProductId == item.ProductId)
                                             .Select(p => p.RecipeId)
                                             .FirstOrDefault();
@@ -350,7 +350,7 @@ namespace POS.Views.Windows.SalesPanel
 
             using (var dbContext = new AppDbContext())
             {
-                var queryResult = dbContext.Products
+                var queryResult = dbContext.Product
                     .Join(dbContext.Recipes, p => p.RecipeId, r => r.RecipeId, (p, r) => new { p, r })
                     .Where(join => join.p.ProductName == productName)
                     .Select(join => join.r.Recipe)
@@ -371,7 +371,7 @@ namespace POS.Views.Windows.SalesPanel
 
             using (var dbContext = new AppDbContext())
             {
-                var queryResult = dbContext.Products
+                var queryResult = dbContext.Product
                     .Join(dbContext.Recipes, p => p.RecipeId, r => r.RecipeId, (p, r) => new { p, r })
                     .Join(dbContext.RecipeIngredients, j => j.r.RecipeId, ri => ri.RecipeId, (j, ri) => new { j, ri })
                     .Join(dbContext.Ingredients, jri => jri.ri.IngredientId, i => i.IngredientId, (jri, i) => new { jri, i })

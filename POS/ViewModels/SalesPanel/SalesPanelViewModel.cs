@@ -18,8 +18,9 @@ namespace POS.ViewModels.SalesPanel
     public class SalesPanelViewModel : ViewModelBase
     {
         private readonly NavigationService _navigationService;
-        private readonly ProductsService _productsService;
+        private readonly ProductService _productsService;
         //private readonly OrdersService _ordersService;
+        //private readonly RecipeService _recipeService;
 
         private const string DefaultPlaceholder = "Wpisz nazwę...";
 
@@ -27,7 +28,7 @@ namespace POS.ViewModels.SalesPanel
         private string searchPhrase = DefaultPlaceholder;
         private string placeholder = DefaultPlaceholder;
 
-        private ObservableCollection<Products> productsCollection = new();
+        private ObservableCollection<Product> productsCollection = new();
         private ObservableCollection<OrderItemDto> orderItemsCollection = new();
 
         public string LoggedInUserName
@@ -55,7 +56,7 @@ namespace POS.ViewModels.SalesPanel
             set => SetField(ref placeholder, value);
         }
 
-        public ObservableCollection<Products> ProductsCollection
+        public ObservableCollection<Product> ProductsCollection
         {
             get => productsCollection;
             set => SetField(ref productsCollection, value);
@@ -73,16 +74,17 @@ namespace POS.ViewModels.SalesPanel
         public ICommand DeleteOrderItemCommand { get; }
         public ICommand SelectCategoryCommand { get; }
 
-        public SalesPanelViewModel(NavigationService navigationService, ProductsService productsService, OrdersService ordersService)
+        public SalesPanelViewModel(NavigationService navigationService, ProductService productsService, OrdersService ordersService)
         {
             _navigationService = navigationService;
             _productsService = productsService;
             //_ordersService = ordersService;
+            //_recipeService = recipeService;
 
             MoveToMainWindowCommand = new RelayCommand(MoveToMainWindow);
-            SelectProductCommand = new RelayCommand<Products>(AddProductToOrderItemsCollection);
+            SelectProductCommand = new RelayCommand<Product>(AddProductToOrderItemsCollection);
             DeleteOrderItemCommand = new RelayCommand<OrderItemDto>(DeleteOrderItemFromOrderItemsCollection);
-            SelectCategoryCommand = new RelayCommand<object>(async (param) => await FilterProductsByCategory(param));
+            SelectCategoryCommand = new RelayCommand<object>(FilterProductsByCategory);
 
             loggedInUserName = LoginManager.Instance.GetLoggedInUserFullName();
 
@@ -90,7 +92,7 @@ namespace POS.ViewModels.SalesPanel
         }
 
         
-        private void LoadProducts(List<Products> productsList)
+        private void LoadProducts(List<Product> productsList)
         {
             productsCollection.Clear();
 
@@ -98,23 +100,23 @@ namespace POS.ViewModels.SalesPanel
                  productsCollection.Add(product);
         }
 
-        private async Task LoadAllProducts()
+        private void LoadAllProducts()
         {
-            var products = await _productsService.LoadAllProducts();
+            var products = _productsService.LoadAllProducts();
 
             LoadProducts(products);
         }
 
-        private async Task FilterProductsBySearchPhrase(string searchPhraseValue)
+        private void FilterProductsBySearchPhrase(string searchPhraseValue)
         {
-            var products = await _productsService.LoadProductsBySearch(searchPhraseValue);
+            var products = _productsService.LoadProductsBySearch(searchPhraseValue);
 
             LoadProducts(products);
         }
 
-        private async Task FilterProductsByCategory(object categoryCommandParameter)
+        private void FilterProductsByCategory(object categoryCommandParameter)
         {
-            var products = await _productsService.LoadProductsByCategory(categoryCommandParameter);
+            var products = _productsService.LoadProductsByCategory(categoryCommandParameter);
 
             LoadProducts(products);
         }
@@ -129,12 +131,12 @@ namespace POS.ViewModels.SalesPanel
         private void HandleProductFiltering(string searchPhraseArg)
         {
             if (string.IsNullOrEmpty(searchPhraseArg) || searchPhraseArg == DefaultPlaceholder)
-                _ = LoadAllProducts();
+                LoadAllProducts();
             else
-                _ = FilterProductsBySearchPhrase(searchPhraseArg);
+                FilterProductsBySearchPhrase(searchPhraseArg);
         }
 
-        private void AddProductToOrderItemsCollection(Products product)
+        private void AddProductToOrderItemsCollection(Product product)
         {
             // 1 is temporrary
             var existingProduct = orderItemsCollection.FirstOrDefault(p => p.ProductId == product.ProductId);
@@ -162,6 +164,11 @@ namespace POS.ViewModels.SalesPanel
                 orderItemsCollection.Remove(orderItem);
             else
                 orderItem.Amount--;
+        }
+
+        private async Task GetProductRecipe()
+        {
+            
         }
 
         private void MoveToMainWindow(object obj)

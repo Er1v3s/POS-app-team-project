@@ -74,7 +74,7 @@ namespace POS.Views.Windows.WarehouseFunctions
         {
             using (var dbContext = new AppDbContext())
             {
-                var product = dbContext.Products.FirstOrDefault(i => i.ProductName == SelectedProduct);
+                var product = dbContext.Product.FirstOrDefault(i => i.ProductName == SelectedProduct);
 
                 if (product != null)
                 {
@@ -136,7 +136,7 @@ namespace POS.Views.Windows.WarehouseFunctions
                     IngredientId = ingredient.IngredientId;
                 }
 
-                var product = dbContext.Products.FirstOrDefault(p => p.ProductName == selectedProduct);
+                var product = dbContext.Product.FirstOrDefault(p => p.ProductName == selectedProduct);
                 if (product != null)
                 {
                     RecipeId = product.RecipeId;
@@ -170,7 +170,7 @@ namespace POS.Views.Windows.WarehouseFunctions
 
                 using (var dbContext = new AppDbContext())
                 {
-                    var product = dbContext.Products.FirstOrDefault(p => p.ProductName == selectedProduct);
+                    var product = dbContext.Product.FirstOrDefault(p => p.ProductName == selectedProduct);
                     if (product != null)
                     {
                         RecipeId = product.RecipeId;
@@ -217,7 +217,7 @@ namespace POS.Views.Windows.WarehouseFunctions
         {
             using (var dbContext = new AppDbContext())
             {
-                var products = dbContext.Products.Select(i => i.ProductName).ToList();
+                var products = dbContext.Product.Select(i => i.ProductName).ToList();
 
                 foreach (var product in products)
                 {
@@ -235,7 +235,7 @@ namespace POS.Views.Windows.WarehouseFunctions
 
                 using (var dbContext = new AppDbContext())
                 {
-                    var product = dbContext.Products.FirstOrDefault(i => i.ProductName == selectedProduct);
+                    var product = dbContext.Product.FirstOrDefault(i => i.ProductName == selectedProduct);
 
                     if (product != null)
                     {
@@ -324,7 +324,7 @@ namespace POS.Views.Windows.WarehouseFunctions
                     };
                     dbContext.Recipes.Add(newRecipe);
                     dbContext.SaveChanges();
-                    var newProduct = new Products
+                    var newProduct = new Product
                     {
                         RecipeId = newRecipe.RecipeId,
                         ProductName = NewProductName.Text,
@@ -333,7 +333,7 @@ namespace POS.Views.Windows.WarehouseFunctions
                         Description = ProductDescription.Text
                     };
 
-                    dbContext.Products.Add(newProduct);
+                    dbContext.Product.Add(newProduct);
                     dbContext.SaveChanges();
                     EditProduct_Clear();
                     FillEditProductComboBox(EditProduct_ComboBox);
@@ -351,7 +351,7 @@ namespace POS.Views.Windows.WarehouseFunctions
                     using (var dbContext = new AppDbContext())
                     {
                         int recipeToUpdateId = 0;
-                        var productToUpdate = dbContext.Products.FirstOrDefault(p => p.ProductName == selectedProduct);
+                        var productToUpdate = dbContext.Product.FirstOrDefault(p => p.ProductName == selectedProduct);
                         if (productToUpdate != null)
                         {
                             recipeToUpdateId = productToUpdate.RecipeId;
@@ -391,7 +391,7 @@ namespace POS.Views.Windows.WarehouseFunctions
 
                 using (var dbContext = new AppDbContext())
                 {
-                    var product = dbContext.Products.FirstOrDefault(p => p.ProductName == selectedProduct);
+                    var product = dbContext.Product.FirstOrDefault(p => p.ProductName == selectedProduct);
 
                     if (product != null)
                     {

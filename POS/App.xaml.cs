@@ -120,7 +120,7 @@ namespace POS
 
             #region SalesPanel
 
-            servicesCollection.AddTransient<ProductsService>();
+            servicesCollection.AddTransient<ProductService>();
             servicesCollection.AddTransient<OrdersService>();
             servicesCollection.AddTransient<SalesPanelViewModel>();
 

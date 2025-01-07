@@ -62,7 +62,7 @@
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
 
-                            <Button Command="{Binding SelectCategoryCommand}" CommandParameter="Whisky" Grid.Column="0" Content="Whisky" Click="FilterByCategory_ButtonClick" Style="{StaticResource cocktailCategoryButton}">
+                            <Button Command="{Binding SelectCategoryCommand}" CommandParameter="Whisky" Content="Whisky" Grid.Column="0" Style="{StaticResource cocktailCategoryButton}">
                                 <Button.Resources>
                                     <Style TargetType="{x:Type Border}">
                                         <Setter Property="CornerRadius">
@@ -73,10 +73,10 @@
                                     </Style>
                                 </Button.Resources>
                             </Button>
-                            <Button Command="{Binding SelectCategoryCommand}" CommandParameter="Gin" Grid.Column="1" Content="Gin" Click="FilterByCategory_ButtonClick" Style="{StaticResource cocktailCategoryButton}"/>
-                            <Button Command="{Binding SelectCategoryCommand}" CommandParameter="Wódka" Grid.Column="2" Content="Wódka" Click="FilterByCategory_ButtonClick" Style="{StaticResource cocktailCategoryButton}"/>
-                            <Button Command="{Binding SelectCategoryCommand}" CommandParameter="Rum" Grid.Column="3" Content="Rum" Click="FilterByCategory_ButtonClick" Style="{StaticResource cocktailCategoryButton}"/>
-                            <Button Command="{Binding SelectCategoryCommand}" CommandParameter="Tequila" Grid.Column="4" Content="Tequila" Click="FilterByCategory_ButtonClick" Style="{StaticResource cocktailCategoryButton}">
+                            <Button Command="{Binding SelectCategoryCommand}" CommandParameter="Gin" Content="Gin" Grid.Column="1" Style="{StaticResource cocktailCategoryButton}"/>
+                            <Button Command="{Binding SelectCategoryCommand}" CommandParameter="Wódka" Content="Wódka" Grid.Column="2" Style="{StaticResource cocktailCategoryButton}"/>
+                            <Button Command="{Binding SelectCategoryCommand}" CommandParameter="Rum" Content="Rum" Grid.Column="3" Style="{StaticResource cocktailCategoryButton}"/>
+                            <Button Command="{Binding SelectCategoryCommand}" CommandParameter="Tequila" Content="Tequila" Grid.Column="4" Style="{StaticResource cocktailCategoryButton}">
                                 <Button.Resources>
                                     <Style TargetType="{x:Type Border}">
                                         <Setter Property="CornerRadius">
