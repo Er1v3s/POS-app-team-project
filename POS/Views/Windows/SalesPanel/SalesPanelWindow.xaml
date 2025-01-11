@@ -90,29 +90,79 @@
                         </Grid>
 
                         <Grid Grid.Row="1" Background="#FFD9D9D9">
-                            <ScrollViewer>
-                                <ItemsControl ItemsSource="{Binding ProductsCollection}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <UniformGrid Columns="5" VerticalAlignment="Top"/>
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Viewbox>
-                                                <Button Command="{Binding DataContext.SelectProductCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                        CommandParameter="{Binding}" Style="{StaticResource chooseProductButton}">
-                                                    <StackPanel>
-                                                        <TextBlock Text="{Binding ProductName}" TextAlignment="Center" Margin="10" />
-                                                        <TextBlock Text="{Binding Price, StringFormat={}{0} zł}" TextAlignment="Center" Margin="10" />
+                            <TabControl SelectedIndex="{Binding CurrentViewIndex}">
+                                <TabControl.Template>
+                                    <ControlTemplate TargetType="TabControl">
+                                        <Grid>
+                                            <ContentPresenter ContentSource="SelectedContent" />
+                                        </Grid>
+                                    </ControlTemplate>
+                                </TabControl.Template>
+
+                                <TabItem>
+                                    <ScrollViewer>
+                                        <ItemsControl ItemsSource="{Binding ProductCollection}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <UniformGrid Columns="5" VerticalAlignment="Top"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Viewbox>
+                                                        <Button Command="{Binding DataContext.SelectProductCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                CommandParameter="{Binding}" Style="{StaticResource chooseProductButton}">
+                                                            <StackPanel>
+                                                                <TextBlock Text="{Binding ProductName}" TextAlignment="Center" Margin="10" />
+                                                                <TextBlock Text="{Binding Price, StringFormat={}{0} zł}" TextAlignment="Center" Margin="10" />
+                                                            </StackPanel>
+                                                        </Button>
+                                                    </Viewbox>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </TabItem>
+
+                                <TabItem>
+                                    <ScrollViewer>
+                                        <ItemsControl ItemsSource="{Binding RecipeCollection}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <UniformGrid Columns="3" VerticalAlignment="Top"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Style="{StaticResource RecipeStackPanel}">
+                                                        <TextBlock Text="{Binding RecipeName}" Style="{StaticResource RecipeTextStyle}"/>
+                                                        <!--<TextBlock Text="{Binding RecipeIngredients}" Style="{StaticResource RecipeTextStyle}"/>-->
+                                                        <!--<TextBlock Text="NIgga"/>-->
+                                                        <ItemsControl ItemsSource="{Binding RecipeIngredients}">
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <StackPanel>
+                                                                        <TextBlock Text="{Binding Ingredient.Name}"></TextBlock>
+                                                                        <TextBlock Text="{Binding Ingredient.Description}"></TextBlock>
+                                                                    </StackPanel>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+
+                                                        <TextBlock Text="{Binding Recipe}" Style="{StaticResource RecipeTextStyle}"/>
                                                     </StackPanel>
-                                                </Button>
-                                            </Viewbox>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </ScrollViewer>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </TabItem>
+                            </TabControl>
+
                         </Grid>
+
+                        <!--<Grid Grid.Row="1" Background="#FFD9D9D9" >
+                            
+                        </Grid>-->
 
                         <!--<Grid Grid.Row="1" Background="#FFD9D9D9">
                             <ScrollViewer>
@@ -135,8 +185,8 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Button Grid.Column="0" Content="Anuluj" Style="{StaticResource cancelButton}" Click="DeleteCurrentOrder_ButtonClick" Grid.Row="2" d:IsLocked="True" />
-                                <Button x:Name="showRecipes_Button" Grid.Column="1" Content="Przepisy" Style="{StaticResource recipeButton}" Click="ShowRecipes_ButtonClick" Grid.Row="2" d:IsLocked="True" />
-                                <Button x:Name="showDrinks_Button" Grid.Column="2" Content="Drinki" Style="{StaticResource payButton}" Click="ShowDrinks_ButtonClick" Grid.Row="2" d:IsLocked="True" />
+                                <Button Command="{Binding ShowRecipeCollectionCommand}" Content="Przepisy" Style="{StaticResource recipeButton}" Grid.Column="1" Grid.Row="2" d:IsLocked="True" />
+                                <Button Command="{Binding ShowProductCollectionCommand}" Content="Drinki" Style="{StaticResource payButton}" Grid.Column="2" Grid.Row="2" d:IsLocked="True" />
 
 
                                 <Button Command="{Binding MoveToMainWindowCommand}" Grid.Column="5" Style="{StaticResource homeButton}" d:IsLocked="True">
@@ -203,7 +253,7 @@
             </Grid>
 
             <Grid Grid.Row="1">
-                <DataGrid ItemsSource="{Binding OrderItemsCollection}"
+                <DataGrid ItemsSource="{Binding OrderItemCollection}"
                           AutoGenerateColumns="False"
                           IsReadOnly="True"
                           Style="{DynamicResource DataGridStyle3}"

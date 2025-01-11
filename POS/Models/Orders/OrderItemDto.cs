@@ -10,6 +10,7 @@ namespace POS.Models.Orders
 
         public int ProductId { get; set; }
         public string ProductName { get; set; }
+        public int RecipeId { get; set; }
         public double Price { get; set; }
 
         public int Amount
