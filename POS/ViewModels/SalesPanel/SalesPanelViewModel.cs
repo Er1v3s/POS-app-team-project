@@ -133,15 +133,17 @@ namespace POS.ViewModels.SalesPanel
 
         private void FilterProductsBySearchPhrase(string searchPhraseValue)
         {
-            var products = _productsService.LoadProductsBySearch(searchPhraseValue);
+            SwitchViewToCollectionFromArgument(productCollection);
 
+            var products = _productsService.LoadProductsBySearch(searchPhraseValue);
             LoadProducts(products);
         }
 
         private void FilterProductsByCategory(object categoryCommandParameter)
         {
-            var products = _productsService.LoadProductsByCategory(categoryCommandParameter);
+            SwitchViewToCollectionFromArgument(productCollection);
 
+            var products = _productsService.LoadProductsByCategory(categoryCommandParameter);
             LoadProducts(products);
         }
 
@@ -186,14 +188,19 @@ namespace POS.ViewModels.SalesPanel
         private void DeleteOrderItemFromOrderItemsCollection(OrderItemDto orderItem)
         {
             if (orderItem.Amount == 1)
+            {
                 orderItemCollection.Remove(orderItem);
+
+                var recipe = recipeCollection.FirstOrDefault(r => r.RecipeId == orderItem.RecipeId)!;
+                recipeCollection.Remove(recipe);
+            }
             else
                 orderItem.Amount--;
         }
 
         private void ShowProductCollectionView()
         {
-            SwitchView();
+            SwitchViewToCollectionFromArgument(productCollection);
         }
 
         private async Task ShowProductsRecipeView()
@@ -206,7 +213,7 @@ namespace POS.ViewModels.SalesPanel
             {
                 recipeCollection.Clear();
 
-                SwitchView();
+                SwitchViewToCollectionFromArgument(recipeCollection);
 
                 foreach (var product in orderItemCollection)
                 {
@@ -217,9 +224,12 @@ namespace POS.ViewModels.SalesPanel
             }
         }
 
-        private void SwitchView()
+        private void SwitchViewToCollectionFromArgument<T>(ObservableCollection<T> collection)
         {
-            CurrentViewIndex = CurrentViewIndex == 0 ? 1 : 0;
+            if (collection.GetType() == typeof(ObservableCollection<Product>))
+                CurrentViewIndex = 0;
+            else if(collection.GetType() == typeof(ObservableCollection<Recipes>))
+                CurrentViewIndex = 1;
         }
 
         private void MoveToMainWindow()

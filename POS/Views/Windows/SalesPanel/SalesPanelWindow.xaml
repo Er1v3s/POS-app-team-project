@@ -135,15 +135,21 @@
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Style="{StaticResource RecipeStackPanel}">
-                                                        <TextBlock Text="{Binding RecipeName}" Style="{StaticResource RecipeTextStyle}"/>
-                                                        <!--<TextBlock Text="{Binding RecipeIngredients}" Style="{StaticResource RecipeTextStyle}"/>-->
-                                                        <!--<TextBlock Text="NIgga"/>-->
+                                                        <TextBlock Text="{Binding RecipeName}" FontWeight="Bold" FontSize="24" Style="{StaticResource RecipeTextStyle}"/>
+
                                                         <ItemsControl ItemsSource="{Binding RecipeIngredients}">
                                                             <ItemsControl.ItemTemplate>
                                                                 <DataTemplate>
                                                                     <StackPanel>
-                                                                        <TextBlock Text="{Binding Ingredient.Name}"></TextBlock>
-                                                                        <TextBlock Text="{Binding Ingredient.Description}"></TextBlock>
+                                                                        <TextBlock Foreground="White" Margin="20, 0, 0, 0">
+                                                                            <TextBlock.Text>
+                                                                                <MultiBinding StringFormat="{}{0} - {1} {2}.">
+                                                                                    <Binding Path="Ingredient.Name" />
+                                                                                    <Binding Path="Quantity" />
+                                                                                    <Binding Path="Ingredient.Unit" />
+                                                                                </MultiBinding>
+                                                                            </TextBlock.Text>
+                                                                        </TextBlock>
                                                                     </StackPanel>
                                                                 </DataTemplate>
                                                             </ItemsControl.ItemTemplate>
