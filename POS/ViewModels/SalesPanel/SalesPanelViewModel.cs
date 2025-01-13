@@ -201,6 +201,8 @@ namespace POS.ViewModels.SalesPanel
         private void ShowProductCollectionView()
         {
             SwitchViewToCollectionFromArgument(productCollection);
+
+            ShowAllProducts();
         }
 
         private async Task ShowProductsRecipeView()
