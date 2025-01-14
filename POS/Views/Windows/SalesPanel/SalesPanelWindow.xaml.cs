@@ -120,58 +120,6 @@ namespace POS.Views.Windows.SalesPanel
             }
         }
 
-        private Orders SaveOrder()
-        {
-            using (var dbContext = new AppDbContext())
-            {
-                Orders newOrder = new Orders { OrderTime = DateTime.Now, EmployeeId = EmployeeId };
-                var addedOrderEntry = dbContext.Orders.Add(newOrder);
-                dbContext.SaveChanges();
-
-                return addedOrderEntry.Entity;
-            }
-        }
-
-        private void SavePayment(Orders order, string paymentMethod, double totalPrice)
-        {
-            using (var dbContext = new AppDbContext())
-            {
-                Payments newPayment = new Payments
-                {
-                    OrderId = order.OrderId,
-                    PaymentMethod = paymentMethod,
-                    Amount = totalPrice
-                };
-                dbContext.Payments.Add(newPayment);
-                dbContext.SaveChanges();
-            }
-        }
-
-        private void SaveOrderItems(Orders order)
-        {
-            using (var dbContext = new AppDbContext())
-            {
-                foreach (var orderListItem in orderList)
-                {
-                    OrderItems newOrderItem = new OrderItems
-                    {
-                        OrderId = order.OrderId,
-                        EmployeeId = EmployeeId,
-                        ProductId = orderListItem.ProductId,
-                        Quantity = orderListItem.Amount,
-                    };
-                    dbContext.OrderItems.Add(newOrderItem);
-                    dbContext.SaveChanges();
-                }
-            }
-        }
-
-        //private void UpdateTotalPrice()
-        //{
-        //    totalPrice = orderListCollection[currentOrderId].Sum(item => item.Amount * item.Price);
-        //    totalAmountLabel.Content = $"{totalPrice:C2}";
-        //}
-
         private void ShowOpenOrders_ButtonClick(object sender, RoutedEventArgs e)
         {
             //ProductsUnifromGrid.Children.Clear();

@@ -20,7 +20,7 @@ namespace POS.ViewModels.SalesPanel
     {
         private readonly NavigationService _navigationService;
         private readonly ProductService _productsService;
-        //private readonly OrdersService _ordersService;
+        private readonly OrderService _orderService;
         private readonly RecipeService _recipeService;
 
         private const string DefaultPlaceholder = "Wpisz nazwę...";
@@ -99,17 +99,18 @@ namespace POS.ViewModels.SalesPanel
         public ICommand SelectCategoryCommand { get; }
         public ICommand ShowProductCollectionCommand { get; }
         public ICommand ShowRecipeCollectionCommand { get; }
+        public ICommand PayForOrderCommand { get; }
 
         public SalesPanelViewModel(
             NavigationService navigationService,
             ProductService productService,
-            OrdersService ordersService,
+            OrderService orderService,
             RecipeService recipeService
             )
         {
             _navigationService = navigationService;
             _productsService = productService;
-            //_ordersService = ordersService;
+            _orderService = orderService;
             _recipeService = recipeService;
 
             MoveToMainWindowCommand = new RelayCommand(MoveToMainWindow);
@@ -118,6 +119,7 @@ namespace POS.ViewModels.SalesPanel
             SelectCategoryCommand = new RelayCommand<object>(FilterProductsByCategory);
             ShowProductCollectionCommand = new RelayCommand(ShowProductCollectionView);
             ShowRecipeCollectionCommand = new RelayCommandAsync(ShowProductsRecipeView);
+            PayForOrderCommand = new RelayCommandAsync<object>(PayForOrder);
 
             loggedInUserName = LoginManager.Instance.GetLoggedInUserFullName();
 
@@ -203,6 +205,35 @@ namespace POS.ViewModels.SalesPanel
                 orderItem.Amount--;
 
             AmountToPayForOrder -= orderItem.Price;
+        }
+
+        private async Task PayForOrder(object paymentMethod)
+        {
+            var orderDto = CreateOrderDto(paymentMethod);
+            var result = await _orderService.HandleTheOrder(orderDto);
+
+            if (result)
+                ClearOrder();
+        }
+
+        private OrderDto CreateOrderDto(object paymentMethod)
+        {
+            return new OrderDto
+            {
+                EmployeeId = LoginManager.Instance.Employee!.EmployeeId,
+                OrderItemList = orderItemCollection.ToList(),
+                AmountToPay = AmountToPayForOrder,
+                PaymentMethod = paymentMethod.ToString()!
+            };
+        }
+
+        private void ClearOrder()
+        {
+            orderItemCollection.Clear();
+            recipeCollection.Clear();
+            ShowProductCollectionView();
+            AmountToPayForOrder = 0;
+            placeholder = DefaultPlaceholder;
         }
 
         private void ShowProductCollectionView()

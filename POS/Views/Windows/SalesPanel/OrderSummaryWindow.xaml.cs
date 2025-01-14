@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
@@ -16,10 +17,10 @@ namespace POS.Views.Windows.SalesPanel
     /// </summary>
     public partial class OrderSummaryWindow : Window
     {
-        private ObservableCollection<OrderItemDto> orderList;
+        private List<OrderItemDto> orderList;
         double totalOrderPrice = 0;
 
-        public OrderSummaryWindow(ObservableCollection<OrderItemDto> orderList)
+        public OrderSummaryWindow(List<OrderItemDto> orderList)
         {
             InitializeComponent();
 

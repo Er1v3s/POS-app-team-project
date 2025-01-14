@@ -17,8 +17,6 @@ namespace POS.Services.SalesPanel
 
         public async Task<Recipes> GetRecipe(OrderItemDto orderItem)
         {
-            //return (await _dbContext.Recipes.FirstOrDefaultAsync(p => p.RecipeId == orderItem.RecipeId))!;
-
             return (await _dbContext.Recipes
                 .Include(r => r.RecipeIngredients)
                 .ThenInclude(ri => ri.Ingredient)
