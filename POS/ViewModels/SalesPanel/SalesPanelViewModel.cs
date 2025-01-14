@@ -35,6 +35,8 @@ namespace POS.ViewModels.SalesPanel
         private ObservableCollection<OrderItemDto> orderItemCollection = new();
         private ObservableCollection<Recipes> recipeCollection = new();
 
+        private double amountToPayForOrder;
+
         public string LoggedInUserName
         {
             get => loggedInUserName;
@@ -84,6 +86,12 @@ namespace POS.ViewModels.SalesPanel
             set => SetField(ref currentViewIndex, value);
         }
 
+        public double AmountToPayForOrder
+        {
+            get => amountToPayForOrder;
+            set => SetField(ref amountToPayForOrder, Math.Round(value, 2));
+        }
+
         public Action CloseWindowAction;
         public ICommand MoveToMainWindowCommand { get; }
         public ICommand SelectProductCommand { get; }
@@ -127,7 +135,6 @@ namespace POS.ViewModels.SalesPanel
         private void ShowAllProducts()
         {
             var products = _productsService.LoadAllProducts();
-
             LoadProducts(products);
         }
 
@@ -156,7 +163,7 @@ namespace POS.ViewModels.SalesPanel
 
         private void HandleProductFiltering(string searchPhraseArg)
         {
-            if (string.IsNullOrEmpty(searchPhraseArg) || searchPhraseArg == DefaultPlaceholder)
+            if (searchPhraseArg.IsNullOrEmpty() || searchPhraseArg == DefaultPlaceholder)
                 ShowAllProducts();
             else
                 FilterProductsBySearchPhrase(searchPhraseArg);
@@ -164,15 +171,9 @@ namespace POS.ViewModels.SalesPanel
 
         private void AddProductToOrderItemsCollection(Product product)
         {
-            // 1 is temporrary
             var existingProduct = orderItemCollection.FirstOrDefault(p => p.ProductId == product.ProductId);
 
-            if (existingProduct != null)
-            {
-                existingProduct.Amount++;
-                // existingProduct.TotalPrice = existingProduct.Amount * existingProduct.Price;
-            }
-            else
+            if (existingProduct == null)
             {
                 orderItemCollection.Add(new OrderItemDto
                 {
@@ -183,6 +184,10 @@ namespace POS.ViewModels.SalesPanel
                     Price = Convert.ToDouble(product.Price)
                 });
             }
+            else
+                existingProduct.Amount++;
+
+            AmountToPayForOrder += Convert.ToDouble(product.Price);
         }
 
         private void DeleteOrderItemFromOrderItemsCollection(OrderItemDto orderItem)
@@ -196,22 +201,19 @@ namespace POS.ViewModels.SalesPanel
             }
             else
                 orderItem.Amount--;
+
+            AmountToPayForOrder -= orderItem.Price;
         }
 
         private void ShowProductCollectionView()
         {
             SwitchViewToCollectionFromArgument(productCollection);
-
             ShowAllProducts();
         }
 
         private async Task ShowProductsRecipeView()
         {
-            if (orderItemCollection.IsNullOrEmpty())
-            {
-                MessageBox.Show("Brak produktów do wyświetlenia przepisu");
-            }
-            else
+            if (!orderItemCollection.IsNullOrEmpty())
             {
                 recipeCollection.Clear();
 
@@ -220,10 +222,11 @@ namespace POS.ViewModels.SalesPanel
                 foreach (var product in orderItemCollection)
                 {
                     var recipe = await _recipeService.GetRecipe(product);
-
                     recipeCollection.Add(recipe);
                 }
             }
+            else
+                MessageBox.Show("Brak produktów do wyświetlenia przepisu");
         }
 
         private void SwitchViewToCollectionFromArgument<T>(ObservableCollection<T> collection)

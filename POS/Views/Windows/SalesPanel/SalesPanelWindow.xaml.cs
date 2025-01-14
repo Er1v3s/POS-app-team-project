@@ -43,7 +43,7 @@ namespace POS.Views.Windows.SalesPanel
 
             //LoadAllProducts();
             //orderListDataGrid.ItemsSource = orderListCollection[currentOrderId];
-            UpdateTotalPrice();
+            //UpdateTotalPrice();
             EmployeeId = employeeId;
         }
 
@@ -166,11 +166,11 @@ namespace POS.Views.Windows.SalesPanel
             }
         }
 
-        private void UpdateTotalPrice()
-        {
-            totalPrice = orderListCollection[currentOrderId].Sum(item => item.Amount * item.Price);
-            totalAmountLabel.Content = $"{totalPrice:C2}";
-        }
+        //private void UpdateTotalPrice()
+        //{
+        //    totalPrice = orderListCollection[currentOrderId].Sum(item => item.Amount * item.Price);
+        //    totalAmountLabel.Content = $"{totalPrice:C2}";
+        //}
 
         private void ShowOpenOrders_ButtonClick(object sender, RoutedEventArgs e)
         {
@@ -188,10 +188,10 @@ namespace POS.Views.Windows.SalesPanel
             //}
         }
 
-        private double CalculateTotalPriceForOrder(ObservableCollection<OrderItemDto> order)
-        {
-            return order.Sum(item => item.Amount * item.Price);
-        }
+        //private double CalculateTotalPriceForOrder(ObservableCollection<OrderItemDto> order)
+        //{
+        //    return order.Sum(item => item.Amount * item.Price);
+        //}
 
         private void DeleteCurrentOrder_ButtonClick(object sender, RoutedEventArgs e)
         {
