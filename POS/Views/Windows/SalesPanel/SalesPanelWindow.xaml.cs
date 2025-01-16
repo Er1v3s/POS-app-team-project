@@ -226,8 +226,8 @@ namespace POS.Views.Windows.SalesPanel
         //    discountApplied = false;
         //}
         
-        private void ApplyDiscount_ButtonClick(object sender, RoutedEventArgs e)
-        {
+        //private void ApplyDiscount_ButtonClick(object sender, RoutedEventArgs e)
+        //{
             //if (discountApplied)
             //{
             //    MessageBox.Show("Rabat został już zastosowany.", "Informacja", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -247,7 +247,7 @@ namespace POS.Views.Windows.SalesPanel
             //    UpdateTotalPrice();
             //    discountApplied = true;
             //}
-        }
+        //}
 
         private void AddInvoice_ButtonClick(object sender, RoutedEventArgs e)
         {

@@ -291,7 +291,7 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
-                <Button Command="{Binding PayForOrderCommand}" CommandParameter="Gotówka" Grid.Column="0" Style="{StaticResource leftBarButton}" Click="PayForOrder_ButtonClick" Tag="Gotówka">
+                <Button Command="{Binding PayForOrderCommand}" CommandParameter="Gotówka" Grid.Column="0" Style="{StaticResource leftBarButton}">
                     <fa:ImageAwesome Icon="Money" Height="24" Foreground="White"/>
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">
@@ -304,11 +304,11 @@
                     </Button.Resources>
                 </Button>
 
-                <Button Command="{Binding PayForOrderCommand}" CommandParameter="Karta debetowa" Grid.Column="1" Style="{StaticResource leftBarButton}" Click="PayForOrder_ButtonClick" Tag="Karta debetowa">
+                <Button Command="{Binding PayForOrderCommand}" CommandParameter="Karta debetowa" Grid.Column="1" Style="{StaticResource leftBarButton}">
                     <fa:ImageAwesome Icon="CreditCard" Height="24" Foreground="White"/>
                 </Button>
 
-                <Button Grid.Column="2" Style="{StaticResource leftBarButton}" Click="ApplyDiscount_ButtonClick">
+                <Button Command="{Binding ApplyDiscountCommand}" Grid.Column="2" Style="{StaticResource leftBarButton}">
                     <fa:ImageAwesome Icon="Percent" Height="24" Foreground="White"/>
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">

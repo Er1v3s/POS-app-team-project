@@ -13,6 +13,7 @@ using POS.Services.Login;
 using POS.Services.SalesPanel;
 using POS.Utilities.RelayCommands;
 using POS.ViewModels.Base;
+using POS.Views.Windows.SalesPanel;
 
 namespace POS.ViewModels.SalesPanel
 {
@@ -36,6 +37,7 @@ namespace POS.ViewModels.SalesPanel
         private ObservableCollection<Recipes> recipeCollection = new();
 
         private double amountToPayForOrder;
+        private bool isDiscountApplied;
 
         public string LoggedInUserName
         {
@@ -100,6 +102,7 @@ namespace POS.ViewModels.SalesPanel
         public ICommand ShowProductCollectionCommand { get; }
         public ICommand ShowRecipeCollectionCommand { get; }
         public ICommand PayForOrderCommand { get; }
+        public ICommand ApplyDiscountCommand { get; }
 
         public SalesPanelViewModel(
             NavigationService navigationService,
@@ -120,6 +123,7 @@ namespace POS.ViewModels.SalesPanel
             ShowProductCollectionCommand = new RelayCommand(ShowProductCollectionView);
             ShowRecipeCollectionCommand = new RelayCommandAsync(ShowProductsRecipeView);
             PayForOrderCommand = new RelayCommandAsync<object>(PayForOrder);
+            ApplyDiscountCommand = new RelayCommand(ApplyDiscount);
 
             loggedInUserName = LoginManager.Instance.GetLoggedInUserFullName();
 
@@ -234,6 +238,7 @@ namespace POS.ViewModels.SalesPanel
             ShowProductCollectionView();
             AmountToPayForOrder = 0;
             placeholder = DefaultPlaceholder;
+            isDiscountApplied = false;
         }
 
         private void ShowProductCollectionView()
@@ -258,6 +263,27 @@ namespace POS.ViewModels.SalesPanel
             }
             else
                 MessageBox.Show("Brak produktów do wyświetlenia przepisu");
+        }
+
+        private void ApplyDiscount()
+        {
+            var discountWindow = new DiscountWindow();
+            discountWindow.ShowDialog();
+
+            if (discountWindow.DialogResult == true && !isDiscountApplied)
+            {
+                if (!isDiscountApplied)
+                {
+                    if (discountWindow.radioButton10.IsChecked == true)
+                        AmountToPayForOrder *= 0.9;
+                    else if (discountWindow.radioButton15.IsChecked == true)
+                        AmountToPayForOrder *= 0.85;
+
+                    isDiscountApplied = true;
+                }
+                else
+                    MessageBox.Show("Rabat został już zastosowany", "Informacja", MessageBoxButton.OK);
+            }
         }
 
         private void SwitchViewToCollectionFromArgument<T>(ObservableCollection<T> collection)
