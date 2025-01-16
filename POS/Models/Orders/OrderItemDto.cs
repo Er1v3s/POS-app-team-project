@@ -19,6 +19,8 @@ namespace POS.Models.Orders
             set => SetField(ref amount, value);
         }
 
+        public double TotalPrice => Price * Amount;
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

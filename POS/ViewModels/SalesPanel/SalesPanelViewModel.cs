@@ -214,7 +214,7 @@ namespace POS.ViewModels.SalesPanel
         private async Task PayForOrder(object paymentMethod)
         {
             var orderDto = CreateOrderDto(paymentMethod);
-            var result = await _orderService.HandleTheOrder(orderDto);
+            var result = await _orderService.HandleTheOrder(orderDto, amountToPayForOrder);
 
             if (result)
                 ClearOrder();

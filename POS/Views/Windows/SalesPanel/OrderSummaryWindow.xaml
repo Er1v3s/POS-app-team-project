@@ -4,6 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
+        xmlns:salesPanel="clr-namespace:POS.ViewModels.SalesPanel"
+        d:DataContext="{d:DesignInstance Type=salesPanel:OrderSummaryViewModel}"
         mc:Ignorable="d"
         d:DesignHeight="600" d:DesignWidth="600"
         Title="Podsumowanie zamówienia"
@@ -32,10 +34,18 @@
                 </Grid>
             </Border>
 
-            <DataGrid x:Name="orderSummaryDataGrid" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" Style="{DynamicResource DataGridStyle3}" RowStyle="{DynamicResource DataGridRowStyle3}" CellStyle="{DynamicResource DataGridCellStyle3}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle3}" IsReadOnly="True">
+            <DataGrid ItemsSource="{Binding OrderList}"
+                      Grid.Row="1"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      Style="{DynamicResource DataGridStyle3}"
+                      RowStyle="{DynamicResource DataGridRowStyle3}"
+                      CellStyle="{DynamicResource DataGridCellStyle3}"
+                      ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle3}"
+                      IsReadOnly="True">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Width="1.5*" Header="ID" Binding="{Binding Id}"/>
-                    <DataGridTextColumn Width="9*" Header="Nazwa" Binding="{Binding Name}"/>
+                    <DataGridTextColumn Width="1.5*" Header="ID" Binding="{Binding ProductId}"/>
+                    <DataGridTextColumn Width="9*" Header="Nazwa" Binding="{Binding ProductName}"/>
                     <DataGridTextColumn Width="4*" Header="Cena/szt" Binding="{Binding Price}"/>
                     <DataGridTextColumn Width="1.5*" Header="Ilosc" Binding="{Binding Amount}"/>
                     <DataGridTextColumn Width="4*" Header="Cena razem" Binding="{Binding TotalPrice}"/>
@@ -51,15 +61,16 @@
                 <Grid Grid.Column="1">
                     <Border Grid.Row="2" CornerRadius="0,0,8,0" Background="#FF7286D3" BorderBrush="Black" BorderThickness="0,1,0,0">
                         <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="25,0,25,0">
-                            <TextBlock Text="Podsumowanie ceny: " Foreground="White" FontWeight="Bold"/>
-                            <TextBlock x:Name="totalPriceTextBlock" Foreground="White" FontWeight="Bold"/>
+                            <TextBlock Text="Suma: " Foreground="White" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding AmountToPayForOrder, FallbackValue='0.00', StringFormat={}{0:F2}}" Foreground="White" FontWeight="Bold"/>
+                            <TextBlock Text=" PLN" Foreground="White" FontWeight="Bold"/>
                         </StackPanel>
                     </Border>
                 </Grid>
 
                 <Border Grid.Row="2" CornerRadius="0,0,0,8" Grid.Column="0" Background="#FF7286D3" BorderBrush="Black" BorderThickness="0,1,0,0">
                     <Grid Grid.Row="2" Grid.Column="0" Margin="0,9,0,9">
-                        <Button Grid.Row="2" Grid.Column="0" MaxHeight="32" MaxWidth="120" Margin="25,0,0,0" Click="PrintDocument_ButtonClick" Style="{StaticResource payButton}">
+                        <Button Command="{Binding FinishOrderCommand}" Grid.Row="2" Grid.Column="0" MaxHeight="32" MaxWidth="120" Margin="25,0,0,0" Style="{StaticResource payButton}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Drukuj" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                             </StackPanel>

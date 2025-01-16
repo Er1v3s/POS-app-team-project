@@ -124,6 +124,7 @@ namespace POS
             servicesCollection.AddTransient<OrderService>();
             servicesCollection.AddTransient<RecipeService>();
             servicesCollection.AddTransient<SalesPanelViewModel>();
+            servicesCollection.AddTransient<OrderSummaryViewModel>();
 
             #endregion
 
