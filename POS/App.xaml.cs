@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using DataAccess;
-using DataAccess.Models;
 using Microsoft.Extensions.DependencyInjection;
 using POS.Factories;
 using POS.Models.Reports;
@@ -124,6 +123,7 @@ namespace POS
             servicesCollection.AddTransient<OrderService>();
             servicesCollection.AddTransient<RecipeService>();
             servicesCollection.AddTransient<DiscountService>();
+            servicesCollection.AddTransient<OrderSummaryService>();
 
             servicesCollection.AddTransient<DiscountWindowViewModel>();
             servicesCollection.AddTransient<OrderSummaryViewModel>();
