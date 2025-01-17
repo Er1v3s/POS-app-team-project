@@ -21,6 +21,7 @@ namespace POS.ViewModels.SalesPanel
 
         private List<OrderItemDto> orderList;
         private double amountToPayForOrder;
+        private int discount;
 
         private readonly Paragraph lineSpacer = new("")
         {
@@ -46,7 +47,12 @@ namespace POS.ViewModels.SalesPanel
             set => SetField(ref amountToPayForOrder, Math.Round(value, 2));
         }
 
-        public Action CloseWindowAction;
+        public int Discount
+        {
+            get => discount;
+            set => SetField(ref discount, value);
+        }
+
         public ICommand FinishOrderCommand { get; }
 
         public OrderSummaryViewModel()
@@ -82,7 +88,7 @@ namespace POS.ViewModels.SalesPanel
                 MessageBox.Show("Wystąpił błąd podczas generowania rachunku: " + ex.Message);
             }
 
-            CloseWindowAction.Invoke();
+            CloseWindowBaseAction!.Invoke();
         }
 
         private Paragraph CreateDateTime()
@@ -105,6 +111,7 @@ namespace POS.ViewModels.SalesPanel
             Paragraph pdfDateTime = CreateDateTime();
             Paragraph pdfTitle = CreatePdfTitle();
             PdfPTable pdfPTable = CreatePdfTable();
+            PdfPTable pdfDiscount = CreateDiscountRow();
             PdfPTable pdfSummary = CreateOrderSummary();
 
             pdfDoc.Add(pdfDateTime);
@@ -123,6 +130,8 @@ namespace POS.ViewModels.SalesPanel
             pdfDoc.Add(lineSpacer);
             pdfDoc.Add(pdfPTable);
             pdfDoc.Add(lineSpacer);
+            pdfDoc.Add(lineSpacer);
+            pdfDoc.Add(pdfDiscount);
             pdfDoc.Add(pdfSummary);
 
             pdfDoc.Close();
@@ -237,6 +246,21 @@ namespace POS.ViewModels.SalesPanel
 
             pdfTable.AddCell("SUMA");
             pdfTable.AddCell($"{amountToPayForOrder} PLN ");
+
+            return pdfTable;
+        }
+
+        private PdfPTable CreateDiscountRow()
+        {
+            PdfPTable pdfTable = new PdfPTable(new[] { .75f, 2f })
+            {
+                HorizontalAlignment = Element.ALIGN_CENTER,
+                WidthPercentage = 100,
+                DefaultCell = { MinimumHeight = 22f },
+            };
+
+            pdfTable.AddCell("RABAT");
+            pdfTable.AddCell($"-{discount} %");
 
             return pdfTable;
         }

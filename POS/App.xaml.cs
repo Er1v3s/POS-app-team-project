@@ -123,8 +123,11 @@ namespace POS
             servicesCollection.AddTransient<ProductService>();
             servicesCollection.AddTransient<OrderService>();
             servicesCollection.AddTransient<RecipeService>();
-            servicesCollection.AddTransient<SalesPanelViewModel>();
+            servicesCollection.AddTransient<DiscountService>();
+
+            servicesCollection.AddTransient<DiscountWindowViewModel>();
             servicesCollection.AddTransient<OrderSummaryViewModel>();
+            servicesCollection.AddTransient<SalesPanelViewModel>();
 
             #endregion
 

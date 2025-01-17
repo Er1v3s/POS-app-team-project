@@ -17,9 +17,9 @@ namespace POS.Services.SalesPanel
             _dbContext = dbContext;
         }
 
-        public async Task<bool> HandleTheOrder(OrderDto orderDto, double amountToPayForOrder)
+        public async Task<bool> HandleTheOrder(OrderDto orderDto, double amountToPayForOrder, int discount)
         {
-            var summaryOrderWindow = new OrderSummaryWindow(orderDto.OrderItemList, amountToPayForOrder);
+            var summaryOrderWindow = new OrderSummaryWindow(orderDto.OrderItemList, amountToPayForOrder, discount);
             summaryOrderWindow.ShowDialog();
 
             if (summaryOrderWindow.DialogResult == true)

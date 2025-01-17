@@ -13,7 +13,6 @@ using POS.Services.Login;
 using POS.Services.SalesPanel;
 using POS.Utilities.RelayCommands;
 using POS.ViewModels.Base;
-using POS.Views.Windows.SalesPanel;
 
 namespace POS.ViewModels.SalesPanel
 {
@@ -23,6 +22,7 @@ namespace POS.ViewModels.SalesPanel
         private readonly ProductService _productsService;
         private readonly OrderService _orderService;
         private readonly RecipeService _recipeService;
+        private readonly DiscountService _discountService;
 
         private const string DefaultPlaceholder = "Wpisz nazwę...";
 
@@ -37,7 +37,8 @@ namespace POS.ViewModels.SalesPanel
         private ObservableCollection<Recipes> recipeCollection = new();
 
         private double amountToPayForOrder;
-        private bool isDiscountApplied;
+        private double tempAmountToPayForOrder;
+        private int discountValue;
 
         public string LoggedInUserName
         {
@@ -94,7 +95,12 @@ namespace POS.ViewModels.SalesPanel
             set => SetField(ref amountToPayForOrder, Math.Round(value, 2));
         }
 
-        public Action CloseWindowAction;
+        public int DiscountValue
+        {
+            get => discountValue;
+            set => SetField(ref discountValue, value);
+        }
+
         public ICommand MoveToMainWindowCommand { get; }
         public ICommand SelectProductCommand { get; }
         public ICommand DeleteOrderItemCommand { get; }
@@ -108,13 +114,15 @@ namespace POS.ViewModels.SalesPanel
             NavigationService navigationService,
             ProductService productService,
             OrderService orderService,
-            RecipeService recipeService
+            RecipeService recipeService,
+            DiscountService discountService
             )
         {
             _navigationService = navigationService;
             _productsService = productService;
             _orderService = orderService;
             _recipeService = recipeService;
+            _discountService = discountService;
 
             MoveToMainWindowCommand = new RelayCommand(MoveToMainWindow);
             SelectProductCommand = new RelayCommand<Product>(AddProductToOrderItemsCollection);
@@ -193,7 +201,8 @@ namespace POS.ViewModels.SalesPanel
             else
                 existingProduct.Amount++;
 
-            AmountToPayForOrder += Convert.ToDouble(product.Price);
+            tempAmountToPayForOrder += Convert.ToDouble(product.Price);
+            RecalculateAmountToPay();
         }
 
         private void DeleteOrderItemFromOrderItemsCollection(OrderItemDto orderItem)
@@ -208,16 +217,25 @@ namespace POS.ViewModels.SalesPanel
             else
                 orderItem.Amount--;
 
-            AmountToPayForOrder -= orderItem.Price;
+            tempAmountToPayForOrder -= orderItem.Price;
+            RecalculateAmountToPay();
         }
 
         private async Task PayForOrder(object paymentMethod)
         {
-            var orderDto = CreateOrderDto(paymentMethod);
-            var result = await _orderService.HandleTheOrder(orderDto, amountToPayForOrder);
+            if (orderItemCollection.Any())
+            {
+                var orderDto = CreateOrderDto(paymentMethod);
+                var result = await _orderService.HandleTheOrder(orderDto, amountToPayForOrder, discountValue);
 
-            if (result)
-                ClearOrder();
+                if (result)
+                    ClearOrder();
+            }
+            else
+            {
+                MessageBox.Show("Zamówienie jest puste, brak możliwości dokonania płatności", "Ostrzeżenie",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private OrderDto CreateOrderDto(object paymentMethod)
@@ -237,8 +255,9 @@ namespace POS.ViewModels.SalesPanel
             recipeCollection.Clear();
             ShowProductCollectionView();
             AmountToPayForOrder = 0;
+            DiscountValue = 0;
+            tempAmountToPayForOrder = 0;
             placeholder = DefaultPlaceholder;
-            isDiscountApplied = false;
         }
 
         private void ShowProductCollectionView()
@@ -267,23 +286,18 @@ namespace POS.ViewModels.SalesPanel
 
         private void ApplyDiscount()
         {
-            var discountWindow = new DiscountWindow();
-            discountWindow.ShowDialog();
+            var discount = _discountService.SetDiscount();
+            DiscountValue = discount;
 
-            if (discountWindow.DialogResult == true && !isDiscountApplied)
-            {
-                if (!isDiscountApplied)
-                {
-                    if (discountWindow.radioButton10.IsChecked == true)
-                        AmountToPayForOrder *= 0.9;
-                    else if (discountWindow.radioButton15.IsChecked == true)
-                        AmountToPayForOrder *= 0.85;
+            RecalculateAmountToPay();
+        }
 
-                    isDiscountApplied = true;
-                }
-                else
-                    MessageBox.Show("Rabat został już zastosowany", "Informacja", MessageBoxButton.OK);
-            }
+        private void RecalculateAmountToPay()
+        {
+            if (DiscountValue > 0)
+                AmountToPayForOrder = tempAmountToPayForOrder * (1 - DiscountValue / 100d);
+            else
+                AmountToPayForOrder = tempAmountToPayForOrder;
         }
 
         private void SwitchViewToCollectionFromArgument<T>(ObservableCollection<T> collection)
@@ -299,7 +313,7 @@ namespace POS.ViewModels.SalesPanel
             _navigationService.OpenMainWindow();
 
             if(Application.Current.Windows.OfType<Views.Windows.MainWindow>().Any())
-                CloseWindowAction.Invoke();
+                CloseWindowBaseAction!.Invoke();
         }
     }
 }

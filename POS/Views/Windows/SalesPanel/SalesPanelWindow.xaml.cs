@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 using DataAccess;
-using DataAccess.Models;
 using Microsoft.Extensions.DependencyInjection;
-using POS.Helpers;
-using POS.Models.Invoices;
 using POS.Models.Orders;
 using POS.ViewModels.SalesPanel;
 
@@ -20,11 +14,7 @@ namespace POS.Views.Windows.SalesPanel
     /// </summary>
     public partial class SalesPanelWindow : Window
     {
-        //private Employees currentUser;
         public int EmployeeId;
-        private double totalPrice = 0;
-        private int currentOrderId = 0;
-        private bool discountApplied = false;
 
         ObservableCollection<OrderItemDto> orderList = [];
         ObservableCollection<ObservableCollection<OrderItemDto>> orderListCollection = [];
@@ -38,7 +28,7 @@ namespace POS.Views.Windows.SalesPanel
             DataContext = App.ServiceProvider.GetRequiredService<SalesPanelViewModel>();
 
             var viewModel = (SalesPanelViewModel)DataContext;
-            viewModel.CloseWindowAction = Close;
+            viewModel.CloseWindowBaseAction = Close;
             //
 
             //LoadAllProducts();
@@ -224,29 +214,6 @@ namespace POS.Views.Windows.SalesPanel
         //    LoadAllProducts();
 
         //    discountApplied = false;
-        //}
-        
-        //private void ApplyDiscount_ButtonClick(object sender, RoutedEventArgs e)
-        //{
-            //if (discountApplied)
-            //{
-            //    MessageBox.Show("Rabat został już zastosowany.", "Informacja", MessageBoxButton.OK, MessageBoxImage.Information);
-            //    return;
-            //}
-            //DiscountWindow discountWindow = new DiscountWindow();
-            //discountWindow.Owner = this;
-
-            //if (discountWindow.ShowDialog() == true)
-            //{
-            //    double discountRate = discountWindow.radioButton10.IsChecked == true ? 0.1 : 0.15;
-
-            //    foreach (var orderItem in orderListCollection[currentOrderId])
-            //    {
-            //        orderItem.Price *= (1 - discountRate);
-            //    }
-            //    UpdateTotalPrice();
-            //    discountApplied = true;
-            //}
         //}
 
         private void AddInvoice_ButtonClick(object sender, RoutedEventArgs e)

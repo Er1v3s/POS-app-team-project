@@ -280,6 +280,20 @@
 
                 <TextBlock Grid.Column="0" Text="SUMA:" FontSize="24" Foreground="White" Margin="20,0,0,0" VerticalAlignment="Center"/>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Grid>
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DiscountValue}" Value="0">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+                        <TextBlock Text="{Binding DiscountValue, FallbackValue='', StringFormat='Rabat: -{0:F0} %'}" 
+                                   Foreground="Red" FontSize="24" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                    </Grid>
+
                     <TextBlock Text="{Binding AmountToPayForOrder, FallbackValue='0.00', StringFormat={}{0:F2}}" FontSize="24" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0"/>
                 </StackPanel>
             </Grid>
