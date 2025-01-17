@@ -37,28 +37,6 @@ namespace POS.Views.Windows.SalesPanel
             EmployeeId = employeeId;
         }
 
-        private void PayForOrder_ButtonClick(object sender, RoutedEventArgs e)
-        {
-            //double totalPrice = Math.Round(orderList.Sum(item => item.Amount * item.Price), 2);
-
-            //if (sender is Button button && button.Tag is string paymentMethod)
-            //{
-            //    var summaryOrderWindow = new OrderSummaryWindow(orderList);
-            //    summaryOrderWindow.ShowDialog();
-
-            //    if(summaryOrderWindow.DialogResult == true)
-            //    {
-            //        var order = SaveOrder();
-            //        SaveOrderItems(order);
-            //        SavePayment(order, paymentMethod, totalPrice);
-            //        RemoveIngredients();
-            //        orderList.Clear();
-            //        UpdateTotalPrice();
-            //        MessageBox.Show($"Zapłacono za zamówienie {totalPrice:C} - metoda płatności: {paymentMethod}");
-            //    } 
-            //}
-        }
-
         private void RemoveIngredients()
         {
             using (var dbContext = new AppDbContext())
@@ -125,11 +103,6 @@ namespace POS.Views.Windows.SalesPanel
             //    CreateOrderButton(orderId, totalPriceForOrder);
             //}
         }
-
-        //private double CalculateTotalPriceForOrder(ObservableCollection<OrderItemDto> order)
-        //{
-        //    return order.Sum(item => item.Amount * item.Price);
-        //}
 
         private void DeleteCurrentOrder_ButtonClick(object sender, RoutedEventArgs e)
         {

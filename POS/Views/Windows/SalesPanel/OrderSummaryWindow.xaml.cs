@@ -11,16 +11,16 @@ namespace POS.Views.Windows.SalesPanel
     /// </summary>
     public partial class OrderSummaryWindow : WindowBase
     {
-        public OrderSummaryWindow(List<OrderItemDto> orderList, double amountToPayForOrder, int discount)
+        public OrderSummaryWindow(OrderDto orderDto)
         {
             InitializeComponent();
             DataContext = App.ServiceProvider.GetRequiredService<OrderSummaryViewModel>();
 
             var viewModel = (OrderSummaryViewModel)DataContext;
             viewModel.CloseWindowBaseAction = Close;
-            viewModel.OrderList = orderList;
-            viewModel.AmountToPayForOrder = amountToPayForOrder;
-            viewModel.Discount = discount;
+            viewModel.OrderList = orderDto.OrderItemList;
+            viewModel.AmountToPayForOrder = orderDto.AmountToPay;
+            viewModel.Discount = orderDto.Discount;
 
             viewModel.PropertyChanged += (sender, args) =>
             {

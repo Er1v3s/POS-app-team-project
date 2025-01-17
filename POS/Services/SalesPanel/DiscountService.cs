@@ -21,10 +21,11 @@ namespace POS.Services.SalesPanel
             {
                 if (discountWindow.radioButton10.IsChecked == true)
                     return 10;
-                else if (discountWindow.radioButton15.IsChecked == true)
+
+                if (discountWindow.radioButton15.IsChecked == true)
                     return 15;
-                else
-                    MessageBox.Show("Nie wybrano żadnego rabatu", "Ostrzeżenie", MessageBoxButton.OK);
+
+                MessageBox.Show("Nie wybrano żadnego rabatu", "Ostrzeżenie", MessageBoxButton.OK);
             }
 
             return 0;

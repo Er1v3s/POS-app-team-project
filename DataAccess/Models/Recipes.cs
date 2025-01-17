@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace DataAccess.Models
+﻿namespace DataAccess.Models
 {
     public class Recipes
     {

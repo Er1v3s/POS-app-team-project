@@ -34,6 +34,7 @@ namespace POS.ViewModels.SalesPanel
 
         private ObservableCollection<Product> productCollection = new();
         private ObservableCollection<OrderItemDto> orderItemCollection = new();
+        private ObservableCollection<OrderDto> orderCollection = new ();
         private ObservableCollection<Recipes> recipeCollection = new();
 
         private double amountToPayForOrder;
@@ -77,6 +78,12 @@ namespace POS.ViewModels.SalesPanel
             set => SetField(ref orderItemCollection, value);
         }
 
+        public ObservableCollection<OrderDto> OrderCollection
+        {
+            get => orderCollection;
+            set => SetField(ref orderCollection, value);
+        }
+
         public ObservableCollection<Recipes> RecipeCollection
         {
             get => recipeCollection;
@@ -107,8 +114,11 @@ namespace POS.ViewModels.SalesPanel
         public ICommand SelectCategoryCommand { get; }
         public ICommand ShowProductCollectionCommand { get; }
         public ICommand ShowRecipeCollectionCommand { get; }
+        public ICommand CancelOrderCommand { get; }
         public ICommand PayForOrderCommand { get; }
         public ICommand ApplyDiscountCommand { get; }
+        public ICommand ShowSavedOrdersCommand { get; }
+        public ICommand LoadOrderCommand { get; }
 
         public SalesPanelViewModel(
             NavigationService navigationService,
@@ -130,8 +140,11 @@ namespace POS.ViewModels.SalesPanel
             SelectCategoryCommand = new RelayCommand<object>(FilterProductsByCategory);
             ShowProductCollectionCommand = new RelayCommand(ShowProductCollectionView);
             ShowRecipeCollectionCommand = new RelayCommandAsync(ShowProductsRecipeView);
-            PayForOrderCommand = new RelayCommandAsync<object>(PayForOrder);
+            CancelOrderCommand = new RelayCommand(CancelOrder);
+            PayForOrderCommand = new RelayCommandAsync<string>(PayForOrder);
             ApplyDiscountCommand = new RelayCommand(ApplyDiscount);
+            ShowSavedOrdersCommand = new RelayCommand(ShowSavedOrdersView);
+            LoadOrderCommand = new RelayCommand<OrderDto>(LoadOrder);
 
             loggedInUserName = LoginManager.Instance.GetLoggedInUserFullName();
 
@@ -221,12 +234,12 @@ namespace POS.ViewModels.SalesPanel
             RecalculateAmountToPay();
         }
 
-        private async Task PayForOrder(object paymentMethod)
+        private async Task PayForOrder(string paymentMethod)
         {
             if (orderItemCollection.Any())
             {
                 var orderDto = CreateOrderDto(paymentMethod);
-                var result = await _orderService.HandleTheOrder(orderDto, amountToPayForOrder, discountValue);
+                var result = await _orderService.HandleOrder(orderDto);
 
                 if (result)
                     ClearOrder();
@@ -238,15 +251,39 @@ namespace POS.ViewModels.SalesPanel
             }
         }
 
-        private OrderDto CreateOrderDto(object paymentMethod)
+        private OrderDto CreateOrderDto(string paymentMethod)
         {
             return new OrderDto
             {
                 EmployeeId = LoginManager.Instance.Employee!.EmployeeId,
                 OrderItemList = orderItemCollection.ToList(),
                 AmountToPay = AmountToPayForOrder,
-                PaymentMethod = paymentMethod.ToString()!
+                PaymentMethod = paymentMethod.IsNullOrEmpty() ? String.Empty : paymentMethod,
+                Discount = DiscountValue,
             };
+        }
+
+        private void LoadOrder(OrderDto orderDto)
+        {
+            foreach (var dto in orderDto.OrderItemList)
+            {
+                OrderItemCollection.Add(dto);
+                tempAmountToPayForOrder += dto.Price;
+            }
+
+            DiscountValue = orderDto.Discount;
+
+            OrderCollection.Remove(orderDto);
+            RecalculateAmountToPay();
+            SwitchViewToCollectionFromArgument(productCollection);
+        }
+
+        private void CancelOrder()
+        {
+            var result = _orderService.CancelOrder();
+
+            if(result)
+                ClearOrder();
         }
 
         private void ClearOrder()
@@ -292,6 +329,29 @@ namespace POS.ViewModels.SalesPanel
             RecalculateAmountToPay();
         }
 
+        private void ShowSavedOrdersView()
+        {
+            if (orderItemCollection.Any())
+            {
+                SaveOrder();
+                SwitchViewToCollectionFromArgument(orderCollection);
+            }
+            else
+            {
+                if (orderCollection.Any())
+                    SwitchViewToCollectionFromArgument(orderCollection);
+                else
+                    MessageBox.Show("Brak zamówień", "", MessageBoxButton.OK, MessageBoxImage.Stop);
+            }
+        }
+
+        private void SaveOrder()
+        {
+            var orderDto = CreateOrderDto(String.Empty);
+            OrderCollection.Add(orderDto);
+            ClearOrder();
+        }
+
         private void RecalculateAmountToPay()
         {
             if (DiscountValue > 0)
@@ -306,6 +366,8 @@ namespace POS.ViewModels.SalesPanel
                 CurrentViewIndex = 0;
             else if(collection.GetType() == typeof(ObservableCollection<Recipes>))
                 CurrentViewIndex = 1;
+            else if (collection.GetType() == typeof(ObservableCollection<OrderDto>))
+                CurrentViewIndex = 2;
         }
 
         private void MoveToMainWindow()

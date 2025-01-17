@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace POS.Models.Orders
 {
@@ -12,5 +8,6 @@ namespace POS.Models.Orders
         public List<OrderItemDto> OrderItemList { get; set; }
         public double AmountToPay { get; set; }
         public string PaymentMethod { get; set; }
+        public int Discount { get; set; }
     }
 }
