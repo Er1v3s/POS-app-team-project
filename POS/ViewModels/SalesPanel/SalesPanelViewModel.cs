@@ -119,6 +119,7 @@ namespace POS.ViewModels.SalesPanel
         public ICommand ApplyDiscountCommand { get; }
         public ICommand ShowSavedOrdersCommand { get; }
         public ICommand LoadOrderCommand { get; }
+        public ICommand ShowFinishedOrdersCommand { get; }
 
         public SalesPanelViewModel(
             NavigationService navigationService,
@@ -145,6 +146,7 @@ namespace POS.ViewModels.SalesPanel
             ApplyDiscountCommand = new RelayCommand(ApplyDiscount);
             ShowSavedOrdersCommand = new RelayCommand(ShowSavedOrdersView);
             LoadOrderCommand = new RelayCommand<OrderDto>(LoadOrder);
+            ShowFinishedOrdersCommand = new RelayCommand(ShowFinishedOrders);
 
             loggedInUserName = LoginManager.Instance.GetLoggedInUserFullName();
 
@@ -350,6 +352,11 @@ namespace POS.ViewModels.SalesPanel
             var orderDto = CreateOrderDto(String.Empty);
             OrderCollection.Add(orderDto);
             ClearOrder();
+        }
+
+        private void ShowFinishedOrders()
+        {
+            _orderService.LoadFinishedOrdersWindow();
         }
 
         private void RecalculateAmountToPay()

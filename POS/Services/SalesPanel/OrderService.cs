@@ -42,9 +42,10 @@ namespace POS.Services.SalesPanel
             return false;
         }
 
-        public bool SaveOrder()
+        public void LoadFinishedOrdersWindow()
         {
-            return true;
+            var finishedOrders = new FinishedOrdersWindow();
+            finishedOrders.Show();
         }
 
         private async Task SaveHandledOrderInDb(OrderDto orderDto)

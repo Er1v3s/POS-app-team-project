@@ -259,7 +259,7 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Style="{StaticResource leftBarButton}" Click="ShowFinishedOrders_ButtonClick">
+                <Button Command="{Binding ShowFinishedOrdersCommand}" Grid.Column="0" Style="{StaticResource leftBarButton}" Click="ShowFinishedOrders_ButtonClick">
                     <fa:ImageAwesome Icon="ListOl" Height="24" Foreground="White"/>
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">
