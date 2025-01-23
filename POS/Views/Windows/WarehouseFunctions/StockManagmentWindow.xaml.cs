@@ -14,7 +14,7 @@ namespace POS.Views.Windows.WarehouseFunctions
     /// </summary>
     public partial class StockManagementWindow : Window
     {
-        private Employees currentUser;
+        private Employee currentUser;
         public int EmployeeId;
 
         public StockManagementWindow(int employeeId)
@@ -186,7 +186,7 @@ namespace POS.Views.Windows.WarehouseFunctions
                     if (ingredient != null && recipe != null)
                     {
 
-                        var recipeIngredient = new RecipeIngredients
+                        var recipeIngredient = new RecipeIngredient
                         {
                             RecipeId = RecipeId,
                             IngredientId = IngredientId,
@@ -258,7 +258,7 @@ namespace POS.Views.Windows.WarehouseFunctions
                     var recipe = dbContext.Recipes.FirstOrDefault(i => i.RecipeId == recipeId);
                     if(recipe != null)
                     {
-                        Recipe.Text = recipe.Recipe;
+                        Recipe.Text = recipe.RecipeContent;
                         Recipe.IsEnabled = true;
                         Recipe.LostFocus -= TextBox_LostFocus;
                         Recipe.GotFocus -= TextBox_GotFocus;
@@ -317,10 +317,10 @@ namespace POS.Views.Windows.WarehouseFunctions
             {
                 using (var dbContext = new AppDbContext())
                 {
-                    var newRecipe = new Recipes
+                    var newRecipe = new Recipe
                     {
                         RecipeName ="Przepis na " + NewProductName.Text,
-                        Recipe = Recipe.Text,
+                        RecipeContent = Recipe.Text,
                     };
                     dbContext.Recipes.Add(newRecipe);
                     dbContext.SaveChanges();
@@ -363,7 +363,7 @@ namespace POS.Views.Windows.WarehouseFunctions
                         var recipeToUpdate = dbContext.Recipes.FirstOrDefault(r => r.RecipeId == recipeToUpdateId);
                         if(recipeToUpdate != null)
                         {
-                            recipeToUpdate.Recipe = Recipe.Text;
+                            recipeToUpdate.RecipeContent = Recipe.Text;
                         }
                         dbContext.SaveChanges();
                         EditProduct_Clear();
@@ -516,7 +516,7 @@ namespace POS.Views.Windows.WarehouseFunctions
             {
                 using (var dbContext = new AppDbContext())
                 {
-                    var newIngredient = new Ingredients
+                    var newIngredient = new Ingredient
                     {
                         Name = NewIngredientName.Text,
                         Unit = IngredientUnit.Text,

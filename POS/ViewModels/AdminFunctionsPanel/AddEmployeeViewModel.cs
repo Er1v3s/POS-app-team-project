@@ -35,9 +35,9 @@ namespace POS.ViewModels.AdminFunctionsPanel
             }
         }
 
-        private Employees CreateEmployee()
+        private Employee CreateEmployee()
         {
-            return new Employees
+            return new Employee
             {
                 FirstName = FormValidatorHelper.ValidateString(firstName),
                 LastName = FormValidatorHelper.ValidateString(lastName),

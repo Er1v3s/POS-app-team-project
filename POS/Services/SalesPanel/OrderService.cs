@@ -68,9 +68,9 @@ namespace POS.Services.SalesPanel
             await _dbContext.SaveChangesAsync();
         }
 
-        private Orders CreateOrder(OrderDto orderDto)
+        private Order CreateOrder(OrderDto orderDto)
         {
-            return new Orders
+            return new Order
             {
                 EmployeeId = orderDto.EmployeeId,
                 OrderTime = DateTime.Now,
@@ -78,14 +78,14 @@ namespace POS.Services.SalesPanel
             };
         }
 
-        private List<OrderItems> CreateOrderItemList(Orders orderEntityEntry, OrderDto orderDto)
+        private List<OrderItem> CreateOrderItemList(Order orderEntityEntry, OrderDto orderDto)
         {
-            var orderItems = new List<OrderItems>();
+            var orderItems = new List<OrderItem>();
 
             foreach (var orderItem in orderDto.OrderItemList)
             {
                 orderItems.Add(
-                new OrderItems
+                new OrderItem
                 {
                     OrderId = orderEntityEntry.OrderId,
                     EmployeeId = orderEntityEntry.EmployeeId,
@@ -97,9 +97,9 @@ namespace POS.Services.SalesPanel
             return orderItems;
         }
 
-        private Payments CreatePayment(Orders orderEntityEntry, OrderDto orderDto)
+        private Payment CreatePayment(Order orderEntityEntry, OrderDto orderDto)
         {
-            return new Payments
+            return new Payment
             {
                 OrderId = orderEntityEntry.OrderId,
                 Amount = orderDto.AmountToPay,

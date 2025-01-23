@@ -39,7 +39,7 @@ namespace POS.ViewModels.SalesPanel
         private ObservableCollection<Product> productCollection = new();
         private ObservableCollection<OrderItemDto> orderItemCollection = new();
         private ObservableCollection<OrderDto> orderCollection = new ();
-        private ObservableCollection<Recipes> recipeCollection = new();
+        private ObservableCollection<Recipe> recipeCollection = new();
 
         private double amountToPayForOrder;
         private double tempAmountToPayForOrder;
@@ -89,7 +89,7 @@ namespace POS.ViewModels.SalesPanel
             set => SetField(ref orderCollection, value);
         }
 
-        public ObservableCollection<Recipes> RecipeCollection
+        public ObservableCollection<Recipe> RecipeCollection
         {
             get => recipeCollection;
             set => SetField(ref recipeCollection, value);
@@ -407,7 +407,7 @@ namespace POS.ViewModels.SalesPanel
         {
             if (collection.GetType() == typeof(ObservableCollection<Product>))
                 CurrentViewIndex = 0;
-            else if(collection.GetType() == typeof(ObservableCollection<Recipes>))
+            else if(collection.GetType() == typeof(ObservableCollection<Recipe>))
                 CurrentViewIndex = 1;
             else if (collection.GetType() == typeof(ObservableCollection<OrderDto>))
                 CurrentViewIndex = 2;

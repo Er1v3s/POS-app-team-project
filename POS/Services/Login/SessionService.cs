@@ -17,13 +17,13 @@ namespace POS.Services.Login
             _dbContext = dbContext;
         }
 
-        public async Task StartSession(Employees employee)
+        public async Task StartSession(Employee employee)
         {
             if (!employee.IsUserLoggedIn)
                 await CreateNewSession(employee);
         }
 
-        public async Task FinishSession(Employees employee)
+        public async Task FinishSession(Employee employee)
         {
             if (employee.IsUserLoggedIn)
                 await FinishExistedSession(employee);
@@ -64,7 +64,7 @@ namespace POS.Services.Login
             return LoginManager.Instance.IsAnySessionActive = sessions != null;
         }
 
-        private async Task CreateNewSession(Employees employee)
+        private async Task CreateNewSession(Employee employee)
         {
             employee.IsUserLoggedIn = true;
             LoginManager.Instance.IsAnySessionActive = true;
@@ -82,7 +82,7 @@ namespace POS.Services.Login
             await _dbContext.SaveChangesAsync();
         }
 
-        private async Task FinishExistedSession(Employees employee)
+        private async Task FinishExistedSession(Employee employee)
         {
             var employeeWorkSession = await _dbContext.EmployeeWorkSession
                     .Where(e => e.WorkingTimeTo == null)

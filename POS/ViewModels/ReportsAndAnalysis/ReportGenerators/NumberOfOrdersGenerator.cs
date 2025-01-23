@@ -24,7 +24,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
             return ordersGroupedWithMissingData;
         }
 
-        private async Task<List<OrderReportDto>> GroupData(IQueryable<Orders> orders, GroupBy? groupBy)
+        private async Task<List<OrderReportDto>> GroupData(IQueryable<Order> orders, GroupBy? groupBy)
         {
             var ordersList = await orders.ToListAsync();
 
@@ -43,7 +43,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
             }
         }
 
-        private List<OrderReportDto> GroupDataByDays(List<Orders> orders)
+        private List<OrderReportDto> GroupDataByDays(List<Order> orders)
         {
             return orders
                 .GroupBy(order => order.OrderTime.Date)
@@ -56,7 +56,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
                 .ToList();
         }
 
-        private List<OrderReportDto> GroupDataByWeeks(List<Orders> orders)
+        private List<OrderReportDto> GroupDataByWeeks(List<Order> orders)
         {
             return orders.GroupBy(order => order.DayOfWeek)
                 .Select(group => new OrderReportDto
@@ -68,7 +68,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
                 .ToList();
         }
 
-        private List<OrderReportDto> GroupDataByMonths(List<Orders> orders)
+        private List<OrderReportDto> GroupDataByMonths(List<Order> orders)
         {
             return orders.ToList()
                 .GroupBy(order => new { order.OrderTime.Year, order.OrderTime.Month })
@@ -81,7 +81,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
                 .ToList();
         }
 
-        private List<OrderReportDto> GroupDataByYears(List<Orders> orders)
+        private List<OrderReportDto> GroupDataByYears(List<Order> orders)
         {
             return orders.ToList()
                 .GroupBy(order => order.OrderTime.Year)

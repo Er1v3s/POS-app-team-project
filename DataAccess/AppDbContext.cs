@@ -22,27 +22,27 @@ namespace DataAccess
         }
 
         public DbSet<Product> Product { get; set; }
-        public DbSet<Employees> Employees { get; set; }
-        public DbSet<Orders> Orders { get; set; }
-        public DbSet<OrderItems> OrderItems { get; set; }
-        public DbSet<Ingredients> Ingredients { get; set; }
-        public DbSet<Payments> Payments { get; set; }
-        public DbSet<RecipeIngredients> RecipeIngredients { get; set; }
-        public DbSet<Recipes> Recipes { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Ingredient> Ingredients { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
+        public DbSet<Recipe> Recipes { get; set; }
         public DbSet<ToDoListTask> ToDoListTasks { get; set; }
         public DbSet<EmployeeWorkSession> EmployeeWorkSession { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Employees>().HasKey(e => e.EmployeeId);
+            modelBuilder.Entity<Employee>().ToTable("Employees").HasKey(e => e.EmployeeId);
             modelBuilder.Entity<Product>().ToTable("Products").HasKey(e => e.ProductId);
-            modelBuilder.Entity<Orders>().HasKey(e => e.OrderId);
-            modelBuilder.Entity<Ingredients>().HasKey(e => e.IngredientId);
-            modelBuilder.Entity<Payments>().HasKey(e => e.PaymentId);
-            modelBuilder.Entity<RecipeIngredients>().HasKey(e => e.RecipeIngredientId);
-            modelBuilder.Entity<Recipes>().HasKey(e => e.RecipeId);
+            modelBuilder.Entity<Order>().ToTable("Orders").HasKey(e => e.OrderId);
+            modelBuilder.Entity<Ingredient>().ToTable("Ingredients").HasKey(e => e.IngredientId);
+            modelBuilder.Entity<Payment>().ToTable("Payments").HasKey(e => e.PaymentId);
+            modelBuilder.Entity<RecipeIngredient>().ToTable("RecipeIngredients").HasKey(e => e.RecipeIngredientId);
+            modelBuilder.Entity<Recipe>().ToTable("Recipes").HasKey(e => e.RecipeId);
             modelBuilder.Entity<ToDoListTask>().HasKey(e => e.TodoTaskId);
-            modelBuilder.Entity<OrderItems>().HasKey(e => e.OrderItemId);
+            modelBuilder.Entity<OrderItem>().ToTable("OrderItems").HasKey(e => e.OrderItemId);
             modelBuilder.Entity<EmployeeWorkSession>().HasKey(e => e.WorkSessionId);
         }
     }

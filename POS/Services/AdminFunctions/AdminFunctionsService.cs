@@ -40,18 +40,18 @@ namespace POS.Services.AdminFunctions
             return employeesInfoList;
         }
 
-        public async Task<Employees> LoadEmployeeData(EmployeeInfoDto selectedEmployeeInfo)
+        public async Task<Employee> LoadEmployeeData(EmployeeInfoDto selectedEmployeeInfo)
         {
             return (await _dbContext.Employees.FirstOrDefaultAsync(employee => employee.EmployeeId == selectedEmployeeInfo.EmployeeId))!;
         }
 
-        public async Task AddEmployee(Employees newEmployee)
+        public async Task AddEmployee(Employee newEmployee)
         {
             await _dbContext.Employees.AddAsync(newEmployee);
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task EditEmployee(Employees selectedEmployee)
+        public async Task EditEmployee(Employee selectedEmployee)
         {
             var employeeToUpdate = await _dbContext.Employees.FirstOrDefaultAsync(employee => employee.EmployeeId == selectedEmployee.EmployeeId);
 

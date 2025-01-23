@@ -155,7 +155,7 @@
                                                             </ItemsControl.ItemTemplate>
                                                         </ItemsControl>
 
-                                                        <TextBlock Text="{Binding Recipe}" Style="{StaticResource RecipeTextStyle}"/>
+                                                        <TextBlock Text="{Binding RecipeContent}" Style="{StaticResource RecipeTextStyle}"/>
                                                     </StackPanel>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>

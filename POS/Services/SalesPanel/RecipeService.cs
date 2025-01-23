@@ -15,7 +15,7 @@ namespace POS.Services.SalesPanel
             _dbContext = dbContext;
         }
 
-        public async Task<Recipes> GetRecipe(OrderItemDto orderItem)
+        public async Task<Recipe> GetRecipe(OrderItemDto orderItem)
         {
             return (await _dbContext.Recipes
                 .Include(r => r.RecipeIngredients)

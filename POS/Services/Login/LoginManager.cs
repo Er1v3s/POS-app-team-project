@@ -7,12 +7,12 @@ namespace POS.Services.Login
     public class LoginManager
     {
         public static LoginManager Instance { get; } = new LoginManager();
-        public Employees? Employee { get; private set; }
+        public Employee? Employee { get; private set; }
         public bool IsAnySessionActive { get; set; }
         public bool IsAuthenticationOnlyRequired { get; set; }
         public bool SuccessfullyLoggedIn { get; set; }
 
-        public void LogIn(Employees employee)
+        public void LogIn(Employee employee)
         {
             SuccessfullyLoggedIn = true;
             Employee = employee;
