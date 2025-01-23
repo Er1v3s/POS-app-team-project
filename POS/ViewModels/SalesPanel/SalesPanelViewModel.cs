@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reflection.PortableExecutable;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -27,6 +26,7 @@ namespace POS.ViewModels.SalesPanel
         private readonly RecipeService _recipeService;
         private readonly DiscountService _discountService;
         private readonly InvoiceService _invoiceService;
+        private readonly IngredientService _ingredientService;
 
         private const string DefaultPlaceholder = "Wpisz nazwę...";
 
@@ -133,7 +133,8 @@ namespace POS.ViewModels.SalesPanel
             OrderService orderService,
             RecipeService recipeService,
             DiscountService discountService,
-            InvoiceService invoiceService
+            InvoiceService invoiceService,
+            IngredientService ingredientService
             )
         {
             _navigationService = navigationService;
@@ -142,6 +143,7 @@ namespace POS.ViewModels.SalesPanel
             _recipeService = recipeService;
             _discountService = discountService;
             _invoiceService = invoiceService;
+            _ingredientService = ingredientService;
 
             MoveToMainWindowCommand = new RelayCommand(MoveToMainWindow);
             SelectProductCommand = new RelayCommand<Product>(AddProductToOrderItemsCollection);
@@ -253,7 +255,11 @@ namespace POS.ViewModels.SalesPanel
                 var result = await _orderService.HandleOrder(orderDto);
 
                 if (result)
+                {
+                    // this method is disabled for development time
+                    //await _ingredientService.RemoveIngredients(orderDto);
                     ClearOrder();
+                }
             }
             else
             {
