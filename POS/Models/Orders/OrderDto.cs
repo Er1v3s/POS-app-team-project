@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using POS.Models.Invoices;
 
 namespace POS.Models.Orders
 {
@@ -9,5 +10,6 @@ namespace POS.Models.Orders
         public double AmountToPay { get; set; }
         public string PaymentMethod { get; set; }
         public int Discount { get; set; }
+        public InvoiceCustomerDataDto? InvoiceCustomerData { get; set; }
     }
 }

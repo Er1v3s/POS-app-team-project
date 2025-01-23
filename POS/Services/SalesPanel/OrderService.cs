@@ -28,8 +28,8 @@ namespace POS.Services.SalesPanel
                 await SaveHandledOrderInDb(orderDto);
                 return true;
             }
-            else
-                return false;
+
+            return false;
         }
 
         public bool CancelOrder()

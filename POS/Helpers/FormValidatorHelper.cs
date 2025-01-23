@@ -39,44 +39,45 @@ namespace POS.Helpers
 
         public static void ValidateTextBox(object sender, RoutedEventArgs e)
         {
-            TextBox textBox = sender as TextBox;
+            TextBox textBox = (TextBox)sender;
             textBox.BorderThickness = new Thickness(2);
 
-            if (textBox != null)
-            {
-                if (textBox.Text.Length < 1)
-                    textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(174, 75, 89));
-                else
-                    textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(55, 154, 140));
-            }
+            textBox.BorderBrush = textBox.Text.Length < 1 ?
+                new SolidColorBrush(Color.FromRgb(174, 75, 89)) :
+                new SolidColorBrush(Color.FromRgb(55, 154, 140));
         }
 
         public static void ValidateEmailAddress(object sender, RoutedEventArgs e)
         {
-            TextBox textBox = sender as TextBox;
+            TextBox textBox = (TextBox)sender;
             textBox.BorderThickness = new Thickness(2);
 
             if (textBox != null || textBox.Text.Length >= 1)
             {
-                if (IsEmailValid(textBox.Text))
-                    textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(55, 154, 140));
-                else
-                    textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(174, 75, 89));
+                textBox.BorderBrush = IsEmailValid(textBox.Text) ?
+                    new SolidColorBrush(Color.FromRgb(55, 154, 140)) :
+                    new SolidColorBrush(Color.FromRgb(174, 75, 89));
             }
         }
 
         public static void ValidatePhoneNumber(object sender, RoutedEventArgs e)
         {
-            TextBox textBox = sender as TextBox;
+            TextBox textBox = (TextBox)sender;
             textBox.BorderThickness = new Thickness(2);
 
-            if (textBox != null)
-            {
-                if (IsPhoneNumberValid(textBox.Text))
-                    textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(55, 154, 140));
-                else
-                    textBox.BorderBrush = new SolidColorBrush(Color.FromRgb(174, 75, 89));
-            }
+            textBox.BorderBrush = IsPhoneNumberValid(textBox.Text) ?
+                new SolidColorBrush(Color.FromRgb(55, 154, 140)) :
+                new SolidColorBrush(Color.FromRgb(174, 75, 89));
+        }
+
+        public static void ValidateTaxIdentificationNumber(object sender, RoutedEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            textBox.BorderThickness = new Thickness(2);
+
+            textBox.BorderBrush = textBox.Text.Length != 10 ?
+                new SolidColorBrush(Color.FromRgb(174, 75, 89)) :
+                new SolidColorBrush(Color.FromRgb(55, 154, 140));
         }
 
         private static bool IsEmailValid(string email)

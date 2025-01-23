@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using DataAccess;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using POS.Factories;
 using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
@@ -125,11 +126,14 @@ namespace POS
             servicesCollection.AddTransient<DiscountService>();
             servicesCollection.AddTransient<OrderSummaryService>();
             servicesCollection.AddTransient<FinishedOrderService>();
+            servicesCollection.AddScoped<InvoiceService>();
 
             servicesCollection.AddTransient<DiscountWindowViewModel>();
             servicesCollection.AddTransient<OrderSummaryViewModel>();
             servicesCollection.AddTransient<FinishedOrderViewModel>();
             servicesCollection.AddTransient<SalesPanelViewModel>();
+            servicesCollection.AddTransient<InvoiceViewModel>();
+
 
             #endregion
 

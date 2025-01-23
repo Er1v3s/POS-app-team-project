@@ -21,6 +21,7 @@ namespace POS.Views.Windows.SalesPanel
             viewModel.OrderList = orderDto.OrderItemList;
             viewModel.AmountToPayForOrder = orderDto.AmountToPay;
             viewModel.Discount = orderDto.Discount;
+            viewModel.InvoiceCustomerData = orderDto.InvoiceCustomerData;
 
             viewModel.PropertyChanged += (sender, args) =>
             {

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace POS.Models.Invoices
+﻿namespace POS.Models.Invoices
 {
     public class InvoiceCustomerDataDto
     {
-        public int TaxIdentificationNumber { get; set; }
-        public string CustomerName { get; set; }
-        public string CustomerAddress { get; set; }
+        public required string TaxIdentificationNumber { get; set; }
+        public required string CustomerName { get; set; }
+        public required string CustomerAddress { get; set; }
     }
 }

@@ -21,11 +21,11 @@
                 <RowDefinition Height="9*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
 
-            <Border MouseDown="DragWindow" CornerRadius="7,7,0,0" Background="#FF7286D3">
-                <Grid Grid.Row="0">
-
+            <Border MouseDown="DragWindow_OnMouseDown" CornerRadius="7,7,0,0" Background="#FF7286D3">
+                <Grid>
                     <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
                         <TextBlock Text="Podsumowanie" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16"/>
                     </StackPanel>
@@ -36,10 +36,7 @@
                 </Grid>
             </Border>
 
-            <DataGrid ItemsSource="{Binding OrderList}"
-                      Grid.Row="1"
-                      AutoGenerateColumns="False"
-                      CanUserAddRows="False"
+            <DataGrid Grid.Row="1" ItemsSource="{Binding OrderList}"
                       Style="{DynamicResource DataGridStyle3}"
                       RowStyle="{DynamicResource DataGridRowStyle3}"
                       CellStyle="{DynamicResource DataGridCellStyle3}"
@@ -56,6 +53,41 @@
             </DataGrid>
 
             <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding InvoiceCustomerData}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="25,0,25,0">
+                    <TextBlock Text="FAKTURA" Foreground="Red" FontSize="24" Margin="0,0,25,0"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="25,0,25,0">
+                    <TextBlock Text="NIP:" Margin="0,0,25,0"/>
+                    <TextBlock Text="{Binding InvoiceCustomerData.TaxIdentificationNumber}" FontWeight="Bold" Margin="0,0,25,0"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="25,0,25,0">
+                    <TextBlock Text="Nazwa firmy:" Margin="0,0,25,0"/>
+                    <TextBlock Text="{Binding InvoiceCustomerData.CustomerName}" FontWeight="Bold" Margin="0,0,25,0"/>
+                </StackPanel>
+                <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="25,0,25,0">
+                    <TextBlock Text="" Margin="0,0,25,0"/>
+                    <TextBlock Text="{Binding InvoiceCustomerData.CustomerAddress, StringFormat='Adres: {0}'}" FontWeight="Bold" Margin="0,0,25,0"/>
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="3">
                 <Grid.Style>
                     <Style TargetType="Grid">
                         <Style.Triggers>
@@ -69,7 +101,7 @@
                            Foreground="Red" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0"/>
             </Grid>
 
-            <Grid Grid.Row="3">
+            <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="145*"/>
                     <ColumnDefinition Width="455*"/>

@@ -5,7 +5,7 @@ namespace POS.Views.Base
 {
     public class WindowBase : Window
     {
-        protected void DragWindow(object sender, MouseButtonEventArgs e)
+        protected void DragWindow_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
             {

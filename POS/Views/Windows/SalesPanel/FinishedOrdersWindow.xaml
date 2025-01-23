@@ -21,7 +21,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Border CornerRadius="7,7,0,0" Background="#FF7286D3">
+            <Border MouseDown="DragWindow_OnMouseDown" CornerRadius="7,7,0,0" Background="#FF7286D3">
                 <Grid>
                     <Button Command="{Binding CloseWindowBaseCommand}" Width="26" Height="26" Margin="0, 0, 3, 0" HorizontalAlignment="Right" Style="{StaticResource cancelButton}" d:IsLocked="True">
                         <fa:ImageAwesome Icon="Close" Height="13" Foreground="White"/>

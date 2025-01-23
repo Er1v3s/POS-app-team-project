@@ -2,17 +2,20 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using DataAccess.Models;
 using Microsoft.IdentityModel.Tokens;
+using POS.Models.Invoices;
 using POS.Models.Orders;
 using POS.Services;
 using POS.Services.Login;
 using POS.Services.SalesPanel;
 using POS.Utilities.RelayCommands;
 using POS.ViewModels.Base;
+using POS.Views.Windows.SalesPanel;
 
 namespace POS.ViewModels.SalesPanel
 {
@@ -23,6 +26,7 @@ namespace POS.ViewModels.SalesPanel
         private readonly OrderService _orderService;
         private readonly RecipeService _recipeService;
         private readonly DiscountService _discountService;
+        private readonly InvoiceService _invoiceService;
 
         private const string DefaultPlaceholder = "Wpisz nazwę...";
 
@@ -40,6 +44,7 @@ namespace POS.ViewModels.SalesPanel
         private double amountToPayForOrder;
         private double tempAmountToPayForOrder;
         private int discountValue;
+        private InvoiceCustomerDataDto? invoiceCustomerData;
 
         public string LoggedInUserName
         {
@@ -120,13 +125,15 @@ namespace POS.ViewModels.SalesPanel
         public ICommand ShowSavedOrdersCommand { get; }
         public ICommand LoadOrderCommand { get; }
         public ICommand ShowFinishedOrdersCommand { get; }
+        public ICommand AddInvoiceCommand { get; }
 
         public SalesPanelViewModel(
             NavigationService navigationService,
             ProductService productService,
             OrderService orderService,
             RecipeService recipeService,
-            DiscountService discountService
+            DiscountService discountService,
+            InvoiceService invoiceService
             )
         {
             _navigationService = navigationService;
@@ -134,6 +141,7 @@ namespace POS.ViewModels.SalesPanel
             _orderService = orderService;
             _recipeService = recipeService;
             _discountService = discountService;
+            _invoiceService = invoiceService;
 
             MoveToMainWindowCommand = new RelayCommand(MoveToMainWindow);
             SelectProductCommand = new RelayCommand<Product>(AddProductToOrderItemsCollection);
@@ -147,6 +155,7 @@ namespace POS.ViewModels.SalesPanel
             ShowSavedOrdersCommand = new RelayCommand(ShowSavedOrdersView);
             LoadOrderCommand = new RelayCommand<OrderDto>(LoadOrder);
             ShowFinishedOrdersCommand = new RelayCommand(ShowFinishedOrders);
+            AddInvoiceCommand = new RelayCommand(AddInvoice);
 
             loggedInUserName = LoginManager.Instance.GetLoggedInUserFullName();
 
@@ -262,6 +271,7 @@ namespace POS.ViewModels.SalesPanel
                 AmountToPay = AmountToPayForOrder,
                 PaymentMethod = paymentMethod.IsNullOrEmpty() ? String.Empty : paymentMethod,
                 Discount = DiscountValue,
+                InvoiceCustomerData = invoiceCustomerData,
             };
         }
 
@@ -297,6 +307,7 @@ namespace POS.ViewModels.SalesPanel
             DiscountValue = 0;
             tempAmountToPayForOrder = 0;
             placeholder = DefaultPlaceholder;
+            invoiceCustomerData = null;
         }
 
         private void ShowProductCollectionView()
@@ -357,6 +368,15 @@ namespace POS.ViewModels.SalesPanel
         private void ShowFinishedOrders()
         {
             _orderService.LoadFinishedOrdersWindow();
+        }
+
+        private void AddInvoice()
+        {
+            InvoiceWindow invoiceWindow = new();
+            invoiceWindow.ShowDialog();
+
+            if (invoiceWindow.DialogResult == true)
+                invoiceCustomerData = _invoiceService.GetInvoiceCustomerData();
         }
 
         private void RecalculateAmountToPay()

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using POS.Models.Invoices;
 using POS.Models.Orders;
 using POS.Services.SalesPanel;
 using POS.Utilities.RelayCommands;
@@ -16,6 +17,7 @@ namespace POS.ViewModels.SalesPanel
         private List<OrderItemDto> orderList;
         private double amountToPayForOrder;
         private int discount;
+        private InvoiceCustomerDataDto? invoiceCustomerData;
 
         private readonly OrderSummaryService _orderSummaryService;
 
@@ -43,6 +45,12 @@ namespace POS.ViewModels.SalesPanel
             set => SetField(ref discount, value);
         }
 
+        public InvoiceCustomerDataDto? InvoiceCustomerData
+        {
+            get => invoiceCustomerData;
+            set => SetField(ref invoiceCustomerData, value);
+        }
+
         public ICommand FinishOrderCommand { get; }
 
         public OrderSummaryViewModel(OrderSummaryService orderSummaryService)
@@ -54,7 +62,7 @@ namespace POS.ViewModels.SalesPanel
 
         private async Task FinishOrder()
         { 
-            var result = await _orderSummaryService.GenerateBill(orderList, amountToPayForOrder, discount);
+            var result = await _orderSummaryService.GenerateBill(orderList, amountToPayForOrder, discount, invoiceCustomerData);
 
             if(result)
                 DialogResult = true;

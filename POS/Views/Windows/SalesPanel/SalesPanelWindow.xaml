@@ -223,7 +223,7 @@
                                     <ColumnDefinition Width="2*" />
                                 </Grid.ColumnDefinitions>
 
-                                <Button Command="{Binding CancelOrderCommand}" Grid.Column="0" Content="Anuluj" Style="{StaticResource cancelButton}" Click="DeleteCurrentOrder_ButtonClick" Grid.Row="2" d:IsLocked="True" />
+                                <Button Command="{Binding CancelOrderCommand}" Grid.Column="0" Content="Anuluj" Style="{StaticResource cancelButton}" Grid.Row="2" d:IsLocked="True" />
                                 <Button Command="{Binding ShowRecipeCollectionCommand}" Content="Przepisy" Style="{StaticResource recipeButton}" Grid.Column="1" Grid.Row="2" d:IsLocked="True" />
                                 <Button Command="{Binding ShowProductCollectionCommand}" Content="Drinki" Style="{StaticResource payButton}" Grid.Column="2" Grid.Row="2" d:IsLocked="True" />
 
@@ -259,7 +259,7 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
-                <Button Command="{Binding ShowFinishedOrdersCommand}" Grid.Column="0" Style="{StaticResource leftBarButton}" Click="ShowFinishedOrders_ButtonClick">
+                <Button Command="{Binding ShowFinishedOrdersCommand}" Grid.Column="0" Style="{StaticResource leftBarButton}">
                     <fa:ImageAwesome Icon="ListOl" Height="24" Foreground="White"/>
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">
@@ -272,11 +272,11 @@
                     </Button.Resources>
                 </Button>
 
-                <Button Grid.Column="1" Style="{StaticResource leftBarButton}" Click="AddInvoice_ButtonClick">
+                <Button Command="{Binding AddInvoiceCommand}" Grid.Column="1" Style="{StaticResource leftBarButton}">
                     <fa:ImageAwesome Icon="File" Height="24" Foreground="White"/>
                 </Button>
 
-                <Button Command="{Binding ShowSavedOrdersCommand}" Grid.Column="2" Click="ShowOpenOrders_ButtonClick" Style="{StaticResource leftBarButton}">
+                <Button Command="{Binding ShowSavedOrdersCommand}" Grid.Column="2" Style="{StaticResource leftBarButton}">
                     <fa:ImageAwesome Icon="Save" Height="24" Foreground="White"/>
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">
