@@ -1,6 +1,6 @@
 ﻿namespace POS.Models.Invoices
 {
-    public class InvoiceCustomerDataDto
+    public class InvoiceDto
     {
         public required string TaxIdentificationNumber { get; set; }
         public required string CustomerName { get; set; }

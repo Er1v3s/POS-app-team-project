@@ -9,17 +9,13 @@ namespace POS.Views.Windows.SalesPanel
     /// </summary>
     public partial class SalesPanelWindow : Window
     {
-        public int EmployeeId;
-
-        public SalesPanelWindow(int employeeId)
+        public SalesPanelWindow()
         {
             InitializeComponent();
             DataContext = App.ServiceProvider.GetRequiredService<SalesPanelViewModel>();
 
             var viewModel = (SalesPanelViewModel)DataContext;
             viewModel.CloseWindowBaseAction = Close;
-            
-            EmployeeId = employeeId;
         }
     }
 }

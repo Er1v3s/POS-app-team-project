@@ -18,25 +18,30 @@ namespace POS.Services.SalesPanel
             _dbContext = dbContext;
         }
 
-        public async Task<bool> HandleOrder(OrderDto orderDto)
+        //public async Task<bool> HandleOrder(OrderDto orderDto)
+        //{
+        //    var summaryOrderWindow = new OrderSummaryWindow(orderDto);
+        //    summaryOrderWindow.ShowDialog();
+
+        //    if (summaryOrderWindow.DialogResult == true)
+        //    {
+        //        await SaveHandledOrderInDb(orderDto);
+        //        return true;
+        //    }
+
+        //    return false;
+        //}
+
+        public async Task HandleOrderAsync(OrderDto orderDto)
         {
-            var summaryOrderWindow = new OrderSummaryWindow(orderDto);
-            summaryOrderWindow.ShowDialog();
-
-            if (summaryOrderWindow.DialogResult == true)
-            {
-                await SaveHandledOrderInDb(orderDto);
-                return true;
-            }
-
-            return false;
+            await SaveHandledOrderInDb(orderDto);
         }
 
         public bool CancelOrder()
         {
             var result = MessageBox.Show("Anulować zamówienie?", "", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-            if (result == MessageBoxResult.Yes) 
+            if (result == MessageBoxResult.Yes)
                 return true;
 
             return false;

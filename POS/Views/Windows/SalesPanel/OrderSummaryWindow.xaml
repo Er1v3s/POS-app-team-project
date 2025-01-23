@@ -49,7 +49,6 @@
                     <DataGridTextColumn Width="1.5*" Header="Ilosc" Binding="{Binding Amount}"/>
                     <DataGridTextColumn Width="4*" Header="Cena razem" Binding="{Binding TotalPrice}"/>
                 </DataGrid.Columns>
-
             </DataGrid>
 
             <Grid Grid.Row="2">
@@ -63,7 +62,7 @@
                 <Grid.Style>
                     <Style TargetType="Grid">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding InvoiceCustomerData}">
+                            <DataTrigger Binding="{Binding InvoiceData}">
                                 <Setter Property="Visibility" Value="Collapsed"/>
                             </DataTrigger>
                         </Style.Triggers>
@@ -75,15 +74,15 @@
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="25,0,25,0">
                     <TextBlock Text="NIP:" Margin="0,0,25,0"/>
-                    <TextBlock Text="{Binding InvoiceCustomerData.TaxIdentificationNumber}" FontWeight="Bold" Margin="0,0,25,0"/>
+                    <TextBlock Text="{Binding InvoiceData.TaxIdentificationNumber}" FontWeight="Bold" Margin="0,0,25,0"/>
                 </StackPanel>
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="25,0,25,0">
                     <TextBlock Text="Nazwa firmy:" Margin="0,0,25,0"/>
-                    <TextBlock Text="{Binding InvoiceCustomerData.CustomerName}" FontWeight="Bold" Margin="0,0,25,0"/>
+                    <TextBlock Text="{Binding InvoiceData.CustomerName}" FontWeight="Bold" Margin="0,0,25,0"/>
                 </StackPanel>
                 <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="25,0,25,0">
-                    <TextBlock Text="" Margin="0,0,25,0"/>
-                    <TextBlock Text="{Binding InvoiceCustomerData.CustomerAddress, StringFormat='Adres: {0}'}" FontWeight="Bold" Margin="0,0,25,0"/>
+                    <TextBlock Text="Adres:" Margin="0,0,25,0"/>
+                    <TextBlock Text="{Binding InvoiceData.CustomerAddress}" FontWeight="Bold" Margin="0,0,25,0"/>
                 </StackPanel>
             </Grid>
 
@@ -107,25 +106,25 @@
                     <ColumnDefinition Width="455*"/>
                 </Grid.ColumnDefinitions>
 
-                <Grid Grid.Column="1">
-                    <Border Grid.Row="2" CornerRadius="0,0,8,0" Background="#FF7286D3" BorderBrush="Black" BorderThickness="0,1,0,0">
-                        <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="25,0,25,0">
-                            <TextBlock Text="Suma: " Foreground="White" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding AmountToPayForOrder, FallbackValue='0.00', StringFormat={}{0:F2}}" Foreground="White" FontWeight="Bold"/>
-                            <TextBlock Text=" PLN" Foreground="White" FontWeight="Bold"/>
-                        </StackPanel>
-                    </Border>
-                </Grid>
-
-                <Border Grid.Row="2" CornerRadius="0,0,0,8" Grid.Column="0" Background="#FF7286D3" BorderBrush="Black" BorderThickness="0,1,0,0">
-                    <Grid Grid.Row="2" Grid.Column="0" Margin="0,9,0,9">
-                        <Button Command="{Binding FinishOrderCommand}" Grid.Row="2" Grid.Column="0" MaxHeight="32" MaxWidth="120" Margin="25,0,0,0" Style="{StaticResource payButton}">
+                <Border Grid.Column="0"  CornerRadius="0,0,0,8" Background="#FF7286D3" BorderBrush="Black" BorderThickness="0,1,0,0">
+                    <Grid Margin="0,9,0,9">
+                        <Button Command="{Binding FinishOrderCommand}" Grid.Column="0" MaxHeight="32" MaxWidth="120" Margin="25,0,0,0" Style="{StaticResource payButton}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Drukuj" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                             </StackPanel>
                         </Button>
                     </Grid>
                 </Border>
+
+                <Grid Grid.Column="1">
+                    <Border CornerRadius="0,0,8,0" Background="#FF7286D3" BorderBrush="Black" BorderThickness="0,1,0,0">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="25,0,25,0">
+                            <TextBlock Text="Suma: " Foreground="White" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding AmountToPayForOrder, FallbackValue='0.00', StringFormat={}{0:F2}}" Foreground="White" FontWeight="Bold"/>
+                            <TextBlock Text=" PLN" Foreground="White" FontWeight="Bold"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
             </Grid>
 
         </Grid>

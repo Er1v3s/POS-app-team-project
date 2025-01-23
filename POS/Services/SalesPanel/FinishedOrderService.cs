@@ -16,7 +16,7 @@ namespace POS.Services.SalesPanel
             _dbContext = dbContext;
         }
 
-        public async Task<List<OrderHistoryDto>> GetFinishedOrders()
+        public async Task<List<OrderHistoryDto>> GetFinishedOrdersAsync()
         {
             List<OrderHistoryDto> finishedOrders = new();
 

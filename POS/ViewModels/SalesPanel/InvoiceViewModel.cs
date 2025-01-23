@@ -41,19 +41,19 @@ namespace POS.ViewModels.SalesPanel
             set => SetField(ref customerAddress, value);
         }
 
-        public ICommand SaveInvoiceCommand { get; }
+        public ICommand SetInvoiceDataCommand { get; }
 
         public InvoiceViewModel(InvoiceService invoiceService)
         {
             _invoiceService = invoiceService;
 
-            SaveInvoiceCommand = new RelayCommand(SaveInvoice);
+            SetInvoiceDataCommand = new RelayCommand(SetInvoiceData);
         }
 
-        private void SaveInvoice()
+        private void SetInvoiceData()
         {
-            var invoiceCustomerData = CreateInvoiceCustomerDataObject();
-            var result = _invoiceService.ValidateAndSaveInvoice(invoiceCustomerData);
+            var invoiceDto = CreateInvoiceDto();
+            var result = _invoiceService.ValidateAndSetInvoice(invoiceDto);
 
             if (result)
                 DialogResult = true;
@@ -61,9 +61,9 @@ namespace POS.ViewModels.SalesPanel
                 MessageBox.Show("Walidacja nie przebiegła poprawnie");
         }
 
-        private InvoiceCustomerDataDto CreateInvoiceCustomerDataObject()
+        private InvoiceDto CreateInvoiceDto()
         {
-            return new InvoiceCustomerDataDto()
+            return new InvoiceDto()
             {
                 TaxIdentificationNumber = taxIdentificationNumber,
                 CustomerName = customerName,

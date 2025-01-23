@@ -23,7 +23,7 @@
             </Grid.RowDefinitions>
 
             <Border MouseDown="DragWindow_OnMouseDown" CornerRadius="7,7,0,0" Background="#FF7286D3">
-                <Grid Grid.Row="0">
+                <Grid>
                     <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
                         <TextBlock Text="Faktura" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16"/>
                     </StackPanel>
@@ -58,7 +58,7 @@
             </Grid>
 
             <Grid Grid.Row="2">
-                <Button Command="{Binding SaveInvoiceCommand}" Style="{StaticResource payButton}">
+                <Button Command="{Binding SetInvoiceDataCommand}" Style="{StaticResource payButton}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Przypisz fakturę do zamówienia" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                     </StackPanel>

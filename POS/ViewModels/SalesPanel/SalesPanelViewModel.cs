@@ -44,7 +44,7 @@ namespace POS.ViewModels.SalesPanel
         private double amountToPayForOrder;
         private double tempAmountToPayForOrder;
         private int discountValue;
-        private InvoiceCustomerDataDto? invoiceCustomerData;
+        private InvoiceDto? invoiceCustomerData;
 
         public string LoggedInUserName
         {
@@ -155,7 +155,7 @@ namespace POS.ViewModels.SalesPanel
             PayForOrderCommand = new RelayCommandAsync<string>(PayForOrder);
             ApplyDiscountCommand = new RelayCommand(ApplyDiscount);
             ShowSavedOrdersCommand = new RelayCommand(ShowSavedOrdersView);
-            LoadOrderCommand = new RelayCommand<OrderDto>(LoadOrder);
+            LoadOrderCommand = new RelayCommand<OrderDto>(LoadSavedOrder);
             ShowFinishedOrdersCommand = new RelayCommand(ShowFinishedOrders);
             AddInvoiceCommand = new RelayCommand(AddInvoice);
 
@@ -196,7 +196,7 @@ namespace POS.ViewModels.SalesPanel
 
         private void HandlePlaceholder()
         {
-            Placeholder = string.IsNullOrEmpty(SearchPhrase) || SearchPhrase == DefaultPlaceholder
+            Placeholder = SearchPhrase.IsNullOrEmpty() || SearchPhrase == DefaultPlaceholder
                 ? DefaultPlaceholder
                 : string.Empty;
         }
@@ -249,39 +249,102 @@ namespace POS.ViewModels.SalesPanel
 
         private async Task PayForOrder(string paymentMethod)
         {
-            if (orderItemCollection.Any())
-            {
-                var orderDto = CreateOrderDto(paymentMethod);
-                var result = await _orderService.HandleOrder(orderDto);
+            var orderDto = CreateOrderDto(paymentMethod);
 
-                if (result)
+            var summaryOrderWindow = new OrderSummaryWindow(orderDto);
+            summaryOrderWindow.ShowDialog();
+
+            if (summaryOrderWindow.DialogResult == true)
+            {
+                try
                 {
-                    // this method is disabled for development time
-                    //await _ingredientService.RemoveIngredients(orderDto);
+                    await _orderService.HandleOrderAsync(orderDto);
                     ClearOrder();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             else
-            {
-                MessageBox.Show("Zamówienie jest puste, brak możliwości dokonania płatności", "Ostrzeżenie",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+                MessageBox.Show("Zamówienie jest puste, brak możliwości dokanania płatności", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        private OrderDto CreateOrderDto(string paymentMethod)
+        private OrderDto CreateOrderDto(string paymentMethod = "")
         {
             return new OrderDto
             {
                 EmployeeId = LoginManager.Instance.Employee!.EmployeeId,
                 OrderItemList = orderItemCollection.ToList(),
-                AmountToPay = AmountToPayForOrder,
-                PaymentMethod = paymentMethod.IsNullOrEmpty() ? String.Empty : paymentMethod,
-                Discount = DiscountValue,
-                InvoiceCustomerData = invoiceCustomerData,
+                AmountToPay = amountToPayForOrder,
+                PaymentMethod = paymentMethod,
+                Discount = discountValue,
+                InvoiceData = invoiceCustomerData,
             };
         }
 
-        private void LoadOrder(OrderDto orderDto)
+        private void SaveOrder()
+        {
+            var orderDto = CreateOrderDto();
+            OrderCollection.Add(orderDto);
+            ClearOrder();
+        }
+
+        private void CancelOrder()
+        {
+            var result = MessageBox.Show("Anulować zamówienie?", "", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                ClearOrder();
+
+                if(!orderCollection.Any())
+                    SwitchViewToCollectionFromArgument(productCollection);
+            }
+        }
+
+        private void ApplyDiscount()
+        {
+            DiscountWindow discountWindow = new();
+            discountWindow.ShowDialog();
+
+            if (discountWindow.DialogResult == true)
+            {
+                DiscountValue = _discountService.DiscountValue;
+                RecalculateAmountToPay();
+            }
+        }
+        
+        private void AddInvoice()
+        {
+            InvoiceWindow invoiceWindow = new();
+            invoiceWindow.ShowDialog();
+
+            if (invoiceWindow.DialogResult == true)
+                invoiceCustomerData = _invoiceService.GetInvoiceCustomerData();
+        }
+
+        private void ClearOrder()
+        {
+            orderItemCollection.Clear();
+            recipeCollection.Clear();
+            AmountToPayForOrder = 0;
+            DiscountValue = 0;
+            tempAmountToPayForOrder = 0;
+            placeholder = DefaultPlaceholder;
+            invoiceCustomerData = null;
+            RecalculateAmountToPay();
+        }
+
+        private void RecalculateAmountToPay()
+        {
+            if (DiscountValue > 0)
+                AmountToPayForOrder = tempAmountToPayForOrder * (1 - DiscountValue / 100d);
+            else
+                AmountToPayForOrder = tempAmountToPayForOrder;
+        }
+
+        private void LoadSavedOrder(OrderDto orderDto)
         {
             foreach (var dto in orderDto.OrderItemList)
             {
@@ -296,24 +359,9 @@ namespace POS.ViewModels.SalesPanel
             SwitchViewToCollectionFromArgument(productCollection);
         }
 
-        private void CancelOrder()
+        private void ShowFinishedOrders()
         {
-            var result = _orderService.CancelOrder();
-
-            if(result)
-                ClearOrder();
-        }
-
-        private void ClearOrder()
-        {
-            orderItemCollection.Clear();
-            recipeCollection.Clear();
-            ShowProductCollectionView();
-            AmountToPayForOrder = 0;
-            DiscountValue = 0;
-            tempAmountToPayForOrder = 0;
-            placeholder = DefaultPlaceholder;
-            invoiceCustomerData = null;
+            _orderService.LoadFinishedOrdersWindow();
         }
 
         private void ShowProductCollectionView()
@@ -327,7 +375,6 @@ namespace POS.ViewModels.SalesPanel
             if (!orderItemCollection.IsNullOrEmpty())
             {
                 recipeCollection.Clear();
-
                 SwitchViewToCollectionFromArgument(recipeCollection);
 
                 foreach (var product in orderItemCollection)
@@ -338,14 +385,6 @@ namespace POS.ViewModels.SalesPanel
             }
             else
                 MessageBox.Show("Brak produktów do wyświetlenia przepisu");
-        }
-
-        private void ApplyDiscount()
-        {
-            var discount = _discountService.SetDiscount();
-            DiscountValue = discount;
-
-            RecalculateAmountToPay();
         }
 
         private void ShowSavedOrdersView()
@@ -360,37 +399,8 @@ namespace POS.ViewModels.SalesPanel
                 if (orderCollection.Any())
                     SwitchViewToCollectionFromArgument(orderCollection);
                 else
-                    MessageBox.Show("Brak zamówień", "", MessageBoxButton.OK, MessageBoxImage.Stop);
+                    MessageBox.Show("Brak zamówień do wyświetlenia");
             }
-        }
-
-        private void SaveOrder()
-        {
-            var orderDto = CreateOrderDto(String.Empty);
-            OrderCollection.Add(orderDto);
-            ClearOrder();
-        }
-
-        private void ShowFinishedOrders()
-        {
-            _orderService.LoadFinishedOrdersWindow();
-        }
-
-        private void AddInvoice()
-        {
-            InvoiceWindow invoiceWindow = new();
-            invoiceWindow.ShowDialog();
-
-            if (invoiceWindow.DialogResult == true)
-                invoiceCustomerData = _invoiceService.GetInvoiceCustomerData();
-        }
-
-        private void RecalculateAmountToPay()
-        {
-            if (DiscountValue > 0)
-                AmountToPayForOrder = tempAmountToPayForOrder * (1 - DiscountValue / 100d);
-            else
-                AmountToPayForOrder = tempAmountToPayForOrder;
         }
 
         private void SwitchViewToCollectionFromArgument<T>(ObservableCollection<T> collection)

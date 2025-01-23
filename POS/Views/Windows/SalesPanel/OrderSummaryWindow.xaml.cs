@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using POS.Models.Orders;
 using POS.ViewModels.SalesPanel;
 using POS.Views.Base;
@@ -21,7 +20,7 @@ namespace POS.Views.Windows.SalesPanel
             viewModel.OrderList = orderDto.OrderItemList;
             viewModel.AmountToPayForOrder = orderDto.AmountToPay;
             viewModel.Discount = orderDto.Discount;
-            viewModel.InvoiceCustomerData = orderDto.InvoiceCustomerData;
+            viewModel.InvoiceData = orderDto.InvoiceData;
 
             viewModel.PropertyChanged += (sender, args) =>
             {

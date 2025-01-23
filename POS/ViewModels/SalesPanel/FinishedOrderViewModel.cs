@@ -27,7 +27,7 @@ namespace POS.ViewModels.SalesPanel
 
         private async Task GenerateOrderHistory()
         {
-            var orderHistory =  await _finishedOrderService.GetFinishedOrders();
+            var orderHistory =  await _finishedOrderService.GetFinishedOrdersAsync();
 
             FinishedOrders = orderHistory;
         }

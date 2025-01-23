@@ -20,7 +20,7 @@ namespace POS.Services.SalesPanel
             SpacingAfter = 10f,
         };
 
-        public async Task<bool> GenerateBill(List<OrderItemDto> orderList, double amountToPayForOrder, int discount, InvoiceCustomerDataDto? invoiceCustomerData)
+        public async Task<bool> GenerateBill(List<OrderItemDto> orderList, double amountToPayForOrder, int discount, InvoiceDto? invoiceData)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace POS.Services.SalesPanel
                 if (result == true)
                 {
                     string filePath = saveFileDialog.FileName;
-                    await CreatePdfDocument(filePath, orderList, amountToPayForOrder, discount, invoiceCustomerData);
+                    await CreatePdfDocument(filePath, orderList, amountToPayForOrder, discount, invoiceData);
 
                     MessageBox.Show("Rachunek został wygenrowany.");
                     return true;
@@ -49,17 +49,7 @@ namespace POS.Services.SalesPanel
             }
         }
 
-        private Paragraph CreateDateTime()
-        {
-            Paragraph dateTime = new (DateTime.Now.ToString("G"))
-            {
-                Alignment = Element.ALIGN_RIGHT
-            };
-
-            return dateTime;
-        }
-
-        private async Task CreatePdfDocument(string filePath, List<OrderItemDto> orderList, double amountToPayForOrder, int discount, InvoiceCustomerDataDto? invoiceCustomerDataDto = null)
+        private async Task CreatePdfDocument(string filePath, List<OrderItemDto> orderList, double amountToPayForOrder, int discount, InvoiceDto? invoiceDto = null)
         {
             Document pdfDoc = new (PageSize.A4);
 
@@ -78,10 +68,10 @@ namespace POS.Services.SalesPanel
             pdfDoc.Add(pdfTitle);
             pdfDoc.Add(lineSpacer);
 
-            if (invoiceCustomerDataDto != null)
+            if (invoiceDto != null)
             {
                 var pdfInvoiceInfo = CreateInvoiceInfo();
-                var pdfInvoiceData = CreateInvoiceClientInfo(invoiceCustomerDataDto);
+                var pdfInvoiceData = CreateInvoiceClientInfo(invoiceDto);
 
                 pdfDoc.Add(pdfInvoiceInfo);
                 pdfDoc.Add(pdfInvoiceData);
@@ -99,6 +89,16 @@ namespace POS.Services.SalesPanel
 
             pdfDoc.Add(pdfSummary);
             pdfDoc.Close();
+        }
+
+        private Paragraph CreateDateTime()
+        {
+            Paragraph dateTime = new(DateTime.Now.ToString("G"))
+            {
+                Alignment = Element.ALIGN_RIGHT
+            };
+
+            return dateTime;
         }
 
         private Paragraph CreatePdfTitle()
@@ -125,7 +125,7 @@ namespace POS.Services.SalesPanel
             return pdfInvoiceInfo;
         }
 
-        private PdfPTable CreateInvoiceClientInfo(InvoiceCustomerDataDto invoiceCustomerDataDto)
+        private PdfPTable CreateInvoiceClientInfo(InvoiceDto invoiceDto)
         {
             PdfPTable clientInfoTable = new (new[] { .75f, 2f })
             {
@@ -135,11 +135,11 @@ namespace POS.Services.SalesPanel
             };
 
             clientInfoTable.AddCell("NIP");
-            clientInfoTable.AddCell(invoiceCustomerDataDto.TaxIdentificationNumber);
+            clientInfoTable.AddCell(invoiceDto.TaxIdentificationNumber);
             clientInfoTable.AddCell("Nazwa");
-            clientInfoTable.AddCell(invoiceCustomerDataDto.CustomerName);
+            clientInfoTable.AddCell(invoiceDto.CustomerName);
             clientInfoTable.AddCell("Adres");
-            clientInfoTable.AddCell(invoiceCustomerDataDto.CustomerAddress);
+            clientInfoTable.AddCell(invoiceDto.CustomerAddress);
 
             return clientInfoTable;
         }

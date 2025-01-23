@@ -1,32 +1,31 @@
 ﻿using POS.Models.Invoices;
-using POS.Views.Windows.SalesPanel;
 
 namespace POS.Services.SalesPanel
 {
     public class InvoiceService
     {
-        private InvoiceCustomerDataDto? _invoiceCustomerData;
+        private InvoiceDto? invoiceData;
 
-        public InvoiceCustomerDataDto? GetInvoiceCustomerData()
+        public InvoiceDto? GetInvoiceCustomerData()
         {
-            return _invoiceCustomerData;
+            return invoiceData;
         }
 
-        public bool ValidateAndSaveInvoice(InvoiceCustomerDataDto invoiceCustomerData)
+        public bool ValidateAndSetInvoice(InvoiceDto invoiceDto)
         {
-            var result = ValidateInvoiceCustomerData(invoiceCustomerData);
+            var result = ValidateInvoiceData(invoiceDto);
 
             if (result)
-                _invoiceCustomerData = invoiceCustomerData;
+                invoiceData = invoiceDto;
 
             return result;
         }
 
-        private bool ValidateInvoiceCustomerData(InvoiceCustomerDataDto invoiceCustomerData)
+        private bool ValidateInvoiceData(InvoiceDto invoiceCustomerDto)
         {
-            return invoiceCustomerData.TaxIdentificationNumber.Length == 10
-                   && invoiceCustomerData.CustomerName.Length > 0
-                   && invoiceCustomerData.CustomerAddress.Length > 0;
+            return invoiceCustomerDto.TaxIdentificationNumber.Length == 10
+                   && invoiceCustomerDto.CustomerName.Length > 0
+                   && invoiceCustomerDto.CustomerAddress.Length > 0;
         }
     }
 }

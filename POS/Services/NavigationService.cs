@@ -31,7 +31,7 @@ namespace POS.Services
                 LoginManager.Instance.IsAuthenticationOnlyRequired = false;
                 LoginManager.Instance.SuccessfullyLoggedIn = false;
 
-                var salesPanel = new SalesPanelWindow(LoginManager.Instance.Employee.EmployeeId);
+                var salesPanel = new SalesPanelWindow();
                 salesPanel.Show();
             }
         }
