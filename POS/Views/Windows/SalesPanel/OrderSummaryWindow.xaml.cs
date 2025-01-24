@@ -17,6 +17,7 @@ namespace POS.Views.Windows.SalesPanel
 
             var viewModel = (OrderSummaryViewModel)DataContext;
             viewModel.CloseWindowBaseAction = Close;
+            viewModel.OrderDto = orderDto;
             viewModel.OrderList = orderDto.OrderItemList;
             viewModel.AmountToPayForOrder = orderDto.AmountToPay;
             viewModel.Discount = orderDto.Discount;
@@ -30,4 +31,3 @@ namespace POS.Views.Windows.SalesPanel
         }
     }
 }
-

@@ -251,19 +251,22 @@ namespace POS.ViewModels.SalesPanel
         {
             var orderDto = CreateOrderDto(paymentMethod);
 
-            var summaryOrderWindow = new OrderSummaryWindow(orderDto);
-            summaryOrderWindow.ShowDialog();
-
-            if (summaryOrderWindow.DialogResult == true)
+            if (orderItemCollection.Any())
             {
-                try
+                var summaryOrderWindow = new OrderSummaryWindow(orderDto);
+                summaryOrderWindow.ShowDialog();
+
+                if (summaryOrderWindow.DialogResult == true)
                 {
-                    await _orderService.HandleOrderAsync(orderDto);
-                    ClearOrder();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
+                    try
+                    {
+                        await _orderService.HandleOrderAsync(orderDto);
+                        ClearOrder();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
             }
             else
@@ -379,7 +382,7 @@ namespace POS.ViewModels.SalesPanel
 
                 foreach (var product in orderItemCollection)
                 {
-                    var recipe = await _recipeService.GetRecipe(product);
+                    var recipe = await _recipeService.GetRecipeAsync(product);
                     recipeCollection.Add(recipe);
                 }
             }

@@ -10,12 +10,12 @@ namespace POS.Services.SalesPanel
     public class ProductService
     {
         private readonly AppDbContext _dbContext;
-        private readonly List<Product> _productList;
+        private readonly List<Product> productList;
 
         public ProductService(AppDbContext dbContext)
         {
             _dbContext = dbContext;
-            _productList = Task.Run(GetAllProductsFromDb).Result;
+            productList = Task.Run(GetAllProductsFromDb).Result;
         }
 
         private async Task<List<Product>> GetAllProductsFromDb()
@@ -25,17 +25,17 @@ namespace POS.Services.SalesPanel
 
         public List<Product> LoadAllProducts()
         {
-            return _productList.ToList();
+            return productList.ToList();
         }
 
         public List<Product> LoadProductsByCategory(object category)
         {
-            return _productList.Where(p => p.Category == category.ToString()).ToList();
+            return productList.Where(p => p.Category == category.ToString()).ToList();
         }
 
         public List<Product> LoadProductsBySearch(string searchText)
         {
-            return _productList.Where(p => p.ProductName.ToLower().Contains(searchText.ToLower())).ToList();
+            return productList.Where(p => p.ProductName.ToLower().Contains(searchText.ToLower())).ToList();
         }
     }
 }

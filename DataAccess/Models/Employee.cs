@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DataAccess.Models
+﻿namespace DataAccess.Models
 {
     public class Employee
     {

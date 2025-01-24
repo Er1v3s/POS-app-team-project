@@ -14,10 +14,12 @@ namespace POS.ViewModels.SalesPanel
     {
         private bool dialogResult;
 
+        private OrderDto orderDto;
         private List<OrderItemDto> orderList = new();
         private double amountToPayForOrder;
         private int discount;
         private InvoiceDto? invoiceData;
+
 
         private readonly OrderSummaryService _orderSummaryService;
 
@@ -25,6 +27,12 @@ namespace POS.ViewModels.SalesPanel
         {
             get => dialogResult;
             set => SetField(ref dialogResult, value);
+        }
+
+        public OrderDto OrderDto
+        {
+            get => orderDto;
+            set => SetField(ref orderDto, value);
         }
 
         public List<OrderItemDto> OrderList
@@ -62,7 +70,7 @@ namespace POS.ViewModels.SalesPanel
 
         private async Task FinishOrder()
         { 
-            var result = await _orderSummaryService.GenerateBill(orderList, amountToPayForOrder, discount, invoiceData);
+            var result = await _orderSummaryService.GenerateBill(orderDto);
 
             if(result)
                 DialogResult = true;

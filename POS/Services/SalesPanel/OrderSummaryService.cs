@@ -20,7 +20,7 @@ namespace POS.Services.SalesPanel
             SpacingAfter = 10f,
         };
 
-        public async Task<bool> GenerateBill(List<OrderItemDto> orderList, double amountToPayForOrder, int discount, InvoiceDto? invoiceData)
+        public async Task<bool> GenerateBill(OrderDto orderDto)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace POS.Services.SalesPanel
                 if (result == true)
                 {
                     string filePath = saveFileDialog.FileName;
-                    await CreatePdfDocument(filePath, orderList, amountToPayForOrder, discount, invoiceData);
+                    await CreatePdfDocument(filePath, orderDto);
 
                     MessageBox.Show("Rachunek został wygenrowany.");
                     return true;
@@ -49,7 +49,7 @@ namespace POS.Services.SalesPanel
             }
         }
 
-        private async Task CreatePdfDocument(string filePath, List<OrderItemDto> orderList, double amountToPayForOrder, int discount, InvoiceDto? invoiceDto = null)
+        private async Task CreatePdfDocument(string filePath, OrderDto orderDto)
         {
             Document pdfDoc = new (PageSize.A4);
 
@@ -60,18 +60,18 @@ namespace POS.Services.SalesPanel
 
             var pdfDateTime = CreateDateTime();
             var pdfTitle = CreatePdfTitle();
-            var pdfPTable = CreatePdfTable(orderList);
-            var pdfDiscount = CreateDiscountRow(discount);
-            var pdfSummary = CreateOrderSummary(amountToPayForOrder);
+            var pdfPTable = CreatePdfTable(orderDto.OrderItemList);
+            var pdfDiscount = CreateDiscountRow(orderDto.Discount);
+            var pdfSummary = CreateOrderSummary(orderDto.AmountToPay);
 
             pdfDoc.Add(pdfDateTime);
             pdfDoc.Add(pdfTitle);
             pdfDoc.Add(lineSpacer);
 
-            if (invoiceDto != null)
+            if (orderDto.InvoiceData != null)
             {
                 var pdfInvoiceInfo = CreateInvoiceInfo();
-                var pdfInvoiceData = CreateInvoiceClientInfo(invoiceDto);
+                var pdfInvoiceData = CreateInvoiceClientInfo(orderDto.InvoiceData);
 
                 pdfDoc.Add(pdfInvoiceInfo);
                 pdfDoc.Add(pdfInvoiceData);
@@ -81,7 +81,7 @@ namespace POS.Services.SalesPanel
             pdfDoc.Add(pdfPTable);
             pdfDoc.Add(lineSpacer);
 
-            if (discount != 0)
+            if (orderDto.Discount != 0)
             {
                 pdfDoc.Add(lineSpacer);
                 pdfDoc.Add(pdfDiscount);
