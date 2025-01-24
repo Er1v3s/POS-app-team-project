@@ -1,6 +1,6 @@
 ﻿namespace POS.Models.Warehouse
 {
-    class DeliveryItemDto
+    public class DeliveryItemDto
     {
         public string Name { get; set; }
         public int Quantity { get; set; }

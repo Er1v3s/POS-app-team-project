@@ -3,13 +3,8 @@ using POS.Helpers;
 
 namespace POS.Views.Base
 {
-    public abstract class FormInputWindow : Window
+    public abstract class FormInputWindow : WindowBase
     {
-        protected FormInputWindow()
-        {
-            MouseLeftButtonDown += (sender, e) => DragMove();
-        }
-
         protected void FormInput_LostFocus(object sender, RoutedEventArgs e)
         {
             FormValidatorHelper.ValidateTextBox(sender, e);
@@ -23,6 +18,11 @@ namespace POS.Views.Base
         protected void PhoneNumberFormInput_LostFocus(object sender, RoutedEventArgs e)
         {
             FormValidatorHelper.ValidatePhoneNumber(sender, e);
+        }
+
+        protected void TaxIdentificationNumberFormInput_LostFocus(object sender, RoutedEventArgs e)
+        {
+            FormValidatorHelper.ValidateTaxIdentificationNumber(sender, e);
         }
     }
 }

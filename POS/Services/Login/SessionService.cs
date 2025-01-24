@@ -17,23 +17,23 @@ namespace POS.Services.Login
             _dbContext = dbContext;
         }
 
-        public async Task StartSession(Employees employee)
+        public async Task StartSessionAsync(Employee employee)
         {
             if (!employee.IsUserLoggedIn)
-                await CreateNewSession(employee);
+                await CreateNewSessionAsync(employee);
         }
 
-        public async Task FinishSession(Employees employee)
+        public async Task FinishSessionAsync(Employee employee)
         {
             if (employee.IsUserLoggedIn)
-                await FinishExistedSession(employee);
+                await FinishExistedSessionAsync(employee);
 
             LoginManager.Instance.LogOut();
         }
 
-        public async Task<ObservableCollection<EmployeeWorkSession>> LoadSessions()
+        public async Task<ObservableCollection<EmployeeWorkSession>> LoadSessionsAsync()
         {
-            var sessionList = new ObservableCollection<EmployeeWorkSession>();
+            ObservableCollection<EmployeeWorkSession> sessionList = new();
 
             var sessions = await _dbContext.EmployeeWorkSession.ToListAsync();
 
@@ -57,14 +57,14 @@ namespace POS.Services.Login
             return sessionList;
         }
 
-        public async Task<bool> CheckForActiveSessions()
+        public async Task<bool> CheckForActiveSessionsAsync()
         {
             var sessions = await _dbContext.EmployeeWorkSession.FirstOrDefaultAsync(s => s.WorkingTimeTo == null);
 
             return LoginManager.Instance.IsAnySessionActive = sessions != null;
         }
 
-        private async Task CreateNewSession(Employees employee)
+        private async Task CreateNewSessionAsync(Employee employee)
         {
             employee.IsUserLoggedIn = true;
             LoginManager.Instance.IsAnySessionActive = true;
@@ -82,7 +82,7 @@ namespace POS.Services.Login
             await _dbContext.SaveChangesAsync();
         }
 
-        private async Task FinishExistedSession(Employees employee)
+        private async Task FinishExistedSessionAsync(Employee employee)
         {
             var employeeWorkSession = await _dbContext.EmployeeWorkSession
                     .Where(e => e.WorkingTimeTo == null)
@@ -95,7 +95,7 @@ namespace POS.Services.Login
                 await _dbContext.SaveChangesAsync();
             }
 
-            await CheckForActiveSessions();
+            await CheckForActiveSessionsAsync();
         }
     }
 }

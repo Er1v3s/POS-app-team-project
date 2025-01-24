@@ -15,7 +15,7 @@ namespace POS.ViewModels.AdminFunctionsPanel
         private readonly AdminFunctionsService _adminFunctionsService;
 
         private EmployeeInfoDto selectedEmployee;
-        private Employees selectedEmployeeFullData;
+        private Employee selectedEmployeeFullData;
 
         public ICommand EditEmployeeCommand { get; }
         public ICommand LoadSelectedEmployeeDataCommand;
@@ -35,7 +35,7 @@ namespace POS.ViewModels.AdminFunctionsPanel
             try
             {
                 EditEmployeeData();
-                await _adminFunctionsService.EditEmployee(selectedEmployeeFullData);
+                await _adminFunctionsService.EditEmployeeAsync(selectedEmployeeFullData);
                 CloseWindowAction?.Invoke();
             }
             catch (Exception ex)
@@ -63,13 +63,13 @@ namespace POS.ViewModels.AdminFunctionsPanel
 
         private async Task LoadSelectedEmployeeData()
         {
-            var employee = await _adminFunctionsService.LoadEmployeeData(selectedEmployee);
+            var employee = await _adminFunctionsService.LoadEmployeeDataAsync(selectedEmployee);
 
             selectedEmployeeFullData = employee;
             SetLoadedEmployeeDataInForm(employee);
         }
 
-        private void SetLoadedEmployeeDataInForm(Employees employeeToUpdate)
+        private void SetLoadedEmployeeDataInForm(Employee employeeToUpdate)
         {
             FirstName = employeeToUpdate.FirstName;
             LastName = employeeToUpdate.LastName;

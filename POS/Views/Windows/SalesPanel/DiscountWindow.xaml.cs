@@ -1,35 +1,27 @@
-﻿using System.Windows;
-using System.Windows.Input;
+﻿using Microsoft.Extensions.DependencyInjection;
+using POS.ViewModels.SalesPanel;
+using POS.Views.Base;
 
 namespace POS.Views.Windows.SalesPanel
 {
     /// <summary>
     /// Logika interakcji dla klasy DiscountWindow.xaml
     /// </summary>
-    public partial class DiscountWindow : Window
+    public partial class DiscountWindow : WindowBase
     {
         public DiscountWindow()
         {
             InitializeComponent();
-        }
+            DataContext = App.ServiceProvider.GetRequiredService<DiscountWindowViewModel>();
 
-        private void ApplyDiscount_ButtonClick(object sender, RoutedEventArgs e)
-        {
-            DialogResult = true;
-            Close();
-        }
+            var viewModel = (DiscountWindowViewModel)DataContext;
+            viewModel.CloseWindowBaseAction = Close;
 
-        private void DragWindow(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
+            viewModel.PropertyChanged += (sender, args) =>
             {
-                this.DragMove();
-            }
-        }
-
-        private void CloseWindow_ButtonClick(object sender, RoutedEventArgs e)
-        {
-            this.Close();
+                if (args.PropertyName == nameof(viewModel.DialogResult))
+                    DialogResult = viewModel.DialogResult;
+            };
         }
     }
 }

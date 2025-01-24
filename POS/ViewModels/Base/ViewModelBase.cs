@@ -1,12 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
+using POS.Utilities.RelayCommands;
 
 namespace POS.ViewModels.Base
 {
     public class ViewModelBase : INotifyPropertyChanged
     {
+        public Action? CloseWindowBaseAction;
+        public ICommand CloseWindowBaseCommand => new RelayCommand(CloseWindowBaseAction!);
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

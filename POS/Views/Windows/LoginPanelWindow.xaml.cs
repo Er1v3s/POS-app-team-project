@@ -1,21 +1,21 @@
 ﻿using System.Windows;
-using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
 using POS.Services.Login;
 using POS.ViewModels.StartFinishWork;
+using POS.Views.Base;
 using POS.Views.UserControls.LoginPanelWindow;
 
 namespace POS.Views.Windows
 {
-    public partial class LoginPanelWindow : Window
+    public partial class LoginPanelWindow : WindowBase
     {
-        private readonly string uri;
-        public LoginPanelWindow(string uri = "")
+        public LoginPanelWindow()
         {
-            this.uri = uri;
-
             InitializeComponent();
             DataContext = App.ServiceProvider.GetRequiredService<LoginPanelViewModel>();
+            
+            var viewModel = (LoginPanelViewModel)DataContext;
+            viewModel.CloseWindowBaseAction = Close;
         }
 
         private void LogIn_ButtonClick(object sender, RoutedEventArgs e)
@@ -37,14 +37,6 @@ namespace POS.Views.Windows
                     startFinishWork.StartWork.Click += CloseWindow_ButtonClick;
                     startFinishWork.FinishWork.Click += CloseWindow_ButtonClick;
                 }
-            }
-        }
-
-        private void DragWindow(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                this.DragMove();
             }
         }
 

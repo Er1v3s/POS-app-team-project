@@ -26,12 +26,12 @@ namespace DbSeeder
             await GeneratePayment(dbContext, order);
         }
 
-        private static async Task<Orders> GenerateOrder(AppDbContext dbContext)
+        private static async Task<Order> GenerateOrder(AppDbContext dbContext)
         {
             int employeeId = random.Next(1, 4);
             DateTime randomDate = Randomizer.GenerateAlmostRandomDateTime();
 
-            Orders order = new Orders
+            Order order = new Order
             {
                 EmployeeId = employeeId,
                 OrderTime = randomDate,
@@ -44,16 +44,16 @@ namespace DbSeeder
             return order;
         }
 
-        private static async Task GenerateOrderItems(AppDbContext dbContext, Orders order)
+        private static async Task GenerateOrderItems(AppDbContext dbContext, Order order)
         {
             int productSum = Randomizer.GenerateAlmostRandomInt();
 
             while (productSum > 0)
             {
                 int quantity = Randomizer.GenerateAlmostRandomInt();
-                Products product = Randomizer.GenerateAlmostRandomProduct(dbContext, order.DayOfWeek);
+                Product product = Randomizer.GenerateAlmostRandomProduct(dbContext, order.DayOfWeek);
 
-                OrderItems orderItem = new OrderItems 
+                OrderItem orderItem = new OrderItem 
                 {
                     OrderId = order.OrderId,
                     ProductId = product.ProductId,
@@ -68,7 +68,7 @@ namespace DbSeeder
             await dbContext.SaveChangesAsync();
         }
 
-        private static async Task GeneratePayment(AppDbContext dbContext, Orders order)
+        private static async Task GeneratePayment(AppDbContext dbContext, Order order)
         {
             double amount = 0;
             string paymentMethod = Randomizer.GenerateRandomPaymentMethod();
@@ -77,7 +77,7 @@ namespace DbSeeder
 
             foreach (var orderItem in orderItems)
             {
-                var price = dbContext.Products
+                var price = dbContext.Product
                     .Where(a => a.ProductId == orderItem.ProductId)
                     .Select(a => a.Price)
                     .FirstOrDefault();
@@ -88,7 +88,7 @@ namespace DbSeeder
                 }
             }
 
-            var payment = new Payments
+            var payment = new Payment
             {
                 OrderId = order.OrderId,
                 PaymentMethod = paymentMethod,

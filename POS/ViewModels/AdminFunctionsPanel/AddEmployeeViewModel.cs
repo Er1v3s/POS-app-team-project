@@ -26,7 +26,7 @@ namespace POS.ViewModels.AdminFunctionsPanel
             try
             {
                 var newEmployee = CreateEmployee();
-                await _adminFunctionsService.AddEmployee(newEmployee);
+                await _adminFunctionsService.AddEmployeeAsync(newEmployee);
                 CloseWindowAction?.Invoke();
 
             } catch (Exception ex)
@@ -35,9 +35,9 @@ namespace POS.ViewModels.AdminFunctionsPanel
             }
         }
 
-        private Employees CreateEmployee()
+        private Employee CreateEmployee()
         {
-            return new Employees
+            return new Employee
             {
                 FirstName = FormValidatorHelper.ValidateString(firstName),
                 LastName = FormValidatorHelper.ValidateString(lastName),

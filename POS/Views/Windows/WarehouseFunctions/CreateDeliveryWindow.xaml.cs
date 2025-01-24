@@ -22,7 +22,7 @@ namespace POS.Views.Windows.WarehouseFunctions
     /// </summary>
     public partial class CreateDeliveryWindow : Window
     {
-        private Employees currentUser;
+        private Employee currentUser;
         public int EmployeeId;
         List<DeliveryItemDto> deliveryItems = new List<DeliveryItemDto>();
 
@@ -70,7 +70,7 @@ namespace POS.Views.Windows.WarehouseFunctions
 
         private void AddToDelivery_ButtonClick(object sender, RoutedEventArgs e)
         {
-            Ingredients selectedIngredient = (Ingredients)IngredientsDataGrid.SelectedItem;
+            Ingredient selectedIngredient = (Ingredient)IngredientsDataGrid.SelectedItem;
             if (selectedIngredient != null)
             {
                 string newValueString = Microsoft.VisualBasic.Interaction.InputBox("Podaj ilość składnika:", "Dodaj składnik do zamówienia", selectedIngredient.Stock.ToString());
@@ -111,7 +111,7 @@ namespace POS.Views.Windows.WarehouseFunctions
 
         private void EditValue_ButtonClick(object sender, RoutedEventArgs e)
         {
-            Ingredients selectedIngredient = (Ingredients)IngredientsDataGrid.SelectedItem;
+            Ingredient selectedIngredient = (Ingredient)IngredientsDataGrid.SelectedItem;
 
             if (selectedIngredient != null)
             {

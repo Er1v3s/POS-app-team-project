@@ -21,7 +21,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.ReportGenerators
                     (orderItem, order) => new { orderItem, order }
                 )
                 .Join(
-                    _dbContext.Products,
+                    _dbContext.Product,
                     combined => combined.orderItem.ProductId,
                     product => product.ProductId,
                     (combined, product) => new ProductSalesDto

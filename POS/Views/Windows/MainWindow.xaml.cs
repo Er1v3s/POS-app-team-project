@@ -13,10 +13,10 @@ namespace POS.Views.Windows
         {
             InitializeComponent();
             DataContext = App.ServiceProvider.GetRequiredService<MainWindowViewModel>();
-            var viewModel = (MainWindowViewModel)DataContext;
 
+            var viewModel = (MainWindowViewModel)DataContext;
             viewModel.TurnOffApplicationAction = Application.Current.Shutdown;
-            viewModel.CloseWindowsAction = Close;
+            viewModel.CloseWindowBaseAction = Close;
         }
 
         //private void ScheduleDelayedExecution(Action action, TimeSpan delay)
