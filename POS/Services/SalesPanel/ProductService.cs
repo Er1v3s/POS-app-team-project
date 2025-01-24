@@ -18,11 +18,6 @@ namespace POS.Services.SalesPanel
             productList = Task.Run(GetAllProductsFromDb).Result;
         }
 
-        private async Task<List<Product>> GetAllProductsFromDb()
-        {
-            return await _dbContext.Product.ToListAsync();
-        }
-
         public List<Product> LoadAllProducts()
         {
             return productList.ToList();
@@ -36,6 +31,11 @@ namespace POS.Services.SalesPanel
         public List<Product> LoadProductsBySearch(string searchText)
         {
             return productList.Where(p => p.ProductName.ToLower().Contains(searchText.ToLower())).ToList();
+        }
+
+        private async Task<List<Product>> GetAllProductsFromDb()
+        {
+            return await _dbContext.Product.ToListAsync();
         }
     }
 }

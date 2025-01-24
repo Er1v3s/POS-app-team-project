@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows;
 using DataAccess.Models;
 using POS.Models.Orders;
 using POS.Views.Windows.SalesPanel;
@@ -18,33 +17,9 @@ namespace POS.Services.SalesPanel
             _dbContext = dbContext;
         }
 
-        //public async Task<bool> HandleOrder(OrderDto orderDto)
-        //{
-        //    var summaryOrderWindow = new OrderSummaryWindow(orderDto);
-        //    summaryOrderWindow.ShowDialog();
-
-        //    if (summaryOrderWindow.DialogResult == true)
-        //    {
-        //        await SaveHandledOrderInDb(orderDto);
-        //        return true;
-        //    }
-
-        //    return false;
-        //}
-
         public async Task HandleOrderAsync(OrderDto orderDto)
         {
             await SaveHandledOrderInDb(orderDto);
-        }
-
-        public bool CancelOrder()
-        {
-            var result = MessageBox.Show("Anulować zamówienie?", "", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result == MessageBoxResult.Yes)
-                return true;
-
-            return false;
         }
 
         public void LoadFinishedOrdersWindow()
