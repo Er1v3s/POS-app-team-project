@@ -25,5 +25,4 @@ namespace POS.Services
             TimeUpdated?.Invoke();
         }
     }
-
 }

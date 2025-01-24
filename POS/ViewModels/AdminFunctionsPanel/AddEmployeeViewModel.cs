@@ -26,7 +26,7 @@ namespace POS.ViewModels.AdminFunctionsPanel
             try
             {
                 var newEmployee = CreateEmployee();
-                await _adminFunctionsService.AddEmployee(newEmployee);
+                await _adminFunctionsService.AddEmployeeAsync(newEmployee);
                 CloseWindowAction?.Invoke();
 
             } catch (Exception ex)

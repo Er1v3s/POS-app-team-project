@@ -1,5 +1,3 @@
-using System;
-
 namespace POS.Models.Reports
 {
     public class PaymentRatioDto

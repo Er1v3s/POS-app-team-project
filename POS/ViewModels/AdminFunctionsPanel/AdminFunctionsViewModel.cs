@@ -71,7 +71,7 @@ namespace POS.ViewModels.AdminFunctionsPanel
         {
             employeesCollection.Clear();
 
-            var employeeList = await _adminFunctionsService.LoadEmployeeInfoList();
+            var employeeList = await _adminFunctionsService.LoadEmployeeInfoListAsync();
 
             foreach (var employee in employeeList)
                 employeesCollection.Add(employee);
@@ -99,14 +99,14 @@ namespace POS.ViewModels.AdminFunctionsPanel
 
             if (result == MessageBoxResult.Yes)
             {
-                await _adminFunctionsService.DeleteEmployee(selectedEmployee);
+                await _adminFunctionsService.DeleteEmployeeAsync(selectedEmployee);
                 await LoadEmployeeInfoList();
             }
         }
 
         private async Task ShowCashBalance()
         {
-            var cashBalance = await _adminFunctionsService.ShowCashBalance();
+            var cashBalance = await _adminFunctionsService.ShowCashBalanceAsync();
 
             MessageBox.Show($"Stan kasy wynosi: {cashBalance:C}");
         }

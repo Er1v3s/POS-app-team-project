@@ -13,7 +13,7 @@ namespace POS.Services.Login
             _dbContext = dbContext;
         }
 
-        public async Task AuthenticateUser(string login, string password)
+        public async Task AuthenticateUserAsync(string login, string password)
         {
             var employee = await _dbContext.Employees.FirstOrDefaultAsync(e => e.Login == login && e.Password == password);
 

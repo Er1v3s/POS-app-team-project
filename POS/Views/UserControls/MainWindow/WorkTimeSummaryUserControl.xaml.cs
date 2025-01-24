@@ -16,10 +16,10 @@ namespace POS.Views.UserControls.MainWindow
             DataContext = App.ServiceProvider.GetRequiredService<WorkTimeSummaryControlViewModel>();
         }
 
-        private void Refresh_ButtonClick(object sender, RoutedEventArgs e)
+        private void WorkTimeSummaryUserControl_OnGotFocus(object sender, RoutedEventArgs e)
         {
-            var workTimeSummaryControlViewModel = (WorkTimeSummaryControlViewModel)DataContext;
-            workTimeSummaryControlViewModel.RefreshCommand.Execute(null);
+            var viewModel = (WorkTimeSummaryControlViewModel)DataContext;
+            viewModel.RefreshCommand.Execute(null);
         }
     }
 }

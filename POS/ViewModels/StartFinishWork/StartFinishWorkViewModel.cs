@@ -49,20 +49,20 @@ namespace POS.ViewModels.StartFinishWork
                 IsSessionNotActive = !IsSessionNotActive;
             }
 
-            StartSessionCommand = new RelayCommandAsync(StartSession);
-            FinishSessionCommand = new RelayCommandAsync(FinishSession);
+            StartSessionCommand = new RelayCommandAsync(StartSessionAsync);
+            FinishSessionCommand = new RelayCommandAsync(FinishSessionAsync);
         }
 
-        private async Task StartSession()
+        private async Task StartSessionAsync()
         {
             var employee = LoginManager.Instance.Employee;
-            await _sessionService.StartSession(employee!);
+            await _sessionService.StartSessionAsync(employee!);
         }
 
-        private async Task FinishSession()
+        private async Task FinishSessionAsync()
         {
             var employee = LoginManager.Instance.Employee;
-            await _sessionService.FinishSession(employee!);
+            await _sessionService.FinishSessionAsync(employee!);
         }
     }
 }

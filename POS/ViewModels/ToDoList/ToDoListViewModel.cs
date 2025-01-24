@@ -44,7 +44,7 @@ namespace POS.ViewModels.ToDoList
         private async Task LoadTasksAsync()
         {
             TodoListTaskCollection.Clear();
-            var tasks = await _taskManager.GetTaskList();
+            var tasks = await _taskManager.GetTaskListAsync();
 
             foreach (var task in tasks)
             {
@@ -54,7 +54,7 @@ namespace POS.ViewModels.ToDoList
 
         private async Task AddTaskAsync()
         {
-            await _taskManager.CreateTask(NewTaskContent);
+            await _taskManager.CreateTaskAsync(NewTaskContent);
             NewTaskContent = string.Empty;
             await LoadTasksAsync();
         }
@@ -62,7 +62,7 @@ namespace POS.ViewModels.ToDoList
         private async Task DeleteTaskAsync(ToDoListTask task)
         {
             TodoListTaskCollection.Remove(task);
-            await _taskManager.DeleteTask(task);
+            await _taskManager.DeleteTaskAsync(task);
         }
     }
 }

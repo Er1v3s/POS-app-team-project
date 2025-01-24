@@ -18,21 +18,13 @@ namespace POS.ViewModels.StartFinishWork
         public string Login
         {
             get => login;
-            set
-            {
-                SetField(ref login, value);
-                OnPropertyChanged(nameof(Login));
-            }
+            set => SetField(ref login, value);
         }
 
         public string Password
         {
             get => password;
-            set
-            {
-                SetField(ref password, value);
-                OnPropertyChanged(nameof(Password));
-            }
+            set => SetField(ref password, value);
         }
 
         public ICommand LoginCommand { get; }
@@ -41,14 +33,14 @@ namespace POS.ViewModels.StartFinishWork
         {
             _loginService = loginService;
 
-            LoginCommand = new RelayCommandAsync(ExecuteLogin);
+            LoginCommand = new RelayCommandAsync(ExecuteLoginAsync);
         }
 
-        private async Task ExecuteLogin()
+        private async Task ExecuteLoginAsync()
         {
             try
             {
-                await _loginService.AuthenticateUser(login, password);
+                await _loginService.AuthenticateUserAsync(login, password);
             }
             catch (Exception)
             {

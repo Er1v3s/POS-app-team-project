@@ -11,7 +11,14 @@ namespace POS.ViewModels.WorkTimeSummaryControl
     public class WorkTimeSummaryControlViewModel : ViewModelBase
     {
         private readonly SessionService _sessionService;
-        public ObservableCollection<EmployeeWorkSession> SessionList { get; set; }
+
+        private ObservableCollection<EmployeeWorkSession> sessionList = new();
+
+        public ObservableCollection<EmployeeWorkSession> SessionList
+        {
+            get => sessionList;
+            set => SetField(ref sessionList, value);
+        }
 
         public ICommand RefreshCommand { get; }
 
@@ -19,17 +26,16 @@ namespace POS.ViewModels.WorkTimeSummaryControl
         {
             _sessionService = sessionService;
 
-            SessionList = [];
             RefreshCommand = new RelayCommandAsync(LoadSessionsAsync);
 
-            _ = LoadSessionsAsync();
-            _ = CheckForActiveSession();
+            Task.Run(LoadSessionsAsync);
+            Task.Run(CheckForActiveSessionAsync);
         }
 
         private async Task LoadSessionsAsync()
         {
             SessionList.Clear();
-            var sessions = await _sessionService.LoadSessions();
+            var sessions = await _sessionService.LoadSessionsAsync();
 
             foreach (var session in sessions)
             {
@@ -37,9 +43,9 @@ namespace POS.ViewModels.WorkTimeSummaryControl
             }
         }
 
-        private async Task CheckForActiveSession()
+        private async Task CheckForActiveSessionAsync()
         {
-            await _sessionService.CheckForActiveSessions();
+            await _sessionService.CheckForActiveSessionsAsync();
         }
     }
 }

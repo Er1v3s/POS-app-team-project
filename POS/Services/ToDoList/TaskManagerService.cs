@@ -10,7 +10,7 @@ namespace POS.Services.ToDoList
 {
     public class TaskManagerService(AppDbContext dbContext)
     {
-        public async Task<List<ToDoListTask>> GetTaskList()
+        public async Task<List<ToDoListTask>> GetTaskListAsync()
         {
             List<ToDoListTask> todoTaskList = [];
 
@@ -21,7 +21,7 @@ namespace POS.Services.ToDoList
             return todoTaskList;
         }
 
-        public async Task CreateTask(string newTaskContent)
+        public async Task CreateTaskAsync(string newTaskContent)
         {
             if (string.IsNullOrWhiteSpace(newTaskContent) || newTaskContent.Equals("Dodaj zadanie"))
                 return;
@@ -37,7 +37,7 @@ namespace POS.Services.ToDoList
             await dbContext.SaveChangesAsync();
         }
 
-        public async Task DeleteTask(ToDoListTask task)
+        public async Task DeleteTaskAsync(ToDoListTask task)
         {
             var taskFromDb = await dbContext.ToDoListTasks.FindAsync(task.TodoTaskId);
             if (taskFromDb != null)

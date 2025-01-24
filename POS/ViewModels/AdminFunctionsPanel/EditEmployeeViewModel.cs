@@ -35,7 +35,7 @@ namespace POS.ViewModels.AdminFunctionsPanel
             try
             {
                 EditEmployeeData();
-                await _adminFunctionsService.EditEmployee(selectedEmployeeFullData);
+                await _adminFunctionsService.EditEmployeeAsync(selectedEmployeeFullData);
                 CloseWindowAction?.Invoke();
             }
             catch (Exception ex)
@@ -63,7 +63,7 @@ namespace POS.ViewModels.AdminFunctionsPanel
 
         private async Task LoadSelectedEmployeeData()
         {
-            var employee = await _adminFunctionsService.LoadEmployeeData(selectedEmployee);
+            var employee = await _adminFunctionsService.LoadEmployeeDataAsync(selectedEmployee);
 
             selectedEmployeeFullData = employee;
             SetLoadedEmployeeDataInForm(employee);

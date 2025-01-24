@@ -30,7 +30,6 @@ namespace POS.ViewModels.MainWindow
         }
 
         public Action TurnOffApplicationAction;
-        public Action CloseWindowsAction;
         public ICommand OpenSalesPanelWindowCommand { get; }
         public ICommand OpenLoginPanelWindowCommand { get; }
         public ICommand TurnOffApplicationCommand { get; }
@@ -51,15 +50,15 @@ namespace POS.ViewModels.MainWindow
             SetDefaultContentSource(0);
         }
 
-        public void OpenSalesPanelWindow(object obj)
+        public void OpenSalesPanelWindow()
         {
             _navigationService.OpenSalesPanelWindow();
 
             if (Application.Current.Windows.OfType<SalesPanelWindow>().Any())
-                CloseWindowsAction.Invoke();
+                CloseWindowBaseAction!.Invoke();
         }
 
-        public void OpenLoginPanelWindow(object obj)
+        public void OpenLoginPanelWindow()
         {
             _navigationService.OpenLoginPanelWindow();
         }

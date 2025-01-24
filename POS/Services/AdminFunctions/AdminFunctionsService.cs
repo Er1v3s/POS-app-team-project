@@ -17,7 +17,7 @@ namespace POS.Services.AdminFunctions
             _dbContext = dbContext;
         }
 
-        public async Task<Collection<EmployeeInfoDto>> LoadEmployeeInfoList()
+        public async Task<Collection<EmployeeInfoDto>> LoadEmployeeInfoListAsync()
         {
             var employeesInfoList = new Collection<EmployeeInfoDto>();
 
@@ -40,18 +40,18 @@ namespace POS.Services.AdminFunctions
             return employeesInfoList;
         }
 
-        public async Task<Employee> LoadEmployeeData(EmployeeInfoDto selectedEmployeeInfo)
+        public async Task<Employee> LoadEmployeeDataAsync(EmployeeInfoDto selectedEmployeeInfo)
         {
             return (await _dbContext.Employees.FirstOrDefaultAsync(employee => employee.EmployeeId == selectedEmployeeInfo.EmployeeId))!;
         }
 
-        public async Task AddEmployee(Employee newEmployee)
+        public async Task AddEmployeeAsync(Employee newEmployee)
         {
             await _dbContext.Employees.AddAsync(newEmployee);
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task EditEmployee(Employee selectedEmployee)
+        public async Task EditEmployeeAsync(Employee selectedEmployee)
         {
             var employeeToUpdate = await _dbContext.Employees.FirstOrDefaultAsync(employee => employee.EmployeeId == selectedEmployee.EmployeeId);
 
@@ -70,7 +70,7 @@ namespace POS.Services.AdminFunctions
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task DeleteEmployee(EmployeeInfoDto selectedEmployeeInfo)
+        public async Task DeleteEmployeeAsync(EmployeeInfoDto selectedEmployeeInfo)
         {
             var employeeToRemove = await _dbContext.Employees
                 .FirstOrDefaultAsync(e => e.EmployeeId == selectedEmployeeInfo.EmployeeId);
@@ -82,7 +82,7 @@ namespace POS.Services.AdminFunctions
             }
         }
 
-        public async Task<double> ShowCashBalance()
+        public async Task<double> ShowCashBalanceAsync()
         {
             var cashBalance = await _dbContext.Payments
                                 .Where(payment => payment.PaymentMethod == "Gotówka")

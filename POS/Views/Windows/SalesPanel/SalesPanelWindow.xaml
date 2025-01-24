@@ -223,9 +223,9 @@
                                     <ColumnDefinition Width="2*" />
                                 </Grid.ColumnDefinitions>
 
-                                <Button Command="{Binding CancelOrderCommand}" Grid.Column="0" Content="Anuluj" Style="{StaticResource cancelButton}" Grid.Row="2" d:IsLocked="True" />
-                                <Button Command="{Binding ShowRecipeCollectionCommand}" Content="Przepisy" Style="{StaticResource recipeButton}" Grid.Column="1" Grid.Row="2" d:IsLocked="True" />
-                                <Button Command="{Binding ShowProductCollectionCommand}" Content="Drinki" Style="{StaticResource payButton}" Grid.Column="2" Grid.Row="2" d:IsLocked="True" />
+                                <Button Command="{Binding CancelOrderCommand}" Grid.Column="0" Content="Anuluj" Style="{StaticResource cancelButton}" d:IsLocked="True" />
+                                <Button Command="{Binding ShowRecipeCollectionCommand}" Content="Przepisy" Style="{StaticResource recipeButton}" Grid.Column="1" d:IsLocked="True" />
+                                <Button Command="{Binding ShowProductCollectionCommand}" Content="Drinki" Style="{StaticResource payButton}" Grid.Column="2" d:IsLocked="True" />
 
                                 <Button Command="{Binding MoveToMainWindowCommand}" Grid.Column="5" Style="{StaticResource homeButton}" d:IsLocked="True">
                                     <fa:ImageAwesome Icon="Home" Height="24" Foreground="White"/>

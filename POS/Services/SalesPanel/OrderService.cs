@@ -19,7 +19,7 @@ namespace POS.Services.SalesPanel
 
         public async Task HandleOrderAsync(OrderDto orderDto)
         {
-            await SaveHandledOrderInDb(orderDto);
+            await SaveHandledOrderInDbAsync(orderDto);
         }
 
         public void LoadFinishedOrdersWindow()
@@ -28,7 +28,7 @@ namespace POS.Services.SalesPanel
             finishedOrders.Show();
         }
 
-        private async Task SaveHandledOrderInDb(OrderDto orderDto)
+        private async Task SaveHandledOrderInDbAsync(OrderDto orderDto)
         {
             var order = CreateOrder(orderDto);
             var orderEntityEntry = await _dbContext.Orders.AddAsync(order); // because the order id is assigned by the database
