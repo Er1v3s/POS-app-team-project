@@ -225,7 +225,7 @@
             </Style.Triggers>
         </Style>
 <!--#region RunningOutOfIngredients-->
-        <Style x:Key="OpenStockManagmentWindowButton" TargetType="Button">
+        <Style x:Key="OpenStockManagementWindowButton" TargetType="Button">
             <Setter Property="Width"  Value="150" />
             <Setter Property="Height" Value="50" />
             <Setter Property="Background" Value="#7286D3" />

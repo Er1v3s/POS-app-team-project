@@ -1,9 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using DataAccess;
-using POS.Views.Windows;
+using Microsoft.Extensions.DependencyInjection;
+using POS.ViewModels.WarehouseFunctions;
 
 namespace POS.Views.UserControls.MainWindow
 {
@@ -15,12 +13,14 @@ namespace POS.Views.UserControls.MainWindow
         public WarehouseFunctionsUserControl()
         {
             InitializeComponent();
-            LoadRunningOutOfIngredients();
-        }
+            DataContext = App.ServiceProvider.GetRequiredService<WarehouseFunctionsViewModel>();
 
-        private void Refresh_ButtonClick(object sender, RoutedEventArgs e)
-        {
-            LoadRunningOutOfIngredients();
+
+            var viewModel = (WarehouseFunctionsViewModel)DataContext;
+            viewModel.LoadRunningOutOfIngredientsCommand.Execute(null);
+
+
+            //LoadRunningOutOfIngredients();
         }
 
         private void OpenStockManagmentWindow_ButtonClick(object sender, RoutedEventArgs e)
@@ -47,32 +47,6 @@ namespace POS.Views.UserControls.MainWindow
             //    CreateDelivery createDelivery = new CreateDelivery(employeeId);
             //    createDelivery.Show();
             //}
-        }
-
-        private void LoadRunningOutOfIngredients()
-        {
-            try
-            {
-                using var dbContext = new AppDbContext();
-
-                var runningOutOfIngredients = dbContext.Ingredients
-                    .Where(ingredient => ingredient.Stock < ingredient.SafetyStock)
-                    .ToList();
-
-                runningOutOfIngredientsDataGrid.ItemsSource = runningOutOfIngredients;
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Wystąpił błąd podczas wczytywania składników: " + ex.Message);
-            }
-        }
-
-        public void ShowWindow()
-        {
-            var window = new Window();
-            window.Content = this;
-            window.ShowDialog();
         }
     }
 }

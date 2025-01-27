@@ -1,10 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DataAccess;
+using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 using POS.Models.Orders;
 
-namespace POS.Services.SalesPanel
+namespace POS.Services
 {
     public class IngredientService
     {
@@ -46,6 +48,15 @@ namespace POS.Services.SalesPanel
             }
 
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<Ingredient>> GetRunningOutOfIngredientsAsync()
+        {
+            var runningOutOfIngredients = await _dbContext.Ingredients
+                .Where(ingredient => ingredient.Stock < ingredient.SafetyStock)
+                .ToListAsync();
+
+            return runningOutOfIngredients;
         }
     }
 }
