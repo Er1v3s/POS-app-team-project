@@ -43,16 +43,16 @@ namespace POS.ViewModels.MainWindow
             _navigationService = navigationService;
 
             TurnOffApplicationCommand = new RelayCommand(TurnOffApplication);
-            OpenSalesPanelWindowCommand = new RelayCommand(OpenSalesPanelWindow);
+            OpenSalesPanelWindowCommand = new RelayCommand<SalesPanelWindow>(OpenSalesPanelWindow);
             OpenLoginPanelWindowCommand = new RelayCommand(OpenLoginPanelWindow);
             ChangeContentSourceCommand = new RelayCommand(ChangeContentSource);
 
             SetDefaultContentSource(0);
         }
 
-        public void OpenSalesPanelWindow()
+        public void OpenSalesPanelWindow<T>(T windowType)
         {
-            _navigationService.OpenSalesPanelWindow();
+            _navigationService.OpenWindow(windowType);
 
             if (Application.Current.Windows.OfType<SalesPanelWindow>().Any())
                 CloseWindowBaseAction!.Invoke();

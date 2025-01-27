@@ -31,7 +31,7 @@
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Click="OpenStockManagmentWindow_ButtonClick" Style="{StaticResource registerSellButton}">
+                <Button Command="{Binding OpenStockManagementWindowCommand}" Grid.Column="0" Style="{StaticResource registerSellButton}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="DODAJ NOWY SKŁADNIK LUB PRODUKT" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                     </StackPanel>

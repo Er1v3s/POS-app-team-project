@@ -113,7 +113,7 @@ namespace POS.ViewModels.SalesPanel
             set => SetField(ref discountValue, value);
         }
 
-        public ICommand MoveToMainWindowCommand { get; }
+        public ICommand OpenMainWindowCommand { get; }
         public ICommand SelectProductCommand { get; }
         public ICommand DeleteOrderItemCommand { get; }
         public ICommand SelectCategoryCommand { get; }
@@ -145,7 +145,7 @@ namespace POS.ViewModels.SalesPanel
             _invoiceService = invoiceService;
             _ingredientService = ingredientService;
 
-            MoveToMainWindowCommand = new RelayCommand(MoveToMainWindow);
+            OpenMainWindowCommand = new RelayCommand<Views.Windows.MainWindow>(OpenMainWindow);
             SelectProductCommand = new RelayCommand<Product>(AddProductToOrderItemsCollection);
             DeleteOrderItemCommand = new RelayCommand<OrderItemDto>(DeleteOrderItemFromOrderItemsCollection);
             SelectCategoryCommand = new RelayCommand<object>(FilterProductsByCategory);
@@ -416,9 +416,9 @@ namespace POS.ViewModels.SalesPanel
                 CurrentViewIndex = 2;
         }
 
-        private void MoveToMainWindow()
+        private void OpenMainWindow<T>(T windowType)
         {
-            _navigationService.OpenMainWindow();
+            _navigationService.OpenWindow<T>(windowType);
 
             if(Application.Current.Windows.OfType<Views.Windows.MainWindow>().Any())
                 CloseWindowBaseAction!.Invoke();

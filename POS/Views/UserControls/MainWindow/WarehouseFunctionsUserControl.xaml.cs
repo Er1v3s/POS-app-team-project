@@ -23,10 +23,10 @@ namespace POS.Views.UserControls.MainWindow
             //LoadRunningOutOfIngredients();
         }
 
-        private void OpenStockManagmentWindow_ButtonClick(object sender, RoutedEventArgs e)
-        {
-            var loginPanel = new Windows.LoginPanelWindow();
-            loginPanel.ShowDialog();
+        //private void OpenStockManagmentWindow_ButtonClick(object sender, RoutedEventArgs e)
+        //{
+            //var loginPanel = new Windows.LoginPanelWindow();
+            //loginPanel.ShowDialog();
 
             //if (loginPanel.isLoginValid)
             //{
@@ -34,7 +34,7 @@ namespace POS.Views.UserControls.MainWindow
             //    StockManagement stockManagment = new StockManagement(employeeId);
             //    stockManagment.Show();
             //}
-        }
+        //}
 
         private void OpenCreateDeliveryWindow_ButtonClick(object sender, RoutedEventArgs e)
         {
