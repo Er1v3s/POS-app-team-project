@@ -28,8 +28,8 @@ namespace POS.ViewModels.WorkTimeSummaryControl
 
             RefreshCommand = new RelayCommandAsync(LoadSessionsAsync);
 
-            Task.Run(LoadSessionsAsync);
-            Task.Run(CheckForActiveSessionAsync);
+            _ = LoadSessionsAsync();
+            _ = CheckForActiveSessionAsync();
         }
 
         private async Task LoadSessionsAsync()
