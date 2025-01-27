@@ -37,7 +37,7 @@
                     </StackPanel>
                 </Button>
 
-                <Button Grid.Column="1" Click="OpenCreateDeliveryWindow_ButtonClick" Style="{StaticResource registerSellButton}">
+                <Button Command="{Binding OpenCreateDeliveryWindowCommand}" Grid.Column="1" Style="{StaticResource registerSellButton}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="DOSTAWA" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                     </StackPanel>
@@ -63,22 +63,10 @@
             </Grid>
 
             <Grid Grid.Row="4">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                </Grid.ColumnDefinitions>
-                
                 <Button Command="{Binding LoadRunningOutOfIngredientsCommand}" Grid.Column="0" Style="{StaticResource refreshButton}">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Refresh" Width="25" Height="25" Foreground="White"/>
                         <TextBlock Text="ODŚWIEŻ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16"/>
-                    </StackPanel>
-                </Button>
-
-                <Button Grid.Column="1" Style="{StaticResource OpenStockManagementWindowButton}" Click="OpenCreateDeliveryWindow_ButtonClick">
-                    <StackPanel Orientation="Horizontal">
-                        <fa:ImageAwesome Icon="Truck" Width="25" Height="25" Foreground="White"/>
-                        <TextBlock Text="ZAMÓW" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16"/>
                     </StackPanel>
                 </Button>
             </Grid>

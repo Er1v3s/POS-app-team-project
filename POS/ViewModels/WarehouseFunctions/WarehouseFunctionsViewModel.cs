@@ -24,6 +24,7 @@ namespace POS.ViewModels.WarehouseFunctions
 
         public ICommand LoadRunningOutOfIngredientsCommand { get; }
         public ICommand OpenStockManagementWindowCommand { get; }
+        public ICommand OpenCreateDeliveryWindowCommand { get; }
 
         public WarehouseFunctionsViewModel(IngredientService ingredientService, NavigationService navigationService)
         {
@@ -32,6 +33,7 @@ namespace POS.ViewModels.WarehouseFunctions
 
             LoadRunningOutOfIngredientsCommand = new RelayCommandAsync(LoadRunningOutOfIngredientsAsync);
             OpenStockManagementWindowCommand = new RelayCommand<StockManagementWindow>(OpenWindow);
+            OpenCreateDeliveryWindowCommand = new RelayCommand<CreateDeliveryWindow>(OpenWindow);
         }
 
         private async Task LoadRunningOutOfIngredientsAsync()
