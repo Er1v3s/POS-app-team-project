@@ -5,7 +5,9 @@ using System.Windows.Controls;
 using DataAccess;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using POS.Helpers;
+using POS.ViewModels.WarehouseFunctions;
 
 namespace POS.Views.Windows.WarehouseFunctions
 {
@@ -17,35 +19,18 @@ namespace POS.Views.Windows.WarehouseFunctions
         private Employee currentUser;
         public int EmployeeId;
 
-        public StockManagementWindow(int employeeId)
+        public StockManagementWindow()
         {
             InitializeComponent();
+            DataContext = App.ServiceProvider.GetRequiredService<StockManagementViewModel>();
+
+            var viewModel = (StockManagementViewModel)DataContext;
+            viewModel.CloseWindowBaseAction = Close;
+
             FillEditIngredientComboBox(EditIngredient_ComboBox);
             FillEditProductComboBox(EditProduct_ComboBox);
             FillEditIngredientComboBox(EditRecipeIngredient_ComboBox);
             FillEditProductComboBox(EditRecipeOfProduct_ComboBox);
-
-            using (var dbContext = new AppDbContext())
-            {
-                currentUser = dbContext.Employees.FirstOrDefault(e => e.EmployeeId == employeeId);
-            }
-
-            string welcomeMessage = $"{currentUser.FirstName} {currentUser.LastName}";
-            SetWelcomeMessage(welcomeMessage);
-            EmployeeId = employeeId;
-        }
-
-        private void MoveToMainWindow_ButtonClick(object sender, RoutedEventArgs e)
-        {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
-
-            Window.GetWindow(this).Close();
-        }
-
-        private void SetWelcomeMessage(string message)
-        {
-            welcomeLabel.Content = message;
         }
 
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)

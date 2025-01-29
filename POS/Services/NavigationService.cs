@@ -48,7 +48,7 @@ namespace POS.Services
                     }
                     else if (typeof(T) == typeof(StockManagementWindow))
                     {
-                        StockManagementWindow stockManagementWindow = new(1);
+                        StockManagementWindow stockManagementWindow = new();
                         stockManagementWindow.Show();
                     }
                     else if (typeof(T) == typeof(CreateDeliveryWindow))

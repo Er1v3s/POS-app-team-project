@@ -1,12 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Windows;
+using POS.Services.Login;
+using POS.Utilities.RelayCommands;
+using POS.ViewModels.Base;
+using System.Windows.Input;
+using POS.Services;
 
 namespace POS.ViewModels.WarehouseFunctions
 {
-    public class CreateDeliveryViewModel
+    public class CreateDeliveryViewModel : ViewModelBase
     {
+        private readonly NavigationService _navigationService;
+
+        private string loggedInUserName;
+
+        public string LoggedInUserName
+        {
+            get => loggedInUserName;
+            set => SetField(ref loggedInUserName, value);
+        }
+
+        public ICommand OpenMainWindowCommand { get; }
+
+        public CreateDeliveryViewModel(NavigationService navigationService)
+        {
+            _navigationService = navigationService;
+
+            OpenMainWindowCommand = new RelayCommand<Views.Windows.MainWindow>(OpenMainWindow);
+
+            loggedInUserName = LoginManager.Instance.GetLoggedInUserFullName();
+        }
+
+        private void OpenMainWindow<T>(T windowType)
+        {
+            _navigationService.OpenWindow(windowType);
+
+            if (Application.Current.Windows.OfType<T>().Any())
+                CloseWindowBaseAction!.Invoke();
+        }
     }
 }

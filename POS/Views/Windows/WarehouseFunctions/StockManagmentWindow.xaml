@@ -3,6 +3,8 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:warehouseFunctions="clr-namespace:POS.ViewModels.WarehouseFunctions"
+      d:DataContext="{d:DesignInstance Type=warehouseFunctions:StockManagementViewModel}"
       mc:Ignorable="d" 
       xmlns:fa="http://schemas.fontawesome.io/icons/"
       d:DesignHeight="768" d:DesignWidth="1366"
@@ -277,9 +279,11 @@
             </Grid.RowDefinitions>
 
             <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black" CornerRadius="0" Background="#8EA7E9">
-                <Grid Grid.Row="0">
+                <Grid>
                     <Border BorderBrush="#FF7286D3" BorderThickness="1" Width="200" Height="42" HorizontalAlignment="Right" Margin="0,0,25,0" Background="#FF7286D3" CornerRadius="8">
-                        <Label x:Name="welcomeLabel"  VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="White" Margin="-1,-1,0,-1"/>
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding LoggedInUserName, FallbackValue='Imię Nazwisko'}" Foreground="White"/>
+                        </StackPanel>
                     </Border>
                 </Grid>
             </Border>
@@ -419,7 +423,7 @@
                         <ColumnDefinition Width="355*"/>
                         <ColumnDefinition Width="50*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="1" Margin="0" Style="{StaticResource homeButton}" d:IsLocked="True" Click="MoveToMainWindow_ButtonClick">
+                    <Button Command="{Binding OpenMainWindowCommand}" Grid.Column="1" Margin="0" Style="{StaticResource homeButton}" d:IsLocked="True">
                         <fa:ImageAwesome Icon="Home" Height="24" Foreground="White"/>
                     </Button>
                 </Grid>
