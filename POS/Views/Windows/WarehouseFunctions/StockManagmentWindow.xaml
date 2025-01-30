@@ -21,7 +21,7 @@
 
         <Grid Grid.Column="0" Margin="25">
             <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" CornerRadius="8" d:IsLocked="True">
-                <Grid Grid.Row="0">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="3*"/>
                         <RowDefinition Height="1.5*"/>
@@ -38,20 +38,20 @@
                     </Grid.RowDefinitions>
 
                     <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black" CornerRadius="8,8,0, 0" Background="#8EA7E9">
-                        <Grid Grid.Row="0">
+                        <Grid>
                             <TextBlock Text="EDYTUJ SKŁADNIKI RECEPTURY" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"></TextBlock>
                         </Grid>
                     </Border>
 
                     <Border Grid.Row="2" CornerRadius="8" Margin="25,0,25,0" Background="White">
-                        <Grid Grid.Row="2">
+                        <Grid>
                             <ComboBox x:Name="EditRecipeOfProduct_ComboBox" SelectionChanged="EditRecipeOfProduct_ComboBoxSelectionChanged" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                                 <ComboBoxItem IsSelected="True" IsEnabled="False">Wybierz produkt</ComboBoxItem>
                             </ComboBox>
                         </Grid>
                     </Border>
                     <Border Grid.Row="4" CornerRadius="8" Margin="25,0,25,0" Background="White">
-                        <Grid Grid.Row="4">
+                        <Grid>
                             <ComboBox x:Name="EditRecipeIngredient_ComboBox" SelectionChanged="EditRecipeIngredient_ComboBoxSelectionChanged" IsEnabled="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                                 <ComboBoxItem IsSelected="True" IsEnabled="False">Wybierz składnik</ComboBoxItem>
                             </ComboBox>
@@ -59,13 +59,11 @@
                     </Border>
 
                     <Border Grid.Row="6" CornerRadius="8" Margin="25,0,25,0" Background="White">
-                        <Grid Grid.Row="6">
-                            <TextBox x:Name="RecipeIngredientQuantity" IsEnabled="False" Style="{StaticResource placeholderTextBox}" Text="Ilość składnika w przepisie" Tag="Ilość składnika w przepisie" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
-                                <TextBox.Resources>
-                                    <Style TargetType="{x:Type Border}">
-                                        <Setter Property="CornerRadius" Value="8"/>
-                                    </Style>
-                                </TextBox.Resources>
+                        <Grid>
+                            <TextBox Text="{Binding AmountOfIngredientInRecipe, FallbackValue=''}"
+                                     Tag="Ilość składnika w przepisie" 
+                                     Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}" 
+                                     IsEnabled="True">
                             </TextBox>
                         </Grid>
                     </Border>
@@ -93,7 +91,7 @@
                     </Grid>
                     
                     <Border Grid.Row="10" BorderThickness="0,1,0,1" BorderBrush="Black" CornerRadius="0" Background="#8EA7E9">
-                        <Grid Grid.Row="0">
+                        <Grid>
                             <TextBlock Text="LISTA SKŁADNIKÓW RECEPTURY:" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"></TextBlock>
                         </Grid>
                     </Border>
@@ -124,7 +122,7 @@
             </Grid.RowDefinitions>
             
             <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" CornerRadius="8" d:IsLocked="True">
-                <Grid Grid.Row="0">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="3*"/>
                         <RowDefinition Height="1.5*"/>
@@ -145,17 +143,17 @@
                     </Grid.RowDefinitions>
 
                     <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black" CornerRadius="8,8,0, 0" Background="#8EA7E9">
-                        <Grid Grid.Row="0">
+                        <Grid>
                             <TextBlock Text="DODAJ, EDYTUJ LUB USUŃ PRODUKT" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"></TextBlock>
                         </Grid>
                     </Border>
 
                     <Border Grid.Row="2" CornerRadius="8" Margin="25,0,25,0" Background="White">
-                        <Grid Grid.Row="2">
-                                <ComboBox x:Name="EditProduct_ComboBox" SelectionChanged="EditProduct_ComboBoxSelectionChanged" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                                    <ComboBoxItem IsSelected="True" IsEnabled="False">Wybierz produkt</ComboBoxItem>
-                                </ComboBox>
-                            </Grid>
+                        <Grid>
+                            <ComboBox x:Name="EditProduct_ComboBox" SelectionChanged="EditProduct_ComboBoxSelectionChanged" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                                <ComboBoxItem IsSelected="True" IsEnabled="False">Wybierz produkt</ComboBoxItem>
+                            </ComboBox>
+                        </Grid>
                     </Border>
 
                     <Grid Grid.Row="4">
@@ -170,16 +168,14 @@
                             </Viewbox>
                         </Grid>
 
-                        <Border Grid.Column="1" CornerRadius="8" Margin="24,0,25,0" Background="White">
-                            <Grid Grid.Column="1">
-                                    <TextBox x:Name="NewProductName" Style="{StaticResource placeholderTextBox}" IsEnabled="False" Text="Nazwa nowego produktu" Tag="Nazwa nowego produktu" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
-                                        <TextBox.Resources>
-                                            <Style TargetType="{x:Type Border}">
-                                                <Setter Property="CornerRadius" Value="8"/>
-                                            </Style>
-                                        </TextBox.Resources>
-                                    </TextBox>
-                                </Grid>
+                        <Border Grid.Column="1" CornerRadius="8" Margin="25,0,25,0" Background="White">
+                            <Grid>
+                                <TextBox Text="{Binding NewProductName, FallbackValue=''}"
+                                         Tag="Nazwa nowego produktu" 
+                                         Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}" 
+                                         IsEnabled="True">
+                                </TextBox>
+                            </Grid>
                         </Border>
                     </Grid>
 
@@ -188,63 +184,61 @@
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
-                        
-                        <Border Grid.Row="6" Grid.Column="0" CornerRadius="8" Margin="25,0,12,0" Background="White">
-                            <Grid Grid.Row="6">
-                                    <TextBox x:Name="ProductCategory" Style="{StaticResource placeholderTextBox}" IsEnabled="False" Text="Kategoria" Tag="Kategoria" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
-                                        <TextBox.Resources>
-                                            <Style TargetType="{x:Type Border}">
-                                                <Setter Property="CornerRadius" Value="8"/>
-                                            </Style>
-                                        </TextBox.Resources>
-                                    </TextBox>
-                                </Grid>
+
+                        <Border CornerRadius="8" Margin="25,0,12,0" Background="White">
+                            <Grid>
+                                <TextBox Text="{Binding ProductCategory, FallbackValue=''}"
+                                         Tag="Kategoria" 
+                                         Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}" 
+                                         IsEnabled="True">
+                                </TextBox>
+                            </Grid>
                         </Border>
 
-                        <Border Grid.Row="6" Grid.Column="1" CornerRadius="8" Margin="12,0,25,0" Background="White">
-                            <Grid Grid.Row="6">
-                                    <TextBox x:Name="ProductPrice" Style="{StaticResource placeholderTextBox}" IsEnabled="False" Text="Cena" Tag="Cena" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
-                                        <TextBox.Resources>
-                                            <Style TargetType="{x:Type Border}">
-                                                <Setter Property="CornerRadius" Value="8"/>
-                                            </Style>
-                                        </TextBox.Resources>
-                                    </TextBox>
-                                </Grid>
+                        <Border Grid.Column="1" CornerRadius="8" Margin="25,0,25,0" Background="White">
+                            <Grid>
+                                <TextBox Text="{Binding ProductPrice, FallbackValue=''}" 
+                                     Tag="Cena" 
+                                     Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}" 
+                                     IsEnabled="True">
+                                </TextBox>
+                            </Grid>
                         </Border>
                     </Grid>
 
                     <Border Grid.Row="8" CornerRadius="8" Margin="25,0,25,0" Background="White">
-                        <Grid Grid.Row="8">
-                                <TextBox x:Name="ProductDescription" Style="{StaticResource placeholderTextBox}" IsEnabled="False" Text="Opis produktu" Tag="Opis produktu" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" Padding="10" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
-                                    <TextBox.Resources>
-                                        <Style TargetType="{x:Type Border}">
-                                            <Setter Property="CornerRadius" Value="8"/>
-                                        </Style>
-                                    </TextBox.Resources>
-                                </TextBox>
-                            </Grid>
+                        <Grid>
+                            <TextBox Text="{Binding ProductDescription, FallbackValue=''}" 
+                                     Tag="Opis produktu" 
+                                     Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder2}"
+                                     VerticalContentAlignment="Top"
+                                     HorizontalContentAlignment="Left"
+                                     Padding="10"
+                                     IsEnabled="True">
+                            </TextBox>
+                        </Grid>
                     </Border>
 
                     <Border Grid.Row="10" BorderThickness="0,1,0,1" BorderBrush="Black" CornerRadius="0" Background="#8EA7E9">
-                        <Grid Grid.Row="10">
+                        <Grid>
                             <TextBlock Text="DODAJ PRZEPIS" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"></TextBlock>
                         </Grid>
                     </Border>
 
-                        <Border Grid.Row="12" CornerRadius="8" Margin="25,0,25,0" Background="White">
-                            <Grid Grid.Row="12">
-                                <TextBox x:Name="Recipe" Style="{StaticResource placeholderTextBox}" IsEnabled="False" Text="Tutaj wpisz przepis na nowego drinka" Tag="Tutaj wpisz przepis na nowego drinka" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" Padding="10" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
-                                    <TextBox.Resources>
-                                        <Style TargetType="{x:Type Border}">
-                                            <Setter Property="CornerRadius" Value="8"/>
-                                        </Style>
-                                    </TextBox.Resources>
-                                </TextBox>
-                            </Grid>
-                        </Border>
+                    <Border Grid.Row="12" CornerRadius="8" Margin="25,0,25,0" Background="White">
+                        <Grid>
+                            <TextBox Text="{Binding ProductRecipe, FallbackValue=''}" 
+                                Tag="Tutaj wpisz przepis na nowego drinka" 
+                                Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder2}"
+                                VerticalContentAlignment="Top"
+                                HorizontalContentAlignment="Left"
+                                Padding="10"
+                                IsEnabled="True">
+                            </TextBox>
+                        </Grid>
+                    </Border>
 
-                        <Grid Grid.Row="14">
+                    <Grid Grid.Row="14">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="25*"/>
                             <ColumnDefinition Width="165*"/>
@@ -253,18 +247,19 @@
                             <ColumnDefinition Width="25*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Button x:Name="DeleteProduct_Button" Click="DeleteProduct_ButtonClick" Grid.Row="14" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}">
+                        <Button x:Name="DeleteProduct_Button" Click="DeleteProduct_ButtonClick" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="USUŃ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                             </StackPanel>
                         </Button>
 
-                        <Button x:Name="SaveProduct_Button" Click="SaveProduct_ButtonClick" Grid.Row="14" Grid.Column="3" Margin="0" Style="{StaticResource payButton}">
+                        <Button x:Name="SaveProduct_Button" Click="SaveProduct_ButtonClick" Grid.Column="3" Margin="0" Style="{StaticResource payButton}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="ZAPISZ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                             </StackPanel>
                         </Button>
                     </Grid>
+
                 </Grid>
             </Border>
             </Grid>
@@ -296,7 +291,7 @@
                 </Grid.RowDefinitions>
 
                 <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" CornerRadius="8" d:IsLocked="True">
-                    <Grid Grid.Row="0">
+                    <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="3*"/>
                             <RowDefinition Height="1.5*"/>
@@ -313,13 +308,13 @@
                         </Grid.RowDefinitions>
 
                         <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black" CornerRadius="8,8,0, 0" Background="#8EA7E9">
-                            <Grid Grid.Row="0">
+                            <Grid>
                                 <TextBlock Text="DODAJ, EDYTUJ LUB USUŃ SKŁADNIK" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"></TextBlock>
                             </Grid>
                         </Border>
 
                         <Border Grid.Row="2" CornerRadius="8" Margin="25,0,25,0" Background="White">
-                            <Grid Grid.Row="2">
+                            <Grid>
                                 <ComboBox x:Name="EditIngredient_ComboBox" SelectionChanged="EditIngredient_ComboBoxSelectionChanged" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                                     <ComboBoxItem IsSelected="True" IsEnabled="False">Wybierz składnik</ComboBoxItem>
                                 </ComboBox>
@@ -339,13 +334,11 @@
                             </Grid>
 
                             <Border Grid.Column="1" CornerRadius="8" Margin="24,0,25,0" Background="White">
-                                <Grid Grid.Column="1">
-                                    <TextBox x:Name="NewIngredientName" IsEnabled="False" Style="{StaticResource placeholderTextBox}" Text="Nazwa nowego składnika" Tag="Nazwa nowego składnika" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
-                                        <TextBox.Resources>
-                                            <Style TargetType="{x:Type Border}">
-                                                <Setter Property="CornerRadius" Value="8"/>
-                                            </Style>
-                                        </TextBox.Resources>
+                                <Grid>
+                                    <TextBox Text="{Binding NewIngredientName, FallbackValue=''}" 
+                                             Tag="Nazwa nowego składnika" 
+                                             Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}"
+                                             IsEnabled="True">
                                     </TextBox>
                                 </Grid>
                             </Border>
@@ -357,39 +350,38 @@
                                 <ColumnDefinition Width="1*"/>
                             </Grid.ColumnDefinitions>
 
-                            <Border Grid.Row="6" Grid.Column="0" CornerRadius="8" Margin="25,0,12,0" Background="White">
-                                <Grid Grid.Row="6">
-                                    <TextBox x:Name="IngredientUnit" IsEnabled="False" Style="{StaticResource placeholderTextBox}" Text="Jednostka" Tag="Jednostka" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
-                                        <TextBox.Resources>
-                                            <Style TargetType="{x:Type Border}">
-                                                <Setter Property="CornerRadius" Value="8"/>
-                                            </Style>
-                                        </TextBox.Resources>
+                            <Border CornerRadius="8" Margin="24,0,25,0" Background="White">
+                                <Grid>
+                                    <TextBox Text="{Binding IngredientUnit, FallbackValue=''}" 
+                                             Tag="Jednostka" 
+                                             Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}"
+                                             IsEnabled="True">
                                     </TextBox>
                                 </Grid>
                             </Border>
 
-                            <Border Grid.Row="6" Grid.Column="1" CornerRadius="8" Margin="12,0,25,0" Background="White">
-                                <Grid Grid.Row="6">
-                                    <TextBox x:Name="IngredientPackage" IsEnabled="False" Style="{StaticResource placeholderTextBox}" Text="Opakowanie" Tag="Opakowanie" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
-                                        <TextBox.Resources>
-                                            <Style TargetType="{x:Type Border}">
-                                                <Setter Property="CornerRadius" Value="8"/>
-                                            </Style>
-                                        </TextBox.Resources>
+                            <Border Grid.Column="1" CornerRadius="8" Margin="24,0,25,0" Background="White">
+                                <Grid>
+                                    <TextBox Text="{Binding IngredientPackage, FallbackValue=''}" 
+                                             Tag="Opakowanie" 
+                                             Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}"
+                                             VerticalContentAlignment="Top"
+                                             HorizontalContentAlignment="Left"
+                                             IsEnabled="True">
                                     </TextBox>
                                 </Grid>
                             </Border>
                         </Grid>
 
-                        <Border Grid.Row="8" CornerRadius="8" Margin="25,0,25,0" Background="White">
-                            <Grid Grid.Row="8">
-                                <TextBox x:Name="IngredientDescription" IsEnabled="False" Style="{StaticResource placeholderTextBox}" Text="Opis składnika" Tag="Opis składnika" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" Padding="10" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus">
-                                    <TextBox.Resources>
-                                        <Style TargetType="{x:Type Border}">
-                                            <Setter Property="CornerRadius" Value="8"/>
-                                        </Style>
-                                    </TextBox.Resources>
+                        <Border Grid.Row="8" CornerRadius="8" Margin="24,0,25,0" Background="White">
+                            <Grid>
+                                <TextBox Text="{Binding IngredientDescription, FallbackValue=''}" 
+                                         Tag="Opis składnika" 
+                                         Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder2}"
+                                         VerticalContentAlignment="Top"
+                                         HorizontalContentAlignment="Left"
+                                         Padding="10"
+                                         IsEnabled="True">
                                 </TextBox>
                             </Grid>
                         </Border>

@@ -38,7 +38,7 @@ namespace POS.ViewModels.SalesPanel
 
         private ObservableCollection<Product> productCollection = new();
         private ObservableCollection<OrderItemDto> orderItemCollection = new();
-        private ObservableCollection<OrderDto> orderCollection = new ();
+        private ObservableCollection<OrderDto> orderCollection = new();
         private ObservableCollection<Recipe> recipeCollection = new();
 
         private double amountToPayForOrder;
@@ -169,7 +169,7 @@ namespace POS.ViewModels.SalesPanel
             productCollection.Clear();
 
             foreach (var product in productsList)
-                 productCollection.Add(product);
+                productCollection.Add(product);
         }
 
         private void ShowAllProducts()
@@ -301,7 +301,7 @@ namespace POS.ViewModels.SalesPanel
             {
                 ClearOrder();
 
-                if(!orderCollection.Any())
+                if (!orderCollection.Any())
                     SwitchViewToCollectionFromArgument(productCollection);
             }
         }
@@ -317,7 +317,7 @@ namespace POS.ViewModels.SalesPanel
                 RecalculateAmountToPay();
             }
         }
-        
+
         private void AddInvoice()
         {
             InvoiceWindow invoiceWindow = new();
@@ -410,7 +410,7 @@ namespace POS.ViewModels.SalesPanel
         {
             if (collection.GetType() == typeof(ObservableCollection<Product>))
                 CurrentViewIndex = 0;
-            else if(collection.GetType() == typeof(ObservableCollection<Recipe>))
+            else if (collection.GetType() == typeof(ObservableCollection<Recipe>))
                 CurrentViewIndex = 1;
             else if (collection.GetType() == typeof(ObservableCollection<OrderDto>))
                 CurrentViewIndex = 2;
@@ -420,7 +420,7 @@ namespace POS.ViewModels.SalesPanel
         {
             _navigationService.OpenWindow<T>(windowType);
 
-            if(Application.Current.Windows.OfType<Views.Windows.MainWindow>().Any())
+            if (Application.Current.Windows.OfType<Views.Windows.MainWindow>().Any())
                 CloseWindowBaseAction!.Invoke();
         }
     }

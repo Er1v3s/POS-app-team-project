@@ -35,12 +35,12 @@ namespace POS.Views.Windows.WarehouseFunctions
 
         private void TextBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            PlaceholderTextBoxHelper.SetPlaceholderOnFocus(sender, e);
+            //PlaceholderTextBoxHelper.SetPlaceholderOnFocus(sender, e);
         }
 
         private void TextBox_LostFocus(object sender, RoutedEventArgs e)
         {
-            PlaceholderTextBoxHelper.SetPlaceholderOnLostFocus(sender, e);
+            //PlaceholderTextBoxHelper.SetPlaceholderOnLostFocus(sender, e);
         }
 
         #region left side
@@ -86,112 +86,112 @@ namespace POS.Views.Windows.WarehouseFunctions
         
         private void EditRecipeIngredient_ComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(EditRecipeIngredient_ComboBox != null)
-            {
-                string selectedIngredient = EditRecipeIngredient_ComboBox.SelectedItem.ToString();
+            //if(EditRecipeIngredient_ComboBox != null)
+            //{
+            //    string selectedIngredient = EditRecipeIngredient_ComboBox.SelectedItem.ToString();
 
-                using (var dbContext = new AppDbContext())
-                {
-                    var recipeIngredient = dbContext.Ingredients.FirstOrDefault(i => i.Name == selectedIngredient);
-                    if(recipeIngredient != null)
-                    {
-                        RecipeIngredientQuantity.IsEnabled = true;
-                    }
-                }
-            }
+            //    using (var dbContext = new AppDbContext())
+            //    {
+            //        var recipeIngredient = dbContext.Ingredients.FirstOrDefault(i => i.Name == selectedIngredient);
+            //        if(recipeIngredient != null)
+            //        {
+            //            RecipeIngredientQuantity.IsEnabled = true;
+            //        }
+            //    }
+            //}
         }
 
         private void DeleteRecipeIngredient_ButtonClick(object sender, RoutedEventArgs e)
         {
-            int IngredientId = 0, RecipeId = 0;
-            string selectedIngredient = EditRecipeIngredient_ComboBox.SelectedItem?.ToString();
-            string selectedProduct = EditRecipeOfProduct_ComboBox.SelectedItem?.ToString();
+            //int IngredientId = 0, RecipeId = 0;
+            //string selectedIngredient = EditRecipeIngredient_ComboBox.SelectedItem?.ToString();
+            //string selectedProduct = EditRecipeOfProduct_ComboBox.SelectedItem?.ToString();
 
-            if (string.IsNullOrEmpty(selectedIngredient) || string.IsNullOrEmpty(selectedProduct))
-            {
-                MessageBox.Show("Wybierz składnik i produkt przed usunięciem.");
-                return;
-            }
+            //if (string.IsNullOrEmpty(selectedIngredient) || string.IsNullOrEmpty(selectedProduct))
+            //{
+            //    MessageBox.Show("Wybierz składnik i produkt przed usunięciem.");
+            //    return;
+            //}
 
-            using (var dbContext = new AppDbContext())
-            {
-                var ingredient = dbContext.Ingredients.FirstOrDefault(i => i.Name == selectedIngredient);
-                if (ingredient != null)
-                {
-                    IngredientId = ingredient.IngredientId;
-                }
+            //using (var dbContext = new AppDbContext())
+            //{
+            //    var ingredient = dbContext.Ingredients.FirstOrDefault(i => i.Name == selectedIngredient);
+            //    if (ingredient != null)
+            //    {
+            //        IngredientId = ingredient.IngredientId;
+            //    }
 
-                var product = dbContext.Product.FirstOrDefault(p => p.ProductName == selectedProduct);
-                if (product != null)
-                {
-                    RecipeId = product.RecipeId;
-                }
+            //    var product = dbContext.Product.FirstOrDefault(p => p.ProductName == selectedProduct);
+            //    if (product != null)
+            //    {
+            //        RecipeId = product.RecipeId;
+            //    }
 
-                try
-                {
-                    dbContext.Database.ExecuteSqlRaw("DELETE FROM RecipeIngredients WHERE Ingredient_id = {0} AND Recipe_id = {1}", IngredientId, RecipeId);
-                    dbContext.SaveChanges();
-                    MessageBox.Show("Rekord usunięty pomyślnie.");
-                    LoadIngredientsToDataGrid(selectedProduct);
-                    EditRecipeIngredient_ComboBox.SelectedIndex = 0;
-                    RecipeIngredientQuantity.Text = "Ilość składnika w przepisie";
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Wystąpił błąd: {ex.Message}");
-                }
-            }
+            //    try
+            //    {
+            //        dbContext.Database.ExecuteSqlRaw("DELETE FROM RecipeIngredients WHERE Ingredient_id = {0} AND Recipe_id = {1}", IngredientId, RecipeId);
+            //        dbContext.SaveChanges();
+            //        MessageBox.Show("Rekord usunięty pomyślnie.");
+            //        LoadIngredientsToDataGrid(selectedProduct);
+            //        EditRecipeIngredient_ComboBox.SelectedIndex = 0;
+            //        RecipeIngredientQuantity.Text = "Ilość składnika w przepisie";
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        MessageBox.Show($"Wystąpił błąd: {ex.Message}");
+            //    }
+            //}
         }
 
         private void AddRecipeIngredient_ButtonClick(object sender, RoutedEventArgs e)
         {
-            int IngredientId = 0, RecipeId = 0;
-            string selectedIngredient = EditRecipeIngredient_ComboBox.SelectedItem.ToString();
-            string selectedProduct = EditRecipeOfProduct_ComboBox.SelectedItem.ToString();
-            int Quantity;
-            if (int.TryParse(RecipeIngredientQuantity.Text, out Quantity))
-            {
-                Quantity = Convert.ToInt32(RecipeIngredientQuantity.Text);
+            //int IngredientId = 0, RecipeId = 0;
+            //string selectedIngredient = EditRecipeIngredient_ComboBox.SelectedItem.ToString();
+            //string selectedProduct = EditRecipeOfProduct_ComboBox.SelectedItem.ToString();
+            //int Quantity;
+            //if (int.TryParse(RecipeIngredientQuantity.Text, out Quantity))
+            //{
+            //    Quantity = Convert.ToInt32(RecipeIngredientQuantity.Text);
 
-                using (var dbContext = new AppDbContext())
-                {
-                    var product = dbContext.Product.FirstOrDefault(p => p.ProductName == selectedProduct);
-                    if (product != null)
-                    {
-                        RecipeId = product.RecipeId;
-                    }
+            //    using (var dbContext = new AppDbContext())
+            //    {
+            //        var product = dbContext.Product.FirstOrDefault(p => p.ProductName == selectedProduct);
+            //        if (product != null)
+            //        {
+            //            RecipeId = product.RecipeId;
+            //        }
 
-                    var ingredient = dbContext.Ingredients.FirstOrDefault(i => i.Name == selectedIngredient);
-                    if (ingredient != null)
-                    {
-                        IngredientId = ingredient.IngredientId;
-                    }
+            //        var ingredient = dbContext.Ingredients.FirstOrDefault(i => i.Name == selectedIngredient);
+            //        if (ingredient != null)
+            //        {
+            //            IngredientId = ingredient.IngredientId;
+            //        }
 
-                    var recipe = dbContext.Recipes.FirstOrDefault(r => r.RecipeId == RecipeId);
-                    if (ingredient != null && recipe != null)
-                    {
+            //        var recipe = dbContext.Recipes.FirstOrDefault(r => r.RecipeId == RecipeId);
+            //        if (ingredient != null && recipe != null)
+            //        {
 
-                        var recipeIngredient = new RecipeIngredient
-                        {
-                            RecipeId = RecipeId,
-                            IngredientId = IngredientId,
-                            Quantity = Quantity
-                        };
+            //            var recipeIngredient = new RecipeIngredient
+            //            {
+            //                RecipeId = RecipeId,
+            //                IngredientId = IngredientId,
+            //                Quantity = Quantity
+            //            };
 
-                        dbContext.Database.ExecuteSqlRaw("INSERT INTO RecipeIngredients (Recipe_id, Ingredient_id, Quantity) VALUES ({0}, {1}, {2})", RecipeId, ingredient.IngredientId, Quantity);
-                        dbContext.SaveChanges();
+            //            dbContext.Database.ExecuteSqlRaw("INSERT INTO RecipeIngredients (Recipe_id, Ingredient_id, Quantity) VALUES ({0}, {1}, {2})", RecipeId, ingredient.IngredientId, Quantity);
+            //            dbContext.SaveChanges();
 
-                        MessageBox.Show("Rekord dodany pomyślnie.");
-                    }
-                    LoadIngredientsToDataGrid(selectedProduct);
-                    EditRecipeIngredient_ComboBox.SelectedIndex = 0;
-                    RecipeIngredientQuantity.Text = "Ilość składnika w przepisie";
-                }
-            }
-            else
-            {
-                MessageBox.Show("Wprowadzona ilość nie jest cyfrą");
-            }
+            //            MessageBox.Show("Rekord dodany pomyślnie.");
+            //        }
+            //        LoadIngredientsToDataGrid(selectedProduct);
+            //        EditRecipeIngredient_ComboBox.SelectedIndex = 0;
+            //        RecipeIngredientQuantity.Text = "Ilość składnika w przepisie";
+            //    }
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Wprowadzona ilość nie jest cyfrą");
+            //}
         }
 
         #endregion
@@ -213,67 +213,67 @@ namespace POS.Views.Windows.WarehouseFunctions
 
         private void EditProduct_ComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (EditProduct_ComboBox.SelectedItem != null)
-            {
-                int recipeId = 0;
-                string selectedProduct = EditProduct_ComboBox.SelectedItem.ToString();
+            //if (EditProduct_ComboBox.SelectedItem != null)
+            //{
+            //    int recipeId = 0;
+            //    string selectedProduct = EditProduct_ComboBox.SelectedItem.ToString();
 
-                using (var dbContext = new AppDbContext())
-                {
-                    var product = dbContext.Product.FirstOrDefault(i => i.ProductName == selectedProduct);
+            //    using (var dbContext = new AppDbContext())
+            //    {
+            //        var product = dbContext.Product.FirstOrDefault(i => i.ProductName == selectedProduct);
 
-                    if (product != null)
-                    {
-                        recipeId = product.RecipeId;
-                        NewProductName.Text = product.ProductName;
-                        ProductPrice.Text = product.Price.ToString();
-                        ProductPrice.IsEnabled = true;
-                        ProductPrice.LostFocus -= TextBox_LostFocus;
-                        ProductPrice.GotFocus -= TextBox_GotFocus;
-                        ProductCategory.Text = product.Category;
-                        ProductCategory.IsEnabled = true;
-                        ProductCategory.LostFocus -= TextBox_LostFocus;
-                        ProductCategory.GotFocus -= TextBox_GotFocus;
-                        ProductDescription.Text = product.Description;
-                        ProductDescription.IsEnabled = true;
-                        ProductDescription.LostFocus -= TextBox_LostFocus;
-                        ProductDescription.GotFocus -= TextBox_GotFocus;
-                    }
+            //        if (product != null)
+            //        {
+            //            recipeId = product.RecipeId;
+            //            NewProductName.Text = product.ProductName;
+            //            ProductPrice.Text = product.Price.ToString();
+            //            ProductPrice.IsEnabled = true;
+            //            ProductPrice.LostFocus -= TextBox_LostFocus;
+            //            ProductPrice.GotFocus -= TextBox_GotFocus;
+            //            ProductCategory.Text = product.Category;
+            //            ProductCategory.IsEnabled = true;
+            //            ProductCategory.LostFocus -= TextBox_LostFocus;
+            //            ProductCategory.GotFocus -= TextBox_GotFocus;
+            //            ProductDescription.Text = product.Description;
+            //            ProductDescription.IsEnabled = true;
+            //            ProductDescription.LostFocus -= TextBox_LostFocus;
+            //            ProductDescription.GotFocus -= TextBox_GotFocus;
+            //        }
 
-                    var recipe = dbContext.Recipes.FirstOrDefault(i => i.RecipeId == recipeId);
-                    if(recipe != null)
-                    {
-                        Recipe.Text = recipe.RecipeContent;
-                        Recipe.IsEnabled = true;
-                        Recipe.LostFocus -= TextBox_LostFocus;
-                        Recipe.GotFocus -= TextBox_GotFocus;
-                    }
-                }
-            }
+            //        var recipe = dbContext.Recipes.FirstOrDefault(i => i.RecipeId == recipeId);
+            //        if(recipe != null)
+            //        {
+            //            Recipe.Text = recipe.RecipeContent;
+            //            Recipe.IsEnabled = true;
+            //            Recipe.LostFocus -= TextBox_LostFocus;
+            //            Recipe.GotFocus -= TextBox_GotFocus;
+            //        }
+            //    }
+            //}
         }
 
         public void EditProduct_Clear()
         {
-            EditProduct_ComboBox.SelectedIndex = 0;
-            ProductPrice.Text = "Cena";
-            ProductPrice.IsEnabled = true;
-            ProductPrice.LostFocus += TextBox_LostFocus;
-            ProductPrice.GotFocus += TextBox_GotFocus;
-            ProductCategory.Text = "Kategoria";
-            ProductCategory.IsEnabled = true;
-            ProductCategory.LostFocus += TextBox_LostFocus;
-            ProductCategory.GotFocus += TextBox_GotFocus;
-            ProductDescription.Text = "Opis Produktu";
-            ProductDescription.IsEnabled = true;
-            ProductDescription.LostFocus += TextBox_LostFocus;
-            ProductDescription.GotFocus += TextBox_GotFocus;
-            Recipe.Text = "Tutaj wpisz przepis na nowego drinka";
-            Recipe.IsEnabled = true;
-            Recipe.LostFocus += TextBox_LostFocus;
-            Recipe.GotFocus += TextBox_GotFocus;
-            NewProductName.Text = "Nazwa nowego produktu";
-            NewProductName.IsEnabled = true;
-            ProductPrice.IsEnabled = true;
+            //EditProduct_ComboBox.SelectedIndex = 0;
+            //ProductPrice.Text = "Cena";
+            //ProductPrice.IsEnabled = true;
+            //ProductPrice.LostFocus += TextBox_LostFocus;
+            //ProductPrice.GotFocus += TextBox_GotFocus;
+            //ProductCategory.Text = "Kategoria";
+            //ProductCategory.IsEnabled = true;
+            //ProductCategory.LostFocus += TextBox_LostFocus;
+            //ProductCategory.GotFocus += TextBox_GotFocus;
+            //ProductDescription.Text = "Opis Produktu";
+            //ProductDescription.IsEnabled = true;
+            //ProductDescription.LostFocus += TextBox_LostFocus;
+            //ProductDescription.GotFocus += TextBox_GotFocus;
+            //Recipe.Text = "Tutaj wpisz przepis na nowego drinka";
+            //Recipe.IsEnabled = true;
+            //Recipe.LostFocus += TextBox_LostFocus;
+            //Recipe.GotFocus += TextBox_GotFocus;
+            //NewProductName.Text = "Nazwa nowego produktu";
+            //NewProductName.IsEnabled = true;
+            //ProductPrice.IsEnabled = true;
         }
 
         private void CreateNewProduct_CheckBoxChecked(object sender, RoutedEventArgs e)
@@ -287,85 +287,85 @@ namespace POS.Views.Windows.WarehouseFunctions
 
         private void CreateNewProduct_CheckBoxUnChecked(object sender, RoutedEventArgs e)
         {
-            EditProduct_ComboBox.IsEnabled = true;
-            DeleteIngredient_Button.IsEnabled = true;
-            NewProductName.IsEnabled = false;
-            ProductPrice.IsEnabled = false;
-            ProductCategory.IsEnabled = false;
-            ProductDescription.IsEnabled = false;
-            Recipe.IsEnabled = false;
+            //EditProduct_ComboBox.IsEnabled = true;
+            //DeleteIngredient_Button.IsEnabled = true;
+            //NewProductName.IsEnabled = false;
+            //ProductPrice.IsEnabled = false;
+            //ProductCategory.IsEnabled = false;
+            //ProductDescription.IsEnabled = false;
+            //Recipe.IsEnabled = false;
         }
 
         private void SaveProduct_ButtonClick(object sender, RoutedEventArgs e)
         {
-            if (CreateNewProduct_CheckBox.IsChecked == true && double.TryParse(ProductPrice.Text, out double price))
-            {
-                using (var dbContext = new AppDbContext())
-                {
-                    var newRecipe = new Recipe
-                    {
-                        RecipeName ="Przepis na " + NewProductName.Text,
-                        RecipeContent = Recipe.Text,
-                    };
-                    dbContext.Recipes.Add(newRecipe);
-                    dbContext.SaveChanges();
-                    var newProduct = new Product
-                    {
-                        RecipeId = newRecipe.RecipeId,
-                        ProductName = NewProductName.Text,
-                        Price = Convert.ToDouble(ProductPrice.Text),
-                        Category = ProductCategory.Text,
-                        Description = ProductDescription.Text
-                    };
+            //if (CreateNewProduct_CheckBox.IsChecked == true && double.TryParse(ProductPrice.Text, out double price))
+            //{
+            //    using (var dbContext = new AppDbContext())
+            //    {
+            //        var newRecipe = new Recipe
+            //        {
+            //            RecipeName ="Przepis na " + NewProductName.Text,
+            //            RecipeContent = Recipe.Text,
+            //        };
+            //        dbContext.Recipes.Add(newRecipe);
+            //        dbContext.SaveChanges();
+            //        var newProduct = new Product
+            //        {
+            //            RecipeId = newRecipe.RecipeId,
+            //            ProductName = NewProductName.Text,
+            //            Price = Convert.ToDouble(ProductPrice.Text),
+            //            Category = ProductCategory.Text,
+            //            Description = ProductDescription.Text
+            //        };
 
-                    dbContext.Product.Add(newProduct);
-                    dbContext.SaveChanges();
-                    EditProduct_Clear();
-                    FillEditProductComboBox(EditProduct_ComboBox);
-                    FillEditProductComboBox(EditRecipeOfProduct_ComboBox);
-                    CreateNewProduct_CheckBox.IsChecked = false;
-                    MessageBox.Show("Pomyślnie dodano nowy produkt.");
-                }
-            }
-            else if(CreateNewProduct_CheckBox.IsChecked == false && double.TryParse(ProductPrice.Text, out price))
-            {
-                if (EditProduct_ComboBox.SelectedItem != null)
-                {
-                    string selectedProduct = EditProduct_ComboBox.SelectedItem.ToString();
+            //        dbContext.Product.Add(newProduct);
+            //        dbContext.SaveChanges();
+            //        EditProduct_Clear();
+            //        FillEditProductComboBox(EditProduct_ComboBox);
+            //        FillEditProductComboBox(EditRecipeOfProduct_ComboBox);
+            //        CreateNewProduct_CheckBox.IsChecked = false;
+            //        MessageBox.Show("Pomyślnie dodano nowy produkt.");
+            //    }
+            //}
+            //else if(CreateNewProduct_CheckBox.IsChecked == false && double.TryParse(ProductPrice.Text, out price))
+            //{
+            //    if (EditProduct_ComboBox.SelectedItem != null)
+            //    {
+            //        string selectedProduct = EditProduct_ComboBox.SelectedItem.ToString();
 
-                    using (var dbContext = new AppDbContext())
-                    {
-                        int recipeToUpdateId = 0;
-                        var productToUpdate = dbContext.Product.FirstOrDefault(p => p.ProductName == selectedProduct);
-                        if (productToUpdate != null)
-                        {
-                            recipeToUpdateId = productToUpdate.RecipeId;
-                            productToUpdate.ProductName = NewProductName.Text;
-                            productToUpdate.Price = Convert.ToDouble(ProductPrice.Text);
-                            productToUpdate.Category = ProductCategory.Text;
-                            productToUpdate.Description = ProductDescription.Text;
-                        }
-                        var recipeToUpdate = dbContext.Recipes.FirstOrDefault(r => r.RecipeId == recipeToUpdateId);
-                        if(recipeToUpdate != null)
-                        {
-                            recipeToUpdate.RecipeContent = Recipe.Text;
-                        }
-                        dbContext.SaveChanges();
-                        EditProduct_Clear();
-                        CreateNewProduct_CheckBox.IsChecked = false;
-                        MessageBox.Show("Pomyślnie zapisano zmiany.");
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Wybierz produkt do edycji.");
-                }
-            }
-            else
-            {
-                MessageBox.Show("Wprowadzona cena nie jest cyfrą");
-            }
-            FillEditProductComboBox(EditProduct_ComboBox);
+            //        using (var dbContext = new AppDbContext())
+            //        {
+            //            int recipeToUpdateId = 0;
+            //            var productToUpdate = dbContext.Product.FirstOrDefault(p => p.ProductName == selectedProduct);
+            //            if (productToUpdate != null)
+            //            {
+            //                recipeToUpdateId = productToUpdate.RecipeId;
+            //                productToUpdate.ProductName = NewProductName.Text;
+            //                productToUpdate.Price = Convert.ToDouble(ProductPrice.Text);
+            //                productToUpdate.Category = ProductCategory.Text;
+            //                productToUpdate.Description = ProductDescription.Text;
+            //            }
+            //            var recipeToUpdate = dbContext.Recipes.FirstOrDefault(r => r.RecipeId == recipeToUpdateId);
+            //            if(recipeToUpdate != null)
+            //            {
+            //                recipeToUpdate.RecipeContent = Recipe.Text;
+            //            }
+            //            dbContext.SaveChanges();
+            //            EditProduct_Clear();
+            //            CreateNewProduct_CheckBox.IsChecked = false;
+            //            MessageBox.Show("Pomyślnie zapisano zmiany.");
+            //        }
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show("Wybierz produkt do edycji.");
+            //    }
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Wprowadzona cena nie jest cyfrą");
+            //}
+            //FillEditProductComboBox(EditProduct_ComboBox);
         }
 
         private void DeleteProduct_ButtonClick(object sender, RoutedEventArgs e)
