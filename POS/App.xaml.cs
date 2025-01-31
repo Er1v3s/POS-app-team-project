@@ -140,10 +140,13 @@ namespace POS
 
             #region WarehouseFunctions
 
-
-
             servicesCollection.AddTransient<WarehouseFunctionsViewModel>();
+
+            servicesCollection.AddTransient<EditProductRecipeViewModel>();
+            servicesCollection.AddTransient<AddEditDeleteProductViewModel>();
+            servicesCollection.AddTransient<AddEditDeleteIngredientViewModel>();
             servicesCollection.AddTransient<StockManagementViewModel>();
+
             servicesCollection.AddTransient<CreateDeliveryViewModel>();
 
             #endregion

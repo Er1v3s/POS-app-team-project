@@ -14,81 +14,10 @@ namespace POS.ViewModels.WarehouseFunctions
 
         private string loggedInUserName;
 
-        private string amountOfIngredientInRecipe;
-        private string newProductName;
-        private string productCategory;
-        private string productPrice;
-        private string productDescription;
-        private string productRecipe;
-        private string newIngredientName;
-        private string ingredientUnit;
-        private string ingredientPackage;
-        private string ingredientDescription;
-
         public string LoggedInUserName
         {
             get => loggedInUserName;
             set => SetField(ref loggedInUserName, value);
-        }
-
-        public string AmountOfIngredientInRecipe
-        {
-            get => amountOfIngredientInRecipe;
-            set => SetField(ref amountOfIngredientInRecipe, value);
-        }
-
-        public string ProductCategory
-        {
-            get => productCategory;
-            set => SetField(ref productCategory, value);
-        }
-
-        public string ProductPrice
-        {
-            get => productPrice;
-            set => SetField(ref productPrice, value);
-        }
-        
-        public string NewProductName
-        {
-            get => newProductName;
-            set => SetField(ref newProductName, value);
-        }
-        
-        public string ProductDescription
-        {
-            get => productDescription;
-            set => SetField(ref productDescription, value);
-        }
-        
-        public string ProductRecipe
-        {
-            get => productRecipe;
-            set => SetField(ref productRecipe, value);
-        }
-        
-        public string NewIngredientName
-        {
-            get => newIngredientName;
-            set => SetField(ref newIngredientName, value);
-        }
-        
-        public string IngredientUnit
-        {
-            get => ingredientUnit;
-            set => SetField(ref ingredientUnit, value);
-        }
-        
-        public string IngredientPackage
-        {
-            get => ingredientPackage;
-            set => SetField(ref ingredientPackage, value);
-        }
-        
-        public string IngredientDescription
-        {
-            get => ingredientDescription;
-            set => SetField(ref ingredientDescription, value);
         }
 
         public ICommand OpenMainWindowCommand { get; }
