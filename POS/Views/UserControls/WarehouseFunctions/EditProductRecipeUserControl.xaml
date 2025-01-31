@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="768" d:DesignWidth="455">
 
-    <Grid>
+    <Grid Margin="25" Background="#FFD9D9D9">
         <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" CornerRadius="8" d:IsLocked="True">
             <Grid>
                 <Grid.RowDefinitions>
@@ -29,29 +29,52 @@
 
                 <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black" CornerRadius="8,8,0, 0" Background="#8EA7E9">
                     <Grid>
-                        <TextBlock Text="EDYTUJ SKŁADNIKI RECEPTURY" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"></TextBlock>
+                        <TextBlock Text="EDYTUJ RECEPTURĘ PRODUKTU" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"/>
                     </Grid>
                 </Border>
 
                 <Border Grid.Row="2" CornerRadius="8" Margin="25,0,25,0" Background="White">
                     <Grid>
-                        <ComboBox x:Name="EditRecipeOfProduct_ComboBox" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                            <ComboBoxItem IsSelected="True" IsEnabled="False">Wybierz produkt</ComboBoxItem>
+                        <ComboBox ItemsSource="{Binding ProductCollection}"
+                                  SelectedItem="{Binding SelectedProduct}"
+                                  DisplayMemberPath="ProductName"
+                                  VerticalAlignment="Stretch"
+                                  HorizontalAlignment="Stretch"
+                                  HorizontalContentAlignment="Center"
+                                  VerticalContentAlignment="Center">
                         </ComboBox>
+                        <TextBlock Text="Wybierz produkt"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   IsHitTestVisible="False"
+                                   Visibility="{Binding IsProductSelected}">
+                        </TextBlock>
                     </Grid>
                 </Border>
+
                 <Border Grid.Row="4" CornerRadius="8" Margin="25,0,25,0" Background="White">
                     <Grid>
-                        <ComboBox x:Name="EditRecipeIngredient_ComboBox" IsEnabled="False" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                            <ComboBoxItem IsSelected="True" IsEnabled="False">Wybierz składnik</ComboBoxItem>
+                        <ComboBox ItemsSource="{Binding IngredientCollection}"
+                                  SelectedItem="{Binding SelectedIngredient}"
+                                  DisplayMemberPath="Name"
+                                  VerticalAlignment="Stretch"
+                                  HorizontalAlignment="Stretch"
+                                  HorizontalContentAlignment="Center"
+                                  VerticalContentAlignment="Center">
                         </ComboBox>
+                        <TextBlock Text="Wybierz składnik"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   IsHitTestVisible="False"
+                                   Visibility="{Binding IsIngredientSelected}">
+                        </TextBlock>
                     </Grid>
                 </Border>
 
                 <Border Grid.Row="6" CornerRadius="8" Margin="25,0,25,0" Background="White">
                     <Grid>
-                        <TextBox Text="{Binding AmountOfIngredientInRecipe, FallbackValue=''}"
-                             Tag="Ilość składnika w przepisie" 
+                        <TextBox Text="{Binding AmountOfIngredient, FallbackValue='', UpdateSourceTrigger=PropertyChanged}"
+                             Tag="Ilość składnika" 
                              Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}" 
                              IsEnabled="True">
                         </TextBox>
@@ -67,13 +90,13 @@
                         <ColumnDefinition Width="25*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="DeleteRecipeIngredient_Button" Grid.Row="8" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}">
+                    <Button Command="{Binding DeleteIngredientFromRecipeCommand}" IsEnabled="{Binding IsDeleteButtonEnable}" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="USUŃ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                         </StackPanel>
                     </Button>
 
-                    <Button x:Name="AddRecipeIngredient_Button" Grid.Row="8" Grid.Column="3" Margin="0" Style="{StaticResource payButton}">
+                    <Button Command="{Binding AddIngredientToRecipeCommand}" IsEnabled="{Binding IsAddButtonEnable}" Grid.Column="3" Margin="0" Style="{StaticResource payButton}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="DODAJ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                         </StackPanel>
@@ -82,21 +105,33 @@
 
                 <Border Grid.Row="10" BorderThickness="0,1,0,1" BorderBrush="Black" CornerRadius="0" Background="#8EA7E9">
                     <Grid>
-                        <TextBlock Text="LISTA SKŁADNIKÓW RECEPTURY:" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"></TextBlock>
+                        <TextBlock Text="LISTA SKŁADNIKÓW RECEPTURY:" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"/>
                     </Grid>
                 </Border>
 
                 <Grid Grid.Row="11">
-                    <DataGrid x:Name="recipeIngredientsDataGrid" Style="{DynamicResource DataGridStyle3}" RowStyle="{DynamicResource DataGridRowStyle3}" CellStyle="{DynamicResource DataGridCellStyle3}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle3}" IsReadOnly="True">
+                    <DataGrid 
+                        ItemsSource="{Binding RecipeIngredientCollection}"
+                        SelectedItem="{Binding SelectedRecipeIngredient, Mode=TwoWay}"
+                        Style="{DynamicResource DataGridStyle3}"
+                        CellStyle="{DynamicResource DataGridCellStyle3}"
+                        ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle3}"
+                        SelectionMode="Single"
+                        IsReadOnly="True">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="ID" Width="1*" Binding="{Binding RecipeIngredientId}" />
-                            <DataGridTextColumn Header="Nazwa składnika" Width="4*" Binding="{Binding Name}"/>
-                            <DataGridTextColumn Header="Ilość" Width="1*" Binding="{Binding Amount}"/>
-                            <DataGridTextColumn Header="Jednostka" Width="2*" Binding="{Binding Unit}"/>
+                            <DataGridTextColumn Header="Nazwa składnika" Width="4*" Binding="{Binding Ingredient.Name}"/>
+                            <DataGridTextColumn Header="Ilość" Width="1*" Binding="{Binding Quantity}"/>
+                            <DataGridTextColumn Header="Jednostka" Width="2*" Binding="{Binding Ingredient.Unit}"/>
                             <DataGridTemplateColumn Header="" Width="1*"/>
                         </DataGrid.Columns>
+                        <DataGrid.RowStyle>
+                            <Style BasedOn="{StaticResource DataGridRowStyle4}" TargetType="DataGridRow">
+                                <EventSetter Event="PreviewMouseLeftButtonDown" Handler="OnPreviewMouseLeftButtonDown"/>
+                            </Style>
+                        </DataGrid.RowStyle>
                     </DataGrid>
                 </Grid>
+
             </Grid>
         </Border>
     </Grid>

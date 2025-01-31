@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DataAccess;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
+using POS.Exceptions;
 using POS.Models.Orders;
 
 namespace POS.Services
@@ -15,6 +17,16 @@ namespace POS.Services
         public IngredientService(AppDbContext dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public async Task<List<Ingredient>> GetAllIngredientsAsync()
+        {
+            var ingredients = await _dbContext.Ingredients.ToListAsync();
+
+            if (ingredients == null)
+                throw new NotFoundException("Nie odnaleziono żadnych składników");
+
+            return ingredients;
         }
 
         public async Task RemoveIngredients(OrderDto orderDto)

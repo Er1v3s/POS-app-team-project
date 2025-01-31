@@ -382,7 +382,7 @@ namespace POS.ViewModels.SalesPanel
 
                 foreach (var product in orderItemCollection)
                 {
-                    var recipe = await _recipeService.GetRecipeAsync(product);
+                    var recipe = await _recipeService.GetRecipeByIdAsync(product.RecipeId);
                     recipeCollection.Add(recipe);
                 }
             }

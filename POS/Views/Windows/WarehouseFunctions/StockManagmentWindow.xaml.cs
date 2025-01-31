@@ -7,6 +7,7 @@ using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using POS.Helpers;
+using POS.Services;
 using POS.ViewModels.WarehouseFunctions;
 
 namespace POS.Views.Windows.WarehouseFunctions
@@ -16,9 +17,6 @@ namespace POS.Views.Windows.WarehouseFunctions
     /// </summary>
     public partial class StockManagementWindow : Window
     {
-        private Employee currentUser;
-        public int EmployeeId;
-
         public StockManagementWindow()
         {
             InitializeComponent();
@@ -33,30 +31,20 @@ namespace POS.Views.Windows.WarehouseFunctions
             //FillEditProductComboBox(EditRecipeOfProduct_ComboBox);
         }
 
-        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            //PlaceholderTextBoxHelper.SetPlaceholderOnFocus(sender, e);
-        }
-
-        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            //PlaceholderTextBoxHelper.SetPlaceholderOnLostFocus(sender, e);
-        }
-
         #region left side
 
-        private void EditRecipeOfProduct_ComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
+        //private void EditRecipeOfProduct_ComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
             //if (EditRecipeOfProduct_ComboBox.SelectedItem != null)
             //{
             //    string selectedProduct = EditRecipeOfProduct_ComboBox.SelectedItem.ToString();
 
             //    LoadIngredientsToDataGrid(selectedProduct);
             //}
-        }
+        //}
 
-        private void LoadIngredientsToDataGrid(string SelectedProduct)
-        {
+        //private void LoadIngredientsToDataGrid(string SelectedProduct)
+        //{
             //using (var dbContext = new AppDbContext())
             //{
             //    var product = dbContext.Product.FirstOrDefault(i => i.ProductName == SelectedProduct);
@@ -82,10 +70,10 @@ namespace POS.Views.Windows.WarehouseFunctions
             //        EditRecipeIngredient_ComboBox.IsEnabled = true;
             //    }
             //}
-        }
+        //}
         
-        private void EditRecipeIngredient_ComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
+        //private void EditRecipeIngredient_ComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
             //if(EditRecipeIngredient_ComboBox != null)
             //{
             //    string selectedIngredient = EditRecipeIngredient_ComboBox.SelectedItem.ToString();
@@ -99,7 +87,7 @@ namespace POS.Views.Windows.WarehouseFunctions
             //        }
             //    }
             //}
-        }
+        //}
 
         private void DeleteRecipeIngredient_ButtonClick(object sender, RoutedEventArgs e)
         {

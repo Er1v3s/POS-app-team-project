@@ -1,5 +1,5 @@
-﻿using System.ComponentModel;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
+using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
 using POS.ViewModels.WarehouseFunctions;
 
@@ -13,12 +13,16 @@ namespace POS.Views.UserControls.WarehouseFunctions
         public EditProductRecipeUserControl()
         {
             InitializeComponent();
+            DataContext = App.ServiceProvider.GetRequiredService<EditProductRecipeViewModel>();
+        }
 
-            // Designer check
-            if (DesignerProperties.GetIsInDesignMode(this))
-                DataContext = new EditProductRecipeViewModel();
-            else 
-                DataContext = App.ServiceProvider.GetRequiredService<EditProductRecipeViewModel>();
+        private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is DataGridRow row)
+            {
+                row.IsSelected = true;
+                e.Handled = true;
+            }
         }
     }
 }

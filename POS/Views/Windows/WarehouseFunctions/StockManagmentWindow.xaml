@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:userControls="clr-namespace:POS.Views.UserControls.WarehouseFunctions"
       xmlns:warehouseFunctions="clr-namespace:POS.ViewModels.WarehouseFunctions"
-      d:DataContext="{d:DesignInstance Type=warehouseFunctions:StockManagementViewModel, IsDesignTimeCreatable=True}"
+      d:DataContext="{d:DesignInstance Type=warehouseFunctions:StockManagementViewModel}"
       mc:Ignorable="d" 
       xmlns:fa="http://schemas.fontawesome.io/icons/"
       d:DesignHeight="768" d:DesignWidth="1366"
@@ -20,7 +20,7 @@
 
         <!--#region left-->
 
-        <Grid Grid.Column="0" Margin="25">
+        <Grid Grid.Column="0">
             <userControls:EditProductRecipeUserControl/>
         </Grid>
 
