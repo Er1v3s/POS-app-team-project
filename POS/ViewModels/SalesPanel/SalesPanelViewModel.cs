@@ -36,7 +36,7 @@ namespace POS.ViewModels.SalesPanel
         private string searchPhrase = DefaultPlaceholder;
         private string placeholder = DefaultPlaceholder;
 
-        private ObservableCollection<Product> productCollection = new();
+        private ObservableCollection<Product> productCollection;
         private ObservableCollection<OrderItemDto> orderItemCollection = new();
         private ObservableCollection<OrderDto> orderCollection = new();
         private ObservableCollection<Recipe> recipeCollection = new();
@@ -71,11 +71,17 @@ namespace POS.ViewModels.SalesPanel
             set => SetField(ref placeholder, value);
         }
 
-        public ObservableCollection<Product> ProductCollection
+        public ObservableCollection<Product> ProductObservableCollection
         {
             get => productCollection;
             set => SetField(ref productCollection, value);
         }
+
+        //public ObservableCollection<Product> ProductCollection
+        //{
+        //    get => productCollection;
+        //    set => SetField(ref productCollection, value);
+        //}
 
         public ObservableCollection<OrderItemDto> OrderItemCollection
         {
@@ -160,38 +166,24 @@ namespace POS.ViewModels.SalesPanel
             AddInvoiceCommand = new RelayCommand(AddInvoice);
 
             loggedInUserName = LoginManager.Instance.GetLoggedInUserFullName();
-
-            ShowAllProducts();
-        }
-
-        private void LoadProducts(ObservableCollection<Product> argProductCollection)
-        {
-            productCollection.Clear();
-
-            foreach (var product in argProductCollection)
-                productCollection.Add(product);
+            ProductObservableCollection = _productsService.ProductCollection;
         }
 
         private void ShowAllProducts()
         {
-            var products = _productsService.LoadAllProducts();
-            LoadProducts(products);
+            ProductObservableCollection = _productsService.LoadAllProducts();
         }
 
         private void FilterProductsBySearchPhrase(string searchPhraseValue)
         {
-            SwitchViewToCollectionFromArgument(productCollection);
-
-            var products = _productsService.LoadProductsBySearch(searchPhraseValue);
-            LoadProducts(products);
+            SwitchViewToCollectionFromArgument(ProductObservableCollection);
+            ProductObservableCollection = _productsService.LoadProductsBySearch(searchPhraseValue);
         }
 
         private void FilterProductsByCategory(object categoryCommandParameter)
         {
-            SwitchViewToCollectionFromArgument(productCollection);
-
-            var products = _productsService.LoadProductsByCategory(categoryCommandParameter);
-            LoadProducts(products);
+            SwitchViewToCollectionFromArgument(ProductObservableCollection);
+            ProductObservableCollection = _productsService.LoadProductsByCategory(categoryCommandParameter);
         }
 
         private void HandlePlaceholder()
@@ -302,7 +294,7 @@ namespace POS.ViewModels.SalesPanel
                 ClearOrder();
 
                 if (!orderCollection.Any())
-                    SwitchViewToCollectionFromArgument(productCollection);
+                    SwitchViewToCollectionFromArgument(ProductObservableCollection);
             }
         }
 
@@ -359,7 +351,7 @@ namespace POS.ViewModels.SalesPanel
 
             OrderCollection.Remove(orderDto);
             RecalculateAmountToPay();
-            SwitchViewToCollectionFromArgument(productCollection);
+            SwitchViewToCollectionFromArgument(ProductObservableCollection);
         }
 
         private void ShowFinishedOrders()
@@ -369,7 +361,7 @@ namespace POS.ViewModels.SalesPanel
 
         private void ShowProductCollectionView()
         {
-            SwitchViewToCollectionFromArgument(productCollection);
+            SwitchViewToCollectionFromArgument(ProductObservableCollection);
             ShowAllProducts();
         }
 

@@ -101,7 +101,7 @@
 
                                 <TabItem>
                                     <ScrollViewer>
-                                        <ItemsControl ItemsSource="{Binding ProductCollection}">
+                                        <ItemsControl ItemsSource="{Binding ProductObservableCollection}">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <UniformGrid Columns="5" VerticalAlignment="Top"/>
