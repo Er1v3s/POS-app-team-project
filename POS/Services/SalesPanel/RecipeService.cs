@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DataAccess;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using POS.Exceptions;
 
 namespace POS.Services.SalesPanel
@@ -31,13 +32,10 @@ namespace POS.Services.SalesPanel
 
         public async Task AddIngredientToRecipeAsync(int recipeId, Ingredient ingredient, string amountOfIngredient)
         {
-            if (recipeId == null)
-                throw new ArgumentNullException($"Niepoprawny przepis {recipeId}");
-
             if (ingredient == null)
                 throw new ArgumentNullException($"Niepoprawny składnik {ingredient?.Name}");
 
-            if (amountOfIngredient == null)
+            if (amountOfIngredient.IsNullOrEmpty())
                 throw new ArgumentNullException($"Niepoprawna ilość składnika {amountOfIngredient}");
 
             var recipe = await GetRecipeByIdAsync(recipeId);

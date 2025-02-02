@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using POS.ViewModels.WarehouseFunctions;
 
@@ -13,12 +12,7 @@ namespace POS.Views.UserControls.WarehouseFunctions
         public AddEditDeleteProductUserControl()
         {
             InitializeComponent();
-
-            // Designer check
-            if (DesignerProperties.GetIsInDesignMode(this))
-                DataContext = new AddEditDeleteProductViewModel();
-            else
-                DataContext = App.ServiceProvider.GetRequiredService<AddEditDeleteProductViewModel>();
+            DataContext = App.ServiceProvider.GetRequiredService<AddEditDeleteProductViewModel>();
         }
     }
 }

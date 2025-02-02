@@ -33,7 +33,7 @@
 
                 <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black" CornerRadius="8,8,0, 0" Background="#8EA7E9">
                     <Grid>
-                        <TextBlock Text="DODAJ, EDYTUJ LUB USUŃ SKŁADNIK" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"></TextBlock>
+                        <TextBlock Text="DODAJ, EDYTUJ LUB USUŃ SKŁADNIK" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16" />
                     </Grid>
                 </Border>
 

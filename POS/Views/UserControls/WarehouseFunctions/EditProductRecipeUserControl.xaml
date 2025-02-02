@@ -35,7 +35,7 @@
 
                 <Border Grid.Row="2" CornerRadius="8" Margin="25,0,25,0" Background="White">
                     <Grid>
-                        <ComboBox ItemsSource="{Binding ProductCollection}"
+                        <ComboBox ItemsSource="{Binding ProductObservableCollection}"
                                   SelectedItem="{Binding SelectedProduct}"
                                   DisplayMemberPath="ProductName"
                                   VerticalAlignment="Stretch"

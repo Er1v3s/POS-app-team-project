@@ -164,11 +164,11 @@ namespace POS.ViewModels.SalesPanel
             ShowAllProducts();
         }
 
-        private void LoadProducts(List<Product> productsList)
+        private void LoadProducts(ObservableCollection<Product> argProductCollection)
         {
             productCollection.Clear();
 
-            foreach (var product in productsList)
+            foreach (var product in argProductCollection)
                 productCollection.Add(product);
         }
 
