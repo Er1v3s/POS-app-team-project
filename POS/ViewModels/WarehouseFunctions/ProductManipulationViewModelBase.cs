@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Windows;
+﻿using System.Windows;
 using DataAccess.Models;
 using POS.Services.SalesPanel;
+using POS.Utilities;
 using POS.ViewModels.Base;
 
 namespace POS.ViewModels.WarehouseFunctions
@@ -19,7 +17,7 @@ namespace POS.ViewModels.WarehouseFunctions
         private bool isDeleteButtonEnable;
         private bool isAddButtonEnable;
 
-        public ObservableCollection<Product> ProductObservableCollection
+        public MyObservableCollection<Product> ProductObservableCollection
         {
             get => _productService.ProductCollection;
         }
@@ -52,14 +50,6 @@ namespace POS.ViewModels.WarehouseFunctions
             ProductService productService)
         {
             _productService = productService;
-        }
-
-        protected void LoadItemsToCollection<T>(ObservableCollection<T> collection, List<T> items)
-        {
-            collection.Clear();
-
-            foreach (var item in items)
-                collection.Add(item);
         }
 
         protected abstract bool CheckIfAddButtonCanBeEnabled();

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,13 +6,14 @@ using DataAccess;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 using POS.Exceptions;
+using POS.Utilities;
 
 namespace POS.Services.SalesPanel
 {
     public class ProductService
     {
         private readonly AppDbContext _dbContext;
-        public ObservableCollection<Product> ProductCollection { get; }
+        public MyObservableCollection<Product> ProductCollection { get; }
 
         public ProductService(AppDbContext dbContext)
         {
@@ -23,17 +23,17 @@ namespace POS.Services.SalesPanel
             _ = GetAllProductsFromDbAsync();
         }
 
-        public ObservableCollection<Product> LoadAllProducts()
+        public MyObservableCollection<Product> GetAllProducts()
         {
             return ProductCollection;
         }
 
-        public ObservableCollection<Product> LoadProductsByCategory(object category)
+        public ObservableCollection<Product> GetProductsByCategory(object category)
         {
             return new ObservableCollection<Product>(ProductCollection.Where(p => p.Category == category.ToString()));
         }
 
-        public ObservableCollection<Product> LoadProductsBySearch(string searchText)
+        public ObservableCollection<Product> GetProductsBySearchPhrase(string searchText)
         {
             return new ObservableCollection<Product>(ProductCollection.Where(p => p.ProductName.ToLower().Contains(searchText.ToLower())));
         }
@@ -66,15 +66,7 @@ namespace POS.Services.SalesPanel
             if (products.Count == 0)
                 throw new NotFoundException("Nie znaleziono żadnych produktów");
 
-            LoadItemsToCollection(ProductCollection, products);
-        }
-
-        private void LoadItemsToCollection<T>(ObservableCollection<T> collection, List<T> items)
-        {
-            collection.Clear();
-
-            foreach (var item in items)
-                collection.Add(item);
+            ProductCollection.AddRange(products);
         }
     }
 }

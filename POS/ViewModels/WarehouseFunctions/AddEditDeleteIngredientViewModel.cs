@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 using DataAccess.Models;
 using Microsoft.IdentityModel.Tokens;
+using POS.Services;
 using POS.Utilities.RelayCommands;
 using POS.ViewModels.Base;
 
@@ -12,7 +13,7 @@ namespace POS.ViewModels.WarehouseFunctions
 {
     public class AddEditDeleteIngredientViewModel : ViewModelBase
     {
-        private ObservableCollection<Ingredient> ingredientObservableCollection = new();
+        private readonly IngredientService _ingredientService;
 
         private Ingredient? selectedIngredient;
 
@@ -29,8 +30,7 @@ namespace POS.ViewModels.WarehouseFunctions
 
         public ObservableCollection<Ingredient> IngredientObservableCollection
         {
-            get => ingredientObservableCollection;
-            set => SetField(ref ingredientObservableCollection, value);
+            get => _ingredientService.IngredientCollection;
         }
 
         public Ingredient? SelectedIngredient
@@ -100,7 +100,20 @@ namespace POS.ViewModels.WarehouseFunctions
         public bool IsNewIngredient
         {
             get => isNewIngredient;
-            set => SetField(ref isNewIngredient, value);
+            set
+            {
+                if (SetField(ref isNewIngredient, value))
+                {
+                    if (value)
+                    {
+                        SelectedIngredient = null;
+                        IsIngredientSelected = Visibility.Visible;
+                        IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
+                    }
+                    else
+                        IngredientName = string.Empty;
+                }
+            }
         }
 
         public bool IsDeleteButtonEnable
@@ -118,43 +131,49 @@ namespace POS.ViewModels.WarehouseFunctions
         public ICommand AddNewIngredientCommand { get; }
         public ICommand DeleteIngredientCommand { get; }
 
-        public AddEditDeleteIngredientViewModel()
+        public AddEditDeleteIngredientViewModel(IngredientService ingredientService)
         {
+            _ingredientService = ingredientService;
+
             AddNewIngredientCommand = new RelayCommandAsync(AddNewIngredient);
             DeleteIngredientCommand = new RelayCommandAsync(DeleteIngredient);
         }
 
         private async Task AddNewIngredient()
         {
-            //try
-            //{
-            //    var newIngredient = new Ingredient
-            //    {
-            //        Name = IngredientName,
-            //        Description = IngredientDescription,
-            //        Unit = IngredientUnit,
-            //        Package = IngredientPackage
-            //    };
-            //    await _ingredientService.AddIngredient(newIngredient);
-            //    LoadItemsToCollection(IngredientObservableCollection, _ingredientService.GetIngredients());
-            //}
-            //catch (Exception e)
-            //{
-            //    MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            //}
+            try
+            {
+                var newIngredient = CreateIngredient();
+                await _ingredientService.AddNewIngredientAsync(newIngredient);
+
+                MessageBox.Show("Pomyślnie dodano nowy składnik",
+                    "Informacja", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+
+                ResetForm();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Nie udało się utworzyć składnika, przyczyna problemu: {ex.Message}",
+                    "Wystąpił nieoczekiwany problem", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private async Task DeleteIngredient()
         {
-            //try
-            //{
-            //    await _ingredientService.DeleteIngredient(SelectedIngredient);
-            //    LoadItemsToCollection(IngredientObservableCollection, _ingredientService.GetIngredients());
-            //}
-            //catch (Exception e)
-            //{
-            //    MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            //}
+            try
+            {
+                await _ingredientService.DeleteIngredientAsync(selectedIngredient!);
+
+                MessageBox.Show("Pomyślnie usunięto produkt",
+                    "Informacja", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+
+                ResetForm();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Nie udało się usunąć składnika, przyczyna problemu: {ex.Message}",
+                    "Wystąpił nieoczekiwany problem", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void ResetForm()
@@ -168,7 +187,7 @@ namespace POS.ViewModels.WarehouseFunctions
             IsIngredientSelected = Visibility.Visible;
         }
 
-        private Ingredient CreateProduct()
+        private Ingredient CreateIngredient()
         {
             return new Ingredient
             {

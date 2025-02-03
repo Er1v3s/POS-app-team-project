@@ -56,14 +56,6 @@
                     </Grid>
                 </Border>
 
-                <!--<Border Grid.Row="2" CornerRadius="8" Margin="25,0,25,0" Background="White">
-                    <Grid>
-                        <ComboBox x:Name="EditIngredient_ComboBox" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
-                            <ComboBoxItem IsSelected="True" IsEnabled="False">Wybierz składnik</ComboBoxItem>
-                        </ComboBox>
-                    </Grid>
-                </Border>-->
-
                 <Grid Grid.Row="4">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
@@ -76,12 +68,6 @@
                         </Viewbox>
                     </Grid>
 
-                    <!--<Grid Grid.Column="0" Margin="25,0,0,0">
-                        <Viewbox Height="32" HorizontalAlignment="Left" >
-                            <CheckBox x:Name="CreateNewIngredient_CheckBox"/>
-                        </Viewbox>
-                    </Grid>-->
-
                     <Border Grid.Column="1" CornerRadius="8" Margin="25,0,25,0" Background="White">
                         <Grid>
                             <TextBox Text="{Binding IngredientName, FallbackValue='', UpdateSourceTrigger=PropertyChanged}"
@@ -91,16 +77,6 @@
                             </TextBox>
                         </Grid>
                     </Border>
-
-                    <!--<Border Grid.Column="1" CornerRadius="8" Margin="24,0,25,0" Background="White">
-                        <Grid>
-                            <TextBox Text="{Binding IngredientName, FallbackValue=''}" 
-                                     Tag="Nazwa nowego składnika" 
-                                     Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}"
-                                     IsEnabled="True">
-                            </TextBox>
-                        </Grid>
-                    </Border>-->
                 </Grid>
 
                 <Grid Grid.Row="6">
@@ -118,16 +94,6 @@
                         </Grid>
                     </Border>
 
-                    <!--<Border CornerRadius="8" Margin="24,0,25,0" Background="White">
-                        <Grid>
-                            <TextBox Text="{Binding IngredientUnit, FallbackValue=''}" 
-                                     Tag="Jednostka" 
-                                     Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}"
-                                     IsEnabled="True">
-                            </TextBox>
-                        </Grid>
-                    </Border>-->
-
                     <Border Grid.Column="1" CornerRadius="8" Margin="25,0,25,0" Background="White">
                         <Grid>
                             <TextBox Text="{Binding IngredientPackage, FallbackValue='', UpdateSourceTrigger=PropertyChanged}" 
@@ -136,16 +102,6 @@
                             </TextBox>
                         </Grid>
                     </Border>
-
-                    <!--<Border Grid.Column="1" CornerRadius="8" Margin="24,0,25,0" Background="White">
-                        <Grid>
-                            <TextBox Text="{Binding IngredientPackage, FallbackValue=''}" 
-                                     Tag="Opakowanie" 
-                                     Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}"
-                                     IsEnabled="True">
-                            </TextBox>
-                        </Grid>
-                    </Border>-->
                 </Grid>
 
                 <Border Grid.Row="8" CornerRadius="8" Margin="25,0,25,0" Background="White">
@@ -159,19 +115,6 @@
                         </TextBox>
                     </Grid>
                 </Border>
-
-                <!--<Border Grid.Row="8" CornerRadius="8" Margin="24,0,25,0" Background="White">
-                    <Grid>
-                        <TextBox Text="{Binding IngredientDescription, FallbackValue=''}" 
-                                 Tag="Opis składnika" 
-                                 Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder2}"
-                                 VerticalContentAlignment="Top"
-                                 HorizontalContentAlignment="Left"
-                                 Padding="10"
-                                 IsEnabled="True">
-                        </TextBox>
-                    </Grid>
-                </Border>-->
 
                 <Grid Grid.Row="10">
                     <Grid.ColumnDefinitions>
@@ -188,23 +131,11 @@
                         </StackPanel>
                     </Button>
 
-                    <!--<Button x:Name="DeleteIngredient_Button" Grid.Row="10" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="USUŃ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
-                        </StackPanel>
-                    </Button>-->
-
                     <Button Command="{Binding AddNewIngredientCommand}" IsEnabled="{Binding IsAddButtonEnable}" Grid.Column="3" Margin="0" Style="{StaticResource payButton}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="DODAJ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                         </StackPanel>
                     </Button>
-
-                    <!--<Button x:Name="SaveIngredient_Button" Grid.Row="10" Grid.Column="3" Margin="0" Style="{StaticResource payButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="ZAPISZ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
-                        </StackPanel>
-                    </Button>-->
                 </Grid>
             </Grid>
         </Border>

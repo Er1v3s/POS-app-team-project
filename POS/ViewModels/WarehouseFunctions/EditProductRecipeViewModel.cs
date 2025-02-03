@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -8,6 +7,7 @@ using DataAccess.Models;
 using Microsoft.IdentityModel.Tokens;
 using POS.Services;
 using POS.Services.SalesPanel;
+using POS.Utilities;
 using POS.Utilities.RelayCommands;
 
 namespace POS.ViewModels.WarehouseFunctions
@@ -17,8 +17,7 @@ namespace POS.ViewModels.WarehouseFunctions
         private readonly RecipeService _recipeService;
         private readonly IngredientService _ingredientService;
 
-        private ObservableCollection<Ingredient> ingredientCollection = new();
-        private ObservableCollection<RecipeIngredient> recipeIngredientCollection = new();
+        private MyObservableCollection<RecipeIngredient> recipeIngredientCollection = new();
 
         private Ingredient selectedIngredient;
         private string amountOfIngredient;
@@ -26,13 +25,12 @@ namespace POS.ViewModels.WarehouseFunctions
 
         private Visibility isIngredientSelected;
 
-        public ObservableCollection<Ingredient> IngredientCollection
+        public MyObservableCollection<Ingredient> IngredientObservableCollection
         {
-            get => ingredientCollection;
-            set => SetField(ref ingredientCollection, value);
+            get => _ingredientService.IngredientCollection;
         }
 
-        public ObservableCollection<RecipeIngredient> RecipeIngredientCollection
+        public MyObservableCollection<RecipeIngredient> RecipeIngredientCollection
         {
             get => recipeIngredientCollection;
             set => SetField(ref recipeIngredientCollection, value);
@@ -46,7 +44,7 @@ namespace POS.ViewModels.WarehouseFunctions
                 {
                     IsProductSelected = Visibility.Collapsed;
                     IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
-                    _ = LoadRecipeIngredientsToCollection(value!);
+                    _ = GetRecipeIngredientsAsync(value!);
                 }
             }
         }
@@ -102,36 +100,21 @@ namespace POS.ViewModels.WarehouseFunctions
 
             AddIngredientToRecipeCommand = new RelayCommandAsync(AddIngredientToRecipe);
             DeleteIngredientFromRecipeCommand = new RelayCommandAsync(DeleteIngredientFromRecipe);
-
-            _ = LoadIngredientsToCollection();
         } 
 
-        private async Task LoadRecipeIngredientsToCollection(Product product)
+        private async Task GetRecipeIngredientsAsync(Product product)
         {
             try
             {
                 var recipe = await _recipeService.GetRecipeByIdAsync(product.RecipeId);
                 var recipeIngredients = recipe.RecipeIngredients.ToList();
 
-                LoadItemsToCollection(RecipeIngredientCollection, recipeIngredients);
+                RecipeIngredientCollection.Clear();
+                RecipeIngredientCollection.AddRange(recipeIngredients);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Nie udało się załadować listy składników, przyczyna problemu: {ex.Message}", 
-                    "Wystąpił nieoczekiwany problem", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private async Task LoadIngredientsToCollection()
-        {
-            try
-            {
-                var ingredients = await _ingredientService.GetAllIngredientsAsync();
-                LoadItemsToCollection(IngredientCollection, ingredients);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Nie udało się załadować listy składników, przyczyna problemu: {ex.Message}",
                     "Wystąpił nieoczekiwany problem", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -141,7 +124,7 @@ namespace POS.ViewModels.WarehouseFunctions
             try
             {
                 await _recipeService.AddIngredientToRecipeAsync(selectedProduct!.RecipeId, selectedIngredient, amountOfIngredient);
-                await LoadRecipeIngredientsToCollection(selectedProduct);
+                await GetRecipeIngredientsAsync(selectedProduct);
             }
             catch (Exception ex)
             {
@@ -155,7 +138,7 @@ namespace POS.ViewModels.WarehouseFunctions
             try
             {
                 await _recipeService.DeleteIngredientFromRecipeAsync(selectedRecipeIngredient!);
-                await LoadRecipeIngredientsToCollection(selectedProduct!);
+                await GetRecipeIngredientsAsync(selectedProduct!);
             }
             catch (Exception ex)
             {

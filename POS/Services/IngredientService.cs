@@ -2,47 +2,54 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using DataAccess;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 using POS.Exceptions;
 using POS.Models.Orders;
+using POS.Utilities;
 
 namespace POS.Services
 {
     public class IngredientService
     {
         private readonly AppDbContext _dbContext;
+        public MyObservableCollection<Ingredient> IngredientCollection { get; }
 
         public IngredientService(AppDbContext dbContext)
         {
             _dbContext = dbContext;
+
+            IngredientCollection = new();
+            _ = GetAllIngredientsFromDbAsync();
         }
 
-        public async Task<List<Ingredient>> GetAllIngredientsAsync()
+        public MyObservableCollection<Ingredient> GetAllIngredients()
         {
-            var ingredients = await _dbContext.Ingredients.ToListAsync();
-
-            if (ingredients == null)
-                throw new NotFoundException("Nie odnaleziono żadnych składników");
-
-            return ingredients;
+            return IngredientCollection;
         }
 
         public async Task AddNewIngredientAsync(Ingredient ingredient)
         {
+            if (ingredient == null)
+                throw new ArgumentNullException($"Niepoprawny składnik: {ingredient}");
+
+            IngredientCollection.Add(ingredient);
             await _dbContext.Ingredients.AddAsync(ingredient);
             await _dbContext.SaveChangesAsync();
         }
 
         public async Task DeleteIngredientAsync(Ingredient ingredient)
         {
+            if(ingredient == null)
+                throw new ArgumentNullException($"Niepoprawny produkt: {ingredient}");
+
+            IngredientCollection.Remove(ingredient);
             _dbContext.Ingredients.Remove(ingredient);
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task RemoveIngredients(OrderDto orderDto)
+        public async Task RemoveIngredientsAsync(OrderDto orderDto)
         {
             foreach (var orderItem in orderDto.OrderItemList)
             {
@@ -82,6 +89,16 @@ namespace POS.Services
                 .ToListAsync();
 
             return runningOutOfIngredients;
+        }
+
+        private async Task GetAllIngredientsFromDbAsync()
+        {
+            var ingredients = await _dbContext.Ingredients.ToListAsync();
+
+            if (ingredients.Count == 0)
+                throw new NotFoundException("Nie odnaleziono żadnych składników");
+
+            IngredientCollection.AddRange(ingredients);
         }
     }
 }

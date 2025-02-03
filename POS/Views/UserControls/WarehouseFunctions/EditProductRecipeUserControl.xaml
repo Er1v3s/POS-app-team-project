@@ -54,7 +54,7 @@
 
                 <Border Grid.Row="4" CornerRadius="8" Margin="25,0,25,0" Background="White">
                     <Grid>
-                        <ComboBox ItemsSource="{Binding IngredientCollection}"
+                        <ComboBox ItemsSource="{Binding IngredientObservableCollection}"
                                   SelectedItem="{Binding SelectedIngredient}"
                                   DisplayMemberPath="Name"
                                   VerticalAlignment="Stretch"

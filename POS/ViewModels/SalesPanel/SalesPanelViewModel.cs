@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -171,19 +170,19 @@ namespace POS.ViewModels.SalesPanel
 
         private void ShowAllProducts()
         {
-            ProductObservableCollection = _productsService.LoadAllProducts();
+            ProductObservableCollection = _productsService.GetAllProducts();
         }
 
         private void FilterProductsBySearchPhrase(string searchPhraseValue)
         {
             SwitchViewToCollectionFromArgument(ProductObservableCollection);
-            ProductObservableCollection = _productsService.LoadProductsBySearch(searchPhraseValue);
+            ProductObservableCollection = _productsService.GetProductsBySearchPhrase(searchPhraseValue);
         }
 
         private void FilterProductsByCategory(object categoryCommandParameter)
         {
             SwitchViewToCollectionFromArgument(ProductObservableCollection);
-            ProductObservableCollection = _productsService.LoadProductsByCategory(categoryCommandParameter);
+            ProductObservableCollection = _productsService.GetProductsByCategory(categoryCommandParameter);
         }
 
         private void HandlePlaceholder()

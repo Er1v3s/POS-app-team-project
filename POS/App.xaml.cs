@@ -125,7 +125,7 @@ namespace POS
             servicesCollection.AddTransient<RecipeService>();
             servicesCollection.AddTransient<OrderSummaryService>();
             servicesCollection.AddTransient<FinishedOrderService>();
-            servicesCollection.AddTransient<IngredientService>();
+            servicesCollection.AddScoped<IngredientService>();
             servicesCollection.AddScoped<InvoiceService>();
             servicesCollection.AddScoped<DiscountService>();
 
