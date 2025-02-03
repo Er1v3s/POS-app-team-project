@@ -13,7 +13,7 @@ namespace POS.Services.SalesPanel
     public class ProductService
     {
         private readonly AppDbContext _dbContext;
-        public ObservableCollection<Product> ProductCollection { get; private set; }
+        public ObservableCollection<Product> ProductCollection { get; }
 
         public ProductService(AppDbContext dbContext)
         {

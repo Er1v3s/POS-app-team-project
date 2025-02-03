@@ -39,11 +39,30 @@
 
                 <Border Grid.Row="2" CornerRadius="8" Margin="25,0,25,0" Background="White">
                     <Grid>
+                        <ComboBox ItemsSource="{Binding IngredientObservableCollection}"
+                                  SelectedItem="{Binding SelectedIngredient}"
+                                  DisplayMemberPath="Name"
+                                  VerticalAlignment="Stretch"
+                                  HorizontalAlignment="Stretch"
+                                  HorizontalContentAlignment="Center"
+                                  VerticalContentAlignment="Center">
+                        </ComboBox>
+                        <TextBlock Text="Wybierz składnik"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   IsHitTestVisible="False"
+                                   Visibility="{Binding IsIngredientSelected}">
+                        </TextBlock>
+                    </Grid>
+                </Border>
+
+                <!--<Border Grid.Row="2" CornerRadius="8" Margin="25,0,25,0" Background="White">
+                    <Grid>
                         <ComboBox x:Name="EditIngredient_ComboBox" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                             <ComboBoxItem IsSelected="True" IsEnabled="False">Wybierz składnik</ComboBoxItem>
                         </ComboBox>
                     </Grid>
-                </Border>
+                </Border>-->
 
                 <Grid Grid.Row="4">
                     <Grid.ColumnDefinitions>
@@ -53,11 +72,27 @@
 
                     <Grid Grid.Column="0" Margin="25,0,0,0">
                         <Viewbox Height="32" HorizontalAlignment="Left" >
-                            <CheckBox x:Name="CreateNewIngredient_CheckBox"/>
+                            <CheckBox IsChecked="{Binding IsNewIngredient}"/>
                         </Viewbox>
                     </Grid>
 
-                    <Border Grid.Column="1" CornerRadius="8" Margin="24,0,25,0" Background="White">
+                    <!--<Grid Grid.Column="0" Margin="25,0,0,0">
+                        <Viewbox Height="32" HorizontalAlignment="Left" >
+                            <CheckBox x:Name="CreateNewIngredient_CheckBox"/>
+                        </Viewbox>
+                    </Grid>-->
+
+                    <Border Grid.Column="1" CornerRadius="8" Margin="25,0,25,0" Background="White">
+                        <Grid>
+                            <TextBox Text="{Binding IngredientName, FallbackValue='', UpdateSourceTrigger=PropertyChanged}"
+                                     Tag="Nazwa nowego produktu" 
+                                     Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}"
+                                     IsEnabled="{Binding IsNewIngredient}">
+                            </TextBox>
+                        </Grid>
+                    </Border>
+
+                    <!--<Border Grid.Column="1" CornerRadius="8" Margin="24,0,25,0" Background="White">
                         <Grid>
                             <TextBox Text="{Binding IngredientName, FallbackValue=''}" 
                                      Tag="Nazwa nowego składnika" 
@@ -65,7 +100,7 @@
                                      IsEnabled="True">
                             </TextBox>
                         </Grid>
-                    </Border>
+                    </Border>-->
                 </Grid>
 
                 <Grid Grid.Row="6">
@@ -74,7 +109,16 @@
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Border CornerRadius="8" Margin="24,0,25,0" Background="White">
+                    <Border CornerRadius="8" Margin="25,0,12,0" Background="White">
+                        <Grid>
+                            <TextBox Text="{Binding IngredientUnit, FallbackValue='', UpdateSourceTrigger=PropertyChanged}"
+                                     Tag="Jednostka" 
+                                     Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}">
+                            </TextBox>
+                        </Grid>
+                    </Border>
+
+                    <!--<Border CornerRadius="8" Margin="24,0,25,0" Background="White">
                         <Grid>
                             <TextBox Text="{Binding IngredientUnit, FallbackValue=''}" 
                                      Tag="Jednostka" 
@@ -82,9 +126,18 @@
                                      IsEnabled="True">
                             </TextBox>
                         </Grid>
+                    </Border>-->
+
+                    <Border Grid.Column="1" CornerRadius="8" Margin="25,0,25,0" Background="White">
+                        <Grid>
+                            <TextBox Text="{Binding IngredientPackage, FallbackValue='', UpdateSourceTrigger=PropertyChanged}" 
+                                     Tag="Opakowanie" 
+                                     Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}">
+                            </TextBox>
+                        </Grid>
                     </Border>
 
-                    <Border Grid.Column="1" CornerRadius="8" Margin="24,0,25,0" Background="White">
+                    <!--<Border Grid.Column="1" CornerRadius="8" Margin="24,0,25,0" Background="White">
                         <Grid>
                             <TextBox Text="{Binding IngredientPackage, FallbackValue=''}" 
                                      Tag="Opakowanie" 
@@ -92,10 +145,22 @@
                                      IsEnabled="True">
                             </TextBox>
                         </Grid>
-                    </Border>
+                    </Border>-->
                 </Grid>
 
-                <Border Grid.Row="8" CornerRadius="8" Margin="24,0,25,0" Background="White">
+                <Border Grid.Row="8" CornerRadius="8" Margin="25,0,25,0" Background="White">
+                    <Grid>
+                        <TextBox Text="{Binding IngredientDescription, FallbackValue='', UpdateSourceTrigger=PropertyChanged}" 
+                                 Tag="Opis składnika" 
+                                 Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder2}"
+                                 VerticalContentAlignment="Top"
+                                 HorizontalContentAlignment="Left"
+                                 Padding="10">
+                        </TextBox>
+                    </Grid>
+                </Border>
+
+                <!--<Border Grid.Row="8" CornerRadius="8" Margin="24,0,25,0" Background="White">
                     <Grid>
                         <TextBox Text="{Binding IngredientDescription, FallbackValue=''}" 
                                  Tag="Opis składnika" 
@@ -106,7 +171,7 @@
                                  IsEnabled="True">
                         </TextBox>
                     </Grid>
-                </Border>
+                </Border>-->
 
                 <Grid Grid.Row="10">
                     <Grid.ColumnDefinitions>
@@ -117,17 +182,29 @@
                         <ColumnDefinition Width="25*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="DeleteIngredient_Button" Grid.Row="10" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}">
+                    <Button Command="{Binding DeleteIngredientCommand}" IsEnabled="{Binding IsDeleteButtonEnable}" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="USUŃ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                         </StackPanel>
                     </Button>
 
-                    <Button x:Name="SaveIngredient_Button" Grid.Row="10" Grid.Column="3" Margin="0" Style="{StaticResource payButton}">
+                    <!--<Button x:Name="DeleteIngredient_Button" Grid.Row="10" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="USUŃ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
+                        </StackPanel>
+                    </Button>-->
+
+                    <Button Command="{Binding AddNewIngredientCommand}" IsEnabled="{Binding IsAddButtonEnable}" Grid.Column="3" Margin="0" Style="{StaticResource payButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="DODAJ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!--<Button x:Name="SaveIngredient_Button" Grid.Row="10" Grid.Column="3" Margin="0" Style="{StaticResource payButton}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="ZAPISZ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                         </StackPanel>
-                    </Button>
+                    </Button>-->
                 </Grid>
             </Grid>
         </Border>

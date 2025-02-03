@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using DataAccess;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,18 @@ namespace POS.Services
                 throw new NotFoundException("Nie odnaleziono żadnych składników");
 
             return ingredients;
+        }
+
+        public async Task AddNewIngredientAsync(Ingredient ingredient)
+        {
+            await _dbContext.Ingredients.AddAsync(ingredient);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteIngredientAsync(Ingredient ingredient)
+        {
+            _dbContext.Ingredients.Remove(ingredient);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task RemoveIngredients(OrderDto orderDto)
