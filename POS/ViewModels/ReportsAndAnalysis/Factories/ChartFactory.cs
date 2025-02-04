@@ -8,7 +8,7 @@ using SeriesCollection = LiveCharts.SeriesCollection;
 
 namespace POS.ViewModels.ReportsAndAnalysis.Factories
 {
-    public class ChartsFactory : IChartsFactory
+    public class ChartFactory : IChartsFactory
     {
         private SeriesCollection seriesCollection;
         private List<string> labels;
@@ -19,7 +19,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
         private readonly Dictionary<int, Action> _reportChartGenerators;
         private readonly Dictionary<int, Action> _predictionChartGenerators;
 
-        public ChartsFactory(
+        public ChartFactory(
             IReportsFactory reportFactory,
             IPredictionsFactory predictionsFactory,
 

@@ -8,7 +8,7 @@ using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 
 namespace POS.ViewModels.ReportsAndAnalysis.Factories
 {
-    public class PredictionsFactory : IPredictionsFactory
+    public class PredictionFactory : IPredictionsFactory
     {
         private readonly Dictionary<int, Func<Task>> _predictionGenerators;
         private readonly Dictionary<int, Action> _predictionParameters;
@@ -20,7 +20,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
         private readonly DateTime predictionRange = new (DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
         private readonly DateTime reportDateRange = new(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
 
-        public PredictionsFactory(
+        public PredictionFactory(
             IReportsFactory reportFactory,
 
             IPredictionGenerator<ProductSalesDto, ProductSalesPredictionDto> salePredictionGenerator,

@@ -85,9 +85,9 @@ namespace POS
             servicesCollection.AddTransient<IChartGenerator<NumberOfOrdersPredictionDto>, NumberOfOrdersPredictionChartGenerator>();
 
             // Factories
-            servicesCollection.AddSingleton<IReportsFactory, ReportsFactory>();
-            servicesCollection.AddTransient<IChartsFactory, ChartsFactory>();
-            servicesCollection.AddSingleton<IPredictionsFactory, PredictionsFactory>();
+            servicesCollection.AddSingleton<IReportsFactory, ReportFactory>();
+            servicesCollection.AddTransient<IChartsFactory, ChartFactory>();
+            servicesCollection.AddSingleton<IPredictionsFactory, PredictionFactory>();
 
             #endregion
 

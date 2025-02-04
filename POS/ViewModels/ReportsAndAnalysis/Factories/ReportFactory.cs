@@ -6,7 +6,7 @@ using POS.ViewModels.ReportsAndAnalysis.Interfaces;
 
 namespace POS.ViewModels.ReportsAndAnalysis.Factories
 {
-    public class ReportsFactory : IReportsFactory
+    public class ReportFactory : IReportsFactory
     {
         private readonly Dictionary<int, Func<Task>> _reportDataGenerators;
 
@@ -15,7 +15,7 @@ namespace POS.ViewModels.ReportsAndAnalysis.Factories
 
         private object reportData;
 
-        public ReportsFactory(
+        public ReportFactory(
             IReportGenerator<ProductSalesDto> saleReportGenerator,
             IReportGenerator<RevenueReportDto> revenueReportGenerator,
             IReportGenerator<OrderReportDto> numberOfOrdersReportGenerator,
