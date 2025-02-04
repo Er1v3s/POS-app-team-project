@@ -28,7 +28,7 @@
 
                 <Grid Grid.Row="0" Background="#FF8EA7E9">
                     <TextBox Text="{Binding SearchPhrase, UpdateSourceTrigger=PropertyChanged, Delay=300}"
-                             Style="{StaticResource searchBar}"
+                             Style="{StaticResource SearchBar}"
                              Margin="20,0,0,0" 
                              Width="360" 
                              Height="42"
@@ -101,7 +101,7 @@
 
                                 <TabItem>
                                     <ScrollViewer>
-                                        <ItemsControl ItemsSource="{Binding ProductCollection}">
+                                        <ItemsControl ItemsSource="{Binding ProductObservableCollection}">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <UniformGrid Columns="5" VerticalAlignment="Top"/>
@@ -227,7 +227,7 @@
                                 <Button Command="{Binding ShowRecipeCollectionCommand}" Content="Przepisy" Style="{StaticResource recipeButton}" Grid.Column="1" d:IsLocked="True" />
                                 <Button Command="{Binding ShowProductCollectionCommand}" Content="Drinki" Style="{StaticResource payButton}" Grid.Column="2" d:IsLocked="True" />
 
-                                <Button Command="{Binding MoveToMainWindowCommand}" Grid.Column="5" Style="{StaticResource homeButton}" d:IsLocked="True">
+                                <Button Command="{Binding OpenMainWindowCommand}" Grid.Column="5" Style="{StaticResource homeButton}" d:IsLocked="True">
                                     <fa:ImageAwesome Icon="Home" Height="24" Foreground="White"/>
                                 </Button>
 

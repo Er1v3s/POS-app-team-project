@@ -3,6 +3,8 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:warehouseFunctions="clr-namespace:POS.ViewModels.WarehouseFunctions"
+      d:DataContext="{d:DesignInstance Type=warehouseFunctions:CreateDeliveryViewModel}"
       mc:Ignorable="d" 
       xmlns:fa="http://schemas.fontawesome.io/icons/"
       d:DesignHeight="768" d:DesignWidth="1366"
@@ -67,8 +69,8 @@
             <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black" Background="#FF8EA7E9" d:IsLocked="True"/>
             <Grid Grid.Row="0" Background="#FF8EA7E9">
                 <TextBox x:Name="searchTextBox" Style="{StaticResource searchBar}" Margin="25,0,0,0" Text="Szukaj" Tag="Szukaj" Width="360"
-         Height="42" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus"
-         TextChanged="SearchTextBox_TextChanged">
+                    Height="42" GotFocus="SearchTextBox_GotFocus" LostFocus="SearchTextBox_LostFocus"
+                    TextChanged="SearchTextBox_TextChanged">
                     <TextBox.Resources>
                         <Style TargetType="{x:Type Border}">
                             <Setter Property="CornerRadius" Value="16"/>
@@ -78,7 +80,9 @@
 
 
                 <Border BorderBrush="#FF7286D3" BorderThickness="1" Width="200" Height="42" HorizontalAlignment="Right" Margin="0,0,25,0" Background="#FF7286D3" CornerRadius="8">
-                    <Label x:Name="welcomeLabel"  VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="White" Margin="-1,-1,0,-1"/>
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="{Binding LoggedInUserName, FallbackValue='Imię Nazwisko'}" Foreground="White"/>
+                    </StackPanel>
                 </Border>
             </Grid>
 
@@ -129,7 +133,7 @@
                         <Button Grid.Column="1" Content="Korekta" Click="EditValue_ButtonClick" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
                         <Button Grid.Column="2" Content="Przyjmij" IsEnabled="False" Click="AddFromDelivery_ButtonClick" Style="{StaticResource recipeButton}" Grid.Row="2" d:IsLocked="True" />
 
-                        <Button Grid.Column="4" Style="{StaticResource homeButton}" d:IsLocked="True" Click="MoveToMainWindow_ButtonClick">
+                        <Button Command="{Binding OpenMainWindowCommand}" Grid.Column="4" Style="{StaticResource homeButton}" d:IsLocked="True">
                             <fa:ImageAwesome Icon="Home" Height="24" Foreground="White"/>
                         </Button>
 

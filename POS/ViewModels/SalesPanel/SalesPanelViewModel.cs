@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,9 +35,9 @@ namespace POS.ViewModels.SalesPanel
         private string searchPhrase = DefaultPlaceholder;
         private string placeholder = DefaultPlaceholder;
 
-        private ObservableCollection<Product> productCollection = new();
+        private ObservableCollection<Product> productCollection;
         private ObservableCollection<OrderItemDto> orderItemCollection = new();
-        private ObservableCollection<OrderDto> orderCollection = new ();
+        private ObservableCollection<OrderDto> orderCollection = new();
         private ObservableCollection<Recipe> recipeCollection = new();
 
         private double amountToPayForOrder;
@@ -71,11 +70,17 @@ namespace POS.ViewModels.SalesPanel
             set => SetField(ref placeholder, value);
         }
 
-        public ObservableCollection<Product> ProductCollection
+        public ObservableCollection<Product> ProductObservableCollection
         {
             get => productCollection;
             set => SetField(ref productCollection, value);
         }
+
+        //public ObservableCollection<Product> ProductCollection
+        //{
+        //    get => productCollection;
+        //    set => SetField(ref productCollection, value);
+        //}
 
         public ObservableCollection<OrderItemDto> OrderItemCollection
         {
@@ -113,7 +118,7 @@ namespace POS.ViewModels.SalesPanel
             set => SetField(ref discountValue, value);
         }
 
-        public ICommand MoveToMainWindowCommand { get; }
+        public ICommand OpenMainWindowCommand { get; }
         public ICommand SelectProductCommand { get; }
         public ICommand DeleteOrderItemCommand { get; }
         public ICommand SelectCategoryCommand { get; }
@@ -145,7 +150,7 @@ namespace POS.ViewModels.SalesPanel
             _invoiceService = invoiceService;
             _ingredientService = ingredientService;
 
-            MoveToMainWindowCommand = new RelayCommand(MoveToMainWindow);
+            OpenMainWindowCommand = new RelayCommand<Views.Windows.MainWindow>(OpenMainWindow);
             SelectProductCommand = new RelayCommand<Product>(AddProductToOrderItemsCollection);
             DeleteOrderItemCommand = new RelayCommand<OrderItemDto>(DeleteOrderItemFromOrderItemsCollection);
             SelectCategoryCommand = new RelayCommand<object>(FilterProductsByCategory);
@@ -160,38 +165,24 @@ namespace POS.ViewModels.SalesPanel
             AddInvoiceCommand = new RelayCommand(AddInvoice);
 
             loggedInUserName = LoginManager.Instance.GetLoggedInUserFullName();
-
-            ShowAllProducts();
-        }
-
-        private void LoadProducts(List<Product> productsList)
-        {
-            productCollection.Clear();
-
-            foreach (var product in productsList)
-                 productCollection.Add(product);
+            ProductObservableCollection = _productsService.ProductCollection;
         }
 
         private void ShowAllProducts()
         {
-            var products = _productsService.LoadAllProducts();
-            LoadProducts(products);
+            ProductObservableCollection = _productsService.GetAllProducts();
         }
 
         private void FilterProductsBySearchPhrase(string searchPhraseValue)
         {
-            SwitchViewToCollectionFromArgument(productCollection);
-
-            var products = _productsService.LoadProductsBySearch(searchPhraseValue);
-            LoadProducts(products);
+            SwitchViewToCollectionFromArgument(ProductObservableCollection);
+            ProductObservableCollection = _productsService.GetProductsBySearchPhrase(searchPhraseValue);
         }
 
         private void FilterProductsByCategory(object categoryCommandParameter)
         {
-            SwitchViewToCollectionFromArgument(productCollection);
-
-            var products = _productsService.LoadProductsByCategory(categoryCommandParameter);
-            LoadProducts(products);
+            SwitchViewToCollectionFromArgument(ProductObservableCollection);
+            ProductObservableCollection = _productsService.GetProductsByCategory(categoryCommandParameter);
         }
 
         private void HandlePlaceholder()
@@ -301,8 +292,8 @@ namespace POS.ViewModels.SalesPanel
             {
                 ClearOrder();
 
-                if(!orderCollection.Any())
-                    SwitchViewToCollectionFromArgument(productCollection);
+                if (!orderCollection.Any())
+                    SwitchViewToCollectionFromArgument(ProductObservableCollection);
             }
         }
 
@@ -317,7 +308,7 @@ namespace POS.ViewModels.SalesPanel
                 RecalculateAmountToPay();
             }
         }
-        
+
         private void AddInvoice()
         {
             InvoiceWindow invoiceWindow = new();
@@ -359,7 +350,7 @@ namespace POS.ViewModels.SalesPanel
 
             OrderCollection.Remove(orderDto);
             RecalculateAmountToPay();
-            SwitchViewToCollectionFromArgument(productCollection);
+            SwitchViewToCollectionFromArgument(ProductObservableCollection);
         }
 
         private void ShowFinishedOrders()
@@ -369,7 +360,7 @@ namespace POS.ViewModels.SalesPanel
 
         private void ShowProductCollectionView()
         {
-            SwitchViewToCollectionFromArgument(productCollection);
+            SwitchViewToCollectionFromArgument(ProductObservableCollection);
             ShowAllProducts();
         }
 
@@ -382,7 +373,7 @@ namespace POS.ViewModels.SalesPanel
 
                 foreach (var product in orderItemCollection)
                 {
-                    var recipe = await _recipeService.GetRecipeAsync(product);
+                    var recipe = await _recipeService.GetRecipeByIdAsync(product.RecipeId);
                     recipeCollection.Add(recipe);
                 }
             }
@@ -410,17 +401,17 @@ namespace POS.ViewModels.SalesPanel
         {
             if (collection.GetType() == typeof(ObservableCollection<Product>))
                 CurrentViewIndex = 0;
-            else if(collection.GetType() == typeof(ObservableCollection<Recipe>))
+            else if (collection.GetType() == typeof(ObservableCollection<Recipe>))
                 CurrentViewIndex = 1;
             else if (collection.GetType() == typeof(ObservableCollection<OrderDto>))
                 CurrentViewIndex = 2;
         }
 
-        private void MoveToMainWindow()
+        private void OpenMainWindow<T>(T windowType)
         {
-            _navigationService.OpenMainWindow();
+            _navigationService.OpenWindow<T>(windowType);
 
-            if(Application.Current.Windows.OfType<Views.Windows.MainWindow>().Any())
+            if (Application.Current.Windows.OfType<Views.Windows.MainWindow>().Any())
                 CloseWindowBaseAction!.Invoke();
         }
     }

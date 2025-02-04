@@ -10,9 +10,11 @@ using DataAccess;
 using DataAccess.Models;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using POS.Helpers;
 using POS.Models.Warehouse;
+using POS.ViewModels.WarehouseFunctions;
 using Paragraph = iTextSharp.text.Paragraph;
 
 namespace POS.Views.Windows.WarehouseFunctions
@@ -26,32 +28,22 @@ namespace POS.Views.Windows.WarehouseFunctions
         public int EmployeeId;
         List<DeliveryItemDto> deliveryItems = new List<DeliveryItemDto>();
 
-        public CreateDeliveryWindow(int employeeId)
+        public CreateDeliveryWindow()
         {
             InitializeComponent();
+            DataContext = App.ServiceProvider.GetRequiredService<CreateDeliveryViewModel>();
+
+            var viewModel = (CreateDeliveryViewModel)DataContext;
+            viewModel.CloseWindowBaseAction = Close;
+
             using (var dbContext = new AppDbContext())
             {
                 var ingredients = dbContext.Ingredients.ToList();
                 IngredientsDataGrid.ItemsSource = ingredients;
-                currentUser = dbContext.Employees.FirstOrDefault(e => e.EmployeeId == employeeId);
+                //currentUser = dbContext.Employees.FirstOrDefault(e => e.EmployeeId == employeeId);
             }
-            string welcomeMessage = $"{currentUser.FirstName} {currentUser.LastName}";
-            SetWelcomeMessage(welcomeMessage);
-            EmployeeId = employeeId;
+
             deliveryListDataGrid.ItemsSource = deliveryItems;
-        }
-
-        public CreateDeliveryWindow()
-        {
-            InitializeComponent();
-        }
-
-        private void MoveToMainWindow_ButtonClick(object sender, RoutedEventArgs e)
-        {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
-
-            this.Close();
         }
 
         private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
@@ -62,10 +54,6 @@ namespace POS.Views.Windows.WarehouseFunctions
         private void SearchTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             PlaceholderTextBoxHelper.SetPlaceholderOnLostFocus(sender, e);
-        }
-        private void SetWelcomeMessage(string message)
-        {
-            welcomeLabel.Content = message;
         }
 
         private void AddToDelivery_ButtonClick(object sender, RoutedEventArgs e)

@@ -55,17 +55,6 @@
             </Style.Triggers>
         </Style>
 
-        <Style x:Key="placeholderTextBox" TargetType="TextBox">
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="VerticalAlignment" Value="Stretch" />
-            <Setter Property="TextWrapping" Value="Wrap" />
-            <Setter Property="Foreground" Value="Black" />
-            <Setter Property="BorderBrush" Value="White" />
-            <Setter Property="SelectionBrush" Value="Transparent" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
-        </Style>
-
         <!--#endregion-->
 
         <!--#region MainWindow -->
@@ -224,8 +213,10 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-<!--#region RunningOutOfIngredients-->
-        <Style x:Key="OpenStockManagmentWindowButton" TargetType="Button">
+
+        <!--#region RunningOutOfIngredients-->
+
+        <Style x:Key="OpenStockManagementWindowButton" TargetType="Button">
             <Setter Property="Width"  Value="150" />
             <Setter Property="Height" Value="50" />
             <Setter Property="Background" Value="#7286D3" />
@@ -248,6 +239,83 @@
                     <Setter Property="Height" Value="55" />
                 </Trigger>
             </Style.Triggers>
+        </Style>
+
+        <Style x:Key="WarehouseFunctionsTextBoxWithPlaceholder" TargetType="TextBox">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="BorderBrush" Value="White" />
+            <Setter Property="SelectionBrush" Value="Transparent" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Grid>
+                            <TextBlock x:Name="Placeholder" 
+                                       Text="{TemplateBinding Tag}" 
+                                       Foreground="Gray" 
+                                       VerticalAlignment="Center" 
+                                       HorizontalAlignment="Center"
+                                       Margin="5,0,0,0" 
+                                       Visibility="Collapsed"/>
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Text" Value="">
+                                <Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="Text" Value="{x:Null}">
+                                <Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Placeholder" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="WarehouseFunctionsTextBoxWithPlaceholder2" TargetType="TextBox">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="BorderBrush" Value="White" />
+            <Setter Property="SelectionBrush" Value="Transparent" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Grid>
+                            <TextBlock x:Name="Placeholder" 
+                               Text="{TemplateBinding Tag}" 
+                               Foreground="Gray" 
+                               VerticalAlignment="Top" 
+                               HorizontalAlignment="Left"
+                               Margin="5,0,0,0" 
+                               Padding="10"
+                               Visibility="Collapsed"/>
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Text" Value="">
+                                <Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="Text" Value="{x:Null}">
+                                <Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Placeholder" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <!--#endregion -->
@@ -846,7 +914,7 @@
             </Style.Triggers>
         </Style>
 
-        <Style x:Key="searchBar" TargetType="TextBox">
+        <Style x:Key="SearchBar" TargetType="TextBox">
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="TextWrapping" Value="Wrap" />
@@ -881,6 +949,11 @@
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#379A8C" />
                 </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="Gray"/>
+                    <Setter Property="Foreground" Value="DarkGray"/>
+                    <Setter Property="BorderBrush" Value="LightGray"/>
+                </Trigger>
             </Style.Triggers>
         </Style>
 
@@ -906,6 +979,11 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#953240" />
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="Gray"/>
+                    <Setter Property="Foreground" Value="DarkGray"/>
+                    <Setter Property="BorderBrush" Value="LightGray"/>
                 </Trigger>
             </Style.Triggers>
         </Style>

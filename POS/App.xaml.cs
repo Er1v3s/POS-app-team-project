@@ -24,6 +24,7 @@ using POS.ViewModels.ReportsAndAnalysis.ReportGenerators;
 using POS.ViewModels.SalesPanel;
 using POS.ViewModels.StartFinishWork;
 using POS.ViewModels.ToDoList;
+using POS.ViewModels.WarehouseFunctions;
 using POS.ViewModels.WorkTimeSummaryControl;
 
 namespace POS
@@ -119,12 +120,12 @@ namespace POS
 
             #region SalesPanel
 
-            servicesCollection.AddTransient<ProductService>();
+            servicesCollection.AddScoped<ProductService>();
             servicesCollection.AddTransient<OrderService>();
             servicesCollection.AddTransient<RecipeService>();
             servicesCollection.AddTransient<OrderSummaryService>();
             servicesCollection.AddTransient<FinishedOrderService>();
-            servicesCollection.AddTransient<IngredientService>();
+            servicesCollection.AddScoped<IngredientService>();
             servicesCollection.AddScoped<InvoiceService>();
             servicesCollection.AddScoped<DiscountService>();
 
@@ -134,6 +135,19 @@ namespace POS
             servicesCollection.AddTransient<SalesPanelViewModel>();
             servicesCollection.AddTransient<InvoiceViewModel>();
 
+
+            #endregion
+
+            #region WarehouseFunctions
+
+            servicesCollection.AddTransient<WarehouseFunctionsViewModel>();
+
+            servicesCollection.AddTransient<EditProductRecipeViewModel>();
+            servicesCollection.AddTransient<AddEditDeleteProductViewModel>();
+            servicesCollection.AddTransient<AddEditDeleteIngredientViewModel>();
+            servicesCollection.AddTransient<StockManagementViewModel>();
+
+            servicesCollection.AddTransient<CreateDeliveryViewModel>();
 
             #endregion
 

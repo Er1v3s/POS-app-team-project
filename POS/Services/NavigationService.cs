@@ -3,6 +3,7 @@ using POS.Factories;
 using POS.Services.Login;
 using POS.Views.Windows;
 using POS.Views.Windows.SalesPanel;
+using POS.Views.Windows.WarehouseFunctions;
 
 namespace POS.Services
 {
@@ -21,27 +22,42 @@ namespace POS.Services
             LoginManager.OpenLoginWindow();
         }
 
-        public void OpenSalesPanelWindow()
+        public void OpenWindow<T>(T windowType)
         {
-            LoginManager.Instance.IsAuthenticationOnlyRequired = true;
-            LoginManager.OpenLoginWindow();
-
-            if (LoginManager.Instance.SuccessfullyLoggedIn && LoginManager.Instance.Employee!.IsUserLoggedIn)
+            if (typeof(T) == typeof(MainWindow))
             {
-                LoginManager.Instance.IsAuthenticationOnlyRequired = false;
-                LoginManager.Instance.SuccessfullyLoggedIn = false;
+                LoginManager.Instance.LogOut();
 
-                var salesPanel = new SalesPanelWindow();
-                salesPanel.Show();
+                MainWindow mainWindow = new ();
+                mainWindow.Show();
             }
-        }
+            else
+            {
+                LoginManager.Instance.IsAuthenticationOnlyRequired = true;
+                LoginManager.OpenLoginWindow();
 
-        public void OpenMainWindow()
-        {
-            LoginManager.Instance.LogOut();
+                if (LoginManager.Instance.SuccessfullyLoggedIn && LoginManager.Instance.Employee!.IsUserLoggedIn)
+                {
+                    LoginManager.Instance.IsAuthenticationOnlyRequired = false;
+                    LoginManager.Instance.SuccessfullyLoggedIn = false;
 
-            var mainWindow = new MainWindow();
-            mainWindow.Show();
+                    if (typeof(T) == typeof(SalesPanelWindow))
+                    {
+                        SalesPanelWindow salesPanelWindow = new();
+                        salesPanelWindow.Show();
+                    }
+                    else if (typeof(T) == typeof(StockManagementWindow))
+                    {
+                        StockManagementWindow stockManagementWindow = new();
+                        stockManagementWindow.Show();
+                    }
+                    else if (typeof(T) == typeof(CreateDeliveryWindow))
+                    {
+                        CreateDeliveryWindow createDeliveryWindow = new();
+                        createDeliveryWindow.Show();
+                    }
+                }
+            }
         }
 
         public object GetViewSource(object commandParameter)
