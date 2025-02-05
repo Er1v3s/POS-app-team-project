@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using POS.Services.Login;
 using System.Collections.ObjectModel;
+using POS.Utilities;
 using POS.Utilities.RelayCommands;
 using POS.ViewModels.Base;
 
@@ -12,12 +13,9 @@ namespace POS.ViewModels.WorkTimeSummaryControl
     {
         private readonly SessionService _sessionService;
 
-        private ObservableCollection<EmployeeWorkSession> sessionList = new();
-
-        public ObservableCollection<EmployeeWorkSession> SessionList
+        public MyObservableCollection<EmployeeWorkSession> SessionObservableCollection
         {
-            get => sessionList;
-            set => SetField(ref sessionList, value);
+            get => _sessionService.SessionCollection;
         }
 
         public ICommand RefreshCommand { get; }
@@ -28,19 +26,12 @@ namespace POS.ViewModels.WorkTimeSummaryControl
 
             RefreshCommand = new RelayCommandAsync(LoadSessionsAsync);
 
-            _ = LoadSessionsAsync();
             _ = CheckForActiveSessionAsync();
         }
 
         private async Task LoadSessionsAsync()
         {
-            SessionList.Clear();
-            var sessions = await _sessionService.LoadSessionsAsync();
-
-            foreach (var session in sessions)
-            {
-                SessionList.Add(session);
-            }
+            await _sessionService.GetSessionsAsync();
         }
 
         private async Task CheckForActiveSessionAsync()

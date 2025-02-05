@@ -8,8 +8,7 @@
              d:DataContext="{d:DesignInstance Type=worktimesummarycontrol:WorkTimeSummaryControlViewModel}"
              DataContext="{Binding WorkTimeSummaryControlViewModel}"
              d:DesignHeight="800" d:DesignWidth="800"
-             xmlns:fa="http://schemas.fontawesome.io/icons/"
-             MouseEnter="WorkTimeSummaryUserControl_OnGotFocus">
+             xmlns:fa="http://schemas.fontawesome.io/icons/">
 
     <Border BorderBrush="Black" BorderThickness="1" CornerRadius="8" Background="White">
         <Grid>
@@ -25,7 +24,7 @@
             </Border>
             <Grid Grid.Row="1">
                 <Border BorderThickness="0, 1, 0 ,0" BorderBrush="Black">
-                    <DataGrid ItemsSource="{Binding SessionList}" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" RowStyle="{DynamicResource DataGridRowStyle1}">
+                    <DataGrid ItemsSource="{Binding SessionObservableCollection}" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" RowStyle="{DynamicResource DataGridRowStyle1}">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="PRACOWNIK" IsReadOnly="True" Width="3*" CanUserResize="False" CanUserReorder="False" Binding="{Binding EmployeeName}"/>
                             <DataGridTextColumn Header="OD" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False" Binding="{Binding WorkingTimeFrom}"/>
