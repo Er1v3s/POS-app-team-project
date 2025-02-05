@@ -1,8 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
 using DataAccess.Models;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using POS.Services.ToDoList;
+using POS.Utilities;
 using POS.Utilities.RelayCommands;
 using POS.ViewModels.Base;
 
@@ -13,7 +14,6 @@ namespace POS.ViewModels.ToDoList
         private readonly TaskManagerService _taskManager;
 
         private string newTaskContent;
-        private ObservableCollection<ToDoListTask> todoListTaskCollection;
 
         public string NewTaskContent
         {
@@ -21,10 +21,9 @@ namespace POS.ViewModels.ToDoList
             set => SetField(ref newTaskContent, value);
         }
 
-        public ObservableCollection<ToDoListTask> TodoListTaskCollection
+        public MyObservableCollection<ToDoListTask> ToDoTaskObservableCollection
         {
-            get => todoListTaskCollection;
-            set => SetField(ref todoListTaskCollection, value);
+            get => _taskManager.ToDoTaskCollection;
         }
 
         public ICommand AddTaskCommand { get; }
@@ -34,35 +33,24 @@ namespace POS.ViewModels.ToDoList
         {
             _taskManager = taskManager;
 
-            TodoListTaskCollection = [];
             AddTaskCommand = new RelayCommandAsync(AddTaskAsync);
-            DeleteTaskCommand = new RelayCommand<ToDoListTask>(async (task) => await DeleteTaskAsync(task));
-
-            _ = LoadTasksAsync();
-        }
-
-        private async Task LoadTasksAsync()
-        {
-            TodoListTaskCollection.Clear();
-            var tasks = await _taskManager.GetTaskListAsync();
-
-            foreach (var task in tasks)
-            {
-                TodoListTaskCollection.Add(task);
-            }
+            DeleteTaskCommand = new RelayCommandAsync<ToDoListTask>(DeleteTaskAsync);
         }
 
         private async Task AddTaskAsync()
         {
             await _taskManager.CreateTaskAsync(NewTaskContent);
-            NewTaskContent = string.Empty;
-            await LoadTasksAsync();
+            ResetForm();
         }
 
         private async Task DeleteTaskAsync(ToDoListTask task)
         {
-            TodoListTaskCollection.Remove(task);
             await _taskManager.DeleteTaskAsync(task);
+        }
+
+        private void ResetForm()
+        {
+            NewTaskContent = String.Empty;
         }
     }
 }

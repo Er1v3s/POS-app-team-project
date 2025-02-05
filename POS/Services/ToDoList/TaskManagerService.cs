@@ -1,6 +1,7 @@
 ﻿using DataAccess;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
+using POS.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,17 +9,26 @@ using System.Threading.Tasks;
 
 namespace POS.Services.ToDoList
 {
-    public class TaskManagerService(AppDbContext dbContext)
+    public class TaskManagerService
     {
-        public async Task<List<ToDoListTask>> GetTaskListAsync()
+        private readonly AppDbContext _dbContext;
+
+        public MyObservableCollection<ToDoListTask> ToDoTaskCollection { get; }
+
+        public TaskManagerService(AppDbContext dbContext)
         {
-            List<ToDoListTask> todoTaskList = [];
+            _dbContext = dbContext;
 
-            var tasks = await dbContext.ToDoListTasks.Where(p => p.CompletionDate == null).ToListAsync();
+            ToDoTaskCollection = new();
+            _ = GetAllTasks();
+        }
 
-            todoTaskList.AddRange(tasks);
+        public async Task GetAllTasks()
+        {
+            var tasks = await GetAllTasksFromDbAsync();
 
-            return todoTaskList;
+            ToDoTaskCollection.Clear();
+            await ToDoTaskCollection.AddRangeWithDelay(tasks, 50);
         }
 
         public async Task CreateTaskAsync(string newTaskContent)
@@ -33,18 +43,28 @@ namespace POS.Services.ToDoList
                 CompletionDate = null,
             };
 
-            await dbContext.ToDoListTasks.AddAsync(newTask);
-            await dbContext.SaveChangesAsync();
+            ToDoTaskCollection.Add(newTask);
+            await _dbContext.ToDoListTasks.AddAsync(newTask);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task DeleteTaskAsync(ToDoListTask task)
         {
-            var taskFromDb = await dbContext.ToDoListTasks.FindAsync(task.TodoTaskId);
+            var taskFromDb = await _dbContext.ToDoListTasks.FindAsync(task.TodoTaskId);
+
             if (taskFromDb != null)
             {
+                ToDoTaskCollection.Remove(task);
                 taskFromDb.CompletionDate = DateTime.Now;
-                await dbContext.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
             }
+        }
+
+        private async Task<List<ToDoListTask>> GetAllTasksFromDbAsync()
+        {
+            var tasks = await _dbContext.ToDoListTasks.Where(p => p.CompletionDate == null).ToListAsync();
+
+            return tasks;
         }
     }
 }
