@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using DataAccess.Models;
-using POS.Helpers;
+using POS.Validators;
 using POS.Models.AdminFunctions;
 using POS.Services.AdminFunctions;
 using POS.Utilities.RelayCommands;
@@ -46,14 +46,14 @@ namespace POS.ViewModels.AdminFunctionsPanel
 
         private void EditEmployeeData()
         {
-            selectedEmployeeFullData.FirstName = FormValidatorHelper.ValidateString(firstName);
-            selectedEmployeeFullData.LastName = FormValidatorHelper.ValidateString(lastName);
-            selectedEmployeeFullData.JobTitle = FormValidatorHelper.ValidateString(jobTitle);
-            selectedEmployeeFullData.Email = FormValidatorHelper.ValidateEmailAddress(email);
-            selectedEmployeeFullData.PhoneNumber = ParsePhoneNumber(FormValidatorHelper.ValidatePhoneNumber(phoneNumber));
-            selectedEmployeeFullData.Address = FormValidatorHelper.ValidateString(address);
-            selectedEmployeeFullData.Login = FormValidatorHelper.ValidateString(login);
-            selectedEmployeeFullData.Password = FormValidatorHelper.ValidateString(password);
+            selectedEmployeeFullData.FirstName = FormValidator.ValidateString(firstName);
+            selectedEmployeeFullData.LastName = FormValidator.ValidateString(lastName);
+            selectedEmployeeFullData.JobTitle = FormValidator.ValidateString(jobTitle);
+            selectedEmployeeFullData.Email = FormValidator.ValidateEmailAddress(email);
+            selectedEmployeeFullData.PhoneNumber = ParsePhoneNumber(FormValidator.ValidatePhoneNumber(phoneNumber));
+            selectedEmployeeFullData.Address = FormValidator.ValidateString(address);
+            selectedEmployeeFullData.Login = FormValidator.ValidateString(login);
+            selectedEmployeeFullData.Password = FormValidator.ValidateString(password);
         }
 
         private void SetSelectedEmployee(EmployeeInfoDto employee)

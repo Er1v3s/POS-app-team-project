@@ -12,10 +12,10 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
-using POS.Helpers;
 using POS.Models.Warehouse;
 using POS.ViewModels.WarehouseFunctions;
 using Paragraph = iTextSharp.text.Paragraph;
+using POS.Helpers;
 
 namespace POS.Views.Windows.WarehouseFunctions
 {
