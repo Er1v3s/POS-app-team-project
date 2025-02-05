@@ -76,12 +76,6 @@ namespace POS.ViewModels.SalesPanel
             set => SetField(ref productCollection, value);
         }
 
-        //public ObservableCollection<Product> ProductCollection
-        //{
-        //    get => productCollection;
-        //    set => SetField(ref productCollection, value);
-        //}
-
         public ObservableCollection<OrderItemDto> OrderItemCollection
         {
             get => orderItemCollection;
