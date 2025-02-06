@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using DataAccess;
@@ -16,6 +14,7 @@ namespace POS.Services
     public class IngredientService
     {
         private readonly AppDbContext _dbContext;
+
         public MyObservableCollection<Ingredient> IngredientCollection { get; }
 
         public IngredientService(AppDbContext dbContext)
@@ -26,14 +25,16 @@ namespace POS.Services
             _ = GetAllIngredientsFromDbAsync();
         }
 
-        public MyObservableCollection<Ingredient> GetAllIngredients()
+        public async Task GetAllIngredients()
         {
-            return IngredientCollection;
+            IngredientCollection.Clear();
+            await GetAllIngredientsFromDbAsync();
         }
 
-        public ObservableCollection<Ingredient> GetIngredientsBySearchPhrase(string searchText)
+        public void GetIngredientsBySearchPhrase(string searchText)
         {
-            return new ObservableCollection<Ingredient>(IngredientCollection.Where(i => i.Name.ToLower().Contains(searchText.ToLower())));
+            var filteredIngredients = IngredientCollection.Where(i => i.Name.ToLower().Contains(searchText.ToLower()));
+            IngredientCollection.AddRange(filteredIngredients);
         }
 
         public async Task AddNewIngredientAsync(Ingredient ingredient)

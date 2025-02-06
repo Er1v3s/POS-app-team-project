@@ -7,10 +7,11 @@ using System.Windows.Input;
 using POS.Services;
 using DataAccess.Models;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using POS.Models.Warehouse;
+using POS.Services.WarehouseFunctions;
 using POS.Utilities;
-using POS.Views.Windows.WarehouseFunctions;
 
 namespace POS.ViewModels.WarehouseFunctions
 {
@@ -18,43 +19,27 @@ namespace POS.ViewModels.WarehouseFunctions
     {
         private readonly NavigationService _navigationService;
         private readonly IngredientService _ingredientService;
-
-        private MyObservableCollection<Ingredient> ingredientCollection;
-        private ObservableCollection<DeliveryDto> deliveryCollection;
-
-        private Ingredient selectedIngredient;
-
-        private string loggedInUserName;
+        private readonly DeliveryService _deliveryService;
 
         private const string DefaultPlaceholder = "Wpisz nazwę...";
-
         private string searchPhrase = DefaultPlaceholder;
         private string placeholder = DefaultPlaceholder;
 
+        private Ingredient? selectedIngredient;
 
         public MyObservableCollection<Ingredient> IngredientObservableCollection
         {
-            get => ingredientCollection;
-            set => SetField(ref ingredientCollection, value);
+            get => _ingredientService.IngredientCollection;
         }
+        public ObservableCollection<DeliveryDto> DeliveryObservableCollection => _deliveryService.DeliveryCollection;
 
-        public ObservableCollection<DeliveryDto> DeliveryObservableCollection
-        {
-            get => deliveryCollection;
-            set => SetField(ref deliveryCollection, value);
-        }
-
-        public Ingredient SelectedIngredient
+        public Ingredient? SelectedIngredient
         {
             get => selectedIngredient;
             set => SetField(ref selectedIngredient, value);
         }
 
-        public string LoggedInUserName
-        {
-            get => loggedInUserName;
-            set => SetField(ref loggedInUserName, value);
-        }
+        public static string LoggedInUserName => LoginManager.Instance.GetLoggedInUserFullName();
 
         public string SearchPhrase
         {
@@ -82,10 +67,14 @@ namespace POS.ViewModels.WarehouseFunctions
         public ICommand CancelDeliveryCommand { get; }
         public ICommand OpenMainWindowCommand { get; }
 
-        public CreateDeliveryViewModel(NavigationService navigationService, IngredientService ingredientService)
+        public CreateDeliveryViewModel(
+            NavigationService navigationService,
+            IngredientService ingredientService,
+            DeliveryService deliveryService)
         {
             _navigationService = navigationService;
             _ingredientService = ingredientService;
+            _deliveryService = deliveryService;
 
             AddIngredientToDeliveryCommand = new RelayCommand(AddIngredientToDelivery);
             IncreaseIngredientQuantityCommand = new RelayCommand<DeliveryDto>(IncreaseIngredientQuantity);
@@ -93,26 +82,16 @@ namespace POS.ViewModels.WarehouseFunctions
             EditIngredientCommand = new RelayCommand(EditIngredientQuantity);
             CancelDeliveryCommand = new RelayCommand(CancelDelivery);
             OpenMainWindowCommand = new RelayCommand<Views.Windows.MainWindow>(OpenMainWindow);
-
-            loggedInUserName = LoginManager.Instance.GetLoggedInUserFullName();
-
-            IngredientObservableCollection = new();
-            deliveryCollection = new();
-            ShowAllIngredients();
         }
 
         private void ShowAllIngredients()
         {
-            IngredientObservableCollection.Clear();
-
-            var ingredients = _ingredientService.GetAllIngredients();
-            IngredientObservableCollection.AddRange(ingredients);
+            Task.Run(_ingredientService.GetAllIngredients);
         }
 
         private void FilterIngredientsBySearchPhrase(string searchPhraseArg)
         {
-            var filteredIngredients = _ingredientService.GetIngredientsBySearchPhrase(searchPhraseArg);
-            IngredientObservableCollection.AddRange(filteredIngredients);
+            _ingredientService.GetIngredientsBySearchPhrase(searchPhraseArg);
         }
 
         private void HandleProductFiltering(string searchPhraseArg)
@@ -125,56 +104,35 @@ namespace POS.ViewModels.WarehouseFunctions
 
         private void AddIngredientToDelivery()
         {
-            var existingIngredient = deliveryCollection.FirstOrDefault(i => i.Ingredient.IngredientId == selectedIngredient.IngredientId);
-
-            if (existingIngredient == null)
-            {
-                var deliveryItem = new DeliveryDto
-                {
-                    Ingredient = selectedIngredient,
-                    Quantity = 1
-                };
-
-                DeliveryObservableCollection.Add(deliveryItem);
-            }
-            else
-                existingIngredient.Quantity++;
-
+            if (selectedIngredient == null) 
+                return;
+            
+            _deliveryService.AddIngredientToDeliveryCollection(selectedIngredient);
         }
 
         private void IncreaseIngredientQuantity(DeliveryDto deliveryDto)
         {
-            deliveryDto.Quantity++;
+            _deliveryService.IncreaseIngredientQuantity(deliveryDto);
         }
 
         private void DeleteIngredientFromDelivery(Ingredient ingredient)
         {
-            var existingIngredient = deliveryCollection.FirstOrDefault(i => i.Ingredient.IngredientId == ingredient.IngredientId);
-
-            if (existingIngredient!.Quantity == 1)
-            {
-                var result = MessageBox.Show("Czy usunąć składnik z listy całkowicie?", "", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (result == MessageBoxResult.Yes)
-                    DeliveryObservableCollection.Remove(existingIngredient);
-            }
-            else
-                existingIngredient.Quantity--;
+            _deliveryService.DeleteIngredientFromDeliveryCollection(ingredient);
         }
 
         private void EditIngredientQuantity()
         {
-            var stockCorrection = new StockCorrectionWindow(selectedIngredient);
-            var dialogResult = stockCorrection.ShowDialog();
+            if(selectedIngredient == null)
+                return;
 
-            if (dialogResult == true)
-                ShowAllIngredients();
+            _deliveryService.EditIngredientQuantity(selectedIngredient);
         }
 
         private void CancelDelivery()
         {
             var result = MessageBox.Show("Czy na pewno chcesz anulować zamówienie?", "", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if(result == MessageBoxResult.Yes)
-                DeliveryObservableCollection.Clear();
+            if (result == MessageBoxResult.Yes)
+                _deliveryService.CancelDelivery();
         }
 
         private void HandlePlaceholder()

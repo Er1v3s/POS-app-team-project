@@ -18,6 +18,7 @@ using POS.Services.ReportsAndAnalysis.PredictionGenerators;
 using POS.Services.ReportsAndAnalysis.ReportGenerators;
 using POS.Services.SalesPanel;
 using POS.Services.ToDoList;
+using POS.Services.WarehouseFunctions;
 using POS.ViewModels.AdminFunctionsPanel;
 using POS.ViewModels.MainWindow;
 using POS.ViewModels.ReportsAndAnalysis;
@@ -139,6 +140,8 @@ namespace POS
             #endregion
 
             #region WarehouseFunctions
+
+            servicesCollection.AddTransient<DeliveryService>();
 
             servicesCollection.AddTransient<WarehouseFunctionsViewModel>();
 

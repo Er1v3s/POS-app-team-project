@@ -164,8 +164,8 @@
                         </Grid.ColumnDefinitions>
 
                         <Button Command="{Binding AddIngredientToDeliveryCommand}" Grid.Column="0" Content="Dodaj" Style="{StaticResource recipeButton}" Background="#4BAEA0" d:IsLocked="True" />
-                        <Button Command="{Binding EditIngredientCommand}" Grid.Column="1" Content="Korekta" Click="EditValue_ButtonClick" Style="{StaticResource recipeButton}" d:IsLocked="True" />
-                        <Button Command="{Binding CancelDeliveryCommand}" Grid.Column="2" Content="Anuluj" IsEnabled="False" Style="{StaticResource recipeButton}" Background="#AE4B59" d:IsLocked="True" />
+                        <Button Command="{Binding EditIngredientCommand}" Grid.Column="1" Content="Korekta" Style="{StaticResource recipeButton}" d:IsLocked="True" />
+                        <Button Command="{Binding CancelDeliveryCommand}" Grid.Column="2" Content="Anuluj" Style="{StaticResource recipeButton}" Background="#AE4B59" d:IsLocked="True" />
 
                         <Button Command="{Binding OpenMainWindowCommand}" Grid.Column="4" Style="{StaticResource homeButton}" d:IsLocked="True">
                             <fa:ImageAwesome Icon="Home" Height="24" Foreground="White"/>
