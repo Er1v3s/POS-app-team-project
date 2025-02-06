@@ -148,6 +148,7 @@ namespace POS
             servicesCollection.AddTransient<StockManagementViewModel>();
 
             servicesCollection.AddTransient<CreateDeliveryViewModel>();
+            servicesCollection.AddTransient<StockCorrectionViewModel>();
 
             #endregion
 

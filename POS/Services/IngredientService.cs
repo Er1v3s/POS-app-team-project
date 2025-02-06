@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using DataAccess;
@@ -29,6 +31,11 @@ namespace POS.Services
             return IngredientCollection;
         }
 
+        public ObservableCollection<Ingredient> GetIngredientsBySearchPhrase(string searchText)
+        {
+            return new ObservableCollection<Ingredient>(IngredientCollection.Where(i => i.Name.ToLower().Contains(searchText.ToLower())));
+        }
+
         public async Task AddNewIngredientAsync(Ingredient ingredient)
         {
             if (ingredient == null)
@@ -46,6 +53,32 @@ namespace POS.Services
 
             IngredientCollection.Remove(ingredient);
             _dbContext.Ingredients.Remove(ingredient);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateIngredientQuantityAsync(Ingredient ingredient)
+        {
+            if (ingredient == null)
+                throw new ArgumentNullException($"Niepoprawny produkt: {ingredient}");
+            if (ingredient.Stock < 0)
+                throw new ArgumentException($"Niepoprawna ilość składnika: {ingredient}");
+            if (ingredient.SafetyStock < 0)
+                throw new ArgumentException($"Niepoprawna ilość stanu bezpieczeństwa: {ingredient}");
+
+            var ingredientToUpdate = await _dbContext.Ingredients
+                .Where(i => i.IngredientId == ingredient.IngredientId)
+                .FirstOrDefaultAsync();
+
+            var ingredientFromCollectionToUpdate = IngredientCollection.FirstOrDefault(i => i.IngredientId == ingredient.IngredientId);
+
+            if (ingredientToUpdate == null || ingredientFromCollectionToUpdate == null)
+                throw new NotFoundException($"Nie odnaleziono składnika o Id: {ingredient.IngredientId}"); 
+
+            ingredientFromCollectionToUpdate.Stock = ingredient.Stock;
+            ingredientFromCollectionToUpdate.SafetyStock = ingredient.SafetyStock;
+
+            ingredientToUpdate.Stock = ingredient.Stock;
+            ingredientToUpdate.SafetyStock = ingredient.SafetyStock;
             await _dbContext.SaveChangesAsync();
         }
 

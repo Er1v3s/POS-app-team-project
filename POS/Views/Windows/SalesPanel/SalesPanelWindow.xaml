@@ -27,7 +27,7 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Background="#FF8EA7E9">
-                    <TextBox Text="{Binding SearchPhrase, UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                    <TextBox Text="{Binding SearchPhrase, UpdateSourceTrigger=PropertyChanged, Delay=100}"
                              Style="{StaticResource SearchBar}"
                              Margin="20,0,0,0" 
                              Width="360" 

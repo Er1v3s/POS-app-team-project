@@ -24,10 +24,6 @@ namespace POS.Views.Windows.WarehouseFunctions
     /// </summary>
     public partial class CreateDeliveryWindow : Window
     {
-        private Employee currentUser;
-        public int EmployeeId;
-        List<DeliveryItemDto> deliveryItems = new List<DeliveryItemDto>();
-
         public CreateDeliveryWindow()
         {
             InitializeComponent();
@@ -36,109 +32,99 @@ namespace POS.Views.Windows.WarehouseFunctions
             var viewModel = (CreateDeliveryViewModel)DataContext;
             viewModel.CloseWindowBaseAction = Close;
 
-            using (var dbContext = new AppDbContext())
-            {
-                var ingredients = dbContext.Ingredients.ToList();
-                IngredientsDataGrid.ItemsSource = ingredients;
+            //using (var dbContext = new AppDbContext())
+            //{
+                //var ingredients = dbContext.Ingredients.ToList();
+                //IngredientsDataGrid.ItemsSource = ingredients;
                 //currentUser = dbContext.Employees.FirstOrDefault(e => e.EmployeeId == employeeId);
-            }
+            //}
 
-            deliveryListDataGrid.ItemsSource = deliveryItems;
+            //deliveryListDataGrid.ItemsSource = deliveryItems;
         }
 
-        private void SearchTextBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            PlaceholderTextBoxHelper.SetPlaceholderOnFocus(sender, e);
-        }
+        //private void AddToDelivery_ButtonClick(object sender, RoutedEventArgs e)
+        //{
+        //    //Ingredient selectedIngredient = (Ingredient)IngredientsDataGrid.SelectedItem;
+        //    //if (selectedIngredient != null)
+        //    //{
+        //    //    string newValueString = Microsoft.VisualBasic.Interaction.InputBox("Podaj ilość składnika:", "Dodaj składnik do zamówienia", selectedIngredient.Stock.ToString());
 
-        private void SearchTextBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            PlaceholderTextBoxHelper.SetPlaceholderOnLostFocus(sender, e);
-        }
+        //    //    if (!string.IsNullOrEmpty(newValueString))
+        //    //    {
+        //    //        if (int.TryParse(newValueString, out int newValue))
+        //    //        {
+        //    //            using (var dbContext = new AppDbContext())
+        //    //            {
+        //    //                var ingredientToUpdate = dbContext.Ingredients.FirstOrDefault(i => i.IngredientId == selectedIngredient.IngredientId);
 
-        private void AddToDelivery_ButtonClick(object sender, RoutedEventArgs e)
-        {
-            Ingredient selectedIngredient = (Ingredient)IngredientsDataGrid.SelectedItem;
-            if (selectedIngredient != null)
-            {
-                string newValueString = Microsoft.VisualBasic.Interaction.InputBox("Podaj ilość składnika:", "Dodaj składnik do zamówienia", selectedIngredient.Stock.ToString());
+        //    //                if (ingredientToUpdate != null)
+        //    //                {
+        //    //                    DeliveryItemDto newItem = new DeliveryItemDto
+        //    //                    {
+        //    //                        Name = ingredientToUpdate.Name,
+        //    //                        Quantity = newValue,
+        //    //                        Package = ingredientToUpdate.Package,
+        //    //                        FullQuantity = newValue + ingredientToUpdate.SafetyStock
+        //    //                    };
 
-                if (!string.IsNullOrEmpty(newValueString))
-                {
-                    if (int.TryParse(newValueString, out int newValue))
-                    {
-                        using (var dbContext = new AppDbContext())
-                        {
-                            var ingredientToUpdate = dbContext.Ingredients.FirstOrDefault(i => i.IngredientId == selectedIngredient.IngredientId);
+        //    //                    deliveryItems.Add(newItem);
+        //    //                    deliveryListDataGrid.ItemsSource = null;
+        //    //                    deliveryListDataGrid.ItemsSource = deliveryItems;
+        //    //                }
+        //    //            }
 
-                            if (ingredientToUpdate != null)
-                            {
-                                DeliveryItemDto newItem = new DeliveryItemDto
-                                {
-                                    Name = ingredientToUpdate.Name,
-                                    Quantity = newValue,
-                                    Package = ingredientToUpdate.Package,
-                                    FullQuantity = newValue + ingredientToUpdate.SafetyStock
-                                };
-
-                                deliveryItems.Add(newItem);
-                                deliveryListDataGrid.ItemsSource = null;
-                                deliveryListDataGrid.ItemsSource = deliveryItems;
-                            }
-                        }
-
-                        RefreshIngredientsDataGrid();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Invalid input. Please enter a valid number.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
-            }
-        }
+        //    //            RefreshIngredientsDataGrid();
+        //    //        }
+        //    //        else
+        //    //        {
+        //    //            MessageBox.Show("Invalid input. Please enter a valid number.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        //    //        }
+        //    //    }
+        //    //}
+        //}
 
         private void EditValue_ButtonClick(object sender, RoutedEventArgs e)
         {
-            Ingredient selectedIngredient = (Ingredient)IngredientsDataGrid.SelectedItem;
+            //Ingredient selectedIngredient = (Ingredient)IngredientsDataGrid.SelectedItem;
 
-            if (selectedIngredient != null)
-            {
-                string newValueString = Microsoft.VisualBasic.Interaction.InputBox("Enter new value:", "Edit Value", selectedIngredient.Stock.ToString());
+            //if (selectedIngredient != null)
+            //{
+            //    string newValueString = Microsoft.VisualBasic.Interaction.InputBox("Enter new value:", "Edit Value", selectedIngredient.Stock.ToString());
 
-                if (!string.IsNullOrEmpty(newValueString))
-                {
-                    if (int.TryParse(newValueString, out int newValue))
-                    {
-                        using (var dbContext = new AppDbContext())
-                        {
-                            var ingredientToUpdate = dbContext.Ingredients.FirstOrDefault(i => i.IngredientId == selectedIngredient.IngredientId);
+            //    if (!string.IsNullOrEmpty(newValueString))
+            //    {
+            //        if (int.TryParse(newValueString, out int newValue))
+            //        {
+            //            using (var dbContext = new AppDbContext())
+            //            {
+            //                var ingredientToUpdate = dbContext.Ingredients.FirstOrDefault(i => i.IngredientId == selectedIngredient.IngredientId);
 
-                            if (ingredientToUpdate != null)
-                            {
-                                ingredientToUpdate.Stock = newValue;
-                                dbContext.SaveChanges();
-                            }
-                        }
+            //                if (ingredientToUpdate != null)
+            //                {
+            //                    ingredientToUpdate.Stock = newValue;
+            //                    dbContext.SaveChanges();
+            //                }
+            //            }
 
-                        RefreshIngredientsDataGrid();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Invalid input. Please enter a valid number.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
-            }
+            //            RefreshIngredientsDataGrid();
+            //        }
+            //        else
+            //        {
+            //            MessageBox.Show("Invalid input. Please enter a valid number.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            //        }
+            //    }
+            //}
         }
 
-        private void AddFromDelivery_ButtonClick(Object sender, RoutedEventArgs e) { }
+        //private void AddFromDelivery_ButtonClick(Object sender, RoutedEventArgs e) { }
 
         private void RefreshIngredientsDataGrid()
         {
-            using (var dbContext = new AppDbContext())
-            {
-                var ingredients = dbContext.Ingredients.ToList();
-                IngredientsDataGrid.ItemsSource = ingredients;
-            }
+            //using (var dbContext = new AppDbContext())
+            //{
+            //    var ingredients = dbContext.Ingredients.ToList();
+            //    IngredientsDataGrid.ItemsSource = ingredients;
+            //}
         }
 
         private void GenerateDelivery_ButtonClick(object sender, RoutedEventArgs e)
@@ -148,90 +134,66 @@ namespace POS.Views.Windows.WarehouseFunctions
 
         private async void GenerateDeliveryPDFFile()
         {
-            await Task.Run(() =>
-            {
-                try
-                {
-                    SaveFileDialog saveFileDialog = new SaveFileDialog();
-                    saveFileDialog.Filter = "Pliki PDF (*.pdf)|*.pdf";
-                    saveFileDialog.FileName = "Podsumowanie_zamowienia.pdf";
+            //await Task.Run(() =>
+            //{
+            //    try
+            //    {
+            //        SaveFileDialog saveFileDialog = new SaveFileDialog();
+            //        saveFileDialog.Filter = "Pliki PDF (*.pdf)|*.pdf";
+            //        saveFileDialog.FileName = "Podsumowanie_zamowienia.pdf";
 
-                    bool? result = saveFileDialog.ShowDialog();
+            //        bool? result = saveFileDialog.ShowDialog();
 
-                    if (result == true)
-                    {
-                        string filePath = saveFileDialog.FileName;
+            //        if (result == true)
+            //        {
+            //            string filePath = saveFileDialog.FileName;
 
-                        Document pdfDoc = new Document(PageSize.A4);
-                        PdfWriter writer = PdfWriter.GetInstance(pdfDoc, new FileStream(filePath, FileMode.Create));
+            //            Document pdfDoc = new Document(PageSize.A4);
+            //            PdfWriter writer = PdfWriter.GetInstance(pdfDoc, new FileStream(filePath, FileMode.Create));
 
-                        pdfDoc.Open();
-                        pdfDoc.NewPage();
+            //            pdfDoc.Open();
+            //            pdfDoc.NewPage();
 
-                        PdfPTable pdfTable = new PdfPTable(deliveryListDataGrid.Columns.Count);
+            //            PdfPTable pdfTable = new PdfPTable(deliveryListDataGrid.Columns.Count);
 
-                        foreach (DataGridColumn column in deliveryListDataGrid.Columns)
-                        {
-                            PdfPCell cell = new PdfPCell(new Phrase(column.Header.ToString()));
-                            pdfTable.AddCell(cell);
-                        }
+            //            foreach (DataGridColumn column in deliveryListDataGrid.Columns)
+            //            {
+            //                PdfPCell cell = new PdfPCell(new Phrase(column.Header.ToString()));
+            //                pdfTable.AddCell(cell);
+            //            }
 
-                        foreach (var item in deliveryListDataGrid.Items)
-                        {
-                            foreach (DataGridColumn column in deliveryListDataGrid.Columns)
-                            {
-                                string cellValue = (column.GetCellContent(item) as TextBlock)?.Text;
-                                PdfPCell cell = new PdfPCell(new Phrase(cellValue ?? ""));
-                                pdfTable.AddCell(cell);
-                            }
-                        }
+            //            foreach (var item in deliveryListDataGrid.Items)
+            //            {
+            //                foreach (DataGridColumn column in deliveryListDataGrid.Columns)
+            //                {
+            //                    string cellValue = (column.GetCellContent(item) as TextBlock)?.Text;
+            //                    PdfPCell cell = new PdfPCell(new Phrase(cellValue ?? ""));
+            //                    pdfTable.AddCell(cell);
+            //                }
+            //            }
 
-                        Paragraph pdfTitle = new Paragraph("Zamówienie", new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD));
-                        pdfTitle.Alignment = Element.ALIGN_CENTER;
-                        pdfTitle.SpacingAfter = 10f;
-                        pdfTitle.SetLeading(0, 1.2f);
+            //            Paragraph pdfTitle = new Paragraph("Zamówienie", new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD));
+            //            pdfTitle.Alignment = Element.ALIGN_CENTER;
+            //            pdfTitle.SpacingAfter = 10f;
+            //            pdfTitle.SetLeading(0, 1.2f);
 
-                        pdfDoc.Add(pdfTitle);
-                        pdfDoc.Add(pdfTable);
+            //            pdfDoc.Add(pdfTitle);
+            //            pdfDoc.Add(pdfTable);
 
-                        pdfDoc.Close();
-                        this.Close();
-                        MessageBox.Show("Zamówienie zostało zapisane do pliku PDF.");
-                    }
-                    else
-                    {
-                        MessageBox.Show("Anulowano zapisywanie pliku PDF.");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Wystąpił błąd podczas zapisywania pliku PDF: " + ex.Message);
-                }
-            });
-        }
-
-        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            try
-            {
-                using (var dbContext = new AppDbContext())
-                {
-                    string searchPhrase = searchTextBox.Text.ToLower();
-
-                    var filteredIngredients = dbContext.Ingredients
-                        .Where(ingredient => ingredient.Name.ToLower().Contains(searchPhrase))
-                        .ToList();
-
-                    if(filteredIngredients.Count != 0)
-                    {
-                        IngredientsDataGrid.ItemsSource = filteredIngredients;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Wystąpił błąd podczas filtrowania składników: " + ex.Message);
-            }
+            //            pdfDoc.Close();
+            //            this.Close();
+            //            MessageBox.Show("Zamówienie zostało zapisane do pliku PDF.");
+            //        }
+            //        else
+            //        {
+            //            MessageBox.Show("Anulowano zapisywanie pliku PDF.");
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        MessageBox.Show("Wystąpił błąd podczas zapisywania pliku PDF: " + ex.Message);
+            //    }
+            //});
         }
 
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
