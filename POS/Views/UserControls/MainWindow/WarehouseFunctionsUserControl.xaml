@@ -21,7 +21,7 @@
 
             <Border CornerRadius="8,8,0, 0" Background="#8EA7E9">
                 <Grid>
-                    <TextBlock Text="FUNKCJE MAGAZYNOWE:" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="24"></TextBlock>
+                    <TextBlock Text="FUNKCJE MAGAZYNOWE" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="24"></TextBlock>
                 </Grid>
             </Border>
 
@@ -46,7 +46,7 @@
 
             <Border CornerRadius="0,0,0, 0" Background="#8EA7E9" Grid.Row="2">
                 <Grid>
-                    <TextBlock Text="KOŃCZĄCE SIĘ SKŁADNIKI:" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="24"></TextBlock>
+                    <TextBlock Text="KOŃCZĄCE SIĘ SKŁADNIKI" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="24"></TextBlock>
                 </Grid>
             </Border>
 
@@ -54,9 +54,9 @@
                 <Border BorderThickness="0, 1, 0 ,0" BorderBrush="Black">
                     <DataGrid ItemsSource="{Binding RunningOutOfIngredientsCollection}" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" RowStyle="{DynamicResource DataGridRowStyle1}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="NAZWA" IsReadOnly="True" Width="3*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Name}"/>
-                            <DataGridTextColumn Header="STAN BEZPIECZEŃSTWA" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False" Binding="{Binding SafetyStock}"/>
-                            <DataGridTextColumn Header="AKTUALNY STAN" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Stock}"/>
+                            <DataGridTextColumn Header="NAZWA" IsReadOnly="True" Width="2*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Name}"/>
+                            <DataGridTextColumn Header="STAN MINIMALNY" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False" Binding="{Binding SafetyStock}"/>
+                            <DataGridTextColumn Header="STAN" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Stock}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Border>

@@ -43,7 +43,7 @@
                               BorderThickness="0"
                               IsReadOnly="True">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Składnik" Width="4*" Binding="{Binding Ingredient.Name}"/>
+                            <DataGridTextColumn Header="Składnik" Width="3*" Binding="{Binding Ingredient.Name}"/>
                             <DataGridTextColumn Header="Opakowanie" Width="2*" Binding="{Binding Ingredient.Package}"/>
                             <DataGridTextColumn Header="Jednostka" Width="2*" Binding="{Binding Ingredient.Unit}"/>
 
@@ -60,7 +60,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTextColumn Header="Ilość" Width="1*" Binding="{Binding Quantity}"/>
+                            <DataGridTextColumn Header="Ilość" Width="0.5*" Binding="{Binding Quantity}"/>
 
                             <DataGridTemplateColumn Header="" Width="0.5*">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -81,7 +81,7 @@
 
             <Border Grid.Row="2" BorderThickness="1,0,1,1" BorderBrush="Black" Background="#8ea7e9" CornerRadius="0,0,8,8" d:IsLocked="True">
                 <Grid>
-                    <Button x:Name="GenerateDeliveryButton" Click="GenerateDelivery_ButtonClick" Style="{StaticResource BasicButton}">
+                    <Button Command="{Binding GenerateDeliveryCommand}" Style="{StaticResource BasicButton}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="GENERUJ ZAMÓWIENIE" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"/>
                         </StackPanel>
@@ -168,7 +168,7 @@
                             <ColumnDefinition Width="3*" />
                             <ColumnDefinition Width="3*" />
                             <ColumnDefinition Width="3*" />
-                            <ColumnDefinition Width="6*" />
+                            <ColumnDefinition Width="8*" />
                             <ColumnDefinition Width="2*" />
                         </Grid.ColumnDefinitions>
 

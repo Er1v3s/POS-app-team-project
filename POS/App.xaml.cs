@@ -142,6 +142,7 @@ namespace POS
             #region WarehouseFunctions
 
             servicesCollection.AddTransient<DeliveryService>();
+            servicesCollection.AddTransient<GenerateDeliveryService>();
 
             servicesCollection.AddTransient<WarehouseFunctionsViewModel>();
 

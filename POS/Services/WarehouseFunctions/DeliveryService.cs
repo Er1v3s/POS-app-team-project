@@ -1,5 +1,7 @@
-﻿using POS.Models.Warehouse;
+﻿using System.Collections.ObjectModel;
+using POS.Models.Warehouse;
 using System.Linq;
+using System.Threading.Tasks;
 using DataAccess.Models;
 using POS.Utilities;
 using System.Windows;
@@ -10,12 +12,14 @@ namespace POS.Services.WarehouseFunctions
     public class DeliveryService
     {
         private readonly IngredientService _ingredientService;
+        private readonly GenerateDeliveryService _generateDeliveryService;
 
         public MyObservableCollection<DeliveryDto> DeliveryCollection;
 
-        public DeliveryService(IngredientService ingredientService)
+        public DeliveryService(IngredientService ingredientService, GenerateDeliveryService generateDeliveryService)
         {
             _ingredientService = ingredientService;
+            _generateDeliveryService = generateDeliveryService;
 
             DeliveryCollection = new();
         }
@@ -69,6 +73,16 @@ namespace POS.Services.WarehouseFunctions
         public void CancelDelivery()
         {
             DeliveryCollection.Clear();
+        }
+
+        public async Task GenerateDeliveryDocument()
+        {
+            var deliveryItemList = DeliveryCollection.ToList();
+
+            var result = await _generateDeliveryService.GenerateDeliveryDocument(deliveryItemList);
+
+            if(result)
+                CancelDelivery();
         }
     }
 }

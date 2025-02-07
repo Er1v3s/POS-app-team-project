@@ -7,6 +7,7 @@ using System.Windows.Input;
 using POS.Services;
 using DataAccess.Models;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using POS.Models.Warehouse;
 using POS.Services.WarehouseFunctions;
@@ -85,6 +86,7 @@ namespace POS.ViewModels.WarehouseFunctions
         public ICommand DeleteIngredientFromDeliveryCommand { get; }
         public ICommand EditIngredientCommand { get; }
         public ICommand CancelDeliveryCommand { get; }
+        public ICommand GenerateDeliveryCommand { get; }
         public ICommand OpenMainWindowCommand { get; }
 
         public CreateDeliveryViewModel(
@@ -101,6 +103,7 @@ namespace POS.ViewModels.WarehouseFunctions
             DeleteIngredientFromDeliveryCommand = new RelayCommand<Ingredient>(DeleteIngredientFromDelivery);
             EditIngredientCommand = new RelayCommand(EditIngredientQuantity);
             CancelDeliveryCommand = new RelayCommand(CancelDelivery);
+            GenerateDeliveryCommand = new RelayCommandAsync(GenerateDelivery);
             OpenMainWindowCommand = new RelayCommand<Views.Windows.MainWindow>(OpenMainWindow);
         }
 
@@ -153,6 +156,11 @@ namespace POS.ViewModels.WarehouseFunctions
             var result = MessageBox.Show("Czy na pewno chcesz anulować zamówienie?", "", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
                 _deliveryService.CancelDelivery();
+        }
+
+        private async Task GenerateDelivery()
+        {
+            await _deliveryService.GenerateDeliveryDocument();
         }
 
         private void HandlePlaceholder()
