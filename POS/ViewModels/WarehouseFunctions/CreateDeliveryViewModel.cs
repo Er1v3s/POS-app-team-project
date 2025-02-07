@@ -7,7 +7,6 @@ using System.Windows.Input;
 using POS.Services;
 using DataAccess.Models;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using POS.Models.Warehouse;
 using POS.Services.WarehouseFunctions;
@@ -27,6 +26,9 @@ namespace POS.ViewModels.WarehouseFunctions
 
         private Ingredient? selectedIngredient;
 
+        private bool isIngredientSelected;
+        private bool deliveryCollectionHasAnyValue;
+
         public MyObservableCollection<Ingredient> IngredientObservableCollection
         {
             get => _ingredientService.IngredientCollection;
@@ -36,7 +38,13 @@ namespace POS.ViewModels.WarehouseFunctions
         public Ingredient? SelectedIngredient
         {
             get => selectedIngredient;
-            set => SetField(ref selectedIngredient, value);
+            set
+            {
+                if (SetField(ref selectedIngredient, value))
+                {
+                    isIngredientSelected = true;
+                }
+            }
         }
 
         public static string LoggedInUserName => LoginManager.Instance.GetLoggedInUserFullName();
@@ -58,6 +66,18 @@ namespace POS.ViewModels.WarehouseFunctions
         {
             get => placeholder;
             set => SetField(ref placeholder, value);
+        }
+
+        public bool IsIngredientSelected
+        {
+            get => isIngredientSelected;
+            set => SetField(ref isIngredientSelected, value);
+        }
+
+        public bool DeliveryCollectionHasAnyValue
+        {
+            get => deliveryCollectionHasAnyValue;
+            set => SetField(ref deliveryCollectionHasAnyValue, value);
         }
 
         public ICommand AddIngredientToDeliveryCommand { get; }
@@ -86,7 +106,7 @@ namespace POS.ViewModels.WarehouseFunctions
 
         private void ShowAllIngredients()
         {
-            Task.Run(_ingredientService.GetAllIngredients);
+            _ingredientService.GetAllIngredients();
         }
 
         private void FilterIngredientsBySearchPhrase(string searchPhraseArg)

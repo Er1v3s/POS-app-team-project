@@ -114,7 +114,7 @@
         </Style>
 
         <Style x:Key="sideBarButton" TargetType="Button">
-            <Setter Property="Background" Value="#FF7286D3"/>
+            <Setter Property="Background" Value="#7286D3"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="MaxWidth" Value="300" />
             <Setter Property="MaxHeight" Value="180" />
@@ -962,12 +962,20 @@
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="TextWrapping" Value="Wrap" />
-            <Setter Property="Background" Value="#FF7286D3" />
+            <Setter Property="Background" Value="#7286d3" />
             <Setter Property="Foreground" Value="White" />
-            <Setter Property="BorderBrush" Value="#FF7286D3" />
-            <Setter Property="SelectionBrush" Value="#FF8EA7E9" />
+            <Setter Property="BorderBrush" Value="#7286d3" />
+            <Setter Property="SelectionBrush" Value="#5971cb" />
             <Setter Property="Padding" Value="20,0,0,0" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="#5971cb"/>
+                </Trigger>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="#5971cb"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
         <Style x:Key="payButton" TargetType="Button">
@@ -1477,6 +1485,56 @@
             </Setter>
         </Style>
 
+
+        <!--#endregion-->
+
+        <!--#region WarehouseFunctions-->
+
+        <Style x:Key="BasicButton" TargetType="Button">
+            <Setter Property="Background" Value="#7286d3" />
+            <Setter Property="BorderBrush" Value="#7286d3" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#5971cb" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="BasicButtonGreen" TargetType="Button" BasedOn="{StaticResource BasicButton}">
+            <Setter Property="Background" Value="#4baea0" />
+            <Setter Property="BorderBrush" Value="#4baea0" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#449d90" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="BasicButtonRed" TargetType="Button" BasedOn="{StaticResource BasicButton}">
+            <Setter Property="Background" Value="#ae4b59" />
+            <Setter Property="BorderBrush" Value="#ae4b59" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#9d4450" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
 
         <!--#endregion-->
 

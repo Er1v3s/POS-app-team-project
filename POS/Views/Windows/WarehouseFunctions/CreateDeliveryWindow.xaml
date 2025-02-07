@@ -18,14 +18,16 @@
         </Grid.ColumnDefinitions>
         
         <!-- #region leftSide-->
+
         <Border BorderThickness="0,0,1,0" BorderBrush="Black" d:IsLocked="True"/>
         <Grid Grid.Column="0" Margin="25">
             <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="20.75*"/>
-                <RowDefinition Height="1*"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="70"/>
             </Grid.RowDefinitions>
-            <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" Background="#FF8EA7E9" CornerRadius="8,8,0,0" d:IsLocked="True">
+
+            <Border Grid.Row="0" BorderThickness="1,1,1,0" BorderBrush="Black" Background="#8ea7e9" CornerRadius="8,8,0,0" d:IsLocked="True">
                 <Grid>
                     <TextBlock Text="LISTA PRODUKTÓW DO ZAMÓWIENIA" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"/>
                 </Grid>
@@ -38,6 +40,7 @@
                               RowStyle="{DynamicResource DataGridRowStyle3}"
                               CellStyle="{DynamicResource DataGridCellStyle3}"
                               ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle3}"
+                              BorderThickness="0"
                               IsReadOnly="True">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Składnik" Width="4*" Binding="{Binding Ingredient.Name}"/>
@@ -76,54 +79,59 @@
                 </Grid>
             </Border>
 
-            <Border Grid.Row="2" BorderThickness="1" BorderBrush="Black" Background="#7286D3" CornerRadius="0,0,8,8" d:IsLocked="True">
+            <Border Grid.Row="2" BorderThickness="1,0,1,1" BorderBrush="Black" Background="#8ea7e9" CornerRadius="0,0,8,8" d:IsLocked="True">
                 <Grid>
-                    <Button x:Name="GenerateDeliveryButton" Click="GenerateDelivery_ButtonClick" Style="{StaticResource GenerateButton}">
+                    <Button x:Name="GenerateDeliveryButton" Click="GenerateDelivery_ButtonClick" Style="{StaticResource BasicButton}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="GENERUJ ZAMÓWIENIE" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"/>
                         </StackPanel>
                     </Button>
                 </Grid>
             </Border>
+
         </Grid>
+
         <!--#endregion-->
         
         <!--#region rightSide -->
+
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="11*"/>
+                <RowDefinition Height="75"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            
-            <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black" Background="#FF8EA7E9" d:IsLocked="True"/>
-            <Grid Grid.Row="0" Background="#FF8EA7E9">
-                <TextBox Text="{Binding SearchPhrase, UpdateSourceTrigger=PropertyChanged, Delay=100}"
-                         Style="{StaticResource SearchBar}"
-                         Margin="20,0,0,0" 
-                         Width="360" 
-                         Height="42"
-                         helpers:TextBoxHelper.Placeholder="{Binding Placeholder}">
-                    <TextBox.Resources>
-                        <Style TargetType="{x:Type Border}">
-                            <Setter Property="CornerRadius" Value="16"/>
-                        </Style>
-                    </TextBox.Resources>
-                </TextBox>
 
-                <Border BorderBrush="#FF7286D3" BorderThickness="1" Width="200" Height="42" HorizontalAlignment="Right" Margin="0,0,25,0" Background="#FF7286D3" CornerRadius="8">
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock Text="{Binding LoggedInUserName, FallbackValue='Imię Nazwisko'}" Foreground="White"/>
-                    </StackPanel>
-                </Border>
-            </Grid>
+            <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black" Background="#8ea7e9" d:IsLocked="True"> 
+                <Grid Background="#8ea7e9">
+                    <TextBox Text="{Binding SearchPhrase, UpdateSourceTrigger=PropertyChanged, Delay=100}"
+                             Style="{StaticResource SearchBar}"
+                             Margin="20,0,0,0" 
+                             Width="360" 
+                             Height="42"
+                             helpers:TextBoxHelper.Placeholder="{Binding Placeholder}">
+                        <TextBox.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="16"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
 
-            <Grid Grid.Row="1" Margin="25">
+                    <Border BorderBrush="#7286d3" BorderThickness="1" Width="200" Height="42" HorizontalAlignment="Right" Margin="0,0,25,0" Background="#FF7286D3" CornerRadius="8">
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding LoggedInUserName, FallbackValue='Imię Nazwisko'}" Foreground="White"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1" Margin="25" >
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="32*"/>
-                    <RowDefinition Height="582*"/>
-                    <RowDefinition Height="50*"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="70"/>
                 </Grid.RowDefinitions>
-                <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" Background="#4BAEA0" CornerRadius="8,8,0,0" d:IsLocked="True">
+
+                <Border Grid.Row="0" BorderThickness="1, 1, 1, 0" BorderBrush="Black" Background="#4baea0" CornerRadius="8,8,0,0">
                     <Grid>
                         <TextBlock Text="STAN MAGAZYNU" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"/>
                     </Grid>
@@ -136,6 +144,7 @@
                                   Style="{DynamicResource DataGridStyle4}" 
                                   CellStyle="{DynamicResource DataGridCellStyle4}" 
                                   ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle4}"
+                                  BorderThickness="0"
                                   IsReadOnly="True"
                                   SelectionMode="Single">
                             <DataGrid.Columns>
@@ -153,7 +162,7 @@
                     </Grid>
                 </Border>
 
-                <Border BorderBrush="Black" Grid.Row="2" Background="#FF7286D3" CornerRadius="0,0,8,8">
+                <Border BorderBrush="Black" BorderThickness="1, 0, 1, 1" Grid.Row="2" Background="#8ea7e9" CornerRadius="0,0,8,8">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="3*" />
@@ -163,17 +172,19 @@
                             <ColumnDefinition Width="2*" />
                         </Grid.ColumnDefinitions>
 
-                        <Button Command="{Binding AddIngredientToDeliveryCommand}" Grid.Column="0" Content="Dodaj" Style="{StaticResource recipeButton}" Background="#4BAEA0" d:IsLocked="True" />
-                        <Button Command="{Binding EditIngredientCommand}" Grid.Column="1" Content="Korekta" Style="{StaticResource recipeButton}" d:IsLocked="True" />
-                        <Button Command="{Binding CancelDeliveryCommand}" Grid.Column="2" Content="Anuluj" Style="{StaticResource recipeButton}" Background="#AE4B59" d:IsLocked="True" />
+                        <Button Command="{Binding AddIngredientToDeliveryCommand}"  Grid.Column="0" Content="Dodaj" Style="{StaticResource BasicButtonGreen}"/>
+                        <Button Command="{Binding EditIngredientCommand}"  Grid.Column="1" Content="Korekta" Style="{StaticResource BasicButton}"/>
+                        <Button Command="{Binding CancelDeliveryCommand}"  Grid.Column="2" Content="Anuluj" Style="{StaticResource BasicButtonRed}"/>
 
                         <Button Command="{Binding OpenMainWindowCommand}" Grid.Column="4" Style="{StaticResource homeButton}" d:IsLocked="True">
                             <fa:ImageAwesome Icon="Home" Height="24" Foreground="White"/>
                         </Button>
                     </Grid>
                 </Border>
+
             </Grid>
         </Grid>
+
         <!--#endregion-->
 
     </Grid>

@@ -15,6 +15,7 @@ namespace POS.Services
     {
         private readonly AppDbContext _dbContext;
 
+        private List<Ingredient> allIngredientList = new();
         public MyObservableCollection<Ingredient> IngredientCollection { get; }
 
         public IngredientService(AppDbContext dbContext)
@@ -25,15 +26,15 @@ namespace POS.Services
             _ = GetAllIngredientsFromDbAsync();
         }
 
-        public async Task GetAllIngredients()
+        public void GetAllIngredients()
         {
-            IngredientCollection.Clear();
-            await GetAllIngredientsFromDbAsync();
+            ReloadCollection(IngredientCollection);
         }
 
         public void GetIngredientsBySearchPhrase(string searchText)
         {
-            var filteredIngredients = IngredientCollection.Where(i => i.Name.ToLower().Contains(searchText.ToLower()));
+            var filteredIngredients = allIngredientList.Where(i => i.Name.ToLower().Contains(searchText.ToLower()));
+            IngredientCollection.Clear();
             IngredientCollection.AddRange(filteredIngredients);
         }
 
@@ -42,7 +43,8 @@ namespace POS.Services
             if (ingredient == null)
                 throw new ArgumentNullException($"Niepoprawny składnik: {ingredient}");
 
-            IngredientCollection.Add(ingredient);
+            allIngredientList.Add(ingredient);
+            ReloadCollection(IngredientCollection);
             await _dbContext.Ingredients.AddAsync(ingredient);
             await _dbContext.SaveChangesAsync();
         }
@@ -52,7 +54,9 @@ namespace POS.Services
             if(ingredient == null)
                 throw new ArgumentNullException($"Niepoprawny produkt: {ingredient}");
 
-            IngredientCollection.Remove(ingredient);
+            allIngredientList.Remove(ingredient);
+            ReloadCollection(IngredientCollection);
+
             _dbContext.Ingredients.Remove(ingredient);
             await _dbContext.SaveChangesAsync();
         }
@@ -70,13 +74,14 @@ namespace POS.Services
                 .Where(i => i.IngredientId == ingredient.IngredientId)
                 .FirstOrDefaultAsync();
 
-            var ingredientFromCollectionToUpdate = IngredientCollection.FirstOrDefault(i => i.IngredientId == ingredient.IngredientId);
+            var ingredientFromCollectionToUpdate = allIngredientList.FirstOrDefault(i => i.IngredientId == ingredient.IngredientId);
 
             if (ingredientToUpdate == null || ingredientFromCollectionToUpdate == null)
                 throw new NotFoundException($"Nie odnaleziono składnika o Id: {ingredient.IngredientId}"); 
 
             ingredientFromCollectionToUpdate.Stock = ingredient.Stock;
             ingredientFromCollectionToUpdate.SafetyStock = ingredient.SafetyStock;
+            ReloadCollection(IngredientCollection);
 
             ingredientToUpdate.Stock = ingredient.Stock;
             ingredientToUpdate.SafetyStock = ingredient.SafetyStock;
@@ -127,12 +132,18 @@ namespace POS.Services
 
         private async Task GetAllIngredientsFromDbAsync()
         {
-            var ingredients = await _dbContext.Ingredients.ToListAsync();
+            allIngredientList = await _dbContext.Ingredients.ToListAsync();
 
-            if (ingredients.Count == 0)
+            if (allIngredientList.Count == 0)
                 throw new NotFoundException("Nie odnaleziono żadnych składników");
 
-            IngredientCollection.AddRange(ingredients);
+            ReloadCollection(IngredientCollection);
+        }
+
+        private void ReloadCollection(MyObservableCollection<Ingredient> collection)
+        {
+            collection.Clear();
+            collection.AddRange(allIngredientList);
         }
     }
 }

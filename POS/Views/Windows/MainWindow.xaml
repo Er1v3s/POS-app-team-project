@@ -17,7 +17,7 @@
             <ColumnDefinition Width="3*" />
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0" Background="#8EA7E9">
+        <Grid Grid.Column="0" Background="#8ea7e9">
             <UniformGrid Rows="5" Columns="1"  VerticalAlignment="Stretch" Margin="0, 12.5, 0, 12.5" >
                 <Button Command="{Binding ChangeContentSourceCommand}" CommandParameter="0" Style="{StaticResource sideBarButton}">
                     <StackPanel Orientation="Horizontal">
