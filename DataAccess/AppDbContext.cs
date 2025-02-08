@@ -14,11 +14,16 @@ namespace DataAccess
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+
             // Production 
             //optionsBuilder.UseSqlServer(ConnectionString);
 
             // Development
-            optionsBuilder.UseSqlite(ConnectionString, b => b.MigrationsAssembly("DbSeeder"));
+
+            if (File.Exists(ConnectionString))
+            {
+                optionsBuilder.UseSqlite(ConnectionString, builder => builder.MigrationsAssembly("DbSeeder"));
+            }
         }
 
         public DbSet<Product> Product { get; set; }

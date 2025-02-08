@@ -76,10 +76,14 @@
 
                 <Grid Grid.Column="0">
                     <fa:ImageAwesome Icon="Wifi" Foreground="White" Width="32"/>
+                    <fa:ImageAwesome Visibility="{Binding IsInternetAvailable}" Style="{StaticResource plusIcon}" Icon="Plus" Width="32" Height="32" Foreground="#ae4b59" Rotation="45"/>
                 </Grid>
+                
                 <Grid Grid.Column="1">
                     <fa:ImageAwesome Icon="Database" Foreground="White" Width="24" Height="24"/>
+                    <fa:ImageAwesome Visibility="{Binding IsDatabaseAvailable}" Style="{StaticResource plusIcon}" Icon="Plus" Width="32" Height="32" Foreground="#ae4b59" Rotation="45"/>
                 </Grid>
+
                 <StackPanel Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="{Binding Date, StringFormat=dd/MM/yyyy}" FontSize="16" Foreground="White"/>
                     <TextBlock Text="{Binding Time, StringFormat=HH:mm}" FontSize="24" Foreground="White" HorizontalAlignment="Center"/>

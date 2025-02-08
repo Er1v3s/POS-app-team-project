@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -49,6 +50,7 @@ namespace POS
         private void ConfigureServices(ServiceCollection servicesCollection)
         {
             servicesCollection.AddSingleton<AppDbContext>();
+            servicesCollection.AddScoped<ApplicationStateService>();
 
             #region MainWindow
 
@@ -156,6 +158,16 @@ namespace POS
 
             #endregion
 
+        }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            var appState = ServiceProvider.GetRequiredService<ApplicationStateService>();
+
+            appState.GetDatabaseStatusAsync();
+            _ = appState.GetInternetStatusAsync();
         }
 
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

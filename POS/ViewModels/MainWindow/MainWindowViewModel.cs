@@ -13,8 +13,15 @@ namespace POS.ViewModels.MainWindow
     {
         private readonly TimeService _timeService;
         private readonly NavigationService _navigationService;
+        private readonly ApplicationStateService _applicationStateService;
 
         private object contentSource;
+
+        public Visibility IsInternetAvailable => 
+            _applicationStateService.IsInternetAvailable ? Visibility.Collapsed : Visibility.Visible;
+
+        public Visibility IsDatabaseAvailable =>
+            _applicationStateService.IsDatabaseAvailable ? Visibility.Collapsed : Visibility.Visible;
 
         public DateTime Date { get; private set; }
         public DateTime Time { get; private set; }
@@ -35,12 +42,16 @@ namespace POS.ViewModels.MainWindow
         public ICommand TurnOffApplicationCommand { get; }
         public ICommand ChangeContentSourceCommand { get; }
 
-        public MainWindowViewModel(TimeService timeService, NavigationService navigationService)
+        public MainWindowViewModel(
+            TimeService timeService,
+            NavigationService navigationService,
+            ApplicationStateService applicationStateService)
         {
             _timeService = timeService;
             InitializeTimeService();
 
             _navigationService = navigationService;
+            _applicationStateService = applicationStateService;
 
             TurnOffApplicationCommand = new RelayCommand(TurnOffApplication);
             OpenSalesPanelWindowCommand = new RelayCommand<SalesPanelWindow>(OpenSalesPanelWindow);
