@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 using POS.Services.Login;
-using System.Collections.ObjectModel;
+using POS.Exceptions;
 using POS.Utilities;
 using POS.Utilities.RelayCommands;
 using POS.ViewModels.Base;
@@ -13,10 +13,7 @@ namespace POS.ViewModels.WorkTimeSummaryControl
     {
         private readonly SessionService _sessionService;
 
-        public MyObservableCollection<EmployeeWorkSession> SessionObservableCollection
-        {
-            get => _sessionService.SessionCollection;
-        }
+        public MyObservableCollection<EmployeeWorkSession> SessionObservableCollection => _sessionService.SessionCollection;
 
         public ICommand RefreshCommand { get; }
 
@@ -25,18 +22,23 @@ namespace POS.ViewModels.WorkTimeSummaryControl
             _sessionService = sessionService;
 
             RefreshCommand = new RelayCommandAsync(LoadSessionsAsync);
-
-            _ = CheckForActiveSessionAsync();
         }
 
         private async Task LoadSessionsAsync()
         {
-            await _sessionService.GetSessionsAsync();
-        }
-
-        private async Task CheckForActiveSessionAsync()
-        {
-            await _sessionService.CheckForActiveSessionsAsync();
+            try
+            {
+                IsButtonEnable = !IsButtonEnable;
+                await _sessionService.GetSessionsAsync();
+            }
+            catch (DatabaseException ex)
+            {
+                ExceptionsHandler.ShowErrorMessage(ex.Message);
+            }
+            finally
+            {
+                IsButtonEnable = !IsButtonEnable;
+            }
         }
     }
 }

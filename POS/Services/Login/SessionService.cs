@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DataAccess;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
+using POS.Exceptions;
 using POS.Utilities;
 
 namespace POS.Services.Login
@@ -13,15 +14,17 @@ namespace POS.Services.Login
     public class SessionService
     {
         private readonly AppDbContext _dbContext;
+        private readonly DatabaseErrorHandler _databaseErrorHandler;
 
         public MyObservableCollection<EmployeeWorkSession> SessionCollection { get; }
 
-        public SessionService(AppDbContext dbContext)
+        public SessionService(AppDbContext dbContext, DatabaseErrorHandler databaseErrorHandler)
         {
             _dbContext = dbContext;
+            _databaseErrorHandler = databaseErrorHandler;
 
             SessionCollection = new();
-            _ = GetSessionsAsync();
+            _ = InitializeAsync(); // Skip exception handling (in worst case there will be no data in the view, what might happen)
         }
 
         public async Task StartSessionAsync(Employee employee)
@@ -47,19 +50,55 @@ namespace POS.Services.Login
             await SessionCollection.AddRangeWithDelay(sessionsWithTimeInterval, 50);
         }
 
-        public async Task<bool> CheckForActiveSessionsAsync()
+        private async Task InitializeAsync()
         {
-            var sessions = await _dbContext.EmployeeWorkSession.FirstOrDefaultAsync(s => s.WorkingTimeTo == null);
+            await GetSessionsAsync();
+            await CheckForActiveSessionsAsync();
+        }
 
-            return LoginManager.Instance.IsAnySessionActive = sessions != null;
+        private async Task<List<EmployeeWorkSession>> GetAllSessionsFromDbAsync()
+        {
+            return await _databaseErrorHandler.ExecuteDatabaseOperationAsync(async () =>
+            {
+                var sessions = await _dbContext.EmployeeWorkSession.ToListAsync();
+
+                return sessions;
+            });
+        }
+
+        private async Task CheckForActiveSessionsAsync()
+        {
+            await _databaseErrorHandler.ExecuteDatabaseOperationAsync(async () =>
+            {
+                var session = await _dbContext.EmployeeWorkSession.FirstOrDefaultAsync(s => s.WorkingTimeTo == null);
+
+                return LoginManager.Instance.IsAnySessionActive = session != null;
+            }, onFailure: ex =>
+            {
+                LoginManager.Instance.IsAnySessionActive = false;
+            });
         }
 
         private async Task CreateNewSessionAsync(Employee employee)
         {
+            var employeeWorkSession = CreateNewEmployeeWorkSession(employee);
             employee.IsUserLoggedIn = true;
             LoginManager.Instance.IsAnySessionActive = true;
 
-            var employeeWorkSession = new EmployeeWorkSession
+            await _databaseErrorHandler.ExecuteDatabaseOperationAsync(async () => 
+            {
+                await _dbContext.EmployeeWorkSession.AddAsync(employeeWorkSession);
+                await _dbContext.SaveChangesAsync();
+            },
+            onFailure: ex =>
+            {
+                LoginManager.Instance.IsAnySessionActive = false;
+            });
+        }
+
+        private EmployeeWorkSession CreateNewEmployeeWorkSession(Employee employee)
+        {
+            return new EmployeeWorkSession
             {
                 EmployeeId = employee.EmployeeId,
                 EmployeeName = employee.FirstName + " " + employee.LastName,
@@ -67,32 +106,26 @@ namespace POS.Services.Login
                 WorkingTimeTo = null,
                 WorkingTimeSummary = null,
             };
-
-            await _dbContext.EmployeeWorkSession.AddAsync(employeeWorkSession);
-            await _dbContext.SaveChangesAsync();
         }
 
         private async Task FinishExistedSessionAsync(Employee employee)
         {
-            var employeeWorkSession = await _dbContext.EmployeeWorkSession
+            await _databaseErrorHandler.ExecuteDatabaseOperationAsync(async () =>
+            {
+                var employeeWorkSession = await _dbContext.EmployeeWorkSession
                     .Where(e => e.WorkingTimeTo == null)
                     .FirstOrDefaultAsync(e => e.EmployeeId == employee.EmployeeId && employee.IsUserLoggedIn);
 
-            if (employeeWorkSession != null)
-            {
+
+                if (employeeWorkSession == null)
+                    throw new NotFoundException("Nie znaleziono sesji do zakończenia");
+
                 employeeWorkSession.WorkingTimeTo = DateTime.Now.ToString("HH:mm");
                 employee.IsUserLoggedIn = false;
                 await _dbContext.SaveChangesAsync();
-            }
 
-            await CheckForActiveSessionsAsync();
-        }
-
-        private async Task<List<EmployeeWorkSession>> GetAllSessionsFromDbAsync()
-        {
-            var sessions = await _dbContext.EmployeeWorkSession.ToListAsync();
-
-            return sessions;
+                await CheckForActiveSessionsAsync();
+            });
         }
 
         private List<EmployeeWorkSession> SetTimeInterval(List<EmployeeWorkSession> sessions)

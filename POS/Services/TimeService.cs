@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Timers;
 
 namespace POS.Services
@@ -27,8 +28,8 @@ namespace POS.Services
             CurrentTime = DateTime.Now;
             TimeUpdated?.Invoke();
 
-            _applicationStateService.GetDatabaseStatusAsync();
-            _ =_applicationStateService.GetInternetStatusAsync();
+            _ = _applicationStateService.GetDatabaseStatusAsync();
+            _ = _applicationStateService.GetInternetStatusAsync();
         }
     }
 }
