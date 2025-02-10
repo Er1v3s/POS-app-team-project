@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using DataAccess.Models;
-using POS.Helpers;
+using POS.Validators;
 using POS.Services.AdminFunctions;
 using POS.Utilities.RelayCommands;
 
@@ -39,14 +39,14 @@ namespace POS.ViewModels.AdminFunctionsPanel
         {
             return new Employee
             {
-                FirstName = FormValidatorHelper.ValidateString(firstName),
-                LastName = FormValidatorHelper.ValidateString(lastName),
-                JobTitle = FormValidatorHelper.ValidateString(jobTitle),
-                Email = FormValidatorHelper.ValidateEmailAddress(email),
-                PhoneNumber = ParsePhoneNumber(FormValidatorHelper.ValidatePhoneNumber(phoneNumber)),
-                Address = FormValidatorHelper.ValidateString(address),
-                Login = FormValidatorHelper.ValidateString(login),
-                Password = FormValidatorHelper.ValidateString(password),
+                FirstName = FormValidator.ValidateString(firstName),
+                LastName = FormValidator.ValidateString(lastName),
+                JobTitle = FormValidator.ValidateString(jobTitle),
+                Email = FormValidator.ValidateEmailAddress(email),
+                PhoneNumber = ParsePhoneNumber(FormValidator.ValidatePhoneNumber(phoneNumber)),
+                Address = FormValidator.ValidateString(address),
+                Login = FormValidator.ValidateString(login),
+                Password = FormValidator.ValidateString(password),
                 IsUserLoggedIn = false
             };
         }

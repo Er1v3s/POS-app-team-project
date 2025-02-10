@@ -1,20 +1,27 @@
 ﻿using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using DataAccess;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
+using POS.Utilities;
 
 namespace POS.Services.Login
 {
     public class SessionService
     {
         private readonly AppDbContext _dbContext;
+
+        public MyObservableCollection<EmployeeWorkSession> SessionCollection { get; }
+
         public SessionService(AppDbContext dbContext)
         {
             _dbContext = dbContext;
+
+            SessionCollection = new();
+            _ = GetSessionsAsync();
         }
 
         public async Task StartSessionAsync(Employee employee)
@@ -31,30 +38,13 @@ namespace POS.Services.Login
             LoginManager.Instance.LogOut();
         }
 
-        public async Task<ObservableCollection<EmployeeWorkSession>> LoadSessionsAsync()
+        public async Task GetSessionsAsync()
         {
-            ObservableCollection<EmployeeWorkSession> sessionList = new();
+            var sessions = await GetAllSessionsFromDbAsync();
+            var sessionsWithTimeInterval = SetTimeInterval(sessions);
 
-            var sessions = await _dbContext.EmployeeWorkSession.ToListAsync();
-
-            foreach (var session in sessions)
-            {
-                DateTime workingTimeFrom =
-                    DateTime.ParseExact(session.WorkingTimeFrom, "HH:mm", CultureInfo.InvariantCulture);
-                DateTime workingTimeTo =
-                    string.IsNullOrEmpty(session.WorkingTimeTo)
-                        ? DateTime.Now
-                        : DateTime.ParseExact(session.WorkingTimeTo, "HH:mm", CultureInfo.InvariantCulture);
-
-
-                TimeSpan workingTimeDifference = workingTimeTo - workingTimeFrom;
-                session.WorkingTimeSummary =
-                    $"{(int)workingTimeDifference.TotalHours:D2}:{workingTimeDifference.Minutes:D2}";
-
-                sessionList.Add(session);
-            }
-
-            return sessionList;
+            SessionCollection.Clear();
+            await SessionCollection.AddRangeWithDelay(sessionsWithTimeInterval, 50);
         }
 
         public async Task<bool> CheckForActiveSessionsAsync()
@@ -96,6 +86,37 @@ namespace POS.Services.Login
             }
 
             await CheckForActiveSessionsAsync();
+        }
+
+        private async Task<List<EmployeeWorkSession>> GetAllSessionsFromDbAsync()
+        {
+            var sessions = await _dbContext.EmployeeWorkSession.ToListAsync();
+
+            return sessions;
+        }
+
+        private List<EmployeeWorkSession> SetTimeInterval(List<EmployeeWorkSession> sessions)
+        {
+            List<EmployeeWorkSession> sessionsWithTimeInterval = new();
+
+            foreach (var session in sessions)
+            {
+                DateTime workingTimeFrom =
+                    DateTime.ParseExact(session.WorkingTimeFrom, "HH:mm", CultureInfo.InvariantCulture);
+                DateTime workingTimeTo =
+                    string.IsNullOrEmpty(session.WorkingTimeTo)
+                        ? DateTime.Now
+                        : DateTime.ParseExact(session.WorkingTimeTo, "HH:mm", CultureInfo.InvariantCulture);
+
+
+                TimeSpan workingTimeDifference = workingTimeTo - workingTimeFrom;
+                session.WorkingTimeSummary =
+                    $"{(int)workingTimeDifference.TotalHours:D2}:{workingTimeDifference.Minutes:D2}";
+
+                sessionsWithTimeInterval.Add(session);
+            }
+
+            return sessionsWithTimeInterval;
         }
     }
 }

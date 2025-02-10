@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -10,17 +11,18 @@ using POS.Models.Reports.ReportsPredictions;
 using POS.Services;
 using POS.Services.AdminFunctions;
 using POS.Services.Login;
+using POS.Services.ReportsAndAnalysis.ChartGenerators.PredictionChartGenerators;
+using POS.Services.ReportsAndAnalysis.ChartGenerators.ReportChartGenerators;
+using POS.Services.ReportsAndAnalysis.Factories;
+using POS.Services.ReportsAndAnalysis.Interfaces;
+using POS.Services.ReportsAndAnalysis.PredictionGenerators;
+using POS.Services.ReportsAndAnalysis.ReportGenerators;
 using POS.Services.SalesPanel;
 using POS.Services.ToDoList;
+using POS.Services.WarehouseFunctions;
 using POS.ViewModels.AdminFunctionsPanel;
 using POS.ViewModels.MainWindow;
 using POS.ViewModels.ReportsAndAnalysis;
-using POS.ViewModels.ReportsAndAnalysis.ChartGenerators.PredictionChartGenerators;
-using POS.ViewModels.ReportsAndAnalysis.ChartGenerators.ReportChartGenerators;
-using POS.ViewModels.ReportsAndAnalysis.Factories;
-using POS.ViewModels.ReportsAndAnalysis.Interfaces;
-using POS.ViewModels.ReportsAndAnalysis.PredictionGenerators;
-using POS.ViewModels.ReportsAndAnalysis.ReportGenerators;
 using POS.ViewModels.SalesPanel;
 using POS.ViewModels.StartFinishWork;
 using POS.ViewModels.ToDoList;
@@ -48,6 +50,7 @@ namespace POS
         private void ConfigureServices(ServiceCollection servicesCollection)
         {
             servicesCollection.AddSingleton<AppDbContext>();
+            servicesCollection.AddScoped<ApplicationStateService>();
 
             #region MainWindow
 
@@ -85,9 +88,9 @@ namespace POS
             servicesCollection.AddTransient<IChartGenerator<NumberOfOrdersPredictionDto>, NumberOfOrdersPredictionChartGenerator>();
 
             // Factories
-            servicesCollection.AddSingleton<IReportsFactory, ReportsFactory>();
-            servicesCollection.AddTransient<IChartsFactory, ChartsFactory>();
-            servicesCollection.AddSingleton<IPredictionsFactory, PredictionsFactory>();
+            servicesCollection.AddSingleton<IReportsFactory, ReportFactory>();
+            servicesCollection.AddTransient<IChartsFactory, ChartFactory>();
+            servicesCollection.AddSingleton<IPredictionsFactory, PredictionFactory>();
 
             #endregion
 
@@ -140,6 +143,9 @@ namespace POS
 
             #region WarehouseFunctions
 
+            servicesCollection.AddTransient<DeliveryService>();
+            servicesCollection.AddTransient<GenerateDeliveryService>();
+
             servicesCollection.AddTransient<WarehouseFunctionsViewModel>();
 
             servicesCollection.AddTransient<EditProductRecipeViewModel>();
@@ -148,9 +154,20 @@ namespace POS
             servicesCollection.AddTransient<StockManagementViewModel>();
 
             servicesCollection.AddTransient<CreateDeliveryViewModel>();
+            servicesCollection.AddTransient<StockCorrectionViewModel>();
 
             #endregion
 
+        }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            var appState = ServiceProvider.GetRequiredService<ApplicationStateService>();
+
+            appState.GetDatabaseStatusAsync();
+            _ = appState.GetInternetStatusAsync();
         }
 
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

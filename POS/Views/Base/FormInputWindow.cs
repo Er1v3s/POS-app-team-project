@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using POS.Helpers;
+using POS.Validators;
 
 namespace POS.Views.Base
 {
@@ -7,22 +7,22 @@ namespace POS.Views.Base
     {
         protected void FormInput_LostFocus(object sender, RoutedEventArgs e)
         {
-            FormValidatorHelper.ValidateTextBox(sender, e);
+            FormValidator.ValidateTextBox(sender, e);
         }
 
         protected void EmailFormInput_LostFocus(object sender, RoutedEventArgs e)
         {
-            FormValidatorHelper.ValidateEmailAddress(sender, e);
+            FormValidator.ValidateEmailAddress(sender, e);
         }
 
         protected void PhoneNumberFormInput_LostFocus(object sender, RoutedEventArgs e)
         {
-            FormValidatorHelper.ValidatePhoneNumber(sender, e);
+            FormValidator.ValidatePhoneNumber(sender, e);
         }
 
         protected void TaxIdentificationNumberFormInput_LostFocus(object sender, RoutedEventArgs e)
         {
-            FormValidatorHelper.ValidateTaxIdentificationNumber(sender, e);
+            FormValidator.ValidateTaxIdentificationNumber(sender, e);
         }
     }
 }

@@ -5,10 +5,11 @@ using System.Windows;
 using System.Windows.Input;
 using LiveCharts;
 using POS.Models.Reports;
+using POS.Models.Validation;
+using POS.Services.ReportsAndAnalysis.Interfaces;
 using POS.Utilities.RelayCommands;
+using POS.Validators;
 using POS.ViewModels.Base;
-using POS.ViewModels.ReportsAndAnalysis.Interfaces;
-using POS.ViewModels.ReportsAndAnalysis.Validators;
 
 namespace POS.ViewModels.ReportsAndAnalysis
 {
@@ -98,8 +99,7 @@ namespace POS.ViewModels.ReportsAndAnalysis
 
         private async Task GenerateReport()
         {
-            var inputValidator = new InputValidator();
-            var validationResult = inputValidator.ValidateInputs(selectedReportIndex, startDate, endDate);
+            ValidationResult validationResult = DateIntervalValidator.ValidateDateInterval(startDate, endDate);
 
             if (!validationResult.IsValid)
             {

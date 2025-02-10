@@ -14,6 +14,8 @@ namespace POS.Services
     public class IngredientService
     {
         private readonly AppDbContext _dbContext;
+
+        private List<Ingredient> allIngredientList = new();
         public MyObservableCollection<Ingredient> IngredientCollection { get; }
 
         public IngredientService(AppDbContext dbContext)
@@ -24,9 +26,16 @@ namespace POS.Services
             _ = GetAllIngredientsFromDbAsync();
         }
 
-        public MyObservableCollection<Ingredient> GetAllIngredients()
+        public void GetAllIngredients()
         {
-            return IngredientCollection;
+            ReloadCollection(IngredientCollection);
+        }
+
+        public void GetIngredientsBySearchPhrase(string searchText)
+        {
+            var filteredIngredients = allIngredientList.Where(i => i.Name.ToLower().Contains(searchText.ToLower()));
+            IngredientCollection.Clear();
+            IngredientCollection.AddRange(filteredIngredients);
         }
 
         public async Task AddNewIngredientAsync(Ingredient ingredient)
@@ -34,7 +43,8 @@ namespace POS.Services
             if (ingredient == null)
                 throw new ArgumentNullException($"Niepoprawny składnik: {ingredient}");
 
-            IngredientCollection.Add(ingredient);
+            allIngredientList.Add(ingredient);
+            ReloadCollection(IngredientCollection);
             await _dbContext.Ingredients.AddAsync(ingredient);
             await _dbContext.SaveChangesAsync();
         }
@@ -44,8 +54,37 @@ namespace POS.Services
             if(ingredient == null)
                 throw new ArgumentNullException($"Niepoprawny produkt: {ingredient}");
 
-            IngredientCollection.Remove(ingredient);
+            allIngredientList.Remove(ingredient);
+            ReloadCollection(IngredientCollection);
+
             _dbContext.Ingredients.Remove(ingredient);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateIngredientQuantityAsync(Ingredient ingredient)
+        {
+            if (ingredient == null)
+                throw new ArgumentNullException($"Niepoprawny produkt: {ingredient}");
+            if (ingredient.Stock < 0)
+                throw new ArgumentException($"Niepoprawna ilość składnika: {ingredient}");
+            if (ingredient.SafetyStock < 0)
+                throw new ArgumentException($"Niepoprawna ilość stanu bezpieczeństwa: {ingredient}");
+
+            var ingredientToUpdate = await _dbContext.Ingredients
+                .Where(i => i.IngredientId == ingredient.IngredientId)
+                .FirstOrDefaultAsync();
+
+            var ingredientFromCollectionToUpdate = allIngredientList.FirstOrDefault(i => i.IngredientId == ingredient.IngredientId);
+
+            if (ingredientToUpdate == null || ingredientFromCollectionToUpdate == null)
+                throw new NotFoundException($"Nie odnaleziono składnika o Id: {ingredient.IngredientId}"); 
+
+            ingredientFromCollectionToUpdate.Stock = ingredient.Stock;
+            ingredientFromCollectionToUpdate.SafetyStock = ingredient.SafetyStock;
+            ReloadCollection(IngredientCollection);
+
+            ingredientToUpdate.Stock = ingredient.Stock;
+            ingredientToUpdate.SafetyStock = ingredient.SafetyStock;
             await _dbContext.SaveChangesAsync();
         }
 
@@ -93,12 +132,18 @@ namespace POS.Services
 
         private async Task GetAllIngredientsFromDbAsync()
         {
-            var ingredients = await _dbContext.Ingredients.ToListAsync();
+            allIngredientList = await _dbContext.Ingredients.ToListAsync();
 
-            if (ingredients.Count == 0)
+            if (allIngredientList.Count == 0)
                 throw new NotFoundException("Nie odnaleziono żadnych składników");
 
-            IngredientCollection.AddRange(ingredients);
+            ReloadCollection(IngredientCollection);
+        }
+
+        private void ReloadCollection(MyObservableCollection<Ingredient> collection)
+        {
+            collection.Clear();
+            collection.AddRange(allIngredientList);
         }
     }
 }

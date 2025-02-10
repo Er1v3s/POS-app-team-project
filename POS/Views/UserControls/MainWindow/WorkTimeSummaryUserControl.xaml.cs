@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using Microsoft.Extensions.DependencyInjection;
 using POS.ViewModels.WorkTimeSummaryControl;
 
@@ -14,12 +13,6 @@ namespace POS.Views.UserControls.MainWindow
         {
             InitializeComponent();
             DataContext = App.ServiceProvider.GetRequiredService<WorkTimeSummaryControlViewModel>();
-        }
-
-        private void WorkTimeSummaryUserControl_OnGotFocus(object sender, RoutedEventArgs e)
-        {
-            var viewModel = (WorkTimeSummaryControlViewModel)DataContext;
-            viewModel.RefreshCommand.Execute(null);
         }
     }
 }

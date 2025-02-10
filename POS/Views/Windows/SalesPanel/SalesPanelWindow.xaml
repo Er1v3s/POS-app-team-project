@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:POS.Helpers"
+      xmlns:helpers="clr-namespace:POS.Helpers"
       xmlns:salesPanel="clr-namespace:POS.ViewModels.SalesPanel"
       d:DataContext="{d:DesignInstance Type=salesPanel:SalesPanelViewModel}"
       mc:Ignorable="d" 
@@ -27,12 +27,12 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Background="#FF8EA7E9">
-                    <TextBox Text="{Binding SearchPhrase, UpdateSourceTrigger=PropertyChanged, Delay=300}"
+                    <TextBox Text="{Binding SearchPhrase, UpdateSourceTrigger=PropertyChanged, Delay=100}"
                              Style="{StaticResource SearchBar}"
                              Margin="20,0,0,0" 
                              Width="360" 
                              Height="42"
-                             local:TextBoxHelper.Placeholder="{Binding Placeholder}">
+                             helpers:TextBoxHelper.Placeholder="{Binding Placeholder}">
                         <TextBox.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="16"/>
