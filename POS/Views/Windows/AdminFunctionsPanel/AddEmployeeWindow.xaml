@@ -79,7 +79,8 @@
             </Grid>
 
             <Grid Grid.Row="2">
-                <Button Command="{Binding AddEmployeeCommand}" Style="{StaticResource payButton}">
+                <Button Command="{Binding AddEmployeeCommand}"
+                        Style="{StaticResource BasicButtonGreen}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Dodaj" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                     </StackPanel>

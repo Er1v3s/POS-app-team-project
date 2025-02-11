@@ -64,7 +64,9 @@
                     <ColumnDefinition Width="100*"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Command="{Binding OpenMainWindowCommand}" Grid.Column="1" Margin="25" Style="{StaticResource homeButton}" d:IsLocked="True">
+                <Button Command="{Binding OpenMainWindowCommand}"
+                        Style="{StaticResource HomeButton}" 
+                        Grid.Column="1" Margin="25">
                     <fa:ImageAwesome Icon="Home" Height="24" Foreground="White"/>
                 </Button>
             </Grid>

@@ -35,7 +35,11 @@
                 </Border>
             </Grid>
             <Grid Grid.Row="2">
-                <Button Command="{Binding RefreshCommand, IsAsync=True}" IsEnabled="{Binding IsButtonEnable}" Style="{StaticResource refreshButton}">
+                <Button Command="{Binding RefreshCommand, IsAsync=True}"
+                        IsEnabled="{Binding IsButtonEnable}"
+                        Style="{StaticResource BasicButton}"
+                        Width="200"
+                        Height="75">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Refresh" Width="25" Height="25" Foreground="White"/>
                         <TextBlock Text="ODŚWIEŻ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16"/>

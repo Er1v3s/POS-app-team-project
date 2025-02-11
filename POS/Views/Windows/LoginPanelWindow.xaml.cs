@@ -32,7 +32,7 @@ namespace POS.Views.Windows
                 else
                 {
                     var startFinishWork = new StartFinishWorkUserControl();
-                    loginPanelWindow.Child = startFinishWork;
+                    LoginPanel.Child = startFinishWork;
 
                     startFinishWork.StartWork.Click += CloseWindow_ButtonClick;
                     startFinishWork.FinishWork.Click += CloseWindow_ButtonClick;

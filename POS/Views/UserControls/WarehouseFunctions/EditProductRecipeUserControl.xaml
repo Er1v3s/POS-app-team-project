@@ -90,13 +90,21 @@
                         <ColumnDefinition Width="25*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Button Command="{Binding DeleteIngredientFromRecipeCommand}" IsEnabled="{Binding IsDeleteButtonEnable}" Grid.Column="1" Margin="0" Style="{StaticResource cancelButton}">
+                    <Button Command="{Binding DeleteIngredientFromRecipeCommand}"
+                            IsEnabled="{Binding IsDeleteButtonEnable}"
+                            Style="{StaticResource BasicButtonRed}"
+                            Grid.Column="1" 
+                            Margin="0" >
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="USUŃ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                         </StackPanel>
                     </Button>
 
-                    <Button Command="{Binding AddIngredientToRecipeCommand}" IsEnabled="{Binding IsAddButtonEnable}" Grid.Column="3" Margin="0" Style="{StaticResource payButton}">
+                    <Button Command="{Binding AddIngredientToRecipeCommand}"
+                            IsEnabled="{Binding IsAddButtonEnable}"
+                            Style="{StaticResource BasicButtonGreen}"
+                            Grid.Column="3"
+                            Margin="0">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="DODAJ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                         </StackPanel>

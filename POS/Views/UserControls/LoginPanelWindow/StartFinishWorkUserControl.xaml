@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:startfinishwork="clr-namespace:POS.ViewModels.StartFinishWork"
              d:DataContext="{d:DesignInstance Type=startfinishwork:StartFinishWorkViewModel}"
-             DataContext="{Binding StartFinishWorkViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="600" Background="#8EA7E9" Foreground="White" FontSize="16">
     <Grid>
@@ -16,8 +15,8 @@
 
         <Grid Grid.Row="0">
             <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-                <TextBlock Text="Zalogowano jako:" FontSize="48" HorizontalAlignment="Center" ></TextBlock>
-                <TextBlock Text="{Binding EmployeeName}" x:Name="employeeName" FontSize="48" HorizontalAlignment="Center"></TextBlock>
+                <TextBlock Text="Zalogowano jako:" FontSize="48" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding EmployeeName}" FontSize="48" HorizontalAlignment="Center"/>
             </StackPanel>
         </Grid>
         
