@@ -50,7 +50,7 @@
                             <DataGridTemplateColumn Header="" Width="0.5*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Style="{StaticResource deleteItemButton}"
+                                        <Button Style="{StaticResource AddDeleteItemButton}"
                                                 HorizontalAlignment="Right" 
                                                 Command="{Binding DataContext.IncreaseIngredientQuantityCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding }">
@@ -65,11 +65,11 @@
                             <DataGridTemplateColumn Header="" Width="0.5*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Style="{StaticResource deleteItemButton}"
+                                        <Button Style="{StaticResource AddDeleteItemButton}"
                                                 HorizontalAlignment="Right" 
                                                 Command="{Binding DataContext.DeleteIngredientFromDeliveryCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding Ingredient}">
-                                            <fa:ImageAwesome Style="{StaticResource deleteItemIcon}" Icon="Minus" />
+                                            <fa:ImageAwesome Style="{StaticResource DeleteItemIcon}" Icon="Minus" />
                                         </Button>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
@@ -176,7 +176,7 @@
                         <Button Command="{Binding EditIngredientCommand}"  Grid.Column="1" Content="Korekta" Style="{StaticResource BasicButton}"/>
                         <Button Command="{Binding CancelDeliveryCommand}"  Grid.Column="2" Content="Anuluj" Style="{StaticResource BasicButtonRed}"/>
 
-                        <Button Command="{Binding OpenMainWindowCommand}" Grid.Column="4" Style="{StaticResource homeButton}" d:IsLocked="True">
+                        <Button Command="{Binding OpenMainWindowCommand}" Grid.Column="4" Style="{StaticResource HomeButton}">
                             <fa:ImageAwesome Icon="Home" Height="24" Foreground="White"/>
                         </Button>
                     </Grid>

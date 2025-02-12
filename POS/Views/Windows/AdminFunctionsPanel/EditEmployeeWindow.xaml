@@ -80,7 +80,8 @@
             </Grid>
 
             <Grid Grid.Row="2">
-                <Button Command="{Binding EditEmployeeCommand}" Style="{StaticResource payButton}">
+                <Button Command="{Binding EditEmployeeCommand}"
+                        Style="{StaticResource BasicButtonGreen}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Edytuj" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                     </StackPanel>

@@ -28,7 +28,7 @@
                         <TextBlock Text="Wybierz rabat" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16"/>
                     </StackPanel>
 
-                    <Button Command="{Binding CloseWindowBaseCommand}" Width="26" Height="26" Margin="0, 0, 3, 0" HorizontalAlignment="Right" Style="{StaticResource cancelButton}" d:IsLocked="True">
+                    <Button Command="{Binding CloseWindowBaseCommand}" Style="{StaticResource BasicButtonRed}" Width="26" Height="26" Margin="0, 0, 3, 0" HorizontalAlignment="Right">
                         <fa:ImageAwesome Icon="Close" Height="13" Foreground="White"/>
                     </Button>
                 </Grid>
@@ -42,7 +42,9 @@
             </Grid>
 
             <Grid Grid.Row="2">
-                <Button Command="{Binding ApplyDiscountCommand}" Style="{StaticResource payButton}" Margin="10,5,10,5">
+                <Button Command="{Binding ApplyDiscountCommand}"
+                        Style="{StaticResource BasicButtonGreen}"
+                        Margin="10,5,10,5">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Zastosuj Rabat" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                     </StackPanel>

@@ -30,7 +30,7 @@
                         <TextBlock Text="Podsumowanie" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16"/>
                     </StackPanel>
 
-                    <Button Command="{Binding CloseWindowBaseCommand}" Width="26" Height="26" Margin="0, 0, 3, 0" HorizontalAlignment="Right" Style="{StaticResource cancelButton}" d:IsLocked="True">
+                    <Button Command="{Binding CloseWindowBaseCommand}" Style="{StaticResource BasicButtonRed}" Width="26" Height="26" Margin="0, 0, 3, 0" HorizontalAlignment="Right">
                         <fa:ImageAwesome Icon="Close" Height="13" Foreground="White"/>
                     </Button>
                 </Grid>
@@ -70,7 +70,7 @@
                 </Grid.Style>
 
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="25,0,25,0">
-                    <TextBlock Text="FAKTURA" Foreground="Red" FontSize="24" Margin="0,0,25,0"/>
+                    <TextBlock Text="FAKTURA" Foreground="#ae4b59" FontSize="24" Margin="0,0,25,0"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="25,0,25,0">
                     <TextBlock Text="NIP:" Margin="0,0,25,0"/>
@@ -97,7 +97,7 @@
                     </Style>
                 </Grid.Style>
                 <TextBlock Text="{Binding Discount, FallbackValue='', StringFormat='Zastosowano zniżkę na całe zamówienie: -{0:F0} %'}" 
-                           Foreground="Red" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                           Foreground="#ae4b59" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0"/>
             </Grid>
 
             <Grid Grid.Row="4">
@@ -108,7 +108,12 @@
 
                 <Border Grid.Column="0"  CornerRadius="0,0,0,8" Background="#FF7286D3" BorderBrush="Black" BorderThickness="0,1,0,0">
                     <Grid Margin="0,9,0,9">
-                        <Button Command="{Binding FinishOrderCommand}" Grid.Column="0" MaxHeight="32" MaxWidth="120" Margin="25,0,0,0" Style="{StaticResource payButton}">
+                        <Button Command="{Binding FinishOrderCommand}"
+                                Style="{StaticResource BasicButtonGreen}" 
+                                Grid.Column="0"
+                                MaxHeight="32"
+                                MaxWidth="120"
+                                Margin="25,0,0,0">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Drukuj" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
                             </StackPanel>
@@ -117,7 +122,7 @@
                 </Border>
 
                 <Grid Grid.Column="1">
-                    <Border CornerRadius="0,0,8,0" Background="#FF7286D3" BorderBrush="Black" BorderThickness="0,1,0,0">
+                    <Border CornerRadius="0,0,8,0" Background="#7286d3" BorderBrush="Black" BorderThickness="0,1,0,0">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="25,0,25,0">
                             <TextBlock Text="Suma: " Foreground="White" FontWeight="Bold"/>
                             <TextBlock Text="{Binding AmountToPayForOrder, FallbackValue='0.00', StringFormat={}{0:F2}}" Foreground="White" FontWeight="Bold"/>
