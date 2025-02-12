@@ -1,17 +1,33 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using DataAccess;
 using Microsoft.Extensions.DependencyInjection;
+using POS.Factories;
 using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
+using POS.Services;
+using POS.Services.AdminFunctions;
+using POS.Services.Login;
+using POS.Services.ReportsAndAnalysis.ChartGenerators.PredictionChartGenerators;
+using POS.Services.ReportsAndAnalysis.ChartGenerators.ReportChartGenerators;
+using POS.Services.ReportsAndAnalysis.Factories;
+using POS.Services.ReportsAndAnalysis.Interfaces;
+using POS.Services.ReportsAndAnalysis.PredictionGenerators;
+using POS.Services.ReportsAndAnalysis.ReportGenerators;
+using POS.Services.SalesPanel;
+using POS.Services.ToDoList;
+using POS.Services.WarehouseFunctions;
+using POS.ViewModels.AdminFunctionsPanel;
+using POS.ViewModels.MainWindow;
 using POS.ViewModels.ReportsAndAnalysis;
-using POS.ViewModels.ReportsAndAnalysis.ChartGenerators.PredictionChartGenerators;
-using POS.ViewModels.ReportsAndAnalysis.ChartGenerators.ReportChartGenerators;
-using POS.ViewModels.ReportsAndAnalysis.Factories;
-using POS.ViewModels.ReportsAndAnalysis.Interfaces;
-using POS.ViewModels.ReportsAndAnalysis.PredictionGenerators;
-using POS.ViewModels.ReportsAndAnalysis.ReportGenerators;
+using POS.ViewModels.SalesPanel;
+using POS.ViewModels.StartFinishWork;
+using POS.ViewModels.ToDoList;
+using POS.ViewModels.WarehouseFunctions;
+using POS.ViewModels.WorkTimeSummaryControl;
 
 namespace POS
 {
@@ -33,6 +49,20 @@ namespace POS
 
         private void ConfigureServices(ServiceCollection servicesCollection)
         {
+            servicesCollection.AddSingleton<AppDbContext>();
+            servicesCollection.AddScoped<ApplicationStateService>();
+
+            #region MainWindow
+
+            servicesCollection.AddTransient<TimeService>();
+            servicesCollection.AddTransient<ViewFactory>();
+            servicesCollection.AddTransient<NavigationService>();
+            servicesCollection.AddTransient<MainWindowViewModel>();
+
+            #endregion
+
+            #region ReportsAndAnalysis
+
             servicesCollection.AddTransient<ReportsAndAnalysisViewModel>();
 
             // Reports
@@ -58,9 +88,86 @@ namespace POS
             servicesCollection.AddTransient<IChartGenerator<NumberOfOrdersPredictionDto>, NumberOfOrdersPredictionChartGenerator>();
 
             // Factories
-            servicesCollection.AddSingleton<IReportsFactory, ReportsFactory>();
-            servicesCollection.AddTransient<IChartsFactory, ChartsFactory>();
-            servicesCollection.AddSingleton<IPredictionsFactory, PredictionsFactory>();
+            servicesCollection.AddSingleton<IReportsFactory, ReportFactory>();
+            servicesCollection.AddTransient<IChartsFactory, ChartFactory>();
+            servicesCollection.AddSingleton<IPredictionsFactory, PredictionFactory>();
+
+            #endregion
+
+            #region ToDoList
+
+            servicesCollection.AddTransient<ToDoListViewModel>();
+            servicesCollection.AddTransient<TaskManagerService>();
+
+            #endregion
+
+            #region LoginPanel
+
+            servicesCollection.AddTransient<SessionService>();
+            servicesCollection.AddTransient<LoginManager>();
+            servicesCollection.AddTransient<LoginService>();
+            servicesCollection.AddTransient<LoginPanelViewModel>();
+            servicesCollection.AddTransient<StartFinishWorkViewModel>();
+            servicesCollection.AddTransient<WorkTimeSummaryControlViewModel>();
+
+            #endregion
+
+            #region AdministratorFunctions
+
+            servicesCollection.AddTransient<AdminFunctionsService>();
+            servicesCollection.AddTransient<AdminFunctionsViewModel>();
+            servicesCollection.AddTransient<AddEmployeeViewModel>();
+            servicesCollection.AddTransient<EditEmployeeViewModel>();
+
+            #endregion
+
+            #region SalesPanel
+
+            servicesCollection.AddScoped<ProductService>();
+            servicesCollection.AddTransient<OrderService>();
+            servicesCollection.AddTransient<RecipeService>();
+            servicesCollection.AddTransient<OrderSummaryService>();
+            servicesCollection.AddTransient<FinishedOrderService>();
+            servicesCollection.AddScoped<IngredientService>();
+            servicesCollection.AddScoped<InvoiceService>();
+            servicesCollection.AddScoped<DiscountService>();
+
+            servicesCollection.AddTransient<DiscountWindowViewModel>();
+            servicesCollection.AddTransient<OrderSummaryViewModel>();
+            servicesCollection.AddTransient<FinishedOrderViewModel>();
+            servicesCollection.AddTransient<SalesPanelViewModel>();
+            servicesCollection.AddTransient<InvoiceViewModel>();
+
+
+            #endregion
+
+            #region WarehouseFunctions
+
+            servicesCollection.AddTransient<DeliveryService>();
+            servicesCollection.AddTransient<GenerateDeliveryService>();
+
+            servicesCollection.AddTransient<WarehouseFunctionsViewModel>();
+
+            servicesCollection.AddTransient<EditProductRecipeViewModel>();
+            servicesCollection.AddTransient<AddEditDeleteProductViewModel>();
+            servicesCollection.AddTransient<AddEditDeleteIngredientViewModel>();
+            servicesCollection.AddTransient<StockManagementViewModel>();
+
+            servicesCollection.AddTransient<CreateDeliveryViewModel>();
+            servicesCollection.AddTransient<StockCorrectionViewModel>();
+
+            #endregion
+
+        }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            var appState = ServiceProvider.GetRequiredService<ApplicationStateService>();
+
+            appState.GetDatabaseStatusAsync();
+            _ = appState.GetInternetStatusAsync();
         }
 
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

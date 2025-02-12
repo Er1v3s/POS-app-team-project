@@ -1,10 +1,9 @@
 ﻿<Application x:Class="POS.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:POS"
              xmlns:fa="http://schemas.fontawesome.io/icons/"
-             StartupUri="/Views/MainWindow.xaml"
-    xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
+             xmlns:theme="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
+             StartupUri="/Views/Windows/MainWindow.xaml">
     <Application.Resources>
 
         <!--#region general -->
@@ -32,6 +31,7 @@
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Focusable" Value="False" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -56,15 +56,17 @@
             </Style.Triggers>
         </Style>
 
-        <Style x:Key="placeholderTextBox" TargetType="TextBox">
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="VerticalAlignment" Value="Stretch" />
-            <Setter Property="TextWrapping" Value="Wrap" />
-            <Setter Property="Foreground" Value="Black" />
-            <Setter Property="BorderBrush" Value="White" />
-            <Setter Property="SelectionBrush" Value="Transparent" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Style x:Key="AddItemIcon" TargetType="fa:ImageAwesome">
+            <Setter Property="Foreground" Value="#4BAEA0" />
+            <Setter Property="Width" Value="25" />
+            <Setter Property="Height" Value="25" />
+            <Setter Property="Margin" Value="5" />
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="#41A496"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
         <!--#endregion-->
@@ -112,7 +114,7 @@
         </Style>
 
         <Style x:Key="sideBarButton" TargetType="Button">
-            <Setter Property="Background" Value="#FF7286D3"/>
+            <Setter Property="Background" Value="#7286D3"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="MaxWidth" Value="300" />
             <Setter Property="MaxHeight" Value="180" />
@@ -175,7 +177,7 @@
             </Style.Triggers>
         </Style>
 
-        <Style x:Key="addTaskTextBox" TargetType="TextBox">
+        <Style x:Key="AddTaskTextBox" TargetType="TextBox">
             <Setter Property="TextAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="40, 0, 10 ,0" />
@@ -184,21 +186,51 @@
             <Setter Property="BorderThickness" Value="0, 0, 0, 2" />
             <Setter Property="Padding" Value="0,0,0,2" />
             <Setter Property="BorderBrush" Value="White" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Grid>
+                            <TextBlock x:Name="Placeholder" 
+                               Text="{TemplateBinding Tag}"
+                               VerticalAlignment="Center" 
+                               HorizontalAlignment="Center"
+                               Margin="40,0,10,0"
+                               Foreground="White"
+                               Background="#8EA7E9"
+                               Padding="0,0,0,2"
+                               Visibility="Collapsed"/>
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                            <Border x:Name="PlaceholderBorder"
+                            BorderThickness="0, 0, 0, 2"
+                            BorderBrush="White"
+                            VerticalAlignment="Bottom"
+                            HorizontalAlignment="Stretch"
+                            Margin="40,0,10,0"
+                            Visibility="Collapsed"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Text" Value="">
+                                <Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="PlaceholderBorder" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="Text" Value="{x:Null}">
+                                <Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="PlaceholderBorder" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Placeholder" Property="Visibility" Value="Collapsed"/>
+                                <Setter TargetName="PlaceholderBorder" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
             <Style.Triggers>
                 <Trigger Property="IsFocused" Value="True">
                     <Setter Property="BorderBrush" Value="#7286D3" />
                     <Setter Property="Padding" Value="0,0,0,3" />
                 </Trigger>
             </Style.Triggers>
-        </Style>
-
-        <Style x:Key="addTaskTextBlock" TargetType="TextBlock">
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Foreground" Value="#D8D9DA" />
-            <Setter Property="Margin" Value="40,0,0,0" />
-            <Setter Property="IsHitTestVisible" Value="False" />
-            <Setter Property="Panel.ZIndex" Value="1" />
-            <Setter Property="TextAlignment" Value="Left" />
         </Style>
 
         <Style x:Key="refreshButton" TargetType="Button">
@@ -225,8 +257,10 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-<!--#region RunningOutOfIngredients-->
-        <Style x:Key="OpenStockManagmentWindowButton" TargetType="Button">
+
+        <!--#region RunningOutOfIngredients-->
+
+        <Style x:Key="OpenStockManagementWindowButton" TargetType="Button">
             <Setter Property="Width"  Value="150" />
             <Setter Property="Height" Value="50" />
             <Setter Property="Background" Value="#7286D3" />
@@ -249,6 +283,83 @@
                     <Setter Property="Height" Value="55" />
                 </Trigger>
             </Style.Triggers>
+        </Style>
+
+        <Style x:Key="WarehouseFunctionsTextBoxWithPlaceholder" TargetType="TextBox">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="BorderBrush" Value="White" />
+            <Setter Property="SelectionBrush" Value="Transparent" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Grid>
+                            <TextBlock x:Name="Placeholder" 
+                                       Text="{TemplateBinding Tag}" 
+                                       Foreground="Gray" 
+                                       VerticalAlignment="Center" 
+                                       HorizontalAlignment="Center"
+                                       Margin="5,0,0,0" 
+                                       Visibility="Collapsed"/>
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Text" Value="">
+                                <Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="Text" Value="{x:Null}">
+                                <Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Placeholder" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="WarehouseFunctionsTextBoxWithPlaceholder2" TargetType="TextBox">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="BorderBrush" Value="White" />
+            <Setter Property="SelectionBrush" Value="Transparent" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Grid>
+                            <TextBlock x:Name="Placeholder" 
+                               Text="{TemplateBinding Tag}" 
+                               Foreground="Gray" 
+                               VerticalAlignment="Top" 
+                               HorizontalAlignment="Left"
+                               Margin="5,0,0,0" 
+                               Padding="10"
+                               Visibility="Collapsed"/>
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Text" Value="">
+                                <Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="Text" Value="{x:Null}">
+                                <Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Placeholder" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <!--#endregion -->
@@ -847,16 +958,24 @@
             </Style.Triggers>
         </Style>
 
-        <Style x:Key="searchBar" TargetType="TextBox">
+        <Style x:Key="SearchBar" TargetType="TextBox">
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="TextWrapping" Value="Wrap" />
-            <Setter Property="Background" Value="#FF7286D3" />
+            <Setter Property="Background" Value="#7286d3" />
             <Setter Property="Foreground" Value="White" />
-            <Setter Property="BorderBrush" Value="#FF7286D3" />
-            <Setter Property="SelectionBrush" Value="#FF8EA7E9" />
+            <Setter Property="BorderBrush" Value="#7286d3" />
+            <Setter Property="SelectionBrush" Value="#5971cb" />
             <Setter Property="Padding" Value="20,0,0,0" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="#5971cb"/>
+                </Trigger>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="BorderBrush" Value="#5971cb"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
         <Style x:Key="payButton" TargetType="Button">
@@ -881,6 +1000,11 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#379A8C" />
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="Gray"/>
+                    <Setter Property="Foreground" Value="DarkGray"/>
+                    <Setter Property="BorderBrush" Value="LightGray"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -907,6 +1031,11 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#953240" />
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="Gray"/>
+                    <Setter Property="Foreground" Value="DarkGray"/>
+                    <Setter Property="BorderBrush" Value="LightGray"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -986,10 +1115,15 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="RecipeStackPanel" TargetType="StackPanel">
+            <Setter Property="Background" Value="#FF8EA7E9"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+
         <Style x:Key="RecipeTextStyle" TargetType="TextBlock">
             <Setter Property="TextAlignment" Value="Left"/>
-            <Setter Property="Background" Value="#FF8EA7E9"/>
-            <Setter Property="Foreground" Value="white" />
+            <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+            <Setter Property="Foreground" Value="white"/>
             <Setter Property="Padding" Value="20"/>
         </Style>
         
@@ -1351,6 +1485,56 @@
             </Setter>
         </Style>
 
+
+        <!--#endregion-->
+
+        <!--#region WarehouseFunctions-->
+
+        <Style x:Key="BasicButton" TargetType="Button">
+            <Setter Property="Background" Value="#7286d3" />
+            <Setter Property="BorderBrush" Value="#7286d3" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#5971cb" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="BasicButtonGreen" TargetType="Button" BasedOn="{StaticResource BasicButton}">
+            <Setter Property="Background" Value="#4baea0" />
+            <Setter Property="BorderBrush" Value="#4baea0" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#449d90" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="BasicButtonRed" TargetType="Button" BasedOn="{StaticResource BasicButton}">
+            <Setter Property="Background" Value="#ae4b59" />
+            <Setter Property="BorderBrush" Value="#ae4b59" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#9d4450" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
 
         <!--#endregion-->
 

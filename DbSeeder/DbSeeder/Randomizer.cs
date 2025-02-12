@@ -1,4 +1,5 @@
-﻿using DataAccess.Models;
+﻿using DataAccess;
+using DataAccess.Models;
 
 namespace DbSeeder
 {
@@ -75,10 +76,10 @@ namespace DbSeeder
             return _random.Next(1, 11) >= 7 ? "Gotówka" : "Karta debetowa";
         }
 
-        public static Products GenerateAlmostRandomProduct(AppDbContext dbContext, DayOfWeek dayOfWeek)
+        public static Product GenerateAlmostRandomProduct(AppDbContext dbContext, DayOfWeek dayOfWeek)
         {
-            List<Products> productList = dbContext.Products.ToList();
-            Products product;
+            List<Product> productList = dbContext.Product.ToList();
+            Product product;
 
             switch (dayOfWeek)
             {
@@ -108,7 +109,7 @@ namespace DbSeeder
             return product;
         }
 
-        private static Products GenerateProduct(List<Products> productList, string categoryName)
+        private static Product GenerateProduct(List<Product> productList, string categoryName)
         {
             int threshold = categoryName switch
             {

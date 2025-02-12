@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="POS.Views.UserControls.MainWindow.WarehouseFunctionsUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:warehouseFunctions="clr-namespace:POS.ViewModels.WarehouseFunctions"
+             d:DataContext="{d:DesignInstance Type=warehouseFunctions:WarehouseFunctionsViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="800">
+
+    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="8" Background="White">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="9*"/>
+                <RowDefinition Height="2*"/>
+            </Grid.RowDefinitions>
+
+            <Border CornerRadius="8,8,0, 0" Background="#8EA7E9">
+                <Grid>
+                    <TextBlock Text="FUNKCJE MAGAZYNOWE" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="24"></TextBlock>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Command="{Binding OpenStockManagementWindowCommand}" Grid.Column="0" Style="{StaticResource registerSellButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="DODAJ NOWY SKŁADNIK LUB PRODUKT" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Command="{Binding OpenCreateDeliveryWindowCommand}" Grid.Column="1" Style="{StaticResource registerSellButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="DOSTAWA" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <Border CornerRadius="0,0,0, 0" Background="#8EA7E9" Grid.Row="2">
+                <Grid>
+                    <TextBlock Text="KOŃCZĄCE SIĘ SKŁADNIKI" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="24"></TextBlock>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="3" >
+                <Border BorderThickness="0, 1, 0 ,0" BorderBrush="Black">
+                    <DataGrid ItemsSource="{Binding RunningOutOfIngredientsCollection}" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}" RowStyle="{DynamicResource DataGridRowStyle1}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="NAZWA" IsReadOnly="True" Width="2*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Name}"/>
+                            <DataGridTextColumn Header="STAN MINIMALNY" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False" Binding="{Binding SafetyStock}"/>
+                            <DataGridTextColumn Header="STAN" IsReadOnly="True" Width="1*" CanUserResize="False" CanUserReorder="False" Binding="{Binding Stock}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+            </Grid>
+
+            <Grid Grid.Row="4">
+                <Button Command="{Binding LoadRunningOutOfIngredientsCommand}" Grid.Column="0" Style="{StaticResource refreshButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:ImageAwesome Icon="Refresh" Width="25" Height="25" Foreground="White"/>
+                        <TextBlock Text="ODŚWIEŻ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+        </Grid>
+    </Border>
+</UserControl>

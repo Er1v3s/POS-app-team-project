@@ -30,18 +30,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Database\" />
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\ReportsAndAnalysisPanel\ReportsAndAnalysis.xaml.cs">
+    <Compile Update="Views\UserControls\MainWindow\ReportsAndAnalysisUserControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

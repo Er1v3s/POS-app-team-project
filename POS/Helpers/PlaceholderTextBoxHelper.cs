@@ -1,14 +1,14 @@
-﻿using System.Windows.Controls;
-using System.Windows;
+﻿using System.Windows;
+using System.Windows.Controls;
 
-namespace POS.Converter
+namespace POS.Helpers
 {
-    class PlaceholderTextBoxHelper
+    public class PlaceholderTextBoxHelper
     {
         public static void SetPlaceholderOnFocus(object sender, RoutedEventArgs e)
         {
-            TextBox textBox = sender as TextBox;
-            if (textBox.Text.Length > 0)
+            var textBox = (TextBox)sender;
+            if (textBox.Text.Length > 0 && textBox.Text == textBox.Tag.ToString())
             {
                 textBox.Text = "";
             }
@@ -16,11 +16,9 @@ namespace POS.Converter
 
         public static void SetPlaceholderOnLostFocus(object sender, RoutedEventArgs e)
         {
-            TextBox textBox = sender as TextBox;
+            var textBox = (TextBox)sender;
             if (string.IsNullOrWhiteSpace(textBox.Text))
-            {
                 textBox.Text = textBox.Tag.ToString();
-            }
         }
     }
 }
