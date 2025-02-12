@@ -19,9 +19,9 @@
                 <RowDefinition Height="2*"/>
             </Grid.RowDefinitions>
 
-            <Border CornerRadius="8,8,0, 0" Background="#8EA7E9">
+            <Border CornerRadius="8,8,0, 0" BorderThickness="0,0, 0, 1" BorderBrush="Black" Background="#8EA7E9">
                 <Grid>
-                    <TextBlock Text="FUNKCJE MAGAZYNOWE" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="24"></TextBlock>
+                    <TextBlock Text="FUNKCJE MAGAZYNOWE" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="24"/>
                 </Grid>
             </Border>
 
@@ -31,22 +31,18 @@
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Command="{Binding OpenStockManagementWindowCommand}" Grid.Column="0" Style="{StaticResource registerSellButton}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="DODAJ NOWY SKŁADNIK LUB PRODUKT" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
-                    </StackPanel>
+                <Button Command="{Binding OpenStockManagementWindowCommand}" Grid.Column="0" Style="{StaticResource BasicButtonGreen}" Margin="25, 15" MaxWidth="410" MaxHeight="200">
+                    <TextBlock Text="DODAJ NOWY SKŁADNIK LUB PRODUKT" Style="{StaticResource ButtonTextBlock}" MaxWidth="300" MinWidth="200"/>
                 </Button>
 
-                <Button Command="{Binding OpenCreateDeliveryWindowCommand}" Grid.Column="1" Style="{StaticResource registerSellButton}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="DOSTAWA" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
-                    </StackPanel>
+                <Button Command="{Binding OpenCreateDeliveryWindowCommand}" Grid.Column="1" Style="{StaticResource BasicButtonGreen}" Margin="25, 15" MaxWidth="410" MaxHeight="190">
+                    <TextBlock Text="DOSTAWA" Style="{StaticResource ButtonTextBlock}"/>
                 </Button>
             </Grid>
 
-            <Border CornerRadius="0,0,0, 0" Background="#8EA7E9" Grid.Row="2">
+            <Border Grid.Row="2" Background="#8EA7E9"  CornerRadius="0,0,0, 0" BorderThickness="0,1, 0, 0" BorderBrush="Black">
                 <Grid>
-                    <TextBlock Text="KOŃCZĄCE SIĘ SKŁADNIKI" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="24"></TextBlock>
+                    <TextBlock Text="KOŃCZĄCE SIĘ SKŁADNIKI" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="24"/>
                 </Grid>
             </Border>
 
@@ -63,10 +59,14 @@
             </Grid>
 
             <Grid Grid.Row="4">
-                <Button Command="{Binding LoadRunningOutOfIngredientsCommand}" Grid.Column="0" Style="{StaticResource refreshButton}">
+                <Button Command="{Binding LoadRunningOutOfIngredientsCommand}"
+                        Grid.Column="0"
+                        Style="{StaticResource BasicButton}"
+                        Width="200"
+                        Height="75">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Refresh" Width="25" Height="25" Foreground="White"/>
-                        <TextBlock Text="ODŚWIEŻ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="16"/>
+                        <TextBlock Text="ODŚWIEŻ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0"/>
                     </StackPanel>
                 </Button>
             </Grid>

@@ -1,10 +1,13 @@
 ﻿using System;
-using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using DataAccess;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using POS.Exceptions;
 using POS.Factories;
 using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
@@ -28,6 +31,7 @@ using POS.ViewModels.StartFinishWork;
 using POS.ViewModels.ToDoList;
 using POS.ViewModels.WarehouseFunctions;
 using POS.ViewModels.WorkTimeSummaryControl;
+using Serilog;
 
 namespace POS
 {
@@ -50,6 +54,11 @@ namespace POS
         private void ConfigureServices(ServiceCollection servicesCollection)
         {
             servicesCollection.AddSingleton<AppDbContext>();
+
+            servicesCollection.AddSingleton<ILoggerService, LoggerService>();
+            servicesCollection.AddLogging(configure => configure.AddConsole());
+
+            servicesCollection.AddScoped<DatabaseErrorHandler>();
             servicesCollection.AddScoped<ApplicationStateService>();
 
             #region MainWindow
@@ -104,6 +113,7 @@ namespace POS
             #region LoginPanel
 
             servicesCollection.AddTransient<SessionService>();
+
             servicesCollection.AddTransient<LoginManager>();
             servicesCollection.AddTransient<LoginService>();
             servicesCollection.AddTransient<LoginPanelViewModel>();
@@ -162,12 +172,26 @@ namespace POS
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .WriteTo.File("logs\\log.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
+            Log.Information("Aplikacja została uruchomiona.");
 
             var appState = ServiceProvider.GetRequiredService<ApplicationStateService>();
 
-            appState.GetDatabaseStatusAsync();
+            _ = appState.GetDatabaseStatusAsync();
             _ = appState.GetInternetStatusAsync();
+
+            base.OnStartup(e);
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            Log.Information("Aplikacja została zamknięta.");
+            Log.CloseAndFlush();
+            base.OnExit(e);
         }
 
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

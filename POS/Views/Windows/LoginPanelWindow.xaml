@@ -7,7 +7,6 @@
         xmlns:startfinishwork="clr-namespace:POS.ViewModels.StartFinishWork"
         xmlns:base="clr-namespace:POS.Views.Base"
         d:DataContext="{d:DesignInstance Type=startfinishwork:LoginPanelViewModel}"
-        DataContext="{Binding LoginPanelViewModel}"
         mc:Ignorable="d"
         d:DesignHeight="800" d:DesignWidth="600"
         Title="LoginPanel" Height="800" Width="600"
@@ -24,13 +23,17 @@
 
             <Border MouseDown="DragWindow_OnMouseDown" CornerRadius="7,7,0,0" Background="#FF7286D3">
                 <Grid>
-                    <Button Command="{Binding CloseWindowBaseCommand}" Width="26" Height="26" Margin="0, 0, 3, 0" HorizontalAlignment="Right" Style="{StaticResource cancelButton}" d:IsLocked="True">
+                    <Button Command="{Binding CloseWindowBaseCommand}"
+                            Style="{StaticResource BasicButtonRed}" 
+                            Width="26" Height="26"
+                            Margin="0, 0, 3, 0"
+                            HorizontalAlignment="Right">
                         <fa:ImageAwesome Icon="Close" Height="13" Foreground="White"/>
                     </Button>
                 </Grid>
             </Border>
 
-            <Border Grid.Row="1" Background="#FFD9D9D9" x:Name="loginPanelWindow">
+            <Border Grid.Row="1" Background="#FFD9D9D9" x:Name="LoginPanel">
                 <Grid VerticalAlignment="Center">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
@@ -43,13 +46,14 @@
 
                     <Border Grid.Row="1" BorderThickness="2" CornerRadius="10" Background="#7286D3" Width="350" Height="250">
                         <Border.Effect>
-                            <DropShadowEffect Color="Black" Direction="315" ShadowDepth="5" Opacity="0.5" />
+                            <DropShadowEffect Color="Black" ShadowDepth="0" Opacity="0.5" BlurRadius="8"/>
                         </Border.Effect>
+
                         <Grid Margin="30,20">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
                             <Grid Grid.Row="0">
@@ -57,7 +61,9 @@
                                     <RowDefinition Height="20" />
                                     <RowDefinition Height="40" />
                                 </Grid.RowDefinitions>
+
                                 <TextBlock Text="Nazwa Użytkownika:" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="15" Foreground="white"/>
+
                                 <Border Background="White" CornerRadius="5" Margin="5" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
                                     <TextBox 
                                         Text="{Binding Login}"
@@ -74,7 +80,9 @@
                                     <RowDefinition Height="20" />
                                     <RowDefinition Height="40" />
                                 </Grid.RowDefinitions>
+
                                 <TextBlock Text="Hasło:" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="15" Foreground="white" />
+
                                 <Border Background="White" CornerRadius="5" Margin="5" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
                                     <TextBox 
                                         Text="{Binding Password}"
@@ -86,15 +94,23 @@
                                         VerticalContentAlignment="Center"/>
                                 </Border>
                             </Grid>
-                            <Border Background="#4BAEA0" CornerRadius="10" Width="100" Margin="0,30,0,0" Padding="5" Grid.Row="2" BorderBrush="Black" BorderThickness="1">
-                                <Button 
-                                    Style="{StaticResource loginButton}"
-                                    Content="Zaloguj się" 
+
+                            <Grid Grid.Row="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Button Grid.Row="1"
+                                    Style="{StaticResource BasicButtonGreen}"
                                     Click="LogIn_ButtonClick"
-                                    Background="#4BAEA0" 
-                                    BorderBrush="#4BAEA0" 
-                                    Foreground="White" />
-                            </Border>
+                                    Margin="0">
+                                    <StackPanel>
+                                        <TextBlock Text="Zaloguj się"/>
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+
                         </Grid>
                     </Border>
                 </Grid>

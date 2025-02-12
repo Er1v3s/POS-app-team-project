@@ -62,7 +62,11 @@
                                 <ColumnDefinition Width="1*" />
                             </Grid.ColumnDefinitions>
 
-                            <Button Command="{Binding SelectCategoryCommand}" CommandParameter="Whisky" Content="Whisky" Grid.Column="0" Style="{StaticResource cocktailCategoryButton}">
+                            <Button Command="{Binding SelectCategoryCommand}"
+                                    CommandParameter="Whisky"
+                                    Style="{StaticResource CocktailCategoryButton}" 
+                                    Content="Whisky"
+                                    Grid.Column="0">
                                 <Button.Resources>
                                     <Style TargetType="{x:Type Border}">
                                         <Setter Property="CornerRadius">
@@ -73,10 +77,26 @@
                                     </Style>
                                 </Button.Resources>
                             </Button>
-                            <Button Command="{Binding SelectCategoryCommand}" CommandParameter="Gin" Content="Gin" Grid.Column="1" Style="{StaticResource cocktailCategoryButton}"/>
-                            <Button Command="{Binding SelectCategoryCommand}" CommandParameter="Wódka" Content="Wódka" Grid.Column="2" Style="{StaticResource cocktailCategoryButton}"/>
-                            <Button Command="{Binding SelectCategoryCommand}" CommandParameter="Rum" Content="Rum" Grid.Column="3" Style="{StaticResource cocktailCategoryButton}"/>
-                            <Button Command="{Binding SelectCategoryCommand}" CommandParameter="Tequila" Content="Tequila" Grid.Column="4" Style="{StaticResource cocktailCategoryButton}">
+                            <Button Command="{Binding SelectCategoryCommand}"
+                                    CommandParameter="Gin"
+                                    Style="{StaticResource CocktailCategoryButton}"
+                                    Content="Gin"
+                                    Grid.Column="1" />
+                            <Button Command="{Binding SelectCategoryCommand}"
+                                    CommandParameter="Wódka"
+                                    Style="{StaticResource CocktailCategoryButton}"
+                                    Content="Wódka"
+                                    Grid.Column="2"/>
+                            <Button Command="{Binding SelectCategoryCommand}"
+                                    CommandParameter="Rum"
+                                    Style="{StaticResource CocktailCategoryButton}"
+                                    Content="Rum"
+                                    Grid.Column="3"/>
+                            <Button Command="{Binding SelectCategoryCommand}"
+                                    CommandParameter="Tequila"
+                                    Style="{StaticResource CocktailCategoryButton}"
+                                    Content="Tequila"
+                                    Grid.Column="4">
                                 <Button.Resources>
                                     <Style TargetType="{x:Type Border}">
                                         <Setter Property="CornerRadius">
@@ -111,7 +131,8 @@
                                                 <DataTemplate>
                                                     <Viewbox>
                                                         <Button Command="{Binding DataContext.SelectProductCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                                CommandParameter="{Binding}" Style="{StaticResource chooseProductButton}">
+                                                                CommandParameter="{Binding}"
+                                                                Style="{StaticResource ChooseProductButton}">
                                                             <StackPanel>
                                                                 <TextBlock Text="{Binding ProductName}" TextAlignment="Center" Margin="10" />
                                                                 <TextBlock Text="{Binding Price, StringFormat={}{0} zł}" TextAlignment="Center" Margin="10" />
@@ -223,11 +244,21 @@
                                     <ColumnDefinition Width="2*" />
                                 </Grid.ColumnDefinitions>
 
-                                <Button Command="{Binding CancelOrderCommand}" Grid.Column="0" Content="Anuluj" Style="{StaticResource cancelButton}" d:IsLocked="True" />
-                                <Button Command="{Binding ShowRecipeCollectionCommand}" Content="Przepisy" Style="{StaticResource recipeButton}" Grid.Column="1" d:IsLocked="True" />
-                                <Button Command="{Binding ShowProductCollectionCommand}" Content="Drinki" Style="{StaticResource payButton}" Grid.Column="2" d:IsLocked="True" />
-
-                                <Button Command="{Binding OpenMainWindowCommand}" Grid.Column="5" Style="{StaticResource homeButton}" d:IsLocked="True">
+                                <Button Command="{Binding CancelOrderCommand}"
+                                        Style="{StaticResource BasicButtonRed}"
+                                        Content="Anuluj" 
+                                        Grid.Column="0" />
+                                <Button Command="{Binding ShowRecipeCollectionCommand}"
+                                        Style="{StaticResource BasicButton}" 
+                                        Content="Przepisy"
+                                        Grid.Column="1"/>
+                                <Button Command="{Binding ShowProductCollectionCommand}"
+                                        Style="{StaticResource BasicButtonGreen}"
+                                        Content="Drinki"
+                                        Grid.Column="2" />
+                                <Button Command="{Binding OpenMainWindowCommand}"
+                                        Style="{StaticResource HomeButton}" 
+                                        Grid.Column="5">
                                     <fa:ImageAwesome Icon="Home" Height="24" Foreground="White"/>
                                 </Button>
 
@@ -259,7 +290,7 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
-                <Button Command="{Binding ShowFinishedOrdersCommand}" Grid.Column="0" Style="{StaticResource leftBarButton}">
+                <Button Command="{Binding ShowFinishedOrdersCommand}" Grid.Column="0" Style="{StaticResource LeftBarButton}">
                     <fa:ImageAwesome Icon="ListOl" Height="24" Foreground="White"/>
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">
@@ -272,11 +303,11 @@
                     </Button.Resources>
                 </Button>
 
-                <Button Command="{Binding AddInvoiceCommand}" Grid.Column="1" Style="{StaticResource leftBarButton}">
+                <Button Command="{Binding AddInvoiceCommand}" Grid.Column="1" Style="{StaticResource LeftBarButton}">
                     <fa:ImageAwesome Icon="File" Height="24" Foreground="White"/>
                 </Button>
 
-                <Button Command="{Binding ShowSavedOrdersCommand}" Grid.Column="2" Style="{StaticResource leftBarButton}">
+                <Button Command="{Binding ShowSavedOrdersCommand}" Grid.Column="2" Style="{StaticResource LeftBarButton}">
                     <fa:ImageAwesome Icon="Save" Height="24" Foreground="White"/>
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">
@@ -306,9 +337,9 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Command="{Binding DataContext.DeleteOrderItemCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                            CommandParameter="{Binding}" Style="{StaticResource deleteItemButton}">
+                                            CommandParameter="{Binding}" Style="{StaticResource AddDeleteItemButton}">
                                         <StackPanel Orientation="Horizontal">
-                                            <fa:ImageAwesome Style="{StaticResource deleteItemIcon}" Icon="Close" />
+                                            <fa:ImageAwesome Style="{StaticResource DeleteItemIcon}" Icon="Close" />
                                         </StackPanel>
                                     </Button>
                                 </DataTemplate>
@@ -337,7 +368,7 @@
                             </Style>
                         </Grid.Style>
                         <TextBlock Text="{Binding DiscountValue, FallbackValue='', StringFormat='Rabat: -{0:F0} %'}" 
-                                   Foreground="Red" FontSize="24" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                                   Foreground="#ae4b59" FontSize="24" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0"/>
                     </Grid>
 
                     <TextBlock Text="{Binding AmountToPayForOrder, FallbackValue='0.00', StringFormat={}{0:F2}}" FontSize="24" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0"/>
@@ -351,7 +382,7 @@
                     <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
 
-                <Button Command="{Binding PayForOrderCommand}" CommandParameter="Gotówka" Grid.Column="0" Style="{StaticResource leftBarButton}">
+                <Button Command="{Binding PayForOrderCommand}" CommandParameter="Gotówka" Grid.Column="0" Style="{StaticResource LeftBarButton}">
                     <fa:ImageAwesome Icon="Money" Height="24" Foreground="White"/>
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">
@@ -364,11 +395,16 @@
                     </Button.Resources>
                 </Button>
 
-                <Button Command="{Binding PayForOrderCommand}" CommandParameter="Karta debetowa" Grid.Column="1" Style="{StaticResource leftBarButton}">
+                <Button Command="{Binding PayForOrderCommand}"
+                        CommandParameter="Karta debetowa"
+                        Style="{StaticResource LeftBarButton}"
+                        Grid.Column="1" >
                     <fa:ImageAwesome Icon="CreditCard" Height="24" Foreground="White"/>
                 </Button>
 
-                <Button Command="{Binding ApplyDiscountCommand}" Grid.Column="2" Style="{StaticResource leftBarButton}">
+                <Button Command="{Binding ApplyDiscountCommand}"
+                        Style="{StaticResource LeftBarButton}" 
+                        Grid.Column="2">
                     <fa:ImageAwesome Icon="Percent" Height="24" Foreground="White"/>
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">

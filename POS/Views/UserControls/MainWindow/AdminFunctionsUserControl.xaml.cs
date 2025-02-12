@@ -3,7 +3,6 @@ using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
 using POS.ViewModels.AdminFunctionsPanel;
 
-
 namespace POS.Views.UserControls.MainWindow
 {
     /// <summary>

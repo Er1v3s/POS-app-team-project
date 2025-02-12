@@ -10,6 +10,14 @@ namespace POS.ViewModels.Base
 {
     public class ViewModelBase : INotifyPropertyChanged
     {
+        private bool isButtonEnable = true;
+
+        public bool IsButtonEnable
+        {
+            get => isButtonEnable;
+            set => SetField(ref isButtonEnable, value);
+        }
+
         public Action? CloseWindowBaseAction;
         public ICommand CloseWindowBaseCommand => new RelayCommand(CloseWindowBaseAction!);
 

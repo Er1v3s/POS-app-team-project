@@ -4,9 +4,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:adminFunctionsPanel="clr-namespace:POS.ViewModels.AdminFunctionsPanel"
-      mc:Ignorable="d" 
       d:DataContext="{d:DesignInstance Type=adminFunctionsPanel:AdminFunctionsViewModel}"
-      DataContext="{Binding AdminFunctionsViewModel}"
+      mc:Ignorable="d" 
       d:DesignHeight="800" d:DesignWidth="800"
       xmlns:fa="http://schemas.fontawesome.io/icons/"
       FontSize="16" FontFamily="Lato">
@@ -22,19 +21,20 @@
             </Grid.RowDefinitions>
             
             <Border Grid.Row="0" CornerRadius="8,8,0, 0" Background="#8EA7E9" BorderThickness="0,0,0,1" BorderBrush="Black">
-                <TextBlock Text="FUNKCJE ADMINISTRATORA" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="24"></TextBlock>
+                <TextBlock Text="FUNKCJE ADMINISTRATORA" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="24"/>
             </Border>
 
             <Grid Grid.Row="1">
                 <UniformGrid Rows="1" Columns="3"  VerticalAlignment="Stretch" Margin="10">
-                    <Button Style="{StaticResource topButton}" Background="#4BAEA0">
-                        <TextBlock Text="ROZPOCZNIJ DZIEŃ" Style="{StaticResource topButtonTextBlock}"/>
+                    <Button Style="{StaticResource BasicButtonGreen}" Margin="15">
+                        <TextBlock Text="ROZPOCZNIJ DZIEŃ" Style="{StaticResource ButtonTextBlock}"/>
                     </Button>
-                    <Button Style="{StaticResource topButton}" Background="#FF7286D3" Command="{Binding ShowCashBalanceCommand}">
-                        <TextBlock Text="KONTROLA GOTÓWKI" Style="{StaticResource topButtonTextBlock}"/>
+                    <Button Command="{Binding ShowCashBalanceCommand}" 
+                            Style="{StaticResource BasicButton}" Margin="15">
+                        <TextBlock Text="KONTROLA GOTÓWKI" Style="{StaticResource ButtonTextBlock}"/>
                     </Button>
-                    <Button Style="{StaticResource topButton}" Background="#AE4B59">
-                        <TextBlock Text="KONIEC DNIA" Style="{StaticResource topButtonTextBlock}"/>
+                    <Button Style="{StaticResource BasicButtonRed}" Margin="15">
+                        <TextBlock Text="KONIEC DNIA" Style="{StaticResource ButtonTextBlock}"/>
                     </Button>
                 </UniformGrid>
             </Grid>
@@ -44,7 +44,10 @@
                     <TextBlock Text="ZARZĄDZANIE KADRĄ PRACOWNICZĄ" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="24" />
 
                     <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0">
-                        <Button Command="{Binding LoadEmployeeInfoListCommand}" Style="{StaticResource refreshButton}" HorizontalAlignment="Right" Margin="0,0,00,0">
+                        <Button Command="{Binding LoadEmployeeInfoListCommand}"
+                                Style="{StaticResource BasicButton}"
+                                Width="50"
+                                Height="50">
                             <fa:ImageAwesome Icon="Refresh" Height="20" Foreground="White" />
                         </Button>
                     </StackPanel>
@@ -53,35 +56,58 @@
 
             <Grid Grid.Row="3">
                 <Border BorderThickness="0, 1, 0 ,0" BorderBrush="Black">
-                    <DataGrid ItemsSource="{Binding EmployeesCollection}" SelectedItem="{Binding SelectedEmployee, Mode=TwoWay}" x:Name="employeesInfoDataGrid" SelectionMode="Single" Style="{DynamicResource DataGridStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}">
+                    <DataGrid ItemsSource="{Binding EmployeesCollection}"
+                              SelectedItem="{Binding SelectedEmployee, Mode=TwoWay}"
+                              SelectionMode="Single" Style="{DynamicResource DataGridStyle1}"
+                              CellStyle="{DynamicResource DataGridCellStyle1}"
+                              ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="PRACOWNIK"  Width="3*" CanUserResize="False" CanUserReorder="False" Binding="{Binding EmployeeName}"  />
-                            <DataGridTextColumn Header="STANOWISKO"  Width="1.5*" CanUserResize="False" CanUserReorder="False" Binding="{Binding JobTitle}" />
-                            <DataGridTextColumn Header="UPRAWNIENIA"  Width="1.5*" CanUserResize="False" CanUserReorder="False" Binding="{Binding PermissionLevel}" />
+                            <DataGridTextColumn Header="PRACOWNIK"  Width="3*" Binding="{Binding EmployeeName}"  />
+                            <DataGridTextColumn Header="STANOWISKO"  Width="1.5*" Binding="{Binding JobTitle}" />
+                            <DataGridTextColumn Header="UPRAWNIENIA"  Width="1.5*" Binding="{Binding PermissionLevel}" />
                         </DataGrid.Columns>
                         <DataGrid.RowStyle>
                             <Style BasedOn="{StaticResource DataGridRowStyle4}" TargetType="DataGridRow">
                                 <EventSetter Event="PreviewMouseLeftButtonDown" Handler="OnPreviewMouseLeftButtonDown"/>
                             </Style>
                         </DataGrid.RowStyle>
-
                     </DataGrid>
                 </Border>
             </Grid>
 
             <Grid Grid.Row="4">
                 <UniformGrid Rows="1" Columns="3"  VerticalAlignment="Stretch" Margin="10, 0, 10, 10">
-                    <Button Style="{StaticResource bottomButton}" Command="{Binding AddEmployeeCommand}">
-                        <TextBlock Text="DODAJ PRACOWNIKA" Style="{StaticResource topButtonTextBlock}"/>
+                    <Button Command="{Binding AddEmployeeCommand}"
+                            Style="{StaticResource BasicButton}">
+                        <TextBlock TextAlignment="Center">
+                            <Run Text="DODAJ" />
+                            <LineBreak />
+                            <Run Text="PRACOWNIKA" />
+                        </TextBlock>
                     </Button>
-                    <Button Style="{StaticResource bottomButton}" IsEnabled="{ Binding IsEditButtonEnabled}" Command="{Binding EditEmployeeCommand}">
-                        <TextBlock Text="EDYTUJ PRACOWNIKA" Style="{StaticResource topButtonTextBlock}"/>
+
+                    <Button Command="{Binding EditEmployeeCommand}" 
+                            Style="{StaticResource BasicButton}"
+                            IsEnabled="{Binding IsEditButtonEnabled}">
+                        <TextBlock TextAlignment="Center">
+                            <Run Text="EDYTUJ" />
+                            <LineBreak />
+                            <Run Text="PRACOWNIKA" />
+                        </TextBlock>
                     </Button>
-                    <Button Style="{StaticResource bottomButton}" IsEnabled="{ Binding IsDeleteButtonEnabled}" Command="{Binding DeleteEmployeeCommand}">
-                        <TextBlock Text="USUŃ PRACOWNIKA" Style="{StaticResource topButtonTextBlock}" Width="120"/>
+
+                    <Button Command="{Binding DeleteEmployeeCommand}"
+                            Style="{StaticResource BasicButton}"
+                            IsEnabled="{Binding IsDeleteButtonEnabled}">
+                        <TextBlock TextAlignment="Center">
+                            <Run Text="USUŃ" />
+                            <LineBreak />
+                            <Run Text="PRACOWNIKA" />
+                        </TextBlock>
                     </Button>
                 </UniformGrid>
             </Grid>
+
         </Grid>
     </Border>
 </UserControl>

@@ -20,10 +20,7 @@ namespace DataAccess
 
             // Development
 
-            if (File.Exists(ConnectionString))
-            {
-                optionsBuilder.UseSqlite(ConnectionString, builder => builder.MigrationsAssembly("DbSeeder"));
-            }
+            optionsBuilder.UseSqlite(ConnectionString, builder => builder.MigrationsAssembly("DbSeeder"));
         }
 
         public DbSet<Product> Product { get; set; }

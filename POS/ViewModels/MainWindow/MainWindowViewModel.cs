@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -53,6 +54,8 @@ namespace POS.ViewModels.MainWindow
             _navigationService = navigationService;
             _applicationStateService = applicationStateService;
 
+            _applicationStateService.PropertyChanged += OnApplicationStateChanged;
+
             TurnOffApplicationCommand = new RelayCommand(TurnOffApplication);
             OpenSalesPanelWindowCommand = new RelayCommand<SalesPanelWindow>(OpenSalesPanelWindow);
             OpenLoginPanelWindowCommand = new RelayCommand(OpenLoginPanelWindow);
@@ -102,6 +105,15 @@ namespace POS.ViewModels.MainWindow
             Time = _timeService.CurrentTime.ToLocalTime();
             OnPropertyChanged(nameof(Date));
             OnPropertyChanged(nameof(Time));
+        }
+
+        private void OnApplicationStateChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if(e.PropertyName == nameof(ApplicationStateService.IsInternetAvailable))
+                OnPropertyChanged(nameof(IsInternetAvailable));
+            
+            if(e.PropertyName == nameof(ApplicationStateService.IsDatabaseAvailable))
+                OnPropertyChanged(nameof(IsDatabaseAvailable));
         }
 
         private void TurnOffApplication(object obj)
