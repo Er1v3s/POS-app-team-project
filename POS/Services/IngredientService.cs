@@ -14,13 +14,15 @@ namespace POS.Services
     public class IngredientService
     {
         private readonly AppDbContext _dbContext;
+        private readonly DatabaseErrorHandler _databaseErrorHandler;
 
         private List<Ingredient> allIngredientList = new();
         public MyObservableCollection<Ingredient> IngredientCollection { get; }
 
-        public IngredientService(AppDbContext dbContext)
+        public IngredientService(AppDbContext dbContext, DatabaseErrorHandler databaseErrorHandler)
         {
             _dbContext = dbContext;
+            _databaseErrorHandler = databaseErrorHandler;
 
             IngredientCollection = new();
             _ = GetAllIngredientsFromDbAsync();
@@ -61,81 +63,102 @@ namespace POS.Services
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateIngredientQuantityAsync(Ingredient ingredient)
+        private Ingredient GetIngredientFromCollection(Ingredient ingredient)
         {
             if (ingredient == null)
                 throw new ArgumentNullException($"Niepoprawny produkt: {ingredient}");
             if (ingredient.Stock < 0)
-                throw new ArgumentException($"Niepoprawna ilość składnika: {ingredient}");
+                throw new ArgumentException($"Niepoprawna ilość składnika: {ingredient.Stock}");
             if (ingredient.SafetyStock < 0)
-                throw new ArgumentException($"Niepoprawna ilość stanu bezpieczeństwa: {ingredient}");
-
-            var ingredientToUpdate = await _dbContext.Ingredients
-                .Where(i => i.IngredientId == ingredient.IngredientId)
-                .FirstOrDefaultAsync();
+                throw new ArgumentException($"Niepoprawna ilość stanu bezpieczeństwa: {ingredient.SafetyStock}");
 
             var ingredientFromCollectionToUpdate = allIngredientList.FirstOrDefault(i => i.IngredientId == ingredient.IngredientId);
 
-            if (ingredientToUpdate == null || ingredientFromCollectionToUpdate == null)
-                throw new NotFoundException($"Nie odnaleziono składnika o Id: {ingredient.IngredientId}"); 
+            if (ingredientFromCollectionToUpdate == null)
+                throw new NotFoundException($"Nie odnaleziono składnika o Id: {ingredient.IngredientId}");
+
+            return ingredientFromCollectionToUpdate;
+        }
+
+        public async Task UpdateIngredientQuantityAsync(Ingredient ingredient)
+        {
+
+            var ingredientFromCollectionToUpdate = GetIngredientFromCollection(ingredient);
+
+            await _databaseErrorHandler.ExecuteDatabaseOperationAsync(async () =>
+            {
+                var ingredientToUpdate = await _dbContext.Ingredients
+                    .Where(i => i.IngredientId == ingredient.IngredientId)
+                    .FirstOrDefaultAsync();
+
+
+                if (ingredientToUpdate == null || ingredientFromCollectionToUpdate == null)
+                    throw new NotFoundException($"Nie odnaleziono składnika o Id: {ingredient.IngredientId}");
+
+                ingredientToUpdate.Stock = ingredient.Stock;
+                ingredientToUpdate.SafetyStock = ingredient.SafetyStock;
+                await _dbContext.SaveChangesAsync();
+            });
 
             ingredientFromCollectionToUpdate.Stock = ingredient.Stock;
             ingredientFromCollectionToUpdate.SafetyStock = ingredient.SafetyStock;
             ReloadCollection(IngredientCollection);
-
-            ingredientToUpdate.Stock = ingredient.Stock;
-            ingredientToUpdate.SafetyStock = ingredient.SafetyStock;
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task RemoveIngredientsAsync(OrderDto orderDto)
         {
-            foreach (var orderItem in orderDto.OrderItemList)
+            await _databaseErrorHandler.ExecuteDatabaseOperationAsync(async () =>
             {
-                var recipeId = await _dbContext.Product
-                    .Where(p => p.ProductId == orderItem.ProductId)
-                    .Select(r => r.RecipeId)
-                    .FirstOrDefaultAsync();
-
-                var recipeIngredientId = await _dbContext.RecipeIngredients
-                    .Where(ri => ri.RecipeId == recipeId)
-                    .Select(ri => ri.IngredientId)
-                    .ToListAsync();
-
-                foreach (var ingredientId in recipeIngredientId)
+                foreach (var orderItem in orderDto.OrderItemList)
                 {
-                    var ingredient = await _dbContext.Ingredients
-                        .Where(i => i.IngredientId == ingredientId)
+                    var recipeId = await _dbContext.Product
+                        .Where(p => p.ProductId == orderItem.ProductId)
+                        .Select(r => r.RecipeId)
                         .FirstOrDefaultAsync();
 
-                    var recipeIngredient = await _dbContext.RecipeIngredients
-                        .Where(ri => ri.IngredientId == ingredientId)
-                        .Select(ri => ri.Quantity)
-                        .FirstOrDefaultAsync();
+                    var recipeIngredientId = await _dbContext.RecipeIngredients
+                        .Where(ri => ri.RecipeId == recipeId)
+                        .Select(ri => ri.IngredientId)
+                        .ToListAsync();
 
-                    if (ingredient != null)
-                        ingredient.Stock -= (int)recipeIngredient;
+                    foreach (var ingredientId in recipeIngredientId)
+                    {
+                        var ingredient = await _dbContext.Ingredients
+                            .Where(i => i.IngredientId == ingredientId)
+                            .FirstOrDefaultAsync();
+
+                        var recipeIngredient = await _dbContext.RecipeIngredients
+                            .Where(ri => ri.IngredientId == ingredientId)
+                            .Select(ri => ri.Quantity)
+                            .FirstOrDefaultAsync();
+
+                        if (ingredient != null)
+                            ingredient.Stock -= (int)recipeIngredient;
+                    }
                 }
-            }
 
-            await _dbContext.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
+            });
         }
 
         public async Task<List<Ingredient>> GetRunningOutOfIngredientsAsync()
         {
-            var runningOutOfIngredients = await _dbContext.Ingredients
-                .Where(ingredient => ingredient.Stock < ingredient.SafetyStock)
-                .ToListAsync();
+            return await _databaseErrorHandler.ExecuteDatabaseOperationAsync(async () =>
+            {
+                var runningOutOfIngredients = await _dbContext.Ingredients
+                    .Where(ingredient => ingredient.Stock < ingredient.SafetyStock)
+                    .ToListAsync();
 
-            return runningOutOfIngredients;
+                return runningOutOfIngredients;
+            });
         }
 
         private async Task GetAllIngredientsFromDbAsync()
         {
-            allIngredientList = await _dbContext.Ingredients.ToListAsync();
-
-            if (allIngredientList.Count == 0)
-                throw new NotFoundException("Nie odnaleziono żadnych składników");
+            await _databaseErrorHandler.ExecuteDatabaseOperationAsync(async () =>
+            {
+                allIngredientList = await _dbContext.Ingredients.ToListAsync();
+            });
 
             ReloadCollection(IngredientCollection);
         }

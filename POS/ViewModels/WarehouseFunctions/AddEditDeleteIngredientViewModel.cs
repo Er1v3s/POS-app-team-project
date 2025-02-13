@@ -195,7 +195,8 @@ namespace POS.ViewModels.WarehouseFunctions
                 Description = ingredientDescription,
                 Unit = ingredientUnit,
                 Package = ingredientPackage,
-
+                Stock = 0,
+                SafetyStock = 0
             };
         }
 
