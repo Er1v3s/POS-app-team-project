@@ -25,10 +25,18 @@ namespace POS.Validators.Models
                 .WithMessage("Description should not be longer than 400 characters");
 
             RuleFor(x => x.Unit)
+                .NotEmpty()
+                .WithMessage("Unit cannot be empty")
+                .Must(BeValidUnitPackage)
+                .WithMessage("Unit can only contains letters, and spaces")
                 .MaximumLength(100)
                 .WithMessage("Unit should not exceed 100 characters");
 
             RuleFor(x => x.Package)
+                .NotEmpty()
+                .WithMessage("Package cannot be empty")
+                .Must(BeValidUnitPackage)
+                .WithMessage("Package can only contains letters, and spaces")
                 .MaximumLength(100)
                 .WithMessage("Package should not exceed 100 characters");
 
@@ -46,6 +54,58 @@ namespace POS.Validators.Models
                 .WithMessage("SafetyStock cannot be higher than 1000");
         }
 
+        public ValidationResult ValidateIngredientName(string ingredientName)
+        {
+            if (string.IsNullOrWhiteSpace(ingredientName))
+                return new ValidationResult(false, "Name cannot be empty");
+            if (!BeValidName(ingredientName))
+                return new ValidationResult(false, "Name can only contains letters, numbers, and spaces");
+            if (ingredientName.Length < 3)
+                return new ValidationResult(false, "Ingredient name must be at least 3 characters long.");
+            if (ingredientName.Length > 100)
+                return new ValidationResult(false, "Ingredient name must be less than 100 characters long.");
+
+            return new ValidationResult(true);
+        }
+
+        public ValidationResult ValidateIngredientUnit(string ingredientUnit)
+        {
+            if (string.IsNullOrWhiteSpace(ingredientUnit))
+                return new ValidationResult(false, "Property \"unit\" cannot be empty");
+            if (!BeValidUnitPackage(ingredientUnit))
+                return new ValidationResult(false, "Property \"unit\" can only contains letters, and spaces");
+            if (ingredientUnit.Length > 100)
+                return new ValidationResult(false, "Property \"unit\" must be less than 100 characters long.");
+
+            return new ValidationResult(true);
+        }
+
+        public ValidationResult ValidateIngredientPackage(string ingredientPackage)
+        {
+            if (string.IsNullOrWhiteSpace(ingredientPackage))
+                return new ValidationResult(false, "Property \"package\" cannot be empty");
+            if (!BeValidUnitPackage(ingredientPackage))
+                return new ValidationResult(false, "Property \"package\" can only contains letters, numbers, and spaces");
+            if (ingredientPackage.Length > 100)
+                return new ValidationResult(false, "Property \"package\" must be less than 100 characters long.");
+
+            return new ValidationResult(true);
+        }
+
+        public ValidationResult ValidateIngredientDescription(string ingredientDescription)
+        {
+            if (string.IsNullOrWhiteSpace(ingredientDescription))
+                return new ValidationResult(false, "Property \"description\" cannot be empty");
+            if (!BeValidDescription(ingredientDescription))
+                return new ValidationResult(false, "Property \"description\" can only contains letters, numbers, and spaces");
+            if (ingredientDescription.Length < 5)
+                return new ValidationResult(false, "Property \"description\" must be at least 5 characters long.");
+            if (ingredientDescription.Length > 100)
+                return new ValidationResult(false, "Property \"description\" must be less than 100 characters long.");
+
+            return new ValidationResult(true);
+        }
+
         private bool BeValidName(string text)
         {
             return Regex.IsMatch(text, @"^[a-zA-Z0-9\s]+$");
@@ -54,6 +114,11 @@ namespace POS.Validators.Models
         private bool BeValidDescription(string text)
         {
             return Regex.IsMatch(text, @"^[a-zA-Z0-9\s(),.!?%]+$");
+        }
+
+        private bool BeValidUnitPackage(string text)
+        {
+            return Regex.IsMatch(text, @"^[a-zA-Z\s]*$");
         }
     }
 }

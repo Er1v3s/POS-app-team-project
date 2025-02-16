@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using DataAccess;
 using DataAccess.Models;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using POS.Exceptions;
 using POS.Models.Orders;
 using POS.Utilities;
+using POS.Validators.Models;
 
 namespace POS.Services
 {
@@ -15,6 +17,7 @@ namespace POS.Services
     {
         private readonly AppDbContext _dbContext;
         private readonly DatabaseErrorHandler _databaseErrorHandler;
+        private readonly IngredientValidator _ingredientValidator;
 
         private List<Ingredient> allIngredientList = new();
         public MyObservableCollection<Ingredient> IngredientCollection { get; }
@@ -23,6 +26,7 @@ namespace POS.Services
         {
             _dbContext = dbContext;
             _databaseErrorHandler = databaseErrorHandler;
+            _ingredientValidator = new IngredientValidator();
 
             IngredientCollection = new();
             _ = GetAllIngredientsFromDbAsync();
@@ -42,8 +46,10 @@ namespace POS.Services
 
         public async Task AddNewIngredientAsync(Ingredient ingredient)
         {
-            if (ingredient == null)
-                throw new ArgumentNullException($"Niepoprawny składnik: {ingredient}");
+            if (ingredient == null) throw new ArgumentNullException($"Niepoprawny składnik: {ingredient}");
+
+            var validationResult = await _ingredientValidator.ValidateAsync(ingredient);
+            if (!validationResult.IsValid) throw new ValidationException($"Składnik zawiera niepoprawne dane: \n{validationResult.ToString($"\n")}");
 
             allIngredientList.Add(ingredient);
             ReloadCollection(IngredientCollection);
@@ -53,8 +59,7 @@ namespace POS.Services
 
         public async Task DeleteIngredientAsync(Ingredient ingredient)
         {
-            if(ingredient == null)
-                throw new ArgumentNullException($"Niepoprawny produkt: {ingredient}");
+            if(ingredient == null) throw new ArgumentNullException($"Niepoprawny produkt: {ingredient}");
 
             allIngredientList.Remove(ingredient);
             ReloadCollection(IngredientCollection);
@@ -65,17 +70,13 @@ namespace POS.Services
 
         private Ingredient GetIngredientFromCollection(Ingredient ingredient)
         {
-            if (ingredient == null)
-                throw new ArgumentNullException($"Niepoprawny produkt: {ingredient}");
-            if (ingredient.Stock < 0)
-                throw new ArgumentException($"Niepoprawna ilość składnika: {ingredient.Stock}");
-            if (ingredient.SafetyStock < 0)
-                throw new ArgumentException($"Niepoprawna ilość stanu bezpieczeństwa: {ingredient.SafetyStock}");
+            if (ingredient == null) throw new ArgumentNullException($"Niepoprawny produkt: {ingredient}");
+            if (ingredient.Stock < 0) throw new ArgumentException($"Niepoprawna ilość składnika: {ingredient.Stock}");
+            if (ingredient.SafetyStock < 0) throw new ArgumentException($"Niepoprawna ilość stanu bezpieczeństwa: {ingredient.SafetyStock}");
 
             var ingredientFromCollectionToUpdate = allIngredientList.FirstOrDefault(i => i.IngredientId == ingredient.IngredientId);
 
-            if (ingredientFromCollectionToUpdate == null)
-                throw new NotFoundException($"Nie odnaleziono składnika o Id: {ingredient.IngredientId}");
+            if (ingredientFromCollectionToUpdate == null) throw new NotFoundException($"Nie odnaleziono składnika o Id: {ingredient.IngredientId}");
 
             return ingredientFromCollectionToUpdate;
         }
