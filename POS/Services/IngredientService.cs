@@ -39,7 +39,12 @@ namespace POS.Services
 
         public void GetIngredientsBySearchPhrase(string searchText)
         {
-            var filteredIngredients = allIngredientList.Where(i => i.Name.ToLower().Contains(searchText.ToLower()));
+            var searchTextLowerCase = searchText.ToLowerInvariant();
+
+            var filteredIngredients = allIngredientList
+                .Where(i => i.Name.Contains(searchTextLowerCase, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
             IngredientCollection.Clear();
             IngredientCollection.AddRange(filteredIngredients);
         }

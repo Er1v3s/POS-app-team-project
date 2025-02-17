@@ -51,7 +51,19 @@ namespace POS
 
         private void ConfigureServices(ServiceCollection servicesCollection)
         {
-            servicesCollection.AddSingleton<AppDbContext>();
+            #region Gloval services
+
+            servicesCollection.AddDbContext<AppDbContext>();
+
+            servicesCollection.AddTransient<TimeService>();
+
+            servicesCollection.AddTransient<SessionService>();
+            servicesCollection.AddTransient<LoginManager>();
+            servicesCollection.AddTransient<LoginService>();
+
+
+
+            #endregion
 
             servicesCollection.AddSingleton<ILoggerService, LoggerService>();
             servicesCollection.AddLogging(configure => configure.AddConsole());
@@ -61,7 +73,6 @@ namespace POS
 
             #region MainWindow
 
-            servicesCollection.AddTransient<TimeService>();
             servicesCollection.AddTransient<ViewFactory>();
             servicesCollection.AddTransient<NavigationService>();
             servicesCollection.AddTransient<MainWindowViewModel>();
@@ -103,17 +114,14 @@ namespace POS
 
             #region ToDoList
 
-            servicesCollection.AddTransient<ToDoListViewModel>();
             servicesCollection.AddTransient<TaskManagerService>();
+
+            servicesCollection.AddTransient<ToDoListViewModel>();
 
             #endregion
 
             #region LoginPanel
 
-            servicesCollection.AddTransient<SessionService>();
-
-            servicesCollection.AddTransient<LoginManager>();
-            servicesCollection.AddTransient<LoginService>();
             servicesCollection.AddTransient<LoginPanelViewModel>();
             servicesCollection.AddTransient<StartFinishWorkViewModel>();
             servicesCollection.AddTransient<WorkTimeSummaryControlViewModel>();
@@ -123,6 +131,7 @@ namespace POS
             #region AdministratorFunctions
 
             servicesCollection.AddTransient<AdminFunctionsService>();
+
             servicesCollection.AddTransient<AdminFunctionsViewModel>();
             servicesCollection.AddTransient<AddEmployeeViewModel>();
             servicesCollection.AddTransient<EditEmployeeViewModel>();
