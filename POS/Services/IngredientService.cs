@@ -62,6 +62,31 @@ namespace POS.Services
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task UpdateExistingIngredientAsync(Ingredient oldIngredient, Ingredient newIngredient)
+        {
+            if (oldIngredient == null) throw new ArgumentNullException($"Niepoprawny składnik: {oldIngredient}");
+            if (newIngredient == null) throw new ArgumentNullException($"Niepoprawny składnik: {newIngredient}");
+
+            var ingredientFromDb = await _dbContext.Ingredients.FindAsync(oldIngredient.IngredientId);
+            if (ingredientFromDb == null) throw new NotFoundException();
+
+            var validationResult = await _ingredientValidator.ValidateAsync(newIngredient);
+            if (!validationResult.IsValid) throw new ValidationException($"Składnik zawiera niepoprawne dane: \n{validationResult.ToString($"\n")}");
+
+            ingredientFromDb.Name = newIngredient.Name;
+            ingredientFromDb.Unit = newIngredient.Unit;
+            ingredientFromDb.Package = newIngredient.Package;
+            ingredientFromDb.Description = newIngredient.Description;
+
+            var index = allIngredientList.FindIndex(i => i.IngredientId == oldIngredient.IngredientId);
+            if(index != -1)
+                allIngredientList[index] = ingredientFromDb;
+
+            ReloadCollection(IngredientCollection);
+            
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task DeleteIngredientAsync(Ingredient ingredient)
         {
             if(ingredient == null) throw new ArgumentNullException($"Niepoprawny produkt: {ingredient}");

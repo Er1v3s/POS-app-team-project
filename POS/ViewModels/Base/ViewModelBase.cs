@@ -77,5 +77,14 @@ namespace POS.ViewModels.Base
                 OnErrorsChanged(propertyName);
             }
         }
+
+        protected void ClearAllErrors()
+        {
+            var propertiesWithErrors = _errorsByPropertyName.Keys.ToList();
+            _errorsByPropertyName.Clear();
+
+            foreach (var property in propertiesWithErrors)
+                OnErrorsChanged(property);
+        }
     }
 }

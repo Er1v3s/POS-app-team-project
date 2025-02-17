@@ -27,7 +27,7 @@ namespace POS.Validators.Models
             RuleFor(x => x.Unit)
                 .NotEmpty()
                 .WithMessage("Unit cannot be empty")
-                .Must(BeValidUnitPackage)
+                .Must(BeValidUnit)
                 .WithMessage("Unit can only contains letters, and spaces")
                 .MaximumLength(100)
                 .WithMessage("Unit should not exceed 100 characters");
@@ -35,7 +35,7 @@ namespace POS.Validators.Models
             RuleFor(x => x.Package)
                 .NotEmpty()
                 .WithMessage("Package cannot be empty")
-                .Must(BeValidUnitPackage)
+                .Must(BeValidPackage)
                 .WithMessage("Package can only contains letters, and spaces")
                 .MaximumLength(100)
                 .WithMessage("Package should not exceed 100 characters");
@@ -72,7 +72,7 @@ namespace POS.Validators.Models
         {
             if (string.IsNullOrWhiteSpace(ingredientUnit))
                 return new ValidationResult(false, "Property \"unit\" cannot be empty");
-            if (!BeValidUnitPackage(ingredientUnit))
+            if (!BeValidPackage(ingredientUnit))
                 return new ValidationResult(false, "Property \"unit\" can only contains letters, and spaces");
             if (ingredientUnit.Length > 100)
                 return new ValidationResult(false, "Property \"unit\" must be less than 100 characters long.");
@@ -84,7 +84,7 @@ namespace POS.Validators.Models
         {
             if (string.IsNullOrWhiteSpace(ingredientPackage))
                 return new ValidationResult(false, "Property \"package\" cannot be empty");
-            if (!BeValidUnitPackage(ingredientPackage))
+            if (!BeValidPackage(ingredientPackage))
                 return new ValidationResult(false, "Property \"package\" can only contains letters, numbers, and spaces");
             if (ingredientPackage.Length > 100)
                 return new ValidationResult(false, "Property \"package\" must be less than 100 characters long.");
@@ -108,17 +108,22 @@ namespace POS.Validators.Models
 
         private bool BeValidName(string text)
         {
-            return Regex.IsMatch(text, @"^[a-zA-Z0-9\s]+$");
+            return Regex.IsMatch(text, @"^[a-za-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ0-9\s]*$");
         }
 
         private bool BeValidDescription(string text)
         {
-            return Regex.IsMatch(text, @"^[a-zA-Z0-9\s(),.!?%]+$");
+            return Regex.IsMatch(text, @"^[a-za-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ0-9\s()',.!?%]*$");
         }
 
-        private bool BeValidUnitPackage(string text)
+        private bool BeValidUnit(string text)
         {
-            return Regex.IsMatch(text, @"^[a-zA-Z\s]*$");
+            return Regex.IsMatch(text, @"^[a-za-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]*$");
+        }
+
+        private bool BeValidPackage(string text)
+        {
+            return Regex.IsMatch(text, @"^[a-za-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ0-9\s]*$");
         }
     }
 }
