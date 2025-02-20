@@ -51,10 +51,7 @@ namespace POS.Services
 
         public async Task AddNewIngredientAsync(Ingredient ingredient)
         {
-            if (ingredient == null) throw new ArgumentNullException($"Niepoprawny składnik: {ingredient}");
-
-            var validationResult = await _ingredientValidator.ValidateAsync(ingredient);
-            if (!validationResult.IsValid) throw new ValidationException($"Składnik zawiera niepoprawne dane: \n{validationResult.ToString($"\n")}");
+            if (ingredient is null) throw new ArgumentNullException(nameof(ingredient), "Składnik który próbujesz dodać jest niepoprawny");
 
             allIngredientList.Add(ingredient);
             ReloadCollection(IngredientCollection);
@@ -64,14 +61,11 @@ namespace POS.Services
 
         public async Task UpdateExistingIngredientAsync(Ingredient oldIngredient, Ingredient newIngredient)
         {
-            if (oldIngredient == null) throw new ArgumentNullException($"Niepoprawny składnik: {oldIngredient}");
-            if (newIngredient == null) throw new ArgumentNullException($"Niepoprawny składnik: {newIngredient}");
+            if (oldIngredient is null) throw new ArgumentNullException(nameof(oldIngredient), "Składnik który próbujesz zmienić jest niepoprawny");
+            if (newIngredient is null) throw new ArgumentNullException(nameof(newIngredient), "Składnik który próbujesz zmienić może otrzymać niepoprawne dane");
 
             var ingredientFromDb = await _dbContext.Ingredients.FindAsync(oldIngredient.IngredientId);
             if (ingredientFromDb == null) throw new NotFoundException();
-
-            var validationResult = await _ingredientValidator.ValidateAsync(newIngredient);
-            if (!validationResult.IsValid) throw new ValidationException($"Składnik zawiera niepoprawne dane: \n{validationResult.ToString($"\n")}");
 
             ingredientFromDb.Name = newIngredient.Name;
             ingredientFromDb.Unit = newIngredient.Unit;
@@ -89,7 +83,7 @@ namespace POS.Services
 
         public async Task DeleteIngredientAsync(Ingredient ingredient)
         {
-            if(ingredient == null) throw new ArgumentNullException($"Niepoprawny produkt: {ingredient}");
+            if(ingredient is null) throw new ArgumentNullException(nameof(ingredient), "Niepoprawny produkt.");
 
             allIngredientList.Remove(ingredient);
             ReloadCollection(IngredientCollection);
@@ -98,21 +92,27 @@ namespace POS.Services
             await _dbContext.SaveChangesAsync();
         }
 
-        private Ingredient GetIngredientFromCollection(Ingredient ingredient)
+        public async Task<Ingredient> CreateIngredient(string ingredientName, string ingredientDescription, string ingredientUnit, string ingredientPackage)
         {
-            if (ingredient == null) throw new ArgumentNullException($"Niepoprawny produkt: {ingredient}");
-            if (ingredient.Stock < 0) throw new ArgumentException($"Niepoprawna ilość składnika: {ingredient.Stock}");
-            if (ingredient.SafetyStock < 0) throw new ArgumentException($"Niepoprawna ilość stanu bezpieczeństwa: {ingredient.SafetyStock}");
+            var newIngredient = new Ingredient
+            {
+                Name = ingredientName,
+                Description = ingredientDescription,
+                Unit = ingredientUnit,
+                Package = ingredientPackage,
+                Stock = 0,
+                SafetyStock = 0
+            };
 
-            var ingredientFromCollectionToUpdate = allIngredientList.FirstOrDefault(i => i.IngredientId == ingredient.IngredientId);
+            var validationResult = await _ingredientValidator.ValidateAsync(newIngredient);
+            if (!validationResult.IsValid) throw new ValidationException($"Składnik zawiera niepoprawne dane: \n{validationResult.ToString($"\n")}");
 
-            if (ingredientFromCollectionToUpdate == null) throw new NotFoundException($"Nie odnaleziono składnika o Id: {ingredient.IngredientId}");
-
-            return ingredientFromCollectionToUpdate;
+            return newIngredient;
         }
 
         public async Task UpdateIngredientQuantityAsync(Ingredient ingredient)
         {
+            if (ingredient is null) throw new ArgumentNullException(nameof(ingredient), "Składnik którego dane próbujesz zaktualizować jest niepoprawny");
 
             var ingredientFromCollectionToUpdate = GetIngredientFromCollection(ingredient);
 
@@ -124,7 +124,7 @@ namespace POS.Services
 
 
                 if (ingredientToUpdate == null || ingredientFromCollectionToUpdate == null)
-                    throw new NotFoundException($"Nie odnaleziono składnika o Id: {ingredient.IngredientId}");
+                    throw new NotFoundException($"Nie odnaleziono składnika: {ingredient.Name}");
 
                 ingredientToUpdate.Stock = ingredient.Stock;
                 ingredientToUpdate.SafetyStock = ingredient.SafetyStock;
@@ -182,6 +182,19 @@ namespace POS.Services
 
                 return runningOutOfIngredients;
             });
+        }
+
+        private Ingredient GetIngredientFromCollection(Ingredient ingredient)
+        {
+            if (ingredient is null) throw new ArgumentNullException($"Niepoprawny produkt: {ingredient}");
+            if (ingredient.Stock < 0) throw new ArgumentException($"Niepoprawna ilość składnika: {ingredient.Stock}");
+            if (ingredient.SafetyStock < 0) throw new ArgumentException($"Niepoprawna ilość stanu bezpieczeństwa: {ingredient.SafetyStock}");
+
+            var ingredientFromCollectionToUpdate = allIngredientList.FirstOrDefault(i => i.IngredientId == ingredient.IngredientId);
+
+            if (ingredientFromCollectionToUpdate == null) throw new NotFoundException($"Nie odnaleziono składnika o Id: {ingredient.IngredientId}");
+
+            return ingredientFromCollectionToUpdate;
         }
 
         private async Task GetAllIngredientsFromDbAsync()

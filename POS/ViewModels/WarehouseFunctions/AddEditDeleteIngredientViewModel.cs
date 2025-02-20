@@ -10,6 +10,7 @@ using POS.Utilities.RelayCommands;
 using POS.Validators;
 using POS.Validators.Models;
 using POS.ViewModels.Base;
+
 namespace POS.ViewModels.WarehouseFunctions
 {
     public class AddEditDeleteIngredientViewModel : ViewModelBase
@@ -49,14 +50,14 @@ namespace POS.ViewModels.WarehouseFunctions
                 {
                     IsIngredientSelected = Visibility.Collapsed;
 
-                    if (isNewIngredient && selectedIngredient != null)
+                    if (isNewIngredient && selectedIngredient is not null)
                     {
                         IsNewIngredient = false;
                     }
 
-                    if(selectedIngredient != null)
+                    if(selectedIngredient is not null)
                     {
-                        LoadDataIntoFormFields(value);
+                        LoadDataIntoFormFields(value!);
                         
                         IsAddButtonVisible = Visibility.Collapsed;
                         IsUpdateButtonVisible = Visibility.Visible;
@@ -215,7 +216,7 @@ namespace POS.ViewModels.WarehouseFunctions
         {
             try
             {
-                var newIngredient = CreateIngredient(ingredientName);
+                var newIngredient = await _ingredientService.CreateIngredient(ingredientName, ingredientDescription, ingredientUnit, ingredientPackage);
                 await _ingredientService.AddNewIngredientAsync(newIngredient);
 
                 MessageBox.Show("Pomyślnie dodano nowy składnik",
@@ -234,8 +235,8 @@ namespace POS.ViewModels.WarehouseFunctions
         {
             try
             {
-                var newIngredient = CreateIngredient(selectedIngredient!.Name);
-                await _ingredientService.UpdateExistingIngredientAsync(selectedIngredient, newIngredient);
+                var newIngredient = await _ingredientService.CreateIngredient(ingredientName, ingredientDescription, ingredientUnit, ingredientPackage);
+                await _ingredientService.UpdateExistingIngredientAsync(selectedIngredient!, newIngredient);
 
                 MessageBox.Show("Pomyślnie edytowano składnik",
                     "Informacja", MessageBoxButton.OK, MessageBoxImage.Asterisk);
@@ -287,12 +288,12 @@ namespace POS.ViewModels.WarehouseFunctions
                 IsUpdateButtonEnable = CheckIfUpdateButtonCanBeEnabled();
         }
 
-        private void LoadDataIntoFormFields(Ingredient selectedIngredient)
+        private void LoadDataIntoFormFields(Ingredient ingredient)
         {
-            IngredientName = selectedIngredient.Name;
-            IngredientUnit = selectedIngredient.Unit;
-            IngredientPackage = selectedIngredient.Package;
-            IngredientDescription = selectedIngredient.Description;
+            IngredientName = ingredient.Name;
+            IngredientUnit = ingredient.Unit;
+            IngredientPackage = ingredient.Package;
+            IngredientDescription = ingredient.Description;
         }
 
         private void ResetForm()
@@ -311,21 +312,6 @@ namespace POS.ViewModels.WarehouseFunctions
             IsIngredientSelected = Visibility.Visible;
 
             ClearAllErrors();
-        }
-
-        private Ingredient CreateIngredient(string ingredientNameValue)
-        {
-            if (ingredientNameValue == null) throw new ArgumentNullException(ingredientNameValue, "Nieprawidłowa nazwa składnika");
-
-            return new Ingredient
-            {
-                Name = ingredientNameValue,
-                Description = ingredientDescription,
-                Unit = ingredientUnit,
-                Package = ingredientPackage,
-                Stock = 0,
-                SafetyStock = 0
-            };
         }
 
         private bool CheckIfAddButtonCanBeEnabled()
