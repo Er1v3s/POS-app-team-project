@@ -5,29 +5,13 @@ namespace DataAccess
 {
     public class AppDbContext : DbContext
     {
-        private static readonly string ConnectionString;
-
-        static AppDbContext()
-        {
-            ConnectionString = new DatabaseConfiguration().GetConnectionString();
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-
-            // Production 
-            //optionsBuilder.UseSqlServer(ConnectionString);
-
-            // Development
-
-            optionsBuilder.UseSqlite(ConnectionString, builder => builder.MigrationsAssembly("DbSeeder"));
-        }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<Product> Product { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<Ingredient> Ingredients { get; set; }
+        public virtual DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
