@@ -20,15 +20,15 @@ namespace POS.ViewModels.WarehouseFunctions
 
         private Ingredient? selectedIngredient;
 
-        private string ingredientName;
-        private string ingredientUnit;
-        private string ingredientPackage;
-        private string ingredientDescription;
+        private string ingredientName = string.Empty;
+        private string ingredientUnit = string.Empty;
+        private string ingredientPackage = string.Empty;
+        private string ingredientDescription = string.Empty;
 
-        private string ingredientNameError;
-        private string ingredientUnitError;
-        private string ingredientPackageError;
-        private string ingredientDescriptionError;
+        private string ingredientNameError = string.Empty;
+        private string ingredientUnitError = string.Empty;
+        private string ingredientPackageError = string.Empty;
+        private string ingredientDescriptionError = string.Empty;
 
         private Visibility isIngredientSelected;
         private Visibility isAddButtonVisible;
@@ -76,7 +76,7 @@ namespace POS.ViewModels.WarehouseFunctions
             }
         }
 
-        public string IngredientName
+        public required string IngredientName
         {
             get => ingredientName;
             set
@@ -86,7 +86,7 @@ namespace POS.ViewModels.WarehouseFunctions
             }
         }
 
-        public string IngredientUnit
+        public required string IngredientUnit
         {
             get => ingredientUnit;
             set
@@ -96,7 +96,7 @@ namespace POS.ViewModels.WarehouseFunctions
             }
         }
 
-        public string IngredientPackage
+        public required string IngredientPackage
         {
             get => ingredientPackage;
             set
@@ -106,7 +106,7 @@ namespace POS.ViewModels.WarehouseFunctions
             }
         }
 
-        public string IngredientDescription
+        public required string IngredientDescription
         {
             get => ingredientDescription;
             set
