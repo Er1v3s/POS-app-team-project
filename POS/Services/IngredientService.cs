@@ -7,6 +7,7 @@ using DataAccess.Models;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using POS.Exceptions;
+using POS.Exceptions.Interfaces;
 using POS.Models.Orders;
 using POS.Utilities;
 using POS.Validators.Models;
@@ -16,13 +17,13 @@ namespace POS.Services
     public class IngredientService
     {
         private readonly AppDbContext _dbContext;
-        private readonly DatabaseErrorHandler _databaseErrorHandler;
+        private readonly IDatabaseErrorHandler _databaseErrorHandler;
         private readonly IngredientValidator _ingredientValidator;
 
         private List<Ingredient> allIngredientList = new();
         public MyObservableCollection<Ingredient> IngredientCollection { get; }
 
-        public IngredientService(AppDbContext dbContext, DatabaseErrorHandler databaseErrorHandler)
+        public IngredientService(AppDbContext dbContext, IDatabaseErrorHandler databaseErrorHandler)
         {
             _dbContext = dbContext;
             _databaseErrorHandler = databaseErrorHandler;

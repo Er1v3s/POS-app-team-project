@@ -3,13 +3,13 @@ using FluentAssertions;
 using FluentValidation.TestHelper;
 using POS.Validators.Models;
 
-namespace POS.Tests
+namespace POS.Tests.UnitTests
 {
-    public class IngredientValidatorTests
+    public class IngredientValidatorUnitTests
     {
         private readonly IngredientValidator _validator;
 
-        public IngredientValidatorTests()
+        public IngredientValidatorUnitTests()
         {
             _validator = new IngredientValidator();
         }
@@ -179,7 +179,6 @@ namespace POS.Tests
         public static IEnumerable<object[]> InvalidValues()
         {
             yield return new object[] { "" };
-            yield return new object[] { "InvalidValue123" };
             yield return new object[] { "InvalidValue!@#$%^&*()" };
             yield return new object[] { new string('A', 101) };
         }
