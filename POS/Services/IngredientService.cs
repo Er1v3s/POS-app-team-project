@@ -177,11 +177,10 @@ namespace POS.Services
         {
             return await _databaseErrorHandler.ExecuteDatabaseOperationAsync(async () =>
             {
-                var runningOutOfIngredients = await _dbContext.Ingredients
+                return await _dbContext.Ingredients
                     .Where(ingredient => ingredient.Stock < ingredient.SafetyStock)
                     .ToListAsync();
 
-                return runningOutOfIngredients;
             });
         }
 
