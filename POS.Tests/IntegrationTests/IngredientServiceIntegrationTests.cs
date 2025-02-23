@@ -12,8 +12,6 @@ namespace POS.Tests.IntegrationTests
     public class IngredientServiceIntegrationTests
     {
         private readonly Mock<IDatabaseErrorHandler> _databaseErrorHandlerMock;
-        private readonly AppDbContext _dbContext;
-        private readonly IngredientService _ingredientService;
 
         public IngredientServiceIntegrationTests()
         {
@@ -22,51 +20,53 @@ namespace POS.Tests.IntegrationTests
             _databaseErrorHandlerMock
                 .Setup(x => x.ExecuteDatabaseOperationAsync(It.IsAny<Func<Task>>(), It.IsAny<Action>()))
                 .Returns<Func<Task>, Action<Exception>>((operation, onFailure) => operation());
-
-            _dbContext = GetInMemoryDbContext();
-
-            _ingredientService = new IngredientService(_dbContext, _databaseErrorHandlerMock.Object);
         }
 
-        private AppDbContext GetInMemoryDbContext()
-        {
-            var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase("TestDb")
-                .Options;
-
-            var dbContext = new AppDbContext(options);
-            dbContext.Database.EnsureDeleted();
-            dbContext.Database.EnsureCreated();
-            return dbContext;
-        }
 
         [Fact]
         public async Task IngredientService_OnServiceInitialize_GetDataFromDbToIngredientCollection()
         {
             // Arrange
-            await _dbContext.Ingredients.AddAsync(new Ingredient() { IngredientId = 1, Name = "Test name", Description = "Test description", Unit = "Test unit", Package = "Test package", Stock = 10, SafetyStock = 5 });
-            await _dbContext.Ingredients.AddAsync(new Ingredient() { IngredientId = 2, Name = "Test name 2", Description = "Test description 2", Unit = "Test unit 2", Package = "Test package 2", Stock = 7, SafetyStock = 3 });
-            await _dbContext.SaveChangesAsync();
+            var dbContext = GetInMemoryDbContext();
+            await SeedDatabaseWithIngredients(dbContext);
 
             // Act 
-            var ingredientService = new IngredientService(_dbContext, _databaseErrorHandlerMock.Object);
+            var ingredientService = new IngredientService(dbContext, _databaseErrorHandlerMock.Object);
 
             // Assert 
             ingredientService.IngredientCollection.Should().NotBeEmpty();
         }
 
         [Fact]
+        public async Task GetAllIngredients_WhenAnyFiltersAreAppliedToIngredientCollection_ReturnEntireCollectionWithoutFilters()
+        {
+            // Arrange
+            var dbContext = GetInMemoryDbContext();
+            await SeedDatabaseWithIngredients(dbContext);
+            var searchPhrase = "Whi";
+
+            // Act
+            var ingredientService = new IngredientService(dbContext, _databaseErrorHandlerMock.Object);
+            ingredientService.GetIngredientsBySearchPhrase(searchPhrase);
+                // now IngredientCollection contains only one ingredient [ingredientService.IngredientCollection.Should().HaveCount(1)]
+
+            ingredientService.GetAllIngredients();
+
+            // Assert 
+            ingredientService.IngredientCollection.Should().HaveCount(3);
+        }
+
+        [Fact]
         public async Task GetIngredientsBySearchPhrase_ForPassedPhrase_AddCorrectIngredientsIntoCollection()
         {
             // Arrange
-            await _dbContext.Ingredients.AddAsync(new Ingredient() { IngredientId = 1, Name = "Whisky", Description = "Test description", Unit = "Test unit", Package = "Test package", Stock = 10, SafetyStock = 5 });
-            await _dbContext.Ingredients.AddAsync(new Ingredient() { IngredientId = 2, Name = "Wódka", Description = "Test description 2", Unit = "Test unit 2", Package = "Test package 2", Stock = 7, SafetyStock = 3 });
-            await _dbContext.SaveChangesAsync();
+            var dbContext = GetInMemoryDbContext();
+            await SeedDatabaseWithIngredients(dbContext);
 
             var searchPhrase = "Whi";
 
             // Act
-            var ingredientService = new IngredientService(_dbContext, _databaseErrorHandlerMock.Object);
+            var ingredientService = new IngredientService(dbContext, _databaseErrorHandlerMock.Object);
             ingredientService.GetIngredientsBySearchPhrase(searchPhrase);
 
             // Assert
@@ -81,13 +81,15 @@ namespace POS.Tests.IntegrationTests
         public async Task AddNewIngredientAsync_OnAddNewIngredientAsync_AddNewIngredientToDb()
         {
             // Arrange
+            var dbContext = GetInMemoryDbContext();
             var ingredient = new Ingredient() { IngredientId = 1, Name = "Test name", Description = "Test description", Unit = "Test unit", Package = "Test package", Stock = 10, SafetyStock = 5 };
 
             // Act
-            await _ingredientService.AddNewIngredientAsync(ingredient);
+            var ingredientService = new IngredientService(dbContext, _databaseErrorHandlerMock.Object);
+            await ingredientService.AddNewIngredientAsync(ingredient);
 
             // Assert
-            var ingredientFromDb = await _dbContext.Ingredients.FirstOrDefaultAsync();
+            var ingredientFromDb = await dbContext.Ingredients.FirstOrDefaultAsync();
             ingredientFromDb.Should().NotBeNull();
             ingredientFromDb.Name.Should().Be(ingredient.Name);
         }
@@ -96,18 +98,20 @@ namespace POS.Tests.IntegrationTests
         public async Task UpdateExistingIngredientAsync_OnUpdateExistingIngredientAsync_UpdateExistingIngredientInDb()
         {
             // Arrange
+            var dbContext = GetInMemoryDbContext();
             var ingredient = new Ingredient() { IngredientId = 1, Name = "Test name", Description = "Test description", Unit = "Test unit", Package = "Test package", Stock = 10, SafetyStock = 5 };
-            await _dbContext.Ingredients.AddAsync(ingredient);
-            await _dbContext.SaveChangesAsync();
+            await dbContext.Ingredients.AddAsync(ingredient);
+            await dbContext.SaveChangesAsync();
 
             var updatedIngredient = new Ingredient() { IngredientId = 1, Name = "Updated name", Description = "Updated description", Unit = "Updated unit", Package = "Updated package"};
 
             // Act
-            await _ingredientService.UpdateExistingIngredientAsync(ingredient, updatedIngredient);
-            await _dbContext.SaveChangesAsync();
+            var ingredientService = new IngredientService(dbContext, _databaseErrorHandlerMock.Object);
+            await ingredientService.UpdateExistingIngredientAsync(ingredient, updatedIngredient);
+            //await dbContext.SaveChangesAsync();
 
             // Assert
-            var ingredientFromDb = await _dbContext.Ingredients.FindAsync(ingredient.IngredientId);
+            var ingredientFromDb = await dbContext.Ingredients.FindAsync(ingredient.IngredientId);
 
             ingredientFromDb.Should().NotBeNull();
             ingredientFromDb.Name.Should().Be(updatedIngredient.Name);
@@ -120,15 +124,17 @@ namespace POS.Tests.IntegrationTests
         public async Task DeleteIngredientAsync_OnDeleteIngredientAsync_DeleteIngredientFromDb()
         {
             // Arrange
+            var dbContext = GetInMemoryDbContext();
             var ingredient = new Ingredient() { IngredientId = 1, Name = "Test name", Description = "Test description", Unit = "Test unit", Package = "Test package", Stock = 10, SafetyStock = 5 };
-            await _dbContext.Ingredients.AddAsync(ingredient);
-            await _dbContext.SaveChangesAsync();
+            await dbContext.Ingredients.AddAsync(ingredient);
+            await dbContext.SaveChangesAsync();
 
             // Act
-            await _ingredientService.DeleteIngredientAsync(ingredient);
+            var ingredientService = new IngredientService(dbContext, _databaseErrorHandlerMock.Object);
+            await ingredientService.DeleteIngredientAsync(ingredient);
 
             // Assert
-            var ingredientFromDb = await _dbContext.Ingredients.FindAsync(ingredient.IngredientId);
+            var ingredientFromDb = await dbContext.Ingredients.FindAsync(ingredient.IngredientId);
             ingredientFromDb.Should().BeNull();
         }
 
@@ -136,18 +142,15 @@ namespace POS.Tests.IntegrationTests
         public async Task GetRunningOutOfIngredients_WhenStockIsLowerThanSafetyStock_ReturnsCorrectIngredients()
         {
             // Arrange
+            var dbContext = GetInMemoryDbContext();
+            await SeedDatabaseWithIngredients(dbContext);
+
             _databaseErrorHandlerMock
                 .Setup(x => x.ExecuteDatabaseOperationAsync(It.IsAny<Func<Task<List<Ingredient>>>>(), It.IsAny<Action>()))
                 .Returns<Func<Task<List<Ingredient>>>, Action<Exception>>((operation, onFailure) => operation());
 
-            // Must be initialized because of databaseErrorHandler with generic parameter
-            var ingredientService = new IngredientService(_dbContext, _databaseErrorHandlerMock.Object);
-            await _dbContext.Ingredients.AddAsync(new Ingredient() { IngredientId = 1, Name = "Test name 1", Description = "Test description 1", Unit = "Test unit 1", Package = "Test package 1", Stock = 10, SafetyStock = 5 });
-            await _dbContext.Ingredients.AddAsync(new Ingredient() { IngredientId = 2, Name = "Test name 2", Description = "Test description 2", Unit = "Test unit 2", Package = "Test package 2", Stock = 10, SafetyStock = 10 });
-            await _dbContext.Ingredients.AddAsync(new Ingredient() { IngredientId = 3, Name = "Test name 3", Description = "Test description 3", Unit = "Test unit 3", Package = "Test package 3", Stock = 3, SafetyStock = 5 });
-            await _dbContext.SaveChangesAsync();
-
             // Act
+            var ingredientService = new IngredientService(dbContext, _databaseErrorHandlerMock.Object);
             var runningOutOfIngredients = await ingredientService.GetRunningOutOfIngredientsAsync();
 
             // Assert
@@ -159,19 +162,17 @@ namespace POS.Tests.IntegrationTests
         public async Task RemoveIngredientsAsync_ForPassedArgument_RemovesIngredientsFromDb()
         {
             // Arrange
-            await _dbContext.Ingredients.AddAsync(new Ingredient { IngredientId = 1, Name = "Whisky", Description = "test description", Stock = 10 });
-            await _dbContext.Ingredients.AddAsync(new Ingredient { IngredientId = 2, Name = "Wódka", Description = "test description" ,Stock = 5 });
+            var dbContext = GetInMemoryDbContext();
+            await SeedDatabaseWithIngredients(dbContext);
 
-            await _dbContext.Recipes.AddAsync(new Recipe { RecipeId = 1, RecipeName = "test name", RecipeContent = "test content" });
+            await dbContext.Recipes.AddAsync(new Recipe { RecipeId = 1, RecipeName = "test name", RecipeContent = "test content" });
             
-            // most important 
-            await _dbContext.RecipeIngredients.AddAsync(new RecipeIngredient { RecipeId = 1, IngredientId = 1, Quantity = 1 });
-            await _dbContext.RecipeIngredients.AddAsync(new RecipeIngredient { RecipeId = 1, IngredientId = 2, Quantity = 1 });
-            // most important
+            await dbContext.RecipeIngredients.AddAsync(new RecipeIngredient { RecipeId = 1, IngredientId = 1, Quantity = 1 });
+            await dbContext.RecipeIngredients.AddAsync(new RecipeIngredient { RecipeId = 1, IngredientId = 2, Quantity = 1 });
 
-            await _dbContext.Product.AddAsync(new Product { ProductId = 1, RecipeId = 1, ProductName = "test name", Category = "test category", Price = 0 });
+            await dbContext.Product.AddAsync(new Product { ProductId = 1, RecipeId = 1, ProductName = "test name", Category = "test category", Price = 0 });
             
-            await _dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
 
             var orderDto = new OrderDto
             {
@@ -183,14 +184,35 @@ namespace POS.Tests.IntegrationTests
             };
 
             // Act
-            await _ingredientService.RemoveIngredientsAsync(orderDto);
+            var ingredientService = new IngredientService(dbContext, _databaseErrorHandlerMock.Object);
+            await ingredientService.RemoveIngredientsAsync(orderDto);
 
             // Assert
-            var updatedIngredient1 = await _dbContext.Ingredients.FindAsync(1);
-            var updatedIngredient2 = await _dbContext.Ingredients.FindAsync(2);
+            var updatedIngredient1 = await dbContext.Ingredients.FindAsync(1);
+            var updatedIngredient2 = await dbContext.Ingredients.FindAsync(2);
 
             updatedIngredient1?.Stock.Should().Be(9); // 10 existing - 1 from order
-            updatedIngredient2?.Stock.Should().Be(4); // 5 existing - 1 from order
+            updatedIngredient2?.Stock.Should().Be(6); // 7 existing - 1 from order
+        }
+
+        private AppDbContext GetInMemoryDbContext()
+        {
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase("TestDb")
+                .Options;
+
+            var dbContext = new AppDbContext(options);
+            dbContext.Database.EnsureDeleted();
+            dbContext.Database.EnsureCreated();
+            return dbContext;
+        }
+
+        private async Task SeedDatabaseWithIngredients(AppDbContext dbContext)
+        {
+            await dbContext.Ingredients.AddAsync(new Ingredient() { IngredientId = 1, Name = "Whisky", Description = "Jack Daniel's", Unit = "szt", Package = "Szklana butelka 700ml", Stock = 10, SafetyStock = 5 });
+            await dbContext.Ingredients.AddAsync(new Ingredient() { IngredientId = 2, Name = "Wódka", Description = "Finlandia", Unit = "szt", Package = "Szklana butelka 1000ml", Stock = 7, SafetyStock = 3 });
+            await dbContext.Ingredients.AddAsync(new Ingredient() { IngredientId = 3, Name = "Rum", Description = "Bacardi White", Unit = "szt", Package = "Szklana butelka 700ml", Stock = 10, SafetyStock = 10 });
+            await dbContext.SaveChangesAsync();
         }
     }
 }
