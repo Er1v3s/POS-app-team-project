@@ -1,5 +1,6 @@
 ﻿using DataAccess;
 using DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DbSeeder
 {
@@ -9,7 +10,11 @@ namespace DbSeeder
 
         static async Task Main(string[] args)
         {
-            await using AppDbContext dbContext = new AppDbContext();
+            var options = new DbContextOptionsBuilder<AppDbContext>()
+                .UseSqlite(new DatabaseConfiguration().GetConnectionString(), builder => builder.MigrationsAssembly("DbSeeder"))
+                .Options;
+
+            await using AppDbContext dbContext = new AppDbContext(options);
 
             for (int i = 0; i <= 5000; i++)
             {
