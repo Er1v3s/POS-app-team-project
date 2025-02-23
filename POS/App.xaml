@@ -233,20 +233,21 @@
             <Setter Property="VerticalAlignment" Value="Stretch" />
             <Setter Property="TextWrapping" Value="Wrap" />
             <Setter Property="Foreground" Value="Black" />
-            <Setter Property="BorderBrush" Value="White" />
-            <Setter Property="SelectionBrush" Value="Transparent" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
                         <Grid>
+                            <Border x:Name="TextBoxBorder"
+                                    BorderThickness="2"
+                                    BorderBrush="#a3a3a3"
+                                    CornerRadius="8"/>
                             <TextBlock x:Name="Placeholder" 
                                        Text="{TemplateBinding Tag}" 
                                        Foreground="Gray" 
                                        VerticalAlignment="Center" 
                                        HorizontalAlignment="Center"
-                                       Margin="5,0,0,0" 
                                        Visibility="Collapsed"/>
                             <ScrollViewer x:Name="PART_ContentHost"/>
                         </Grid>
@@ -257,36 +258,71 @@
                             <Trigger Property="Text" Value="{x:Null}">
                                 <Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
                             </Trigger>
-                            <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Trigger Property="IsFocused" Value="True">
                                 <Setter TargetName="Placeholder" Property="Visibility" Value="Collapsed"/>
                             </Trigger>
+
+                            <Trigger Property="Validation.HasError" Value="True">
+                                <Setter TargetName="TextBoxBorder" Property="BorderBrush" Value="#ae4b59"/>
+                            </Trigger>
+
+                            <Trigger Property="Validation.HasError" Value="False">
+                                <Setter TargetName="TextBoxBorder" Property="BorderBrush" Value="#4baea0"/>
+                            </Trigger>
+
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Text" Value=""/>
+                                    <Condition Property="Validation.HasError" Value="False"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="TextBoxBorder" Property="BorderBrush" Value="#a3a3a3"/>
+                            </MultiTrigger>
+
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Text" Value=""/>
+                                    <Condition Property="Validation.HasError" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="TextBoxBorder" Property="BorderBrush" Value="#a3a3a3"/>
+                            </MultiTrigger>
+
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsFocused" Value="True"/>
+                                    <Condition Property="Text" Value=""/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="TextBoxBorder" Property="BorderBrush" Value="#6c6c6c"/>
+                            </MultiTrigger>
                         </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Validation.ErrorTemplate">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <AdornedElementPlaceholder />
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
 
-        <Style x:Key="WarehouseFunctionsTextBoxWithPlaceholder2" TargetType="TextBox">
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="VerticalAlignment" Value="Stretch" />
-            <Setter Property="TextWrapping" Value="Wrap" />
-            <Setter Property="Foreground" Value="Black" />
-            <Setter Property="BorderBrush" Value="White" />
-            <Setter Property="SelectionBrush" Value="Transparent" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Style x:Key="WarehouseFunctionsTextBoxWithPlaceholder2" TargetType="TextBox" BasedOn="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}">
+            <Setter Property="Padding" Value="10"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
                         <Grid>
+                            <Border x:Name="TextBoxBorder"
+                                    BorderThickness="2"
+                                    CornerRadius="8"/>
                             <TextBlock x:Name="Placeholder" 
-                               Text="{TemplateBinding Tag}" 
-                               Foreground="Gray" 
-                               VerticalAlignment="Top" 
-                               HorizontalAlignment="Left"
-                               Margin="5,0,0,0" 
-                               Padding="10"
-                               Visibility="Collapsed"/>
+                                       Text="{TemplateBinding Tag}" 
+                                       Foreground="Gray" 
+                                       VerticalAlignment="Top" 
+                                       HorizontalAlignment="Left"
+                                       Margin="5,0,0,0" 
+                                       Padding="10"
+                                       Visibility="Collapsed"/>
                             <ScrollViewer x:Name="PART_ContentHost"/>
                         </Grid>
                         <ControlTemplate.Triggers>
@@ -296,13 +332,52 @@
                             <Trigger Property="Text" Value="{x:Null}">
                                 <Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
                             </Trigger>
-                            <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Trigger Property="IsFocused" Value="True">
                                 <Setter TargetName="Placeholder" Property="Visibility" Value="Collapsed"/>
                             </Trigger>
+
+                            <Trigger Property="Validation.HasError" Value="True">
+                                <Setter TargetName="TextBoxBorder" Property="BorderBrush" Value="#ae4b59"/>
+                            </Trigger>
+
+                            <Trigger Property="Validation.HasError" Value="False">
+                                <Setter TargetName="TextBoxBorder" Property="BorderBrush" Value="#4baea0"/>
+                            </Trigger>
+
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Text" Value=""/>
+                                    <Condition Property="Validation.HasError" Value="False"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="TextBoxBorder" Property="BorderBrush" Value="#a3a3a3"/>
+                            </MultiTrigger>
+
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="Text" Value=""/>
+                                    <Condition Property="Validation.HasError" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="TextBoxBorder" Property="BorderBrush" Value="#a3a3a3"/>
+                            </MultiTrigger>
+
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsFocused" Value="True"/>
+                                    <Condition Property="Text" Value=""/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="TextBoxBorder" Property="BorderBrush" Value="#6c6c6c"/>
+                            </MultiTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+        </Style>
+
+        <Style x:Key="WarehouseFunctionsTextBoxErrorMessage" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Bottom"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="#ae4b59"/>
+            <Setter Property="FontSize" Value="12"/>
         </Style>
 
         <!--#endregion -->

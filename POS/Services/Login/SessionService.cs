@@ -7,6 +7,7 @@ using DataAccess;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 using POS.Exceptions;
+using POS.Exceptions.Interfaces;
 using POS.Utilities;
 
 namespace POS.Services.Login
@@ -14,11 +15,11 @@ namespace POS.Services.Login
     public class SessionService
     {
         private readonly AppDbContext _dbContext;
-        private readonly DatabaseErrorHandler _databaseErrorHandler;
+        private readonly IDatabaseErrorHandler _databaseErrorHandler;
 
         public MyObservableCollection<EmployeeWorkSession> SessionCollection { get; }
 
-        public SessionService(AppDbContext dbContext, DatabaseErrorHandler databaseErrorHandler)
+        public SessionService(AppDbContext dbContext, IDatabaseErrorHandler databaseErrorHandler)
         {
             _dbContext = dbContext;
             _databaseErrorHandler = databaseErrorHandler;
@@ -73,7 +74,8 @@ namespace POS.Services.Login
                 var session = await _dbContext.EmployeeWorkSession.FirstOrDefaultAsync(s => s.WorkingTimeTo == null);
 
                 return LoginManager.Instance.IsAnySessionActive = session != null;
-            }, onFailure: ex =>
+            }, 
+            onFailure: () =>
             {
                 LoginManager.Instance.IsAnySessionActive = false;
             });
@@ -90,7 +92,7 @@ namespace POS.Services.Login
                 await _dbContext.EmployeeWorkSession.AddAsync(employeeWorkSession);
                 await _dbContext.SaveChangesAsync();
             },
-            onFailure: ex =>
+            onFailure: () =>
             {
                 LoginManager.Instance.IsAnySessionActive = false;
             });
