@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\Da
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbSeeder", "DbSeeder\DbSeeder\DbSeeder.csproj", "{50E68999-78B3-4F03-99A9-4923C1992D1F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POS.Tests", "POS.Tests\POS.Tests.csproj", "{7C475128-685C-4D8B-ACD2-2CB927F78C66}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{50E68999-78B3-4F03-99A9-4923C1992D1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50E68999-78B3-4F03-99A9-4923C1992D1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50E68999-78B3-4F03-99A9-4923C1992D1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C475128-685C-4D8B-ACD2-2CB927F78C66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C475128-685C-4D8B-ACD2-2CB927F78C66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C475128-685C-4D8B-ACD2-2CB927F78C66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C475128-685C-4D8B-ACD2-2CB927F78C66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

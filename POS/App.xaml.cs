@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Threading.Tasks;
+using System.Configuration;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using DataAccess;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using POS.Exceptions;
+using POS.Exceptions.Interfaces;
 using POS.Factories;
 using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
@@ -53,17 +54,34 @@ namespace POS
 
         private void ConfigureServices(ServiceCollection servicesCollection)
         {
-            servicesCollection.AddSingleton<AppDbContext>();
+            #region Gloval services
+
+            servicesCollection.AddDbContext<AppDbContext>(options =>
+            {
+                //options.UseSqlServer(new DatabaseConfiguration().GetConnectionString());
+
+                options.UseSqlite(new DatabaseConfiguration().GetConnectionString(),
+                    builder => builder.MigrationsAssembly("DbSeeder"));
+            });
+
+            servicesCollection.AddTransient<TimeService>();
+
+            servicesCollection.AddTransient<SessionService>();
+            servicesCollection.AddTransient<LoginManager>();
+            servicesCollection.AddTransient<LoginService>();
+
+
+
+            #endregion
 
             servicesCollection.AddSingleton<ILoggerService, LoggerService>();
             servicesCollection.AddLogging(configure => configure.AddConsole());
 
-            servicesCollection.AddScoped<DatabaseErrorHandler>();
+            servicesCollection.AddScoped<IDatabaseErrorHandler, DatabaseErrorHandler>();
             servicesCollection.AddScoped<ApplicationStateService>();
 
             #region MainWindow
 
-            servicesCollection.AddTransient<TimeService>();
             servicesCollection.AddTransient<ViewFactory>();
             servicesCollection.AddTransient<NavigationService>();
             servicesCollection.AddTransient<MainWindowViewModel>();
@@ -105,17 +123,14 @@ namespace POS
 
             #region ToDoList
 
-            servicesCollection.AddTransient<ToDoListViewModel>();
             servicesCollection.AddTransient<TaskManagerService>();
+
+            servicesCollection.AddTransient<ToDoListViewModel>();
 
             #endregion
 
             #region LoginPanel
 
-            servicesCollection.AddTransient<SessionService>();
-
-            servicesCollection.AddTransient<LoginManager>();
-            servicesCollection.AddTransient<LoginService>();
             servicesCollection.AddTransient<LoginPanelViewModel>();
             servicesCollection.AddTransient<StartFinishWorkViewModel>();
             servicesCollection.AddTransient<WorkTimeSummaryControlViewModel>();
@@ -125,6 +140,7 @@ namespace POS
             #region AdministratorFunctions
 
             servicesCollection.AddTransient<AdminFunctionsService>();
+
             servicesCollection.AddTransient<AdminFunctionsViewModel>();
             servicesCollection.AddTransient<AddEmployeeViewModel>();
             servicesCollection.AddTransient<EditEmployeeViewModel>();
@@ -133,14 +149,14 @@ namespace POS
 
             #region SalesPanel
 
-            servicesCollection.AddScoped<ProductService>();
+            servicesCollection.AddTransient<ProductService>();
             servicesCollection.AddTransient<OrderService>();
             servicesCollection.AddTransient<RecipeService>();
             servicesCollection.AddTransient<OrderSummaryService>();
             servicesCollection.AddTransient<FinishedOrderService>();
-            servicesCollection.AddScoped<IngredientService>();
-            servicesCollection.AddScoped<InvoiceService>();
-            servicesCollection.AddScoped<DiscountService>();
+            servicesCollection.AddTransient<IngredientService>();
+            servicesCollection.AddTransient<InvoiceService>();
+            servicesCollection.AddTransient<DiscountService>();
 
             servicesCollection.AddTransient<DiscountWindowViewModel>();
             servicesCollection.AddTransient<OrderSummaryViewModel>();

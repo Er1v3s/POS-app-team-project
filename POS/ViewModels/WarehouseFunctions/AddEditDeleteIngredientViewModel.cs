@@ -7,6 +7,8 @@ using DataAccess.Models;
 using Microsoft.IdentityModel.Tokens;
 using POS.Services;
 using POS.Utilities.RelayCommands;
+using POS.Validators;
+using POS.Validators.Models;
 using POS.ViewModels.Base;
 
 namespace POS.ViewModels.WarehouseFunctions
@@ -14,24 +16,30 @@ namespace POS.ViewModels.WarehouseFunctions
     public class AddEditDeleteIngredientViewModel : ViewModelBase
     {
         private readonly IngredientService _ingredientService;
+        private readonly IngredientValidator _ingredientValidator;
 
         private Ingredient? selectedIngredient;
 
-        private string ingredientName;
-        private string ingredientUnit;
-        private string ingredientPackage;
-        private string ingredientDescription;
+        private string ingredientName = string.Empty;
+        private string ingredientUnit = string.Empty;
+        private string ingredientPackage = string.Empty;
+        private string ingredientDescription = string.Empty;
+
+        private string ingredientNameError = string.Empty;
+        private string ingredientUnitError = string.Empty;
+        private string ingredientPackageError = string.Empty;
+        private string ingredientDescriptionError = string.Empty;
 
         private Visibility isIngredientSelected;
+        private Visibility isAddButtonVisible;
+        private Visibility isUpdateButtonVisible;
         private bool isNewIngredient;
 
         private bool isDeleteButtonEnable;
         private bool isAddButtonEnable;
+        private bool isUpdateButtonEnable;
 
-        public ObservableCollection<Ingredient> IngredientObservableCollection
-        {
-            get => _ingredientService.IngredientCollection;
-        }
+        public ObservableCollection<Ingredient> IngredientObservableCollection => _ingredientService.IngredientCollection;
 
         public Ingredient? SelectedIngredient
         {
@@ -40,10 +48,27 @@ namespace POS.ViewModels.WarehouseFunctions
             {
                 if (SetField(ref selectedIngredient, value))
                 {
-                    IsIngredientSelected= Visibility.Collapsed;
+                    IsIngredientSelected = Visibility.Collapsed;
 
-                    if (isNewIngredient && selectedIngredient != null)
+                    if (isNewIngredient && selectedIngredient is not null)
+                    {
                         IsNewIngredient = false;
+                    }
+
+                    if(selectedIngredient is not null)
+                    {
+                        LoadDataIntoFormFields(value!);
+                        
+                        IsAddButtonVisible = Visibility.Collapsed;
+                        IsUpdateButtonVisible = Visibility.Visible;
+                    }
+                    else
+                    {
+                        ResetForm();
+
+                        IsUpdateButtonVisible = Visibility.Collapsed;
+                        IsAddButtonVisible = Visibility.Visible;
+                    } 
 
                     IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
                     IsDeleteButtonEnable = CheckIfDeleteButtonCanBeEnabled();
@@ -51,50 +76,86 @@ namespace POS.ViewModels.WarehouseFunctions
             }
         }
 
-        public string IngredientName
+        public required string IngredientName
         {
             get => ingredientName;
             set
             {
-                if(SetField(ref ingredientName, value))
-                    IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
+                if (SetField(ref ingredientName, value))
+                    ValidateIngredient(_ingredientValidator.ValidateIngredientName, nameof(IngredientName), value, error => IngredientNameError = error);
             }
         }
 
-        public string IngredientUnit
+        public required string IngredientUnit
         {
             get => ingredientUnit;
             set
             {
                 if (SetField(ref ingredientUnit, value))
-                    IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
+                    ValidateIngredient(_ingredientValidator.ValidateIngredientUnit, nameof(IngredientUnit), value, error => IngredientUnitError = error);
             }
         }
 
-        public string IngredientPackage
+        public required string IngredientPackage
         {
             get => ingredientPackage;
             set
             {
-                if(SetField(ref ingredientPackage, value))
-                    IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
+                if (SetField(ref ingredientPackage, value))
+                    ValidateIngredient(_ingredientValidator.ValidateIngredientPackage, nameof(IngredientPackage), value, error => IngredientPackageError = error);
             }
         }
 
-        public string IngredientDescription
+        public required string IngredientDescription
         {
             get => ingredientDescription;
             set
             {
                 if (SetField(ref ingredientDescription, value))
-                    IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
+                    ValidateIngredient(_ingredientValidator.ValidateIngredientDescription, nameof(IngredientDescription), value, error => IngredientDescriptionError = error);
             }
+        }
+
+        public string IngredientNameError
+        {
+            get => ingredientNameError;
+            set => SetField(ref ingredientNameError, value);
+        }
+
+        public string IngredientUnitError
+        {
+            get => ingredientUnitError;
+            set => SetField(ref ingredientUnitError, value);
+        }
+
+        public string IngredientPackageError
+        {
+            get => ingredientPackageError;
+            set => SetField(ref ingredientPackageError, value);
+        }
+
+        public string IngredientDescriptionError
+        {
+            get => ingredientDescriptionError;
+            set => SetField(ref ingredientDescriptionError, value);
         }
 
         public Visibility IsIngredientSelected
         {
             get => isIngredientSelected;
             set => SetField(ref isIngredientSelected, value);
+        }
+
+        public Visibility IsAddButtonVisible
+        {
+            get => isAddButtonVisible;
+            set => SetField(ref isAddButtonVisible, value);
+        }
+
+        public Visibility IsUpdateButtonVisible
+        {
+            get => isUpdateButtonVisible;
+            set => SetField(ref isUpdateButtonVisible, value);
         }
 
         public bool IsNewIngredient
@@ -111,7 +172,10 @@ namespace POS.ViewModels.WarehouseFunctions
                         IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
                     }
                     else
+                    {
                         IngredientName = string.Empty;
+                        IngredientNameError = string.Empty;
+                    }
                 }
             }
         }
@@ -128,14 +192,23 @@ namespace POS.ViewModels.WarehouseFunctions
             set => SetField(ref isAddButtonEnable, value);
         }
 
+        public bool IsUpdateButtonEnable
+        {
+            get => isUpdateButtonEnable;
+            set => SetField(ref isUpdateButtonEnable, value);
+        }
+
         public ICommand AddNewIngredientCommand { get; }
+        public ICommand UpdateIngredientCommand { get; }
         public ICommand DeleteIngredientCommand { get; }
 
         public AddEditDeleteIngredientViewModel(IngredientService ingredientService)
         {
             _ingredientService = ingredientService;
+            _ingredientValidator = new IngredientValidator();
 
             AddNewIngredientCommand = new RelayCommandAsync(AddNewIngredient);
+            UpdateIngredientCommand = new RelayCommandAsync(UpdateIngredient);
             DeleteIngredientCommand = new RelayCommandAsync(DeleteIngredient);
         }
 
@@ -143,7 +216,7 @@ namespace POS.ViewModels.WarehouseFunctions
         {
             try
             {
-                var newIngredient = CreateIngredient();
+                var newIngredient = await _ingredientService.CreateIngredient(ingredientName, ingredientDescription, ingredientUnit, ingredientPackage);
                 await _ingredientService.AddNewIngredientAsync(newIngredient);
 
                 MessageBox.Show("Pomyślnie dodano nowy składnik",
@@ -154,6 +227,25 @@ namespace POS.ViewModels.WarehouseFunctions
             catch (Exception ex)
             {
                 MessageBox.Show($"Nie udało się utworzyć składnika, przyczyna problemu: {ex.Message}",
+                    "Wystąpił nieoczekiwany problem", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async Task UpdateIngredient()
+        {
+            try
+            {
+                var newIngredient = await _ingredientService.CreateIngredient(ingredientName, ingredientDescription, ingredientUnit, ingredientPackage);
+                await _ingredientService.UpdateExistingIngredientAsync(selectedIngredient!, newIngredient);
+
+                MessageBox.Show("Pomyślnie edytowano składnik",
+                    "Informacja", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+
+                ResetForm();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Nie udało się edytować składnika, przyczyna problemu: {ex.Message}",
                     "Wystąpił nieoczekiwany problem", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -176,6 +268,34 @@ namespace POS.ViewModels.WarehouseFunctions
             }
         }
 
+        private void ValidateIngredient(Func<string, ValidationResult> validationFunc, string propertyName, string propertyValue, Action<string> setError)
+        {
+            ClearErrors(propertyName);
+
+            var isIngredientValidate = validationFunc(propertyValue);
+
+            if (isIngredientValidate.Result == false)
+            {
+                AddError(propertyName, isIngredientValidate.ErrorMessage!);
+                setError(isIngredientValidate.ErrorMessage ?? string.Empty);
+            }
+            else
+                setError(string.Empty);
+
+            if (IsAddButtonVisible == Visibility.Visible)
+                IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
+            if(IsUpdateButtonVisible == Visibility.Visible)
+                IsUpdateButtonEnable = CheckIfUpdateButtonCanBeEnabled();
+        }
+
+        private void LoadDataIntoFormFields(Ingredient ingredient)
+        {
+            IngredientName = ingredient.Name;
+            IngredientUnit = ingredient.Unit;
+            IngredientPackage = ingredient.Package;
+            IngredientDescription = ingredient.Description;
+        }
+
         private void ResetForm()
         {
             IngredientName = string.Empty;
@@ -183,20 +303,15 @@ namespace POS.ViewModels.WarehouseFunctions
             IngredientPackage = string.Empty;
             IngredientDescription = string.Empty;
 
+            IngredientNameError = string.Empty;
+            IngredientUnitError = string.Empty;
+            IngredientPackageError = string.Empty;
+            IngredientDescriptionError = string.Empty;
+
             SelectedIngredient = null;
             IsIngredientSelected = Visibility.Visible;
-        }
 
-        private Ingredient CreateIngredient()
-        {
-            return new Ingredient
-            {
-                Name = ingredientName,
-                Description = ingredientDescription,
-                Unit = ingredientUnit,
-                Package = ingredientPackage,
-
-            };
+            ClearAllErrors();
         }
 
         private bool CheckIfAddButtonCanBeEnabled()
@@ -205,8 +320,18 @@ namespace POS.ViewModels.WarehouseFunctions
                    !ingredientName.IsNullOrEmpty() &&
                    !ingredientUnit.IsNullOrEmpty() &&
                    !ingredientPackage.IsNullOrEmpty() &&
-                   !ingredientDescription.IsNullOrEmpty();
-
+                   !ingredientDescription.IsNullOrEmpty() &&
+                   !HasErrors;
+        }
+        
+        private bool CheckIfUpdateButtonCanBeEnabled()
+        {
+            return selectedIngredient != null &&
+                   !ingredientName.IsNullOrEmpty() &&
+                   !ingredientUnit.IsNullOrEmpty() &&
+                   !ingredientPackage.IsNullOrEmpty() &&
+                   !ingredientDescription.IsNullOrEmpty() &&
+                   !HasErrors;
         }
 
         private bool CheckIfDeleteButtonCanBeEnabled()

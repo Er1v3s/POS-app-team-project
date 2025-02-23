@@ -1,5 +1,4 @@
 ﻿using System;
-using POS.Models.Validation;
 
 namespace POS.Validators
 {
@@ -17,7 +16,7 @@ namespace POS.Validators
                 return new ValidationResult(false, "Niepoprawny przedział czasowy");
             }
 
-            return new ValidationResult(true, null);
+            return new ValidationResult(true);
         }
     }
 }
