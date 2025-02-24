@@ -9,27 +9,28 @@ using POS.Services;
 using POS.Services.SalesPanel;
 using POS.Utilities;
 using POS.Utilities.RelayCommands;
-using POS.ViewModels.Base;
+using POS.ViewModels.Base.WarehouseFunctions;
 
 namespace POS.ViewModels.WarehouseFunctions
 {
-    public class EditProductRecipeViewModel : ProductManipulationViewModelBase
+    public class EditProductRecipeViewModel : FormViewModelBase
     {
+        private readonly ProductService _productService;
         private readonly RecipeService _recipeService;
         private readonly IngredientService _ingredientService;
 
         private MyObservableCollection<RecipeIngredient> recipeIngredientCollection = new();
 
+        private Product? selectedProduct;
         private Ingredient selectedIngredient;
-        private string amountOfIngredient;
         private RecipeIngredient? selectedRecipeIngredient;
 
+        private string amountOfIngredient;
+
+        private Visibility isProductSelected;
         private Visibility isIngredientSelected;
 
-        public MyObservableCollection<Ingredient> IngredientObservableCollection
-        {
-            get => _ingredientService.IngredientCollection;
-        }
+        public MyObservableCollection<Product> ProductObservableCollection => _productService.ProductCollection;
 
         public MyObservableCollection<RecipeIngredient> RecipeIngredientCollection
         {
@@ -37,7 +38,9 @@ namespace POS.ViewModels.WarehouseFunctions
             set => SetField(ref recipeIngredientCollection, value);
         }
 
-        public override Product? SelectedProduct
+        public MyObservableCollection<Ingredient> IngredientObservableCollection => _ingredientService.IngredientCollection;
+
+        public Product? SelectedProduct
         {
             set
             {
@@ -62,6 +65,16 @@ namespace POS.ViewModels.WarehouseFunctions
             }
         }
 
+        public RecipeIngredient? SelectedRecipeIngredient
+        {
+            get => selectedRecipeIngredient;
+            set
+            {
+                if (SetField(ref selectedRecipeIngredient, value))
+                    IsDeleteButtonEnable = CheckIfDeleteButtonCanBeEnabled();
+            }
+        }
+
         public string AmountOfIngredient
         {
             get => amountOfIngredient;
@@ -72,14 +85,10 @@ namespace POS.ViewModels.WarehouseFunctions
             }
         }
 
-        public RecipeIngredient? SelectedRecipeIngredient
+        public Visibility IsProductSelected
         {
-            get => selectedRecipeIngredient;
-            set
-            {
-                if (SetField(ref selectedRecipeIngredient, value))
-                    IsDeleteButtonEnable = CheckIfDeleteButtonCanBeEnabled();
-            }
+            get => isProductSelected;
+            set => SetField(ref isProductSelected, value);
         }
 
         public Visibility IsIngredientSelected
@@ -94,8 +103,9 @@ namespace POS.ViewModels.WarehouseFunctions
         public EditProductRecipeViewModel(
             ProductService productService,
             RecipeService recipeService,
-            IngredientService ingredientService) : base (productService)
+            IngredientService ingredientService)
         {
+            _productService = productService;
             _recipeService = recipeService;
             _ingredientService = ingredientService;
 

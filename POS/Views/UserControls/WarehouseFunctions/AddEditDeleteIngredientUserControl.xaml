@@ -65,7 +65,7 @@
                     <Grid Grid.Column="0" Margin="25, 0, 0,0">
                         <StackPanel>
                             <Viewbox Height="32" HorizontalAlignment="Center">
-                                <CheckBox IsChecked="{Binding IsNewIngredient}"/>
+                                <CheckBox IsChecked="{Binding IsNewItem}"/>
                             </Viewbox>
 
                             <TextBlock Text="Dodaj nowy" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
@@ -83,7 +83,7 @@
                                 <TextBox Text="{Binding IngredientName, Delay=250, FallbackValue='', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
                                          Tag="Nazwa nowego produktu" 
                                          Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}"
-                                         IsEnabled="{Binding IsNewIngredient}">
+                                         IsEnabled="{Binding IsNewItem}">
                                 </TextBox>
                             </Grid>
                         </Border>

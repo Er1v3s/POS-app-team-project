@@ -5,16 +5,21 @@ using System.Windows.Input;
 using DataAccess.Models;
 using Microsoft.IdentityModel.Tokens;
 using POS.Services.SalesPanel;
+using POS.Utilities;
 using POS.Utilities.RelayCommands;
-using POS.Validators;
 using POS.Validators.Models;
-using POS.ViewModels.Base;
+using POS.ViewModels.Base.WarehouseFunctions;
 
 namespace POS.ViewModels.WarehouseFunctions
 {
-    public class AddEditDeleteProductViewModel : ProductManipulationViewModelBase
+    public class AddEditDeleteProductViewModel : FormViewModelBase
     {
+        private readonly ProductService _productService;
         private readonly ProductValidator _productValidator;
+
+        private Product? selectedProduct;
+
+        private Visibility isProductSelected;
 
         private string productName;
         private string productCategory;
@@ -28,11 +33,9 @@ namespace POS.ViewModels.WarehouseFunctions
         private string productDescriptionError;
         private string productRecipeError;
 
-        private Visibility isAddButtonVisible;
-        private Visibility isUpdateButtonVisible;
-        private bool isNewProduct;
+        public MyObservableCollection<Product> ProductObservableCollection => _productService.ProductCollection;
 
-        public override Product? SelectedProduct
+        public Product? SelectedProduct
         {
             get => selectedProduct;
             set
@@ -41,14 +44,38 @@ namespace POS.ViewModels.WarehouseFunctions
                 {
                     IsProductSelected = Visibility.Collapsed;
 
-                    if (isNewProduct && selectedProduct != null)
-                        IsNewProduct = false;
+                    if (IsNewItem && selectedProduct is not null)
+                    {
+                        IsNewItem = false;
+                    }
+
+                    if (selectedProduct is not null)
+                    {
+                        LoadDataIntoFormFields(value!);
+
+                        IsAddButtonVisible = Visibility.Collapsed;
+                        IsUpdateButtonVisible = Visibility.Visible;
+                    }
+                    else
+                    {
+                        ResetForm();
+
+                        IsUpdateButtonVisible = Visibility.Collapsed;
+                        IsAddButtonVisible = Visibility.Visible;
+                    }
 
                     IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
                     IsDeleteButtonEnable = CheckIfDeleteButtonCanBeEnabled();
                 }
             }
         }
+
+        public Visibility IsProductSelected
+        {
+            get => isProductSelected;
+            set => SetField(ref isProductSelected, value);
+        }
+
         public string ProductName
         {
             get => productName;
@@ -129,25 +156,12 @@ namespace POS.ViewModels.WarehouseFunctions
             set => SetField(ref productRecipeError, value);
         }
 
-
-        public Visibility IsAddButtonVisible
+        public override bool IsNewItem
         {
-            get => isAddButtonVisible;
-            set => SetField(ref isAddButtonVisible, value);
-        }
-
-        public Visibility IsUpdateButtonVisible
-        {
-            get => isUpdateButtonVisible;
-            set => SetField(ref isUpdateButtonVisible, value);
-        }
-
-        public bool IsNewProduct
-        {
-            get => isNewProduct;
+            get => isNewItem;
             set
             {
-                if (SetField(ref isNewProduct, value))
+                if (SetField(ref isNewItem, value))
                 {
                     if (value)
                     {
@@ -164,8 +178,9 @@ namespace POS.ViewModels.WarehouseFunctions
         public ICommand AddNewProductCommand { get; }
         public ICommand DeleteProductCommand { get; }
 
-        public AddEditDeleteProductViewModel(ProductService productService) : base(productService)
+        public AddEditDeleteProductViewModel(ProductService productService)
         {
+            _productService = productService;
             _productValidator = new ProductValidator();
 
             AddNewProductCommand = new RelayCommandAsync(AddNewProduct);
@@ -209,6 +224,15 @@ namespace POS.ViewModels.WarehouseFunctions
             }
         }
 
+        private void LoadDataIntoFormFields(Product product)
+        {
+            ProductName = product.ProductName;
+            ProductCategory = product.Category;
+            ProductDescription = product.Description;
+            ProductPrice = product.Price.ToString();
+            //ProductRecipe = product.Recipe;
+        }
+
         private void ResetForm()
         {
             ProductName = string.Empty;
@@ -221,11 +245,9 @@ namespace POS.ViewModels.WarehouseFunctions
             IsProductSelected = Visibility.Visible;
         }
 
-
-
         protected override bool CheckIfAddButtonCanBeEnabled()
         {
-            return isNewProduct &&
+            return isNewItem &&
                    !productName.IsNullOrEmpty() &&
                    !productCategory.IsNullOrEmpty() &&
                    !productPrice.IsNullOrEmpty() &&

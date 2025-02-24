@@ -7,13 +7,12 @@ using DataAccess.Models;
 using Microsoft.IdentityModel.Tokens;
 using POS.Services;
 using POS.Utilities.RelayCommands;
-using POS.Validators;
 using POS.Validators.Models;
-using POS.ViewModels.Base;
+using POS.ViewModels.Base.WarehouseFunctions;
 
 namespace POS.ViewModels.WarehouseFunctions
 {
-    public class AddEditDeleteIngredientViewModel : ViewModelBase
+    public class AddEditDeleteIngredientViewModel : FormViewModelBase
     {
         private readonly IngredientService _ingredientService;
         private readonly IngredientValidator _ingredientValidator;
@@ -31,13 +30,6 @@ namespace POS.ViewModels.WarehouseFunctions
         private string ingredientDescriptionError = string.Empty;
 
         private Visibility isIngredientSelected;
-        private Visibility isAddButtonVisible;
-        private Visibility isUpdateButtonVisible;
-        private bool isNewIngredient;
-
-        private bool isDeleteButtonEnable;
-        private bool isAddButtonEnable;
-        private bool isUpdateButtonEnable;
 
         public ObservableCollection<Ingredient> IngredientObservableCollection => _ingredientService.IngredientCollection;
 
@@ -50,9 +42,9 @@ namespace POS.ViewModels.WarehouseFunctions
                 {
                     IsIngredientSelected = Visibility.Collapsed;
 
-                    if (isNewIngredient && selectedIngredient is not null)
+                    if (IsNewItem && selectedIngredient is not null)
                     {
-                        IsNewIngredient = false;
+                        IsNewItem = false;
                     }
 
                     if(selectedIngredient is not null)
@@ -82,7 +74,7 @@ namespace POS.ViewModels.WarehouseFunctions
             set
             {
                 if (SetField(ref ingredientName, value))
-                    ValidateIngredient(_ingredientValidator.ValidateIngredientName, nameof(IngredientName), value, error => IngredientNameError = error);
+                    ValidateProperty(_ingredientValidator.ValidateIngredientName, nameof(IngredientName), value, error => IngredientNameError = error);
             }
         }
 
@@ -92,7 +84,7 @@ namespace POS.ViewModels.WarehouseFunctions
             set
             {
                 if (SetField(ref ingredientUnit, value))
-                    ValidateIngredient(_ingredientValidator.ValidateIngredientUnit, nameof(IngredientUnit), value, error => IngredientUnitError = error);
+                    ValidateProperty(_ingredientValidator.ValidateIngredientUnit, nameof(IngredientUnit), value, error => IngredientUnitError = error);
             }
         }
 
@@ -102,7 +94,7 @@ namespace POS.ViewModels.WarehouseFunctions
             set
             {
                 if (SetField(ref ingredientPackage, value))
-                    ValidateIngredient(_ingredientValidator.ValidateIngredientPackage, nameof(IngredientPackage), value, error => IngredientPackageError = error);
+                    ValidateProperty(_ingredientValidator.ValidateIngredientPackage, nameof(IngredientPackage), value, error => IngredientPackageError = error);
             }
         }
 
@@ -112,7 +104,7 @@ namespace POS.ViewModels.WarehouseFunctions
             set
             {
                 if (SetField(ref ingredientDescription, value))
-                    ValidateIngredient(_ingredientValidator.ValidateIngredientDescription, nameof(IngredientDescription), value, error => IngredientDescriptionError = error);
+                    ValidateProperty(_ingredientValidator.ValidateIngredientDescription, nameof(IngredientDescription), value, error => IngredientDescriptionError = error);
             }
         }
 
@@ -140,30 +132,12 @@ namespace POS.ViewModels.WarehouseFunctions
             set => SetField(ref ingredientDescriptionError, value);
         }
 
-        public Visibility IsIngredientSelected
+        public override bool IsNewItem
         {
-            get => isIngredientSelected;
-            set => SetField(ref isIngredientSelected, value);
-        }
-
-        public Visibility IsAddButtonVisible
-        {
-            get => isAddButtonVisible;
-            set => SetField(ref isAddButtonVisible, value);
-        }
-
-        public Visibility IsUpdateButtonVisible
-        {
-            get => isUpdateButtonVisible;
-            set => SetField(ref isUpdateButtonVisible, value);
-        }
-
-        public bool IsNewIngredient
-        {
-            get => isNewIngredient;
+            get => isNewItem;
             set
             {
-                if (SetField(ref isNewIngredient, value))
+                if (SetField(ref isNewItem, value))
                 {
                     if (value)
                     {
@@ -180,22 +154,10 @@ namespace POS.ViewModels.WarehouseFunctions
             }
         }
 
-        public bool IsDeleteButtonEnable
+        public Visibility IsIngredientSelected
         {
-            get => isDeleteButtonEnable;
-            set => SetField(ref isDeleteButtonEnable, value);
-        }
-
-        public bool IsAddButtonEnable
-        {
-            get => isAddButtonEnable;
-            set => SetField(ref isAddButtonEnable, value);
-        }
-
-        public bool IsUpdateButtonEnable
-        {
-            get => isUpdateButtonEnable;
-            set => SetField(ref isUpdateButtonEnable, value);
+            get => isIngredientSelected;
+            set => SetField(ref isIngredientSelected, value);
         }
 
         public ICommand AddNewIngredientCommand { get; }
@@ -268,26 +230,6 @@ namespace POS.ViewModels.WarehouseFunctions
             }
         }
 
-        private void ValidateIngredient(Func<string, ValidationResult> validationFunc, string propertyName, string propertyValue, Action<string> setError)
-        {
-            ClearErrors(propertyName);
-
-            var isIngredientValidate = validationFunc(propertyValue);
-
-            if (isIngredientValidate.Result == false)
-            {
-                AddError(propertyName, isIngredientValidate.ErrorMessage!);
-                setError(isIngredientValidate.ErrorMessage ?? string.Empty);
-            }
-            else
-                setError(string.Empty);
-
-            if (IsAddButtonVisible == Visibility.Visible)
-                IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
-            if(IsUpdateButtonVisible == Visibility.Visible)
-                IsUpdateButtonEnable = CheckIfUpdateButtonCanBeEnabled();
-        }
-
         private void LoadDataIntoFormFields(Ingredient ingredient)
         {
             IngredientName = ingredient.Name;
@@ -314,9 +256,9 @@ namespace POS.ViewModels.WarehouseFunctions
             ClearAllErrors();
         }
 
-        private bool CheckIfAddButtonCanBeEnabled()
+        protected override bool CheckIfAddButtonCanBeEnabled()
         {
-            return isNewIngredient &&
+            return isNewItem &&
                    !ingredientName.IsNullOrEmpty() &&
                    !ingredientUnit.IsNullOrEmpty() &&
                    !ingredientPackage.IsNullOrEmpty() &&
@@ -324,7 +266,7 @@ namespace POS.ViewModels.WarehouseFunctions
                    !HasErrors;
         }
         
-        private bool CheckIfUpdateButtonCanBeEnabled()
+        protected override bool CheckIfUpdateButtonCanBeEnabled()
         {
             return selectedIngredient != null &&
                    !ingredientName.IsNullOrEmpty() &&
@@ -334,7 +276,7 @@ namespace POS.ViewModels.WarehouseFunctions
                    !HasErrors;
         }
 
-        private bool CheckIfDeleteButtonCanBeEnabled()
+        protected override bool CheckIfDeleteButtonCanBeEnabled()
         {
             return selectedIngredient != null;
         }
