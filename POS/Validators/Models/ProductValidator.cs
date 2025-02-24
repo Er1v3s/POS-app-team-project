@@ -1,5 +1,6 @@
 ﻿using DataAccess.Models;
 using FluentValidation;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace POS.Validators.Models
@@ -79,6 +80,22 @@ namespace POS.Validators.Models
             return new ValidationResult(true);
         }
 
+        public ValidationResult ValidateProductPrice(string price)
+        {
+            if (string.IsNullOrWhiteSpace(price))
+                return new ValidationResult(false, "Property \"price\" cannot be empty");
+            if (!double.TryParse(price, NumberStyles.Float, CultureInfo.InvariantCulture, out double priceAsDouble))
+                return new ValidationResult(false, "Property \"price\" must be a numeric value");
+            if (priceAsDouble < 0 || priceAsDouble > 10000)
+                return new ValidationResult(false, "Property \"price\" must be between 0 and 10000");
+
+            string[] parts = price.Split('.');
+            if (parts.Length == 2 && parts[1].Length > 2)
+                return new ValidationResult(false, "Property \"price\" can have up to two decimal places");
+
+            return new ValidationResult(true);
+        }
+
         private bool BeValidName(string text)
         {
             return Regex.IsMatch(text, @"^[a-za-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ0-9\s]*$");
@@ -88,6 +105,7 @@ namespace POS.Validators.Models
         {
             return Regex.IsMatch(text, @"^[a-za-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ0-9\s()',.!?%]*$");
         }
+
 
         //private bool BeValidUnit(string text)
         //{
