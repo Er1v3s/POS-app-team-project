@@ -1,8 +1,8 @@
-﻿using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows.Input;
 using DataAccess.Models;
 using POS.Services;
+using POS.Utilities;
 using POS.Utilities.RelayCommands;
 using POS.ViewModels.Base;
 using POS.Views.Windows.WarehouseFunctions;
@@ -14,9 +14,9 @@ namespace POS.ViewModels.WarehouseFunctions
         private readonly IngredientService _ingredientService;
         private readonly NavigationService _navigationService;
 
-        private ObservableCollection<Ingredient> runningOutOfIngredientsCollection = new();
+        private MyObservableCollection<Ingredient> runningOutOfIngredientsCollection = new();
 
-        public ObservableCollection<Ingredient> RunningOutOfIngredientsCollection
+        public MyObservableCollection<Ingredient> RunningOutOfIngredientsCollection
         {
             get => runningOutOfIngredientsCollection;
             set => SetField(ref runningOutOfIngredientsCollection, value);
@@ -41,12 +41,7 @@ namespace POS.ViewModels.WarehouseFunctions
             runningOutOfIngredientsCollection.Clear();
 
             var runningOutOfIngredients = await _ingredientService.GetRunningOutOfIngredientsAsync();
-
-            foreach (var runningOutOfIngredient in runningOutOfIngredients)
-            {
-                await Task.Delay(150);
-                RunningOutOfIngredientsCollection.Add(runningOutOfIngredient);
-            }
+            await RunningOutOfIngredientsCollection.AddRangeWithDelay(runningOutOfIngredients, 100);
         }
 
         private void OpenWindow<T>(T windowType)
