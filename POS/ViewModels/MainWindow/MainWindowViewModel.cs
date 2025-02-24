@@ -64,7 +64,7 @@ namespace POS.ViewModels.MainWindow
             SetDefaultContentSource(0);
         }
 
-        public void OpenSalesPanelWindow<T>(T windowType)
+        private void OpenSalesPanelWindow<T>(T windowType)
         {
             _navigationService.OpenWindow(windowType);
 
@@ -72,7 +72,7 @@ namespace POS.ViewModels.MainWindow
                 CloseWindowBaseAction!.Invoke();
         }
 
-        public void OpenLoginPanelWindow()
+        private void OpenLoginPanelWindow()
         {
             _navigationService.OpenLoginPanelWindow();
         }
