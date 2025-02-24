@@ -1,11 +1,12 @@
 ﻿using DataAccess;
 using DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DbSeeder
 {
     public class Randomizer
     {
-        private static readonly Random _random = new Random();
+        private static readonly Random _random = new ();
 
         public static DateTime GenerateAlmostRandomDateTime()
         {
@@ -76,9 +77,9 @@ namespace DbSeeder
             return _random.Next(1, 11) >= 7 ? "Gotówka" : "Karta debetowa";
         }
 
-        public static Product GenerateAlmostRandomProduct(AppDbContext dbContext, DayOfWeek dayOfWeek)
+        public static async Task<Product> GenerateAlmostRandomProduct(AppDbContext dbContext, DayOfWeek dayOfWeek)
         {
-            List<Product> productList = dbContext.Product.ToList();
+            List<Product> productList = await dbContext.Product.ToListAsync();
             Product product;
 
             switch (dayOfWeek)
