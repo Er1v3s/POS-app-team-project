@@ -176,7 +176,7 @@ namespace POS.ViewModels.WarehouseFunctions
         {
             try
             {
-                var product = CreateProduct();
+                var product = await _productService.CreateProduct(productName, productCategory, productDescription, productPrice);
                 await _productService.AddNewProductAsync(product);
 
                 MessageBox.Show("Pomyślnie dodano nowy produkt", 
@@ -221,36 +221,7 @@ namespace POS.ViewModels.WarehouseFunctions
             IsProductSelected = Visibility.Visible;
         }
 
-        private Product CreateProduct()
-        {
-            return new Product
-            {
-                ProductName = productName,
-                Category = productCategory,
-                Description = productDescription,
-                Price = double.Parse(productPrice),
-            };
-        }
 
-        private void ValidateProperty(Func<string, ValidationResult> validationFunc, string propertyName, string propertyValue, Action<string> setError)
-        {
-            ClearErrors(propertyName);
-
-            var isPropertyValidate = validationFunc(propertyValue);
-
-            if (isPropertyValidate.Result == false)
-            {
-                AddError(propertyName, isPropertyValidate.ErrorMessage!);
-                setError(isPropertyValidate.ErrorMessage ?? string.Empty);
-            }
-            else
-                setError(string.Empty);
-
-            if (IsAddButtonVisible == Visibility.Visible)
-                IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
-            if (IsUpdateButtonVisible == Visibility.Visible)
-                IsUpdateButtonEnable = CheckIfUpdateButtonCanBeEnabled();
-        }
 
         protected override bool CheckIfAddButtonCanBeEnabled()
         {
