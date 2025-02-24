@@ -2,9 +2,8 @@
 using DataAccess.Models;
 using POS.Services.SalesPanel;
 using POS.Utilities;
-using POS.ViewModels.Base;
 
-namespace POS.ViewModels.WarehouseFunctions
+namespace POS.ViewModels.Base
 {
     public abstract class ProductManipulationViewModelBase : ViewModelBase
     {
@@ -15,6 +14,7 @@ namespace POS.ViewModels.WarehouseFunctions
         protected Visibility isProductSelected;
 
         private bool isDeleteButtonEnable;
+        private bool isUpdateButtonEnable;
         private bool isAddButtonEnable;
 
         public MyObservableCollection<Product> ProductObservableCollection
@@ -40,6 +40,12 @@ namespace POS.ViewModels.WarehouseFunctions
             set => SetField(ref isDeleteButtonEnable, value);
         }
 
+        public bool IsUpdateButtonEnable
+        {
+            get => isUpdateButtonEnable;
+            set => SetField(ref isUpdateButtonEnable, value);
+        }
+        
         public bool IsAddButtonEnable
         {
             get => isAddButtonEnable;
@@ -54,5 +60,6 @@ namespace POS.ViewModels.WarehouseFunctions
 
         protected abstract bool CheckIfAddButtonCanBeEnabled();
         protected abstract bool CheckIfDeleteButtonCanBeEnabled();
+        protected abstract bool CheckIfUpdateButtonCanBeEnabled();
     }
 }
