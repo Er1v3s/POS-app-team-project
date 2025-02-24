@@ -11,24 +11,24 @@
     <Grid Margin="25" Background="#FFD9D9D9">
         <Grid.RowDefinitions>
             <RowDefinition Height="5*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" CornerRadius="8" d:IsLocked="True">
+        <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" CornerRadius="8">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="0.5*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="0.5*"/>
-                    <RowDefinition Height="1.2*"/>
-                    <RowDefinition Height="0.5*"/>
-                    <RowDefinition Height="1.2*"/>
-                    <RowDefinition Height="0.5*"/>
+                    <RowDefinition Height="1*" MaxHeight="50"/>
+                    <RowDefinition Height="0.5*" MaxHeight="25"/>
+                    <RowDefinition Height="1*" MaxHeight="50"/>
+                    <RowDefinition Height="0.5*" MaxHeight="25"/>
+                    <RowDefinition Height="1.4*" MaxHeight="70"/>
+                    <RowDefinition Height="0.5*" MaxHeight="25"/>
+                    <RowDefinition Height="1.4*" MaxHeight="70"/>
+                    <RowDefinition Height="0.5*" MaxHeight="25"/>
                     <RowDefinition Height="4*"/>
-                    <RowDefinition Height="0.5*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="0.5*"/>
+                    <RowDefinition Height="0.5*" MaxHeight="25"/>
+                    <RowDefinition Height="1*" MaxHeight="50"/>
+                    <RowDefinition Height="0.5*" MaxHeight="25"/>
                 </Grid.RowDefinitions>
 
                 <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black" CornerRadius="8,8,0, 0" Background="#8EA7E9">
@@ -74,8 +74,8 @@
 
                     <Grid Grid.Column="1">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="3*"/>
-                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="20"/>
                         </Grid.RowDefinitions>
 
                         <Border Grid.Row="0" CornerRadius="8" Background="White" Margin="0, 0, 25, 0">
@@ -97,14 +97,14 @@
 
                 <Grid Grid.Row="6">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="3*"/>
-                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="20"/>
                         </Grid.RowDefinitions>
 
                         <Border CornerRadius="8" Margin="25,0,12.5,0" Background="White">
@@ -122,8 +122,8 @@
 
                     <Grid Grid.Column="1">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="3*"/>
-                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="20"/>
                         </Grid.RowDefinitions>
 
                         <Border Grid.Row="0" CornerRadius="8" Margin="12.5,0,25,0" Background="White">
@@ -142,8 +142,8 @@
 
                 <Grid Grid.Row="8">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="3.7*"/>
-                        <RowDefinition Height="0.3*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="20"/>
                     </Grid.RowDefinitions>
 
                     <Border CornerRadius="8" Margin="25,0,25,0" Background="White">
