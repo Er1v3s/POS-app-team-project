@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using POS.Services;
@@ -64,15 +63,13 @@ namespace POS.ViewModels.MainWindow
             SetDefaultContentSource(0);
         }
 
-        public void OpenSalesPanelWindow<T>(T windowType)
+        private void OpenSalesPanelWindow<T>(T windowType)
         {
-            _navigationService.OpenWindow(windowType);
-
-            if (Application.Current.Windows.OfType<SalesPanelWindow>().Any())
-                CloseWindowBaseAction!.Invoke();
+            _navigationService.OpenNewWindow(windowType);
+            _navigationService.CloseCurrentWindow<Views.Windows.MainWindow>();
         }
 
-        public void OpenLoginPanelWindow()
+        private void OpenLoginPanelWindow()
         {
             _navigationService.OpenLoginPanelWindow();
         }
