@@ -9,6 +9,7 @@ using POS.Services;
 using POS.Services.SalesPanel;
 using POS.Utilities;
 using POS.Utilities.RelayCommands;
+using POS.ViewModels.Base;
 
 namespace POS.ViewModels.WarehouseFunctions
 {
@@ -157,6 +158,11 @@ namespace POS.ViewModels.WarehouseFunctions
         protected override bool CheckIfDeleteButtonCanBeEnabled()
         {
             return selectedRecipeIngredient != null;
+        }
+
+        protected override bool CheckIfUpdateButtonCanBeEnabled()
+        {
+            throw new NotImplementedException();
         }
     }
 }
