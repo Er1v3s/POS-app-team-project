@@ -51,7 +51,8 @@ namespace POS.ViewModels.WarehouseFunctions
 
         private void OpenWindow<T>(T windowType)
         {
-            _navigationService.OpenWindow(windowType);
+            _navigationService.OpenNewWindow(windowType);
+            _navigationService.CloseCurrentWindow<Views.Windows.MainWindow>();
         }
     }
 }

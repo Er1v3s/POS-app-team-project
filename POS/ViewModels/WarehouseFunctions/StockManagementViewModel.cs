@@ -1,10 +1,9 @@
-﻿using System.Linq;
-using System.Windows;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using POS.Services;
 using POS.Services.Login;
 using POS.Utilities.RelayCommands;
 using POS.ViewModels.Base;
+using POS.Views.Windows.WarehouseFunctions;
 
 namespace POS.ViewModels.WarehouseFunctions
 {
@@ -33,10 +32,8 @@ namespace POS.ViewModels.WarehouseFunctions
 
         private void OpenMainWindow<T>(T windowType)
         {
-            _navigationService.OpenWindow(windowType);
-
-            if (Application.Current.Windows.OfType<T>().Any())
-                CloseWindowBaseAction!.Invoke();
+            _navigationService.OpenNewWindow(windowType);
+            _navigationService.CloseCurrentWindow<StockManagementWindow>();
         }
     }
 }

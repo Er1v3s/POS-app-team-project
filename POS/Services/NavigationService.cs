@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Windows;
 using POS.Factories;
 using POS.Services.Login;
 using POS.Views.Windows;
@@ -22,7 +24,7 @@ namespace POS.Services
             LoginManager.OpenLoginWindow();
         }
 
-        public void OpenWindow<T>(T windowType)
+        public void OpenNewWindow<T>(T windowType)
         {
             if (typeof(T) == typeof(MainWindow))
             {
@@ -58,6 +60,12 @@ namespace POS.Services
                     }
                 }
             }
+        }
+
+        public void CloseCurrentWindow<T>() where T : Window
+        {
+            var window = Application.Current.Windows.OfType<T>().FirstOrDefault();
+            window?.Close();
         }
 
         public object GetViewSource(object commandParameter)
