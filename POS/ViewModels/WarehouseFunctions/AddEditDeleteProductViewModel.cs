@@ -17,17 +17,17 @@ namespace POS.ViewModels.WarehouseFunctions
         private readonly ProductService _productService;
         private readonly ProductValidator _productValidator;
 
-        private string productName;
-        private string productCategory;
-        private string productPrice;
-        private string productDescription;
-        private string productRecipe;
+        private string productName = string.Empty;
+        private string productCategory = string.Empty;
+        private string productPrice = string.Empty;
+        private string productDescription = string.Empty;
+        private string productRecipe = string.Empty;
 
-        private string productNameError;
-        private string productCategoryError;
-        private string productPriceError;
-        private string productDescriptionError;
-        private string productRecipeError;
+        private string productNameError = string.Empty;
+        private string productCategoryError = string.Empty;
+        private string productPriceError = string.Empty;
+        private string productDescriptionError = string.Empty;
+        private string productRecipeError = string.Empty;
 
         public MyObservableCollection<Product> ProductObservableCollection => _productService.ProductCollection;
 
