@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows;
-using POS.Validators;
+﻿using System.Windows;
 
 namespace POS.ViewModels.Base.WarehouseFunctions
 {
-    public abstract class FormViewModelBase : ViewModelBase, INotifyDataErrorInfo
+    public abstract class FormViewModelBase : NotifyFormErrorViewModelBase
     {
-        private readonly Dictionary<string, List<string>> _errorsByPropertyName = new Dictionary<string, List<string>>();
+        private object? selectedItem;
+        private Visibility isItemSelected;
+
+        private bool isNewItem;
 
         private Visibility isAddButtonVisible;
         private Visibility isUpdateButtonVisible;
@@ -19,7 +16,68 @@ namespace POS.ViewModels.Base.WarehouseFunctions
         private bool isAddButtonEnable;
         private bool isUpdateButtonEnable;
 
-        protected bool isNewItem;
+
+        public object? SelectedItem
+        {
+            get => selectedItem;
+            set
+            {
+                if (SetField(ref selectedItem, value))
+                {
+                    IsItemSelected = Visibility.Collapsed;
+
+                    if (IsNewItem && selectedItem is not null)
+                    {
+                        IsNewItem = false;
+                    }
+
+                    if (selectedItem is not null)
+                    {
+                        LoadDataIntoFormFields(value!);
+
+                        IsAddButtonVisible = Visibility.Collapsed;
+                        IsUpdateButtonVisible = Visibility.Visible;
+                    }
+                    else
+                    {
+                        ResetForm();
+
+                        IsUpdateButtonVisible = Visibility.Collapsed;
+                        IsAddButtonVisible = Visibility.Visible;
+                    }
+
+                    IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
+                    IsDeleteButtonEnable = CheckIfDeleteButtonCanBeEnabled();
+                }
+            }
+        }
+
+        public Visibility IsItemSelected
+        {
+            get => isItemSelected;
+            set => SetField(ref isItemSelected, value);
+        }
+
+        public virtual bool IsNewItem
+        {
+            get => isNewItem;
+            set
+            {
+                if (SetField(ref isNewItem, value))
+                {
+                    if (value)
+                    {
+                        SelectedItem = null;
+                        IsItemSelected = Visibility.Visible;
+                        IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
+                    }
+                    else
+                    {
+                        ClearNameField();
+                    }
+                }
+            }
+        }
 
         public Visibility IsAddButtonVisible
         {
@@ -51,79 +109,20 @@ namespace POS.ViewModels.Base.WarehouseFunctions
             set => SetField(ref isUpdateButtonEnable, value);
         }
 
-        public virtual bool IsNewItem
+        protected override void CheckWhichButtonShouldBeEnable()
         {
-            get => isNewItem;
-            set => SetField(ref isNewItem, value);
-        }
-
-        public bool HasErrors => _errorsByPropertyName.Any();
-
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
-
-        public void ValidateProperty(Func<string, ValidationResult> validationFunc, string propertyName, string propertyValue, Action<string> setError)
-        {
-            ClearErrors(propertyName);
-
-            var isPropertyValidate = validationFunc(propertyValue);
-
-            if (isPropertyValidate.Result == false)
-            {
-                AddError(propertyName, isPropertyValidate.ErrorMessage!);
-                setError(isPropertyValidate.ErrorMessage ?? string.Empty);
-            }
-            else
-                setError(string.Empty);
-
             if (IsAddButtonVisible == Visibility.Visible)
                 IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
             if (IsUpdateButtonVisible == Visibility.Visible)
                 IsUpdateButtonEnable = CheckIfUpdateButtonCanBeEnabled();
         }
 
-        public IEnumerable GetErrors(string propertyName)
-        {
-            return _errorsByPropertyName.ContainsKey(propertyName) ?
-                _errorsByPropertyName[propertyName] : null;
-        }
-
-        private void OnErrorsChanged(string propertyName)
-        {
-            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
-        }
-
-        protected void AddError(string propertyName, string error)
-        {
-            if (!_errorsByPropertyName.ContainsKey(propertyName))
-                _errorsByPropertyName[propertyName] = new List<string>();
-
-            if (!_errorsByPropertyName[propertyName].Contains(error))
-            {
-                _errorsByPropertyName[propertyName].Add(error);
-                OnErrorsChanged(propertyName);
-            }
-        }
-
-        protected void ClearErrors(string propertyName)
-        {
-            if (_errorsByPropertyName.ContainsKey(propertyName))
-            {
-                _errorsByPropertyName.Remove(propertyName);
-                OnErrorsChanged(propertyName);
-            }
-        }
-
-        protected void ClearAllErrors()
-        {
-            var propertiesWithErrors = _errorsByPropertyName.Keys.ToList();
-            _errorsByPropertyName.Clear();
-
-            foreach (var property in propertiesWithErrors)
-                OnErrorsChanged(property);
-        }
-
         protected abstract bool CheckIfAddButtonCanBeEnabled();
         protected abstract bool CheckIfDeleteButtonCanBeEnabled();
         protected abstract bool CheckIfUpdateButtonCanBeEnabled();
+
+        protected abstract void LoadDataIntoFormFields(object obj);
+        protected abstract void ResetForm();
+        protected abstract void ClearNameField();
     }
 }
