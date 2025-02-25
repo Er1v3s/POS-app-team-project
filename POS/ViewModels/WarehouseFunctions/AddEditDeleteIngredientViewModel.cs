@@ -17,8 +17,6 @@ namespace POS.ViewModels.WarehouseFunctions
         private readonly IngredientService _ingredientService;
         private readonly IngredientValidator _ingredientValidator;
 
-        private Ingredient? selectedIngredient;
-
         private string ingredientName = string.Empty;
         private string ingredientUnit = string.Empty;
         private string ingredientPackage = string.Empty;
@@ -29,44 +27,7 @@ namespace POS.ViewModels.WarehouseFunctions
         private string ingredientPackageError = string.Empty;
         private string ingredientDescriptionError = string.Empty;
 
-        private Visibility isIngredientSelected;
-
         public ObservableCollection<Ingredient> IngredientObservableCollection => _ingredientService.IngredientCollection;
-
-        public Ingredient? SelectedIngredient
-        {
-            get => selectedIngredient;
-            set
-            {
-                if (SetField(ref selectedIngredient, value))
-                {
-                    IsIngredientSelected = Visibility.Collapsed;
-
-                    if (IsNewItem && selectedIngredient is not null)
-                    {
-                        IsNewItem = false;
-                    }
-
-                    if(selectedIngredient is not null)
-                    {
-                        LoadDataIntoFormFields(value!);
-                        
-                        IsAddButtonVisible = Visibility.Collapsed;
-                        IsUpdateButtonVisible = Visibility.Visible;
-                    }
-                    else
-                    {
-                        ResetForm();
-
-                        IsUpdateButtonVisible = Visibility.Collapsed;
-                        IsAddButtonVisible = Visibility.Visible;
-                    } 
-
-                    IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
-                    IsDeleteButtonEnable = CheckIfDeleteButtonCanBeEnabled();
-                }
-            }
-        }
 
         public required string IngredientName
         {
@@ -132,34 +93,6 @@ namespace POS.ViewModels.WarehouseFunctions
             set => SetField(ref ingredientDescriptionError, value);
         }
 
-        public override bool IsNewItem
-        {
-            get => isNewItem;
-            set
-            {
-                if (SetField(ref isNewItem, value))
-                {
-                    if (value)
-                    {
-                        SelectedIngredient = null;
-                        IsIngredientSelected = Visibility.Visible;
-                        IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
-                    }
-                    else
-                    {
-                        IngredientName = string.Empty;
-                        IngredientNameError = string.Empty;
-                    }
-                }
-            }
-        }
-
-        public Visibility IsIngredientSelected
-        {
-            get => isIngredientSelected;
-            set => SetField(ref isIngredientSelected, value);
-        }
-
         public ICommand AddNewIngredientCommand { get; }
         public ICommand UpdateIngredientCommand { get; }
         public ICommand DeleteIngredientCommand { get; }
@@ -198,7 +131,7 @@ namespace POS.ViewModels.WarehouseFunctions
             try
             {
                 var newIngredient = await _ingredientService.CreateIngredient(ingredientName, ingredientDescription, ingredientUnit, ingredientPackage);
-                await _ingredientService.UpdateExistingIngredientAsync(selectedIngredient!, newIngredient);
+                await _ingredientService.UpdateExistingIngredientAsync((SelectedItem as Ingredient)!, newIngredient);
 
                 MessageBox.Show("Pomyślnie edytowano składnik",
                     "Informacja", MessageBoxButton.OK, MessageBoxImage.Asterisk);
@@ -216,7 +149,7 @@ namespace POS.ViewModels.WarehouseFunctions
         {
             try
             {
-                await _ingredientService.DeleteIngredientAsync(selectedIngredient!);
+                await _ingredientService.DeleteIngredientAsync((SelectedItem as Ingredient)!);
 
                 MessageBox.Show("Pomyślnie usunięto produkt",
                     "Informacja", MessageBoxButton.OK, MessageBoxImage.Asterisk);
@@ -230,15 +163,18 @@ namespace POS.ViewModels.WarehouseFunctions
             }
         }
 
-        private void LoadDataIntoFormFields(Ingredient ingredient)
+        protected override void LoadDataIntoFormFields(object obj)
         {
+            var ingredient = obj as Ingredient;
+            if (ingredient is null) throw new ArgumentNullException();
+
             IngredientName = ingredient.Name;
             IngredientUnit = ingredient.Unit;
             IngredientPackage = ingredient.Package;
             IngredientDescription = ingredient.Description;
         }
 
-        private void ResetForm()
+        protected override void ResetForm()
         {
             IngredientName = string.Empty;
             IngredientUnit = string.Empty;
@@ -250,15 +186,21 @@ namespace POS.ViewModels.WarehouseFunctions
             IngredientPackageError = string.Empty;
             IngredientDescriptionError = string.Empty;
 
-            SelectedIngredient = null;
-            IsIngredientSelected = Visibility.Visible;
+            SelectedItem = null;
+            IsItemSelected = Visibility.Visible;
 
             ClearAllErrors();
         }
 
+        protected override void ClearNameField()
+        {
+            IngredientName = string.Empty;
+            IngredientNameError = string.Empty;
+        }
+
         protected override bool CheckIfAddButtonCanBeEnabled()
         {
-            return isNewItem &&
+            return IsNewItem &&
                    !ingredientName.IsNullOrEmpty() &&
                    !ingredientUnit.IsNullOrEmpty() &&
                    !ingredientPackage.IsNullOrEmpty() &&
@@ -268,7 +210,7 @@ namespace POS.ViewModels.WarehouseFunctions
         
         protected override bool CheckIfUpdateButtonCanBeEnabled()
         {
-            return selectedIngredient != null &&
+            return SelectedItem != null &&
                    !ingredientName.IsNullOrEmpty() &&
                    !ingredientUnit.IsNullOrEmpty() &&
                    !ingredientPackage.IsNullOrEmpty() &&
@@ -278,7 +220,7 @@ namespace POS.ViewModels.WarehouseFunctions
 
         protected override bool CheckIfDeleteButtonCanBeEnabled()
         {
-            return selectedIngredient != null;
+            return SelectedItem != null;
         }
     }
 }

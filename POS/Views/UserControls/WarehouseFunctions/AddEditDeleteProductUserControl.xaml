@@ -41,7 +41,7 @@
                 <Border Grid.Row="2" Margin="25, 0, 25, 0" CornerRadius="8" Background="White">
                     <Grid>
                         <ComboBox ItemsSource="{Binding ProductObservableCollection}"
-                                  SelectedItem="{Binding SelectedProduct}"
+                                  SelectedItem="{Binding SelectedItem}"
                                   DisplayMemberPath="ProductName"
                                   VerticalAlignment="Stretch"
                                   HorizontalAlignment="Stretch"
@@ -52,7 +52,7 @@
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    IsHitTestVisible="False"
-                                   Visibility="{Binding IsProductSelected}">
+                                   Visibility="{Binding IsItemSelected}">
                         </TextBlock>
                     </Grid>
                 </Border>

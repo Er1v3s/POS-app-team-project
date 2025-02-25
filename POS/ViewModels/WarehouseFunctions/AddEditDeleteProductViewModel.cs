@@ -17,10 +17,6 @@ namespace POS.ViewModels.WarehouseFunctions
         private readonly ProductService _productService;
         private readonly ProductValidator _productValidator;
 
-        private Product? selectedProduct;
-
-        private Visibility isProductSelected;
-
         private string productName;
         private string productCategory;
         private string productPrice;
@@ -34,47 +30,6 @@ namespace POS.ViewModels.WarehouseFunctions
         private string productRecipeError;
 
         public MyObservableCollection<Product> ProductObservableCollection => _productService.ProductCollection;
-
-        public Product? SelectedProduct
-        {
-            get => selectedProduct;
-            set
-            {
-                if (SetField(ref selectedProduct, value))
-                {
-                    IsProductSelected = Visibility.Collapsed;
-
-                    if (IsNewItem && selectedProduct is not null)
-                    {
-                        IsNewItem = false;
-                    }
-
-                    if (selectedProduct is not null)
-                    {
-                        LoadDataIntoFormFields(value!);
-
-                        IsAddButtonVisible = Visibility.Collapsed;
-                        IsUpdateButtonVisible = Visibility.Visible;
-                    }
-                    else
-                    {
-                        ResetForm();
-
-                        IsUpdateButtonVisible = Visibility.Collapsed;
-                        IsAddButtonVisible = Visibility.Visible;
-                    }
-
-                    IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
-                    IsDeleteButtonEnable = CheckIfDeleteButtonCanBeEnabled();
-                }
-            }
-        }
-
-        public Visibility IsProductSelected
-        {
-            get => isProductSelected;
-            set => SetField(ref isProductSelected, value);
-        }
 
         public string ProductName
         {
@@ -156,25 +111,6 @@ namespace POS.ViewModels.WarehouseFunctions
             set => SetField(ref productRecipeError, value);
         }
 
-        public override bool IsNewItem
-        {
-            get => isNewItem;
-            set
-            {
-                if (SetField(ref isNewItem, value))
-                {
-                    if (value)
-                    {
-                        SelectedProduct = null;
-                        IsProductSelected = Visibility.Visible;
-                        IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
-                    }
-                    else
-                        ProductName = string.Empty;
-                }
-            }
-        }
-
         public ICommand AddNewProductCommand { get; }
         public ICommand DeleteProductCommand { get; }
 
@@ -210,7 +146,7 @@ namespace POS.ViewModels.WarehouseFunctions
         {
             try
             {
-                await _productService.DeleteProductAsync(selectedProduct!);
+                await _productService.DeleteProductAsync((SelectedItem as Product)!);
 
                 MessageBox.Show("Pomyślnie usunięto produkt",
                     "Informacja", MessageBoxButton.OK, MessageBoxImage.Asterisk);
@@ -224,8 +160,11 @@ namespace POS.ViewModels.WarehouseFunctions
             }
         }
 
-        private void LoadDataIntoFormFields(Product product)
+        protected override void LoadDataIntoFormFields(object obj)
         {
+            var product = obj as Product;
+            if (product is null) throw new ArgumentNullException();
+
             ProductName = product.ProductName;
             ProductCategory = product.Category;
             ProductDescription = product.Description;
@@ -233,7 +172,7 @@ namespace POS.ViewModels.WarehouseFunctions
             //ProductRecipe = product.Recipe;
         }
 
-        private void ResetForm()
+        protected override void ResetForm()
         {
             ProductName = string.Empty;
             ProductCategory = string.Empty;
@@ -241,13 +180,19 @@ namespace POS.ViewModels.WarehouseFunctions
             ProductDescription = string.Empty;
             ProductRecipe = string.Empty;
 
-            SelectedProduct = null;
-            IsProductSelected = Visibility.Visible;
+            SelectedItem = null;
+            IsItemSelected = Visibility.Visible;
+        }
+
+        protected override void ClearNameField()
+        {
+            ProductName = string.Empty;
+            ProductNameError = string.Empty;
         }
 
         protected override bool CheckIfAddButtonCanBeEnabled()
         {
-            return isNewItem &&
+            return IsNewItem &&
                    !productName.IsNullOrEmpty() &&
                    !productCategory.IsNullOrEmpty() &&
                    !productPrice.IsNullOrEmpty() &&
@@ -258,7 +203,7 @@ namespace POS.ViewModels.WarehouseFunctions
 
         protected override bool CheckIfUpdateButtonCanBeEnabled()
         {
-            return selectedProduct != null &&
+            return SelectedItem != null &&
                    !productName.IsNullOrEmpty() &&
                    !productCategory.IsNullOrEmpty() &&
                    !productPrice.IsNullOrEmpty() &&
@@ -269,7 +214,7 @@ namespace POS.ViewModels.WarehouseFunctions
 
         protected override bool CheckIfDeleteButtonCanBeEnabled()
         {
-            return selectedProduct != null;
+            return SelectedItem != null;
         }
     }
 }
