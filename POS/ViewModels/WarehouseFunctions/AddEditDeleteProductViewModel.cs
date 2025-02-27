@@ -169,7 +169,7 @@ namespace POS.ViewModels.WarehouseFunctions
             ProductCategory = product.Category;
             ProductDescription = product.Description;
             ProductPrice = product.Price.ToString();
-            //ProductRecipe = product.Recipe;
+            ProductRecipe = product.Recipe.RecipeContent;
         }
 
         protected override void ResetForm()

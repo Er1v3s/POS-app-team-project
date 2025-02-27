@@ -14,14 +14,21 @@ namespace DataAccess
         public virtual DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
-        public DbSet<Recipe> Recipes { get; set; }
+        public DbSet<Recipe> Recipe { get; set; }
         public DbSet<ToDoListTask> ToDoListTasks { get; set; }
         public DbSet<EmployeeWorkSession> EmployeeWorkSession { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Employee>().ToTable("Employees").HasKey(e => e.EmployeeId);
-            modelBuilder.Entity<Product>().ToTable("Products").HasKey(e => e.ProductId);
+
+            modelBuilder.Entity<Product>()
+                .ToTable("Products")
+                .HasOne(p => p.Recipe)
+                .WithOne(r => r.Product)
+                .HasForeignKey<Product>(p => p.RecipeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Order>().ToTable("Orders").HasKey(e => e.OrderId);
             modelBuilder.Entity<Ingredient>().ToTable("Ingredients").HasKey(e => e.IngredientId);
             modelBuilder.Entity<Payment>().ToTable("Payments").HasKey(e => e.PaymentId);

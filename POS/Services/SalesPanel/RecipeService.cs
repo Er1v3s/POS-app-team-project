@@ -19,7 +19,7 @@ namespace POS.Services.SalesPanel
 
         public async Task<Recipe> GetRecipeByIdAsync(int recipeId)
         {
-            var recipe = await _dbContext.Recipes
+            var recipe = await _dbContext.Recipe
                 .Include(r => r.RecipeIngredients)
                 .ThenInclude(ri => ri.Ingredient)
                 .FirstOrDefaultAsync(p => p.RecipeId == recipeId);

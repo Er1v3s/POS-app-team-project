@@ -165,7 +165,7 @@ namespace POS.Tests.IntegrationTests
             var dbContext = GetInMemoryDbContext();
             await SeedDatabaseWithIngredients(dbContext);
 
-            await dbContext.Recipes.AddAsync(new Recipe { RecipeId = 1, RecipeName = "test name", RecipeContent = "test content" });
+            await dbContext.Recipe.AddAsync(new Recipe { RecipeId = 1, RecipeName = "test name", RecipeContent = "test content" });
             
             await dbContext.RecipeIngredients.AddAsync(new RecipeIngredient { RecipeId = 1, IngredientId = 1, Quantity = 1 });
             await dbContext.RecipeIngredients.AddAsync(new RecipeIngredient { RecipeId = 1, IngredientId = 2, Quantity = 1 });

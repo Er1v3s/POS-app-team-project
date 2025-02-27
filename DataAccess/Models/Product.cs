@@ -8,6 +8,7 @@
         public string Description { get; set; }
         public required double Price { get; set; }
         public int RecipeId { get; set; }
+        public Recipe Recipe { get; set; }
         public bool? IsAvailable { get; set; } // In the future check if we have enough ingredients to make this product.
     }
 }

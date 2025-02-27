@@ -61,7 +61,7 @@ namespace POS
                 //options.UseSqlServer(new DatabaseConfiguration().GetConnectionString());
 
                 options.UseSqlite(new DatabaseConfiguration().GetConnectionString(),
-                    builder => builder.MigrationsAssembly("DbSeeder"));
+                    builder => builder.MigrationsAssembly("DataAccess"));
             });
 
             servicesCollection.AddTransient<TimeService>();
