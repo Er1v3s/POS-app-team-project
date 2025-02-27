@@ -93,7 +93,9 @@ namespace POS.Services.SalesPanel
         {
             await _databaseErrorHandler.ExecuteDatabaseOperationAsync(async () =>
             {
-                var products = await _dbContext.Product.ToListAsync();
+                var products = await _dbContext.Product
+                    .Include(recipe => recipe.Recipe)
+                    .ToListAsync();
 
                 if (products.Count == 0)
                     throw new NotFoundException("Nie znaleziono żadnych produktów");
