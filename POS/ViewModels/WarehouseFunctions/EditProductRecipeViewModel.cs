@@ -158,6 +158,21 @@ namespace POS.ViewModels.WarehouseFunctions
             }
         }
 
+        protected override void LoadDataIntoFormFields(object obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void ResetForm()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void ClearNameField()
+        {
+            throw new NotImplementedException();
+        }
+
         protected override bool CheckIfAddButtonCanBeEnabled()
         {
             return isProductSelected == Visibility.Collapsed &&
