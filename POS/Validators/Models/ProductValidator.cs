@@ -30,14 +30,22 @@ namespace POS.Validators.Models
                 .WithMessage("Description cannot be empty")
                 .Must(BeValidDescription)
                 .WithMessage("Description can only contains letters, numbers, and spaces")
-                .MaximumLength(400)
-                .WithMessage("Description should not be longer than 400 characters");
+                .MaximumLength(1000)
+                .WithMessage("Description should not be longer than 1000 characters");
 
             RuleFor(x => x.Price)
                 .NotEmpty()
                 .WithMessage("Price cannot be empty")
                 .GreaterThanOrEqualTo(0)
                 .WithMessage("Price cannot be negative");
+
+            RuleFor(x => x.Recipe.RecipeContent)
+                .NotEmpty()
+                .WithMessage("Recipe cannot be empty")
+                .Must(BeValidDescription)
+                .WithMessage("Description can only contains letters, numbers, and spaces")
+                .MaximumLength(1000)
+                .WithMessage("Description should not be longer than 1000 characters");
         }
 
         public ValidationResult ValidateProductName(string name)
@@ -74,8 +82,8 @@ namespace POS.Validators.Models
                 return new ValidationResult(false, "Property \"description\" can only contains letters, numbers, and spaces");
             if (description.Length < 5)
                 return new ValidationResult(false, "Property \"description\" must be at least 5 characters long.");
-            if (description.Length > 400)
-                return new ValidationResult(false, "Property \"description\" must be less than 400 characters long.");
+            if (description.Length > 1000)
+                return new ValidationResult(false, "Property \"description\" must be less than 1000 characters long.");
 
             return new ValidationResult(true);
         }
@@ -103,18 +111,8 @@ namespace POS.Validators.Models
 
         private bool BeValidDescription(string text)
         {
-            return Regex.IsMatch(text, @"^[a-za-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ0-9\s()',.!?%]*$");
+            return Regex.IsMatch(text, @"^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ0-9\s()'"".,!?%:@#&+\-/*]*$");
+
         }
-
-
-        //private bool BeValidUnit(string text)
-        //{
-        //    return Regex.IsMatch(text, @"^[a-za-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]*$");
-        //}
-
-        //private bool BeValidPackage(string text)
-        //{
-        //    return Regex.IsMatch(text, @"^[a-za-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ0-9\s]*$");
-        //}
     }
 }
