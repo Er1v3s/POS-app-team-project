@@ -7,6 +7,7 @@ using DataAccess.Models;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using POS.Exceptions;
+using POS.Exceptions.Interfaces;
 using POS.Utilities;
 using POS.Validators.Models;
 
@@ -16,12 +17,14 @@ namespace POS.Services.SalesPanel
     {
         private readonly AppDbContext _dbContext;
         private readonly ProductValidator _productValidator;
+        private readonly IDatabaseErrorHandler _databaseErrorHandler;
         public MyObservableCollection<Product> ProductCollection { get; }
 
-        public ProductService(AppDbContext dbContext)
+        public ProductService(AppDbContext dbContext, IDatabaseErrorHandler databaseErrorHandler)
         {
             _dbContext = dbContext;
             _productValidator = new ProductValidator();
+            _databaseErrorHandler = databaseErrorHandler;
 
             ProductCollection = new();
             _ = GetAllProductsFromDbAsync();
@@ -47,9 +50,13 @@ namespace POS.Services.SalesPanel
             if (product == null)
                 throw new ArgumentNullException($"Niepoprawny produt: {product}");
 
-            ProductCollection.Add(product);
-            await _dbContext.Product.AddAsync(product);
-            await _dbContext.SaveChangesAsync();
+            await _databaseErrorHandler.ExecuteDatabaseOperationAsync(async () =>
+            {
+                await _dbContext.Product.AddAsync(product);
+                await _dbContext.SaveChangesAsync();
+
+                ProductCollection.Add(product);
+            });
         }
 
         public async Task DeleteProductAsync(Product product)
@@ -57,10 +64,13 @@ namespace POS.Services.SalesPanel
             if (product == null)
                 throw new ArgumentNullException($"Niepoprawny produkt: {product}");
 
-            ProductCollection.Remove(product);
-            _dbContext.Product.Remove(product);
-            await _dbContext.SaveChangesAsync();
+            await _databaseErrorHandler.ExecuteDatabaseOperationAsync(async () =>
+            {
+                _dbContext.Product.Remove(product);
+                await _dbContext.SaveChangesAsync();
 
+                ProductCollection.Remove(product);
+            });
         }
 
         public async Task<Product> CreateProduct(string productName, string productCategory, string productDescription, string productPrice)
@@ -81,12 +91,15 @@ namespace POS.Services.SalesPanel
 
         private async Task GetAllProductsFromDbAsync()
         {
-            var products = await _dbContext.Product.ToListAsync();
+            await _databaseErrorHandler.ExecuteDatabaseOperationAsync(async () =>
+            {
+                var products = await _dbContext.Product.ToListAsync();
 
-            if (products.Count == 0)
-                throw new NotFoundException("Nie znaleziono żadnych produktów");
+                if (products.Count == 0)
+                    throw new NotFoundException("Nie znaleziono żadnych produktów");
 
-            ProductCollection.AddRange(products);
+                ProductCollection.AddRange(products);
+            });
         }
     }
 }
