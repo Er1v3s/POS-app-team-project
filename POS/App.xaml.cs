@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using POS.Exceptions;
 using POS.Exceptions.Interfaces;
+using POS.Exceptions.Logger;
 using POS.Factories;
 using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
