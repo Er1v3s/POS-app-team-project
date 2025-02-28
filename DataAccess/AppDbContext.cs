@@ -30,10 +30,22 @@ namespace DataAccess
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Order>().ToTable("Orders").HasKey(e => e.OrderId);
-            modelBuilder.Entity<Ingredient>().ToTable("Ingredients").HasKey(e => e.IngredientId);
+
+            modelBuilder.Entity<Ingredient>().ToTable("Ingredients")
+                .HasMany<RecipeIngredient>()
+                .WithOne(ri => ri.Ingredient)
+                .HasForeignKey(ri => ri.IngredientId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Payment>().ToTable("Payments").HasKey(e => e.PaymentId);
             modelBuilder.Entity<RecipeIngredient>().ToTable("RecipeIngredients").HasKey(e => e.RecipeIngredientId);
-            modelBuilder.Entity<Recipe>().ToTable("Recipes").HasKey(e => e.RecipeId);
+
+            modelBuilder.Entity<Recipe>().ToTable("Recipes")
+                .HasMany(r => r.RecipeIngredients)
+                .WithOne(ri => ri.Recipe)
+                .HasForeignKey(ri => ri.RecipeId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<ToDoListTask>().HasKey(e => e.TodoTaskId);
             modelBuilder.Entity<OrderItem>().ToTable("OrderItems").HasKey(e => e.OrderItemId);
             modelBuilder.Entity<EmployeeWorkSession>().HasKey(e => e.WorkSessionId);
