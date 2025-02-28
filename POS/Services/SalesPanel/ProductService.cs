@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using DataAccess;
@@ -59,6 +60,34 @@ namespace POS.Services.SalesPanel
             });
         }
 
+        public async Task UpdateExistingProductAsync(Product oldProduct, Product newProduct)
+        {
+            if (oldProduct is null)
+                throw new ArgumentNullException(nameof(oldProduct), "Niepoprawny produkt, który chcesz zaktualizować.");
+            if (newProduct is null)
+                throw new ArgumentNullException(nameof(newProduct), "Niepoprawne dane, którymi chcesz zastąpić stary produkt");
+
+            await _databaseErrorHandler.ExecuteDatabaseOperationAsync(async () =>
+            {
+                var productFromDb = await _dbContext.Product
+                    .Include(recipe => recipe.Recipe)
+                    .FirstOrDefaultAsync(p => p.ProductId == oldProduct.ProductId);
+
+                if (productFromDb is null) throw new NotFoundException();
+
+                productFromDb.ProductName = newProduct.ProductName;
+                productFromDb.Category = newProduct.Category;
+                productFromDb.Description = newProduct.Description;
+                productFromDb.Price = newProduct.Price;
+
+                var index = ProductCollection.IndexOf(oldProduct);
+                if (index != -1)
+                    ProductCollection[index] = productFromDb;
+
+                await _dbContext.SaveChangesAsync();
+            });
+        }
+
         public async Task DeleteProductAsync(Product product)
         {
             if (product == null)
@@ -73,14 +102,15 @@ namespace POS.Services.SalesPanel
             });
         }
 
-        public async Task<Product> CreateProduct(string productName, string productCategory, string productDescription, string productPrice)
+        public async Task<Product> CreateProduct(string productName, string productCategory, string productDescription, string productPrice, Recipe recipe)
         {
             var newProduct = new Product
             {
                 ProductName = productName,
                 Category = productCategory,
                 Description = productDescription,
-                Price = double.Parse(productPrice),
+                Price = double.Parse(productPrice.Replace(',', '.'), CultureInfo.InvariantCulture),
+                Recipe = recipe
             };
 
             var validationResult = await _productValidator.ValidateAsync(newProduct);

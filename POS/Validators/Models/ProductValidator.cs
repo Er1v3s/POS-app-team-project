@@ -38,14 +38,6 @@ namespace POS.Validators.Models
                 .WithMessage("Price cannot be empty")
                 .GreaterThanOrEqualTo(0)
                 .WithMessage("Price cannot be negative");
-
-            RuleFor(x => x.Recipe.RecipeContent)
-                .NotEmpty()
-                .WithMessage("Recipe cannot be empty")
-                .Must(BeValidDescription)
-                .WithMessage("Description can only contains letters, numbers, and spaces")
-                .MaximumLength(1000)
-                .WithMessage("Description should not be longer than 1000 characters");
         }
 
         public ValidationResult ValidateProductName(string name)
@@ -92,7 +84,7 @@ namespace POS.Validators.Models
         {
             if (string.IsNullOrWhiteSpace(price))
                 return new ValidationResult(false, "Property \"price\" cannot be empty");
-            if (!double.TryParse(price, NumberStyles.Float, CultureInfo.InvariantCulture, out double priceAsDouble))
+            if (!double.TryParse(price, NumberStyles.Any, CultureInfo.InvariantCulture, out double priceAsDouble))
                 return new ValidationResult(false, "Property \"price\" must be a numeric value");
             if (priceAsDouble < 0 || priceAsDouble > 10000)
                 return new ValidationResult(false, "Property \"price\" must be between 0 and 10000");
