@@ -81,10 +81,9 @@
 
                         <Border Grid.Row="0" CornerRadius="8" Background="White" Margin="0, 0, 25, 0">
                             <Grid>
-                                <TextBox Text="{Binding ProductName, FallbackValue='', UpdateSourceTrigger=PropertyChanged}"
+                                <TextBox Text="{Binding ProductName, Delay=250, FallbackValue='', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          Tag="Nazwa nowego produktu" 
-                                         Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}"
-                                         IsEnabled="{Binding IsNewItem}">
+                                         Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}">
                                 </TextBox>
                             </Grid>
                         </Border>
@@ -109,7 +108,7 @@
                         </Grid.RowDefinitions>
 
                         <Border CornerRadius="8" Margin="25,0,12.5,0" Background="White">
-                            <TextBox Text="{Binding ProductCategory, FallbackValue='', UpdateSourceTrigger=PropertyChanged}"
+                            <TextBox Text="{Binding ProductCategory, Delay=250, FallbackValue='', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Tag="Kategoria" 
                                      Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}">
                             </TextBox>
@@ -128,7 +127,7 @@
                         </Grid.RowDefinitions>
 
                         <Border Grid.Row="0" CornerRadius="8" Margin="12.5,0,25,0" Background="White">
-                            <TextBox Text="{Binding ProductPrice, FallbackValue='', UpdateSourceTrigger=PropertyChanged}" 
+                            <TextBox Text="{Binding ProductPrice, Delay=250, FallbackValue='', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                      Tag="Cena" 
                                      Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}">
                             </TextBox>
@@ -148,7 +147,7 @@
                     </Grid.RowDefinitions>
 
                     <Border CornerRadius="8" Margin="25,0,25,0" Background="White">
-                        <TextBox Text="{Binding ProductDescription, FallbackValue='', UpdateSourceTrigger=PropertyChanged}" 
+                        <TextBox Text="{Binding ProductDescription, Delay=250, FallbackValue='', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                  Tag="Opis produktu" 
                                  Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder2}"
                                  VerticalContentAlignment="Top"
@@ -175,7 +174,7 @@
                     </Grid.RowDefinitions>
 
                     <Border CornerRadius="8" Margin="25,0,25,0" Background="White">
-                        <TextBox Text="{Binding ProductRecipe, FallbackValue='', UpdateSourceTrigger=PropertyChanged}" 
+                        <TextBox Text="{Binding ProductRecipe, Delay=250, FallbackValue='', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                  Tag="Tutaj wpisz przepis na nowego drinka" 
                                  Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder2}"
                                  VerticalContentAlignment="Top"
