@@ -168,11 +168,6 @@ namespace POS.ViewModels.WarehouseFunctions
             throw new NotImplementedException();
         }
 
-        protected override void ClearNameField()
-        {
-            throw new NotImplementedException();
-        }
-
         protected override bool CheckIfAddButtonCanBeEnabled()
         {
             return isProductSelected == Visibility.Collapsed &&

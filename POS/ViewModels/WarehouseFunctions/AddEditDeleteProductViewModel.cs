@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using DataAccess.Models;
-using Microsoft.IdentityModel.Tokens;
 using POS.Services.SalesPanel;
 using POS.Utilities;
 using POS.Utilities.RelayCommands;
@@ -15,7 +14,9 @@ namespace POS.ViewModels.WarehouseFunctions
     public class AddEditDeleteProductViewModel : FormViewModelBase
     {
         private readonly ProductService _productService;
+        private readonly RecipeService _recipeService;
         private readonly ProductValidator _productValidator;
+        private readonly RecipeValidator _recipeValidator;
 
         private string productName = string.Empty;
         private string productCategory = string.Empty;
@@ -77,7 +78,7 @@ namespace POS.ViewModels.WarehouseFunctions
             set
             {
                 if (SetField(ref productRecipe, value))
-                    ValidateProperty(_productValidator.ValidateProductDescription, nameof(ProductRecipe), value, error => ProductRecipeError = error);
+                    ValidateProperty(_recipeValidator.ValidateRecipeContent, nameof(ProductRecipe), value, error => ProductRecipeError = error);
             }
         }
 
@@ -115,10 +116,12 @@ namespace POS.ViewModels.WarehouseFunctions
         public ICommand UpdateProductCommand { get; }
         public ICommand DeleteProductCommand { get; }
 
-        public AddEditDeleteProductViewModel(ProductService productService)
+        public AddEditDeleteProductViewModel(ProductService productService, RecipeService recipeService)
         {
             _productService = productService;
+            _recipeService = recipeService;
             _productValidator = new ProductValidator();
+            _recipeValidator = new RecipeValidator();
 
             AddNewProductCommand = new RelayCommandAsync(AddNewProduct);
             UpdateProductCommand = new RelayCommandAsync(UpdateProduct);
@@ -129,8 +132,9 @@ namespace POS.ViewModels.WarehouseFunctions
         {
             try
             {
-                var product = await _productService.CreateProduct(productName, productCategory, productDescription, productPrice);
-                await _productService.AddNewProductAsync(product);
+                var newRecipe = await _recipeService.CreateRecipe(productName, productRecipe);
+                var newProduct = await _productService.CreateProduct(productName, productCategory, productDescription, productPrice, newRecipe);
+                await _productService.AddNewProductAsync(newProduct);
 
                 MessageBox.Show("Pomyślnie dodano nowy produkt", 
                     "Informacja", MessageBoxButton.OK, MessageBoxImage.Asterisk);
@@ -192,51 +196,6 @@ namespace POS.ViewModels.WarehouseFunctions
             ProductDescription = product.Description;
             ProductPrice = product.Price.ToString();
             ProductRecipe = product.Recipe.RecipeContent;
-        }
-
-        protected override void ResetForm()
-        {
-            ProductName = string.Empty;
-            ProductCategory = string.Empty;
-            ProductPrice = string.Empty;
-            ProductDescription = string.Empty;
-            ProductRecipe = string.Empty;
-
-            SelectedItem = null;
-            IsItemSelected = Visibility.Visible;
-        }
-
-        protected override void ClearNameField()
-        {
-            ProductName = string.Empty;
-            ProductNameError = string.Empty;
-        }
-
-        protected override bool CheckIfAddButtonCanBeEnabled()
-        {
-            return IsNewItem &&
-                   !productName.IsNullOrEmpty() &&
-                   !productCategory.IsNullOrEmpty() &&
-                   !productPrice.IsNullOrEmpty() &&
-                   !productDescription.IsNullOrEmpty() &&
-                   !productRecipe.IsNullOrEmpty();
-
-        }
-
-        protected override bool CheckIfUpdateButtonCanBeEnabled()
-        {
-            return SelectedItem != null &&
-                   !productName.IsNullOrEmpty() &&
-                   !productCategory.IsNullOrEmpty() &&
-                   !productPrice.IsNullOrEmpty() &&
-                   !productDescription.IsNullOrEmpty() &&
-                   !productRecipe.IsNullOrEmpty() &&
-                   !HasErrors;
-        }
-
-        protected override bool CheckIfDeleteButtonCanBeEnabled()
-        {
-            return SelectedItem != null;
         }
     }
 }

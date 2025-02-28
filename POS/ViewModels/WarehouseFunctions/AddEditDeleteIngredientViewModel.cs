@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using DataAccess.Models;
-using Microsoft.IdentityModel.Tokens;
 using POS.Services;
 using POS.Utilities.RelayCommands;
 using POS.Validators.Models;
@@ -172,55 +171,6 @@ namespace POS.ViewModels.WarehouseFunctions
             IngredientUnit = ingredient.Unit;
             IngredientPackage = ingredient.Package;
             IngredientDescription = ingredient.Description;
-        }
-
-        protected override void ResetForm()
-        {
-            IngredientName = string.Empty;
-            IngredientUnit = string.Empty;
-            IngredientPackage = string.Empty;
-            IngredientDescription = string.Empty;
-
-            IngredientNameError = string.Empty;
-            IngredientUnitError = string.Empty;
-            IngredientPackageError = string.Empty;
-            IngredientDescriptionError = string.Empty;
-
-            SelectedItem = null;
-            IsItemSelected = Visibility.Visible;
-
-            ClearAllErrors();
-        }
-
-        protected override void ClearNameField()
-        {
-            IngredientName = string.Empty;
-            IngredientNameError = string.Empty;
-        }
-
-        protected override bool CheckIfAddButtonCanBeEnabled()
-        {
-            return IsNewItem &&
-                   !ingredientName.IsNullOrEmpty() &&
-                   !ingredientUnit.IsNullOrEmpty() &&
-                   !ingredientPackage.IsNullOrEmpty() &&
-                   !ingredientDescription.IsNullOrEmpty() &&
-                   !HasErrors;
-        }
-        
-        protected override bool CheckIfUpdateButtonCanBeEnabled()
-        {
-            return SelectedItem != null &&
-                   !ingredientName.IsNullOrEmpty() &&
-                   !ingredientUnit.IsNullOrEmpty() &&
-                   !ingredientPackage.IsNullOrEmpty() &&
-                   !ingredientDescription.IsNullOrEmpty() &&
-                   !HasErrors;
-        }
-
-        protected override bool CheckIfDeleteButtonCanBeEnabled()
-        {
-            return SelectedItem != null;
         }
     }
 }

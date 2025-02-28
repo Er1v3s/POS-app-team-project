@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 
 namespace POS.ViewModels.Base.WarehouseFunctions
 {
@@ -69,12 +70,9 @@ namespace POS.ViewModels.Base.WarehouseFunctions
                     {
                         SelectedItem = null;
                         IsItemSelected = Visibility.Visible;
-                        IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
                     }
-                    else
-                    {
-                        ClearNameField();
-                    }
+
+                    IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
                 }
             }
         }
@@ -117,12 +115,51 @@ namespace POS.ViewModels.Base.WarehouseFunctions
                 IsUpdateButtonEnable = CheckIfUpdateButtonCanBeEnabled();
         }
 
-        protected abstract bool CheckIfAddButtonCanBeEnabled();
-        protected abstract bool CheckIfDeleteButtonCanBeEnabled();
-        protected abstract bool CheckIfUpdateButtonCanBeEnabled();
+        protected virtual bool CheckIfAddButtonCanBeEnabled()
+        {
+            return 
+                IsNewItem &&
+                ArePropertiesValid() &&
+                !HasErrors;
+        }
+
+        protected virtual bool CheckIfUpdateButtonCanBeEnabled()
+        {
+            return
+                SelectedItem is not null &&
+                ArePropertiesValid() &&
+                !HasErrors;
+        }
+
+        protected virtual bool CheckIfDeleteButtonCanBeEnabled()
+        {
+            return
+                SelectedItem is not null;
+        }
+
+        protected virtual void ResetForm()
+        {
+            var properties = GetType().GetProperties()
+                .Where(p => p.PropertyType == typeof(string) && p.CanWrite);
+
+            foreach (var property in properties)
+                property.SetValue(this, string.Empty);
+
+            SelectedItem = null;
+            IsItemSelected = Visibility.Visible;
+
+            ClearAllErrors();
+        }
+
+        private bool ArePropertiesValid()
+        {
+            var properties = GetType().GetProperties()
+                .Where(p => p.PropertyType == typeof(string) && p.CanWrite)
+                .Where(p => !p.Name.EndsWith("Error"));
+
+            return properties.All(p => !string.IsNullOrEmpty(p.GetValue(this) as string));
+        }
 
         protected abstract void LoadDataIntoFormFields(object obj);
-        protected abstract void ResetForm();
-        protected abstract void ClearNameField();
     }
 }

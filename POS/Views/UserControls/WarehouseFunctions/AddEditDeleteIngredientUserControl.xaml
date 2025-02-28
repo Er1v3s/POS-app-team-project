@@ -82,8 +82,7 @@
                             <Grid>
                                 <TextBox Text="{Binding IngredientName, Delay=250, FallbackValue='', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}"
                                          Tag="Nazwa nowego produktu" 
-                                         Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}"
-                                         IsEnabled="{Binding IsNewItem}">
+                                         Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}">
                                 </TextBox>
                             </Grid>
                         </Border>
