@@ -64,25 +64,24 @@ namespace POS.Services
             });
         }
 
-        public async Task UpdateExistingIngredientAsync(Ingredient oldIngredient, Ingredient newIngredient)
+        public async Task UpdateExistingIngredientAsync(Ingredient ingredient, Ingredient newIngredient)
         {
-            if (oldIngredient is null) throw new ArgumentNullException(nameof(oldIngredient), "Składnik który próbujesz zmienić jest niepoprawny");
+            if (ingredient is null) throw new ArgumentNullException(nameof(ingredient), "Składnik który próbujesz zmienić jest niepoprawny");
             if (newIngredient is null) throw new ArgumentNullException(nameof(newIngredient), "Składnik który próbujesz zmienić może otrzymać niepoprawne dane");
 
             await _databaseErrorHandler.ExecuteDatabaseOperationAsync(async () =>
             {
-                var ingredientFromDb = await _dbContext.Ingredients.FindAsync(oldIngredient.IngredientId);
-                if (ingredientFromDb == null) throw new NotFoundException();
+                ingredient.Name = newIngredient.Name;
+                ingredient.Unit = newIngredient.Unit;
+                ingredient.Package = newIngredient.Package;
+                ingredient.Description = newIngredient.Description;
 
-                ingredientFromDb.Name = newIngredient.Name;
-                ingredientFromDb.Unit = newIngredient.Unit;
-                ingredientFromDb.Package = newIngredient.Package;
-                ingredientFromDb.Description = newIngredient.Description;
+                _dbContext.Ingredients.Update(ingredient);
                 await _dbContext.SaveChangesAsync();
 
-                var index = allIngredientList.FindIndex(i => i.IngredientId == oldIngredient.IngredientId);
+                var index = allIngredientList.FindIndex(i => i.IngredientId == ingredient.IngredientId);
                 if (index != -1)
-                    allIngredientList[index] = ingredientFromDb;
+                    allIngredientList[index] = ingredient;
 
                 ReloadCollection(IngredientCollection);
             });
