@@ -156,6 +156,7 @@ namespace POS
             servicesCollection.AddTransient<OrderSummaryService>();
             servicesCollection.AddTransient<FinishedOrderService>();
             servicesCollection.AddTransient<IngredientService>();
+            servicesCollection.AddTransient<RecipeIngredientService>();
             servicesCollection.AddTransient<InvoiceService>();
             servicesCollection.AddTransient<DiscountService>();
 

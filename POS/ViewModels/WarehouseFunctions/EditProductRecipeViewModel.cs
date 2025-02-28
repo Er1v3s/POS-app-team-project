@@ -16,8 +16,9 @@ namespace POS.ViewModels.WarehouseFunctions
     public class EditProductRecipeViewModel : FormViewModelBase
     {
         private readonly ProductService _productService;
-        private readonly RecipeService _recipeService;
         private readonly IngredientService _ingredientService;
+        private readonly RecipeService _recipeService;
+        private readonly RecipeIngredientService _recipeIngredientService;
 
         private MyObservableCollection<RecipeIngredient> recipeIngredientCollection = new();
 
@@ -26,6 +27,7 @@ namespace POS.ViewModels.WarehouseFunctions
         private RecipeIngredient? selectedRecipeIngredient;
 
         private string amountOfIngredient;
+        private string amountOfIngredientError;
 
         private Visibility isProductSelected;
         private Visibility isIngredientSelected;
@@ -84,6 +86,16 @@ namespace POS.ViewModels.WarehouseFunctions
                     IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
             }
         }
+        
+        public string AmountOfIngredientError
+        {
+            get => amountOfIngredientError;
+            set
+            {
+                if (SetField(ref amountOfIngredientError, value))
+                    IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
+            }
+        }
 
         public Visibility IsProductSelected
         {
@@ -98,18 +110,22 @@ namespace POS.ViewModels.WarehouseFunctions
         }
 
         public ICommand AddIngredientToRecipeCommand { get; }
+        public ICommand UpdateIngredientInRecipeCommand { get; }
         public ICommand DeleteIngredientFromRecipeCommand { get; }
 
         public EditProductRecipeViewModel(
             ProductService productService,
             RecipeService recipeService,
-            IngredientService ingredientService)
+            IngredientService ingredientService,
+            RecipeIngredientService recipeIngredientService)
         {
             _productService = productService;
             _recipeService = recipeService;
             _ingredientService = ingredientService;
+            _recipeIngredientService = recipeIngredientService;
 
             AddIngredientToRecipeCommand = new RelayCommandAsync(AddIngredientToRecipe);
+            UpdateIngredientInRecipeCommand = new RelayCommandAsync(UpdateIngredientInRecipe);
             DeleteIngredientFromRecipeCommand = new RelayCommandAsync(DeleteIngredientFromRecipe);
         } 
 
@@ -134,12 +150,27 @@ namespace POS.ViewModels.WarehouseFunctions
         {
             try
             {
-                await _recipeService.AddIngredientToRecipeAsync(selectedProduct!.RecipeId, selectedIngredient, amountOfIngredient);
+                var recipeIngredient = await _recipeIngredientService.CreateRecipeIngredient(selectedProduct!.Recipe, selectedIngredient, amountOfIngredient);
+                await _recipeService.AddIngredientToRecipeAsync(recipeIngredient);
                 await GetRecipeIngredientsAsync(selectedProduct);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Nie udało się dodać składnika do przepisu, przyczyna problemu: {ex.Message}", 
+                    "Wystąpił nieoczekiwany problem", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async Task UpdateIngredientInRecipe()
+        {
+            try
+            {
+                var recipeIngredient = await _recipeIngredientService.CreateRecipeIngredient(selectedProduct!.Recipe, selectedIngredient, amountOfIngredient);
+                await _recipeService.UpdateIngredientInRecipeAsync(selectedRecipeIngredient!, recipeIngredient);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Nie udało się zaktualizować składnika w przepisie, przyczyna problemu: {ex.Message}",
                     "Wystąpił nieoczekiwany problem", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

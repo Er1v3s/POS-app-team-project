@@ -108,7 +108,7 @@
                         <TextBlock Text="USUŃ"/>
                     </Button>
 
-                    <Button Command="{Binding UpdateIngredientCommand}"
+                    <Button Command="{Binding UpdateIngredientInRecipeCommand}"
                             IsEnabled="{Binding IsUpdateButtonEnable}"
                             Style="{StaticResource BasicButton}"
                             Visibility="{Binding IsUpdateButtonVisible}"
