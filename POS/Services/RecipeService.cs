@@ -4,12 +4,11 @@ using DataAccess;
 using DataAccess.Models;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using POS.Exceptions;
 using POS.Exceptions.Interfaces;
 using POS.Validators.Models;
 
-namespace POS.Services.SalesPanel
+namespace POS.Services
 {
     public class RecipeService
     {
@@ -17,7 +16,6 @@ namespace POS.Services.SalesPanel
         private readonly IDatabaseErrorHandler _databaseErrorHandler;
 
         private readonly RecipeValidator _recipeValidator;
-        private readonly RecipeIngredientValidator _recipeIngredientValidator;
 
         public RecipeService(AppDbContext dbContext, IDatabaseErrorHandler databaseErrorHandler)
         {
@@ -25,7 +23,6 @@ namespace POS.Services.SalesPanel
             _databaseErrorHandler = databaseErrorHandler;
 
             _recipeValidator = new RecipeValidator();
-            _recipeIngredientValidator = new RecipeIngredientValidator();
         }
 
         public async Task<Recipe> GetRecipeByIdAsync(int recipeId)
@@ -44,20 +41,32 @@ namespace POS.Services.SalesPanel
             });
         }
 
-        public async Task AddIngredientToRecipeAsync(int recipeId, Ingredient ingredient, string amountOfIngredient)
+        public async Task AddIngredientToRecipeAsync(RecipeIngredient recipeIngredient)
         {
-            if (ingredient == null)
-                throw new ArgumentNullException(nameof(ingredient), "Niepoprawny składnik");
-            if (amountOfIngredient.IsNullOrEmpty())
-                throw new ArgumentNullException(nameof(amountOfIngredient), "Niepoprawna ilość składnika");
+            if (recipeIngredient is null)
+                throw new ArgumentNullException(nameof(recipeIngredient), "Niepoprawny składnik");
 
-            var recipe = await GetRecipeByIdAsync(recipeId);
-
-            var recipeIngredient = await CreateRecipeIngredient(recipeId, ingredient, amountOfIngredient);
+            var recipe = await GetRecipeByIdAsync(recipeIngredient.RecipeId);
 
             await _databaseErrorHandler.ExecuteDatabaseOperationAsync(async () =>
             {
                 recipe.RecipeIngredients.Add(recipeIngredient);
+                await _dbContext.SaveChangesAsync();
+            });
+        }
+
+        public async Task UpdateIngredientInRecipeAsync(RecipeIngredient recipeIngredient, RecipeIngredient newRecipeIngredient)
+        {
+            if (recipeIngredient == null)
+                throw new ArgumentNullException(nameof(recipeIngredient), "Nie wybrano składnika do edycji");
+            if (newRecipeIngredient == null)
+                throw new ArgumentNullException(nameof(newRecipeIngredient), "Niepoprawny nowy składnik");
+
+            recipeIngredient.Quantity = newRecipeIngredient.Quantity;
+
+            await _databaseErrorHandler.ExecuteDatabaseOperationAsync(async () =>
+            {
+                _dbContext.RecipeIngredients.Update(recipeIngredient);
                 await _dbContext.SaveChangesAsync();
             });
         }
@@ -86,22 +95,6 @@ namespace POS.Services.SalesPanel
             if (!validationResult.IsValid) throw new ValidationException($"Produkt zawiera niepoprawne dane: \n{validationResult.ToString($"\n")}");
 
             return newRecipe;
-        }
-
-        private async Task<RecipeIngredient> CreateRecipeIngredient(int recipeId, Ingredient ingredient, string amountOfIngredient)
-        {
-            var newRecipeIngredient = new RecipeIngredient
-            {
-                RecipeId = recipeId,
-                IngredientId = ingredient.IngredientId,
-                Ingredient = ingredient,
-                Quantity = double.Parse(amountOfIngredient)
-            };
-
-            var validationResult = await _recipeIngredientValidator.ValidateAsync(newRecipeIngredient);
-            if (!validationResult.IsValid) throw new ValidationException($"Produkt zawiera niepoprawne dane: \n{validationResult.ToString($"\n")}");
-
-            return newRecipeIngredient;
         }
     }
 }
