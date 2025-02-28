@@ -112,6 +112,7 @@ namespace POS.ViewModels.WarehouseFunctions
         }
 
         public ICommand AddNewProductCommand { get; }
+        public ICommand UpdateProductCommand { get; }
         public ICommand DeleteProductCommand { get; }
 
         public AddEditDeleteProductViewModel(ProductService productService)
@@ -120,6 +121,7 @@ namespace POS.ViewModels.WarehouseFunctions
             _productValidator = new ProductValidator();
 
             AddNewProductCommand = new RelayCommandAsync(AddNewProduct);
+            UpdateProductCommand = new RelayCommandAsync(UpdateProduct);
             DeleteProductCommand = new RelayCommandAsync(DeleteProduct);
         }
 
@@ -131,6 +133,26 @@ namespace POS.ViewModels.WarehouseFunctions
                 await _productService.AddNewProductAsync(product);
 
                 MessageBox.Show("Pomyślnie dodano nowy produkt", 
+                    "Informacja", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+
+                ResetForm();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Nie udało się utworzyć produktu, przyczyna problemu: {ex.Message}",
+                    "Wystąpił nieoczekiwany problem", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async Task UpdateProduct()
+        {
+            try
+            {
+                var updatedRecipe = await _recipeService.CreateRecipe(productName, productRecipe);
+                var updatedProduct = await _productService.CreateProduct(productName, productCategory, productDescription, productPrice, updatedRecipe);
+                await _productService.UpdateExistingProductAsync((SelectedItem as Product)!, updatedProduct);
+
+                MessageBox.Show("Pomyślnie zaktualizowano produkt",
                     "Informacja", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 
                 ResetForm();
