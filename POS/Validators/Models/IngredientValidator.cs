@@ -113,7 +113,7 @@ namespace POS.Validators.Models
 
         private bool BeValidDescription(string text)
         {
-            return Regex.IsMatch(text, @"^[a-za-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ0-9\s()',.!?%]*$");
+            return Regex.IsMatch(text, @"^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ0-9\s()'"".,!?%:@#&+\-/*]*$");
         }
 
         private bool BeValidUnit(string text)
