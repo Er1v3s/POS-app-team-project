@@ -69,22 +69,18 @@ namespace POS.Services.SalesPanel
 
             await _databaseErrorHandler.ExecuteDatabaseOperationAsync(async () =>
             {
-                var productFromDb = await _dbContext.Product
-                    .Include(recipe => recipe.Recipe)
-                    .FirstOrDefaultAsync(p => p.ProductId == oldProduct.ProductId);
+                oldProduct.ProductName = newProduct.ProductName;
+                oldProduct.Category = newProduct.Category;
+                oldProduct.Description = newProduct.Description;
+                oldProduct.Price = newProduct.Price;
 
-                if (productFromDb is null) throw new NotFoundException();
-
-                productFromDb.ProductName = newProduct.ProductName;
-                productFromDb.Category = newProduct.Category;
-                productFromDb.Description = newProduct.Description;
-                productFromDb.Price = newProduct.Price;
+                _dbContext.Product.Update(oldProduct);
+                await _dbContext.SaveChangesAsync();
 
                 var index = ProductCollection.IndexOf(oldProduct);
                 if (index != -1)
-                    ProductCollection[index] = productFromDb;
+                    ProductCollection[index] = oldProduct;
 
-                await _dbContext.SaveChangesAsync();
             });
         }
 
