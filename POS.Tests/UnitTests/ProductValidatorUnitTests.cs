@@ -96,5 +96,54 @@ namespace POS.Tests.UnitTests
         }
 
         #endregion
+
+        #region Validate Product Category
+
+        public static IEnumerable<object[]> InvalidCategory()
+        {
+            yield return new object[] { "" };
+            yield return new object[] { "TestName123" };
+            yield return new object[] { "TestName 123" };
+            yield return new object[] { "`~@#$^&*-_=+[]{};:<>|" };
+            yield return new object[] { new string('A', 401) };
+        }
+
+        public static IEnumerable<object[]> ValidCategory()
+        {
+            yield return new object[] { "ValidCategory" };
+            yield return new object[] { "Valid Category" };
+            yield return new object[] { new string('A', 100) };
+        }
+
+        [Theory]
+        [MemberData(nameof(InvalidCategory))]
+        public void ProductCategory_ForInvalidValues_ShouldHaveValidationError(string invalidCategory)
+        {
+            // Arrange
+            product.Category = invalidCategory;
+
+            // Act
+            var result = _productValidator.TestValidate(product);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(x => x.Category);
+        }
+
+        [Theory]
+        [MemberData(nameof(ValidCategory))]
+        public void ProductCategory_ForValidValues_ShouldNotHaveValidationError(string validCategory)
+        {
+            // Arrange
+            product.Category = validCategory;
+
+            // Act
+            var result = _productValidator.TestValidate(product);
+
+            // Assert
+            result.ShouldNotHaveValidationErrorFor(x => x.Category);
+        }
+
+        #endregion
+
     }
 }
