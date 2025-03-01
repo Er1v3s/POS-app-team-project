@@ -37,7 +37,9 @@ namespace POS.Validators.Models
                 .NotEmpty()
                 .WithMessage("Price cannot be empty")
                 .GreaterThanOrEqualTo(0)
-                .WithMessage("Price cannot be negative");
+                .WithMessage("Price cannot be negative")
+                .LessThanOrEqualTo(10000)
+                .WithMessage("Price cannot be higher than 10000");
 
             RuleFor(x => x.Recipe)
                 .NotNull()

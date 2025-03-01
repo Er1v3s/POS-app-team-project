@@ -1,4 +1,5 @@
-﻿using DataAccess.Models;
+﻿using System.Globalization;
+using DataAccess.Models;
 using FluentAssertions;
 using FluentValidation.TestHelper;
 using POS.Validators.Models;
@@ -233,6 +234,68 @@ namespace POS.Tests.UnitTests
         {
             // Act
             var result = _productValidator.ValidateProductDescription(validDescription);
+
+            // Assert
+            result.Result.Should().BeTrue();
+            result.ErrorMessage.Should().BeNullOrEmpty();
+        }
+
+        #endregion
+
+        #region Validate Product Price
+
+        [Theory]
+        [InlineData("-1")]
+        [InlineData("10001")]
+        public void ProductPrice_ForInvalidValues_ShouldHaveValidationError(string invalidPrice)
+        {
+            // Arrange
+            product.Price = double.Parse(invalidPrice, NumberStyles.Any, CultureInfo.InvariantCulture);
+
+            // Act
+            var result = _productValidator.TestValidate(product);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(x => x.Price);
+        }
+
+        [Theory]
+        [InlineData("20")]
+        [InlineData("25.99")]
+        [InlineData("31,99")]
+        public void ProductPrice_ForValidValues_ShouldNotHaveValidationError(string validPrice)
+        {
+            // Arrange
+            product.Price = double.Parse(validPrice, NumberStyles.Any, CultureInfo.InvariantCulture);
+
+            // Act
+            var result = _productValidator.TestValidate(product);
+
+            // Assert
+            result.ShouldNotHaveValidationErrorFor(x => x.Price);
+        }
+
+        [Theory]
+        [InlineData("-1")]
+        [InlineData("10001")]
+        public void PriceValidationMethod_ForInvalidValues_ShouldReturnValidationResultEqualsFalse(string invalidPrice)
+        {
+            // Act
+            var result = _productValidator.ValidateProductPrice(invalidPrice);
+
+            // Assert
+            result.Result.Should().BeFalse();
+            result.ErrorMessage.Should().NotBeNullOrEmpty();
+        }
+
+        [Theory]
+        [InlineData("20")]
+        [InlineData("25.99")]
+        [InlineData("31,99")]
+        public void PriceValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(string validPrice)
+        {
+            // Act
+            var result = _productValidator.ValidateProductPrice(validPrice);
 
             // Assert
             result.Result.Should().BeTrue();
