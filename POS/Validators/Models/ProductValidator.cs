@@ -39,7 +39,10 @@ namespace POS.Validators.Models
                 .GreaterThanOrEqualTo(0)
                 .WithMessage("Price cannot be negative")
                 .LessThanOrEqualTo(10000)
-                .WithMessage("Price cannot be higher than 10000");
+                .WithMessage("Price cannot be higher than 10000")
+                .Must(HaveTwoDecimalPlacesOrLess)
+                .WithMessage("The value must have up to two decimal places");
+
 
             RuleFor(x => x.Recipe)
                 .NotNull()
@@ -115,6 +118,17 @@ namespace POS.Validators.Models
         private bool BeValidDescription(string text)
         {
             return Regex.IsMatch(text, @"^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ0-9\s()'"".,!?%:@#&+\-/*]*$");
+        }
+
+        private bool HaveTwoDecimalPlacesOrLess(double quantity)
+        {
+            string quantityAsString = quantity.ToString(CultureInfo.InvariantCulture).Replace(',', '.');
+            string[] parts = quantityAsString.Split('.');
+
+            if (parts.Length == 2 && parts[1].Length > 2)
+                return false;
+
+            return true;
         }
     }
 }
