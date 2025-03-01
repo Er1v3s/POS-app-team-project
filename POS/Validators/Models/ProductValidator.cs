@@ -20,7 +20,7 @@ namespace POS.Validators.Models
             RuleFor(x => x.Category)
                 .NotEmpty()
                 .WithMessage("Category cannot be empty")
-                .Must(BeValidName)
+                .Must(BeValidCategory)
                 .WithMessage("Category can only contains letters, and spaces")
                 .MaximumLength(100)
                 .WithMessage("Category should not exceed 100 characters");
@@ -103,6 +103,11 @@ namespace POS.Validators.Models
         private bool BeValidName(string text)
         {
             return Regex.IsMatch(text, @"^[a-za-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ0-9\s]*$");
+        }
+
+        private bool BeValidCategory(string text)
+        {
+            return Regex.IsMatch(text, @"^[a-za-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]*$");
         }
 
         private bool BeValidDescription(string text)
