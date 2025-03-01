@@ -38,6 +38,10 @@ namespace POS.Validators.Models
                 .WithMessage("Price cannot be empty")
                 .GreaterThanOrEqualTo(0)
                 .WithMessage("Price cannot be negative");
+
+            RuleFor(x => x.Recipe)
+                .NotNull()
+                .WithMessage("Recipe cannot be null");
         }
 
         public ValidationResult ValidateProductName(string name)
