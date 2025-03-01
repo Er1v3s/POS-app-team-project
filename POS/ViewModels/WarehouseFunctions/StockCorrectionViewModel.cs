@@ -118,11 +118,12 @@ namespace POS.ViewModels.WarehouseFunctions
             return new Ingredient
             {
                 IngredientId = ingredient.IngredientId,
-                Stock = ingredientStock,
-                SafetyStock = ingredientSafetyStock,
                 Name = ingredient.Name,
                 Description = ingredient.Description,
-                Unit = ingredient.Unit
+                Unit = ingredient.Unit,
+                Package = ingredient.Package,
+                Stock = ingredientStock,
+                SafetyStock = ingredientSafetyStock,
             };
         }
 

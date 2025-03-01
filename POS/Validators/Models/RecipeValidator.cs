@@ -20,9 +20,11 @@ namespace POS.Validators.Models
                 .NotEmpty()
                 .WithMessage("Recipe cannot be empty")
                 .Must(BeValidContent)
-                .WithMessage("Description can only contains letters, numbers, and spaces")
+                .WithMessage("Recipe can only contains letters, numbers, and spaces")
+                .MinimumLength(5)
+                .WithMessage("Recipe must be at least 5 characters long.")
                 .MaximumLength(1000)
-                .WithMessage("Description should not be longer than 1000 characters");
+                .WithMessage("Recipe should not be longer than 1000 characters");
         }
 
         public ValidationResult ValidateRecipeContent(string description)

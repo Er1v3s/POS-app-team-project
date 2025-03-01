@@ -9,6 +9,7 @@ using POS.Exceptions;
 using POS.Exceptions.Interfaces;
 using POS.Utilities;
 using System;
+using System.Globalization;
 
 namespace POS.Services
 {
@@ -87,7 +88,8 @@ namespace POS.Services
                 RecipeId = recipe.RecipeId,
                 IngredientId = ingredient.IngredientId,
                 Ingredient = ingredient,
-                Quantity = double.Parse(amountOfIngredient)
+                Recipe = recipe,
+                Quantity = double.Parse(amountOfIngredient.Replace(',', '.'), NumberStyles.Any, CultureInfo.InvariantCulture),
             };
 
             var validationResult = await _recipeIngredientValidator.ValidateAsync(newRecipeIngredient);

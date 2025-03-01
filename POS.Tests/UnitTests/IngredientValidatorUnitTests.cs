@@ -14,6 +14,16 @@ namespace POS.Tests.UnitTests
             _validator = new IngredientValidator();
         }
 
+        private readonly Ingredient ingredient = new ()
+        {
+            Name = "Test Name",
+            Description = "Test description",
+            Unit = "Test unit",
+            Package = "Test package",
+            Stock = 10,
+            SafetyStock = 5,
+        };
+
         #region Validate Ingredient Name
 
         public static IEnumerable<object[]> InvalidNames()
@@ -36,13 +46,7 @@ namespace POS.Tests.UnitTests
         public void IngredientName_ForInvalidValue_ShouldHaveValidationError(string invalidName)
         {
             // Arrange
-            var ingredient = new Ingredient()
-            {
-                Name = invalidName,
-                Description = "Valid",
-                Stock = 10,
-                SafetyStock = 5,
-            };
+            ingredient.Name = invalidName;
 
             // Act
             var result = _validator.TestValidate(ingredient);
@@ -58,8 +62,6 @@ namespace POS.Tests.UnitTests
             var isIngredientNameValid = _validator.ValidateIngredientName(invalidName);
 
             isIngredientNameValid.Result.Should().BeFalse();
-            isIngredientNameValid.ErrorMessage.Should().NotBe("");
-            isIngredientNameValid.ErrorMessage.Should().NotBeEmpty();
             isIngredientNameValid.ErrorMessage.Should().NotBeNullOrWhiteSpace();
         }
 
@@ -68,13 +70,7 @@ namespace POS.Tests.UnitTests
         public void IngredientName_ForValidValue_ShouldNotHaveValidationError(string validName)
         {
             // Arrange
-            var ingredient = new Ingredient
-            {
-                Name = validName,
-                Description = "Valid",
-                Stock = 10,
-                SafetyStock = 5,
-            };
+            ingredient.Name = validName;
 
             // Act
             var result = _validator.TestValidate(ingredient);
@@ -87,10 +83,12 @@ namespace POS.Tests.UnitTests
         [MemberData(nameof(ValidNames))]
         public void NameValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(string validName)
         {
+            // Act
             var isIngredientNameValid = _validator.ValidateIngredientName(validName);
 
+            // Assert
             isIngredientNameValid.Result.Should().BeTrue();
-            isIngredientNameValid.ErrorMessage.Should().Be(null);
+            isIngredientNameValid.ErrorMessage.Should().BeNull();
         }
 
         #endregion
@@ -115,13 +113,7 @@ namespace POS.Tests.UnitTests
         public void IngredientDescription_ForInvalidValues_ShouldHaveValidationError(string invalidDescription)
         {
             // Arrange
-            var ingredient = new Ingredient()
-            {
-                Name = "Valid Name",
-                Description = invalidDescription,
-                Stock = 10,
-                SafetyStock = 5,
-            };
+            ingredient.Description = invalidDescription;
 
             // Act
             var result = _validator.TestValidate(ingredient);
@@ -134,11 +126,11 @@ namespace POS.Tests.UnitTests
         [MemberData(nameof(InvalidDescription))]
         public void IngredientDescriptionValidationMethod_ForInvalidValues_ShouldReturnValidationResultEqualsFalse(string invalidDescription)
         {
+            // Act
             var isIngredientDescriptionValid = _validator.ValidateIngredientDescription(invalidDescription);
 
+            // Assert
             isIngredientDescriptionValid.Result.Should().BeFalse();
-            isIngredientDescriptionValid.ErrorMessage.Should().NotBe("");
-            isIngredientDescriptionValid.ErrorMessage.Should().NotBeEmpty();
             isIngredientDescriptionValid.ErrorMessage.Should().NotBeNullOrWhiteSpace();
         }
 
@@ -147,13 +139,7 @@ namespace POS.Tests.UnitTests
         public void IngredientDescription_ForValidValue_ShouldNotHaveValidationError(string validDescription)
         {
             // Arrange
-            var ingredient = new Ingredient
-            {
-                Name = "Valid Name",
-                Description = validDescription,
-                Stock = 10,
-                SafetyStock = 5,
-            };
+            ingredient.Description = validDescription;
 
             // Act
             var result = _validator.TestValidate(ingredient);
@@ -166,10 +152,12 @@ namespace POS.Tests.UnitTests
         [MemberData(nameof(ValidDescription))]
         public void IngredientDescriptionValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(string validDescription)
         {
+            // Act
             var isIngredientDescriptionValid = _validator.ValidateIngredientDescription(validDescription);
 
+            // Assert
             isIngredientDescriptionValid.Result.Should().BeTrue();
-            isIngredientDescriptionValid.ErrorMessage.Should().Be(null);
+            isIngredientDescriptionValid.ErrorMessage.Should().BeNull();
         }
 
         #endregion
@@ -195,15 +183,7 @@ namespace POS.Tests.UnitTests
         public void IngredientUnit_ForInvalidValues_ShouldHaveValidationError(string validUnit)
         {
             // Arrange
-
-            var ingredient = new Ingredient
-            {
-                Name = "Valid 123",
-                Description = "Valid",
-                Unit = validUnit,
-                Stock = 10,
-                SafetyStock = 5,
-            };
+            ingredient.Unit = validUnit;
 
             // Act
             var result = _validator.TestValidate(ingredient);
@@ -216,11 +196,11 @@ namespace POS.Tests.UnitTests
         [MemberData(nameof(InvalidValues))]
         public void IngredientUnitValidationMethod_ForInvalidValues_ShouldReturnValidationResultEqualsFalse(string invalidUnit)
         {
+            // Act
             var isIngredientUnitValid = _validator.ValidateIngredientUnit(invalidUnit);
 
+            // Assert
             isIngredientUnitValid.Result.Should().BeFalse();
-            isIngredientUnitValid.ErrorMessage.Should().NotBe("");
-            isIngredientUnitValid.ErrorMessage.Should().NotBeEmpty();
             isIngredientUnitValid.ErrorMessage.Should().NotBeNullOrWhiteSpace();
         }
 
@@ -229,14 +209,7 @@ namespace POS.Tests.UnitTests
         public void IngredientUnit_ForValidValue_ShouldNotHaveValidationError(string validUnits)
         {
             // Arrange
-            var ingredient = new Ingredient
-            {
-                Name = "Valid 123",
-                Description = "Valid",
-                Unit = validUnits,
-                Stock = 10,
-                SafetyStock = 5,
-            };
+            ingredient.Unit = validUnits;
 
             // Act
             var result = _validator.TestValidate(ingredient);
@@ -249,10 +222,12 @@ namespace POS.Tests.UnitTests
         [MemberData(nameof(ValidValues))]
         public void IngredientUnitValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(string validUnit)
         {
+            // Act
             var isIngredientUnitValid = _validator.ValidateIngredientUnit(validUnit);
 
+            // Assert
             isIngredientUnitValid.Result.Should().BeTrue();
-            isIngredientUnitValid.ErrorMessage.Should().Be(null);
+            isIngredientUnitValid.ErrorMessage.Should().BeNull();
         }
 
         [Theory]
@@ -260,14 +235,7 @@ namespace POS.Tests.UnitTests
         public void IngredientPackage_ForInvalidValues_ShouldHaveValidationError(string invalidValue)
         {
             // Arrange
-            var ingredient = new Ingredient
-            {
-                Name = "Valid 123",
-                Description = "Valid",
-                Package = invalidValue,
-                Stock = 10,
-                SafetyStock = 5,
-            };
+            ingredient.Package = invalidValue;
 
             // Act
             var result = _validator.TestValidate(ingredient);
@@ -280,11 +248,11 @@ namespace POS.Tests.UnitTests
         [MemberData(nameof(InvalidValues))]
         public void IngredientPackageValidationMethod_ForInvalidValues_ShouldReturnValidationResultEqualsFalse(string invalidValue)
         {
+            // Act
             var isIngredientPackageValid = _validator.ValidateIngredientPackage(invalidValue);
 
+            // Assert
             isIngredientPackageValid.Result.Should().BeFalse();
-            isIngredientPackageValid.ErrorMessage.Should().NotBe("");
-            isIngredientPackageValid.ErrorMessage.Should().NotBeEmpty();
             isIngredientPackageValid.ErrorMessage.Should().NotBeNullOrWhiteSpace();
         }
 
@@ -293,14 +261,7 @@ namespace POS.Tests.UnitTests
         public void IngredientPackage_ForValidValue_ShouldNotHaveValidationError(string validValue)
         {
             // Arrange
-            var ingredient = new Ingredient
-            {
-                Name = "Valid 123",
-                Description = "Valid",
-                Package = validValue,
-                Stock = 10,
-                SafetyStock = 5,
-            };
+            ingredient.Package = validValue;
 
             // Act
             var result = _validator.TestValidate(ingredient);
@@ -313,10 +274,12 @@ namespace POS.Tests.UnitTests
         [MemberData(nameof(ValidValues))]
         public void IngredientPackageValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(string validValue)
         {
+            // Act
             var isIngredientPackageValid = _validator.ValidateIngredientDescription(validValue);
 
+            // Assert
             isIngredientPackageValid.Result.Should().BeTrue();
-            isIngredientPackageValid.ErrorMessage.Should().Be(null);
+            isIngredientPackageValid.ErrorMessage.Should().BeNull();
         }
 
         #endregion
@@ -329,13 +292,7 @@ namespace POS.Tests.UnitTests
         public void IngredientStock_ForInvalidValue_ShouldHaveValidationError(int invalidValue)
         {
             // Arrange
-            var ingredient = new Ingredient
-            {
-                Name = "Valid 123",
-                Description = "Valid",
-                Stock = invalidValue,
-                SafetyStock = 5,
-            };
+            ingredient.Stock = invalidValue;
 
             // Act
             var result = _validator.TestValidate(ingredient);
@@ -350,13 +307,7 @@ namespace POS.Tests.UnitTests
         public void IngredientSafetyStock_ForInvalidValue_ShouldHaveValidationError(int invalidValue)
         {
             // Arrange
-            var ingredient = new Ingredient
-            {
-                Name = "Valid 123",
-                Description = "Valid",
-                Stock = 5,
-                SafetyStock = invalidValue,
-            };
+            ingredient.SafetyStock = invalidValue;
 
             // Act
             var result = _validator.TestValidate(ingredient);
