@@ -62,7 +62,7 @@ namespace POS.Validators.Models
         {
             if (string.IsNullOrWhiteSpace(category))
                 return new ValidationResult(false, "Property \"category\" cannot be empty");
-            if (!BeValidName(category))
+            if (!BeValidCategory(category))
                 return new ValidationResult(false, "Property \"category\" can only contains letters, numbers, and spaces");
             if (category.Length > 100)
                 return new ValidationResult(false, "Property \"category\" must be less than 100 characters long.");

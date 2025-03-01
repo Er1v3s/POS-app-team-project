@@ -143,6 +143,33 @@ namespace POS.Tests.UnitTests
             result.ShouldNotHaveValidationErrorFor(x => x.Category);
         }
 
+        [Theory]
+        [MemberData(nameof(InvalidCategory))]
+        public void CategoryValidationMethod_ForInvalidValues_ShouldReturnValidationResultEqualsFalse(string invalidCategory)
+        {
+            // Arrange
+            product.Category = invalidCategory;
+
+            // Act
+            var result = _productValidator.ValidateProductCategory(invalidCategory);
+
+            // Assert
+            result.Result.Should().BeFalse();
+            result.ErrorMessage.Should().NotBeNullOrEmpty();
+        }
+
+        [Theory]
+        [MemberData(nameof(ValidCategory))]
+        public void CategoryValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(string validCategory)
+        {
+            // Act
+            var result = _productValidator.ValidateProductCategory(validCategory);
+
+            // Assert
+            result.Result.Should().BeTrue();
+            result.ErrorMessage.Should().BeNullOrEmpty();
+        }
+
         #endregion
 
     }
