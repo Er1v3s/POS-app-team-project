@@ -70,6 +70,30 @@ namespace POS.Tests.UnitTests
             result.ShouldNotHaveValidationErrorFor(ri => ri.Quantity);
         }
 
+        [Theory]
+        [MemberData(nameof(InvalidQuantity))]
+        public void QuantityValidationMethod_ForInvalidValues_ShouldReturnValidationResultEqualsFalse(string quantity)
+        {
+            // Act
+            var result = _recipeIngredientValidator.ValidateQuantity(quantity);
+
+            // Assert
+            result.Result.Should().BeFalse();
+            result.ErrorMessage.Should().NotBeNull();
+        }
+
+        [Theory]
+        [MemberData(nameof(ValidQuantity))]
+        public void QuantityValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(string quantity)
+        {
+            // Act
+            var result = _recipeIngredientValidator.ValidateQuantity(quantity);
+
+            // Assert
+            result.Result.Should().BeTrue();
+            result.ErrorMessage.Should().BeNull();
+        }
+
         #endregion
     }
 }
