@@ -22,7 +22,7 @@ namespace POS.Validators.Models
                 .Must(BeValidContent)
                 .WithMessage("Recipe can only contains letters, numbers, and spaces")
                 .MinimumLength(5)
-                .WithMessage("Recipe ")
+                .WithMessage("Recipe must be at least 5 characters long.")
                 .MaximumLength(1000)
                 .WithMessage("Recipe should not be longer than 1000 characters");
         }
