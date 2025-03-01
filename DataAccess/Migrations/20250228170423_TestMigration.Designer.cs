@@ -3,47 +3,24 @@ using System;
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace DbSeeder.Migrations
+namespace DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250228170423_TestMigration")]
+    partial class TestMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
 
-            modelBuilder.Entity("DataAccess.Models.EmployeeWorkSession", b =>
-                {
-                    b.Property<int>("WorkSessionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("EmployeeName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("WorkingTimeFrom")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("WorkingTimeSummary")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("WorkingTimeTo")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("WorkSessionId");
-
-                    b.ToTable("EmployeeWorkSession");
-                });
-
-            modelBuilder.Entity("DataAccess.Models.Employees", b =>
+            modelBuilder.Entity("DataAccess.Models.Employee", b =>
                 {
                     b.Property<int>("EmployeeId")
                         .ValueGeneratedOnAdd()
@@ -85,10 +62,36 @@ namespace DbSeeder.Migrations
 
                     b.HasKey("EmployeeId");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employees", (string)null);
                 });
 
-            modelBuilder.Entity("DataAccess.Models.Ingredients", b =>
+            modelBuilder.Entity("DataAccess.Models.EmployeeWorkSession", b =>
+                {
+                    b.Property<int>("WorkSessionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("EmployeeName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("WorkingTimeFrom")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("WorkingTimeSummary")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("WorkingTimeTo")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("WorkSessionId");
+
+                    b.ToTable("EmployeeWorkSession");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.Ingredient", b =>
                 {
                     b.Property<int>("IngredientId")
                         .ValueGeneratedOnAdd()
@@ -106,23 +109,45 @@ namespace DbSeeder.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Package")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("SafetyStock")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("Stock")
+                    b.Property<int>("Stock")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Unit")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("IngredientId");
 
-                    b.ToTable("Ingredients");
+                    b.ToTable("Ingredients", (string)null);
                 });
 
-            modelBuilder.Entity("DataAccess.Models.OrderItems", b =>
+            modelBuilder.Entity("DataAccess.Models.Order", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("OrderTime")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("OrderId");
+
+                    b.ToTable("Orders", (string)null);
+                });
+
+            modelBuilder.Entity("DataAccess.Models.OrderItem", b =>
                 {
                     b.Property<int>("OrderItemId")
                         .ValueGeneratedOnAdd()
@@ -142,30 +167,10 @@ namespace DbSeeder.Migrations
 
                     b.HasKey("OrderItemId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
-            modelBuilder.Entity("DataAccess.Models.Orders", b =>
-                {
-                    b.Property<int>("OrderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("DayOfWeek")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("OrderTime")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("OrderId");
-
-                    b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("DataAccess.Models.Payments", b =>
+            modelBuilder.Entity("DataAccess.Models.Payment", b =>
                 {
                     b.Property<int>("PaymentId")
                         .ValueGeneratedOnAdd()
@@ -183,10 +188,10 @@ namespace DbSeeder.Migrations
 
                     b.HasKey("PaymentId");
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
-            modelBuilder.Entity("DataAccess.Models.Products", b =>
+            modelBuilder.Entity("DataAccess.Models.Product", b =>
                 {
                     b.Property<int>("ProductId")
                         .ValueGeneratedOnAdd()
@@ -197,12 +202,10 @@ namespace DbSeeder.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool?>("IsAvailable")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double?>("Price")
+                    b.Property<double>("Price")
                         .HasColumnType("REAL");
 
                     b.Property<string>("ProductName")
@@ -214,10 +217,32 @@ namespace DbSeeder.Migrations
 
                     b.HasKey("ProductId");
 
-                    b.ToTable("Products");
+                    b.HasIndex("RecipeId")
+                        .IsUnique();
+
+                    b.ToTable("Products", (string)null);
                 });
 
-            modelBuilder.Entity("DataAccess.Models.RecipeIngredients", b =>
+            modelBuilder.Entity("DataAccess.Models.Recipe", b =>
+                {
+                    b.Property<int>("RecipeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("RecipeContent")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RecipeName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("RecipeId");
+
+                    b.ToTable("Recipes", (string)null);
+                });
+
+            modelBuilder.Entity("DataAccess.Models.RecipeIngredient", b =>
                 {
                     b.Property<int>("RecipeIngredientId")
                         .ValueGeneratedOnAdd()
@@ -238,26 +263,7 @@ namespace DbSeeder.Migrations
 
                     b.HasIndex("RecipeId");
 
-                    b.ToTable("RecipeIngredients");
-                });
-
-            modelBuilder.Entity("DataAccess.Models.Recipes", b =>
-                {
-                    b.Property<int>("RecipeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Recipe")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("RecipeName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("RecipeId");
-
-                    b.ToTable("Recipes");
+                    b.ToTable("RecipeIngredients", (string)null);
                 });
 
             modelBuilder.Entity("DataAccess.Models.ToDoListTask", b =>
@@ -281,15 +287,26 @@ namespace DbSeeder.Migrations
                     b.ToTable("ToDoListTasks");
                 });
 
-            modelBuilder.Entity("DataAccess.Models.RecipeIngredients", b =>
+            modelBuilder.Entity("DataAccess.Models.Product", b =>
                 {
-                    b.HasOne("DataAccess.Models.Ingredients", "Ingredient")
-                        .WithMany("RecipeIngredients")
+                    b.HasOne("DataAccess.Models.Recipe", "Recipe")
+                        .WithOne("Product")
+                        .HasForeignKey("DataAccess.Models.Product", "RecipeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Recipe");
+                });
+
+            modelBuilder.Entity("DataAccess.Models.RecipeIngredient", b =>
+                {
+                    b.HasOne("DataAccess.Models.Ingredient", "Ingredient")
+                        .WithMany()
                         .HasForeignKey("IngredientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DataAccess.Models.Recipes", "Recipe")
+                    b.HasOne("DataAccess.Models.Recipe", "Recipe")
                         .WithMany("RecipeIngredients")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -300,13 +317,11 @@ namespace DbSeeder.Migrations
                     b.Navigation("Recipe");
                 });
 
-            modelBuilder.Entity("DataAccess.Models.Ingredients", b =>
+            modelBuilder.Entity("DataAccess.Models.Recipe", b =>
                 {
-                    b.Navigation("RecipeIngredients");
-                });
+                    b.Navigation("Product")
+                        .IsRequired();
 
-            modelBuilder.Entity("DataAccess.Models.Recipes", b =>
-                {
                     b.Navigation("RecipeIngredients");
                 });
 #pragma warning restore 612, 618

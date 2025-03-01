@@ -9,31 +9,27 @@
              d:DesignHeight="768" d:DesignWidth="455">
 
     <Grid Margin="25" Background="#FFD9D9D9">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="677*"/>
-            <RowDefinition Height="41*"/>
-        </Grid.RowDefinitions>
-
         <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" CornerRadius="8" d:IsLocked="True">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="3*"/>
-                    <RowDefinition Height="1.5*"/>
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition Height="1.5*"/>
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition Height="1.5*"/>
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition Height="1.5*"/>
-                    <RowDefinition Height="8*"/>
-                    <RowDefinition Height="1.5*"/>
-                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="1*" MaxHeight="50"/>
+                    <RowDefinition Height="0.5*" MaxHeight="25"/>
+                    <RowDefinition Height="1*" MaxHeight="50"/>
+                    <RowDefinition Height="0.5*" MaxHeight="25"/>
+                    <RowDefinition Height="1.4*" MaxHeight="70"/>
+                    <RowDefinition Height="0.5*" MaxHeight="25"/>
+                    <RowDefinition Height="1.4*" MaxHeight="70"/>
+                    <RowDefinition Height="0.5*" MaxHeight="25"/>
+                    <RowDefinition Height="4*"/>
+                    <RowDefinition Height="0.5*" MaxHeight="25"/>
+                    <RowDefinition Height="1*" MaxHeight="50"/>
+
                     <!--10-->
-                    <RowDefinition Height="1.5*"/>
-                    <RowDefinition Height="8*"/>
-                    <RowDefinition Height="1.5*"/>
-                    <RowDefinition Height="2*"/>
-                    <RowDefinition Height="1.5*"/>
+                    <RowDefinition Height="0.5*" MaxHeight="25"/>
+                    <RowDefinition Height="4*"/>
+                    <RowDefinition Height="0.5*" MaxHeight="25"/>
+                    <RowDefinition Height="1*" MaxHeight="50"/>
+                    <RowDefinition Height="0.5*" MaxHeight="25"/>
                 </Grid.RowDefinitions>
 
                 <Border Grid.Row="0" BorderThickness="0,0,0,1" BorderBrush="Black" CornerRadius="8,8,0, 0" Background="#8EA7E9">
@@ -42,10 +38,10 @@
                     </Grid>
                 </Border>
 
-                <Border Grid.Row="2" CornerRadius="8" Margin="25,0,25,0" Background="White">
+                <Border Grid.Row="2" Margin="25, 0, 25, 0" CornerRadius="8" Background="White">
                     <Grid>
                         <ComboBox ItemsSource="{Binding ProductObservableCollection}"
-                                  SelectedItem="{Binding SelectedProduct}"
+                                  SelectedItem="{Binding SelectedItem}"
                                   DisplayMemberPath="ProductName"
                                   VerticalAlignment="Stretch"
                                   HorizontalAlignment="Stretch"
@@ -56,7 +52,7 @@
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    IsHitTestVisible="False"
-                                   Visibility="{Binding IsProductSelected}">
+                                   Visibility="{Binding IsItemSelected}">
                         </TextBlock>
                     </Grid>
                 </Border>
@@ -64,109 +60,164 @@
                 <Grid Grid.Row="4">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="3*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Grid Grid.Column="0" Margin="25,0,0,0">
-                        <Viewbox Height="32" HorizontalAlignment="Left" >
-                            <CheckBox IsChecked="{Binding IsNewProduct}"/>
-                        </Viewbox>
+                    <Grid Grid.Column="0" Margin="25, 0, 0,0">
+                        <StackPanel>
+                            <Viewbox Height="32" HorizontalAlignment="Center">
+                                <CheckBox IsChecked="{Binding IsNewItem}"/>
+                            </Viewbox>
+
+                            <TextBlock Text="Dodaj nowy" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                        </StackPanel>
                     </Grid>
 
-                    <Border Grid.Column="1" CornerRadius="8" Margin="25,0,25,0" Background="White">
-                        <Grid>
-                            <TextBox Text="{Binding ProductName, FallbackValue='', UpdateSourceTrigger=PropertyChanged}"
-                                     Tag="Nazwa nowego produktu" 
-                                     Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}"
-                                     IsEnabled="{Binding IsNewProduct}">
-                            </TextBox>
-                        </Grid>
-                    </Border>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="20"/>
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0" CornerRadius="8" Background="White" Margin="0, 0, 25, 0">
+                            <Grid>
+                                <TextBox Text="{Binding ProductName, Delay=250, FallbackValue='', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Tag="Nazwa nowego produktu" 
+                                         Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}">
+                                </TextBox>
+                            </Grid>
+                        </Border>
+
+                        <TextBlock Grid.Row="1"
+                                   Text="{Binding ProductNameError}"
+                                   Style="{StaticResource WarehouseFunctionsTextBoxErrorMessage}">
+                        </TextBlock>
+                    </Grid>
                 </Grid>
 
                 <Grid Grid.Row="6">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Border CornerRadius="8" Margin="25,0,12,0" Background="White">
-                        <Grid>
-                            <TextBox Text="{Binding ProductCategory, FallbackValue='', UpdateSourceTrigger=PropertyChanged}"
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="20"/>
+                        </Grid.RowDefinitions>
+
+                        <Border CornerRadius="8" Margin="25,0,12.5,0" Background="White">
+                            <TextBox Text="{Binding ProductCategory, Delay=250, FallbackValue='', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      Tag="Kategoria" 
                                      Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}">
                             </TextBox>
-                        </Grid>
-                    </Border>
+                        </Border>
 
-                    <Border Grid.Column="1" CornerRadius="8" Margin="25,0,25,0" Background="White">
-                        <Grid>
-                            <TextBox Text="{Binding ProductPrice, FallbackValue='', UpdateSourceTrigger=PropertyChanged}" 
+                        <TextBlock Grid.Column="0" Grid.Row="1"
+                                   Text="{Binding ProductCategoryError}"
+                                   Style="{StaticResource WarehouseFunctionsTextBoxErrorMessage}">
+                        </TextBlock>
+                    </Grid>
+
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="20"/>
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0" CornerRadius="8" Margin="12.5,0,25,0" Background="White">
+                            <TextBox Text="{Binding ProductPrice, Delay=250, FallbackValue='', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                      Tag="Cena" 
                                      Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}">
                             </TextBox>
-                        </Grid>
-                    </Border>
+                        </Border>
+
+                        <TextBlock Grid.Row="1"
+                                   Text="{Binding ProductPriceError}"
+                                   Style="{StaticResource WarehouseFunctionsTextBoxErrorMessage}">
+                        </TextBlock>
+                    </Grid>
                 </Grid>
 
-                <Border Grid.Row="8" CornerRadius="8" Margin="25,0,25,0" Background="White">
-                    <Grid>
-                        <TextBox Text="{Binding ProductDescription, FallbackValue='', UpdateSourceTrigger=PropertyChanged}" 
+                <Grid Grid.Row="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="20"/>
+                    </Grid.RowDefinitions>
+
+                    <Border CornerRadius="8" Margin="25,0,25,0" Background="White">
+                        <TextBox Text="{Binding ProductDescription, Delay=250, FallbackValue='', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                  Tag="Opis produktu" 
                                  Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder2}"
                                  VerticalContentAlignment="Top"
-                                 HorizontalContentAlignment="Left"
-                                 Padding="10">
+                                 HorizontalContentAlignment="Left">
                         </TextBox>
-                    </Grid>
-                </Border>
+                    </Border>
 
-                <Border Grid.Row="10" BorderThickness="0,1,0,1" BorderBrush="Black" CornerRadius="0" Background="#8EA7E9">
+                    <TextBlock Grid.Row="1"
+                               Text="{Binding ProductDescriptionError}"
+                               Style="{StaticResource WarehouseFunctionsTextBoxErrorMessage}">
+                    </TextBlock>
+                </Grid>
+
+                <Border Grid.Row="10" BorderThickness="0, 1,0,1" BorderBrush="Black" CornerRadius="0" Background="#8EA7E9">
                     <Grid>
                         <TextBlock Text="DODAJ PRZEPIS" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"/>
                     </Grid>
                 </Border>
 
-                <Border Grid.Row="12" CornerRadius="8" Margin="25,0,25,0" Background="White">
-                    <Grid>
-                        <TextBox Text="{Binding ProductRecipe, FallbackValue='', UpdateSourceTrigger=PropertyChanged}" 
+                <Grid Grid.Row="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="20"/>
+                    </Grid.RowDefinitions>
+
+                    <Border CornerRadius="8" Margin="25,0,25,0" Background="White">
+                        <TextBox Text="{Binding ProductRecipe, Delay=250, FallbackValue='', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                  Tag="Tutaj wpisz przepis na nowego drinka" 
                                  Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder2}"
                                  VerticalContentAlignment="Top"
-                                 HorizontalContentAlignment="Left"
-                                 Padding="10"
-                                 IsEnabled="True">
+                                 HorizontalContentAlignment="Left">
                         </TextBox>
-                    </Grid>
-                </Border>
+                    </Border>
+
+                    <TextBlock Grid.Row="1"
+                               Text="{Binding ProductRecipeError}"
+                               Style="{StaticResource WarehouseFunctionsTextBoxErrorMessage}">
+                    </TextBlock>
+                </Grid>
 
                 <Grid Grid.Row="14">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="25*"/>
-                        <ColumnDefinition Width="165*"/>
-                        <ColumnDefinition Width="16*"/>
-                        <ColumnDefinition Width="165*"/>
-                        <ColumnDefinition Width="25*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
 
                     <Button Command="{Binding DeleteProductCommand}"
                             IsEnabled="{Binding IsDeleteButtonEnable}"
                             Style="{StaticResource BasicButtonRed}"
+                            Grid.Column="0"
+                            Margin="25, 0, 12.5, 0">
+                        <TextBlock Text="USUŃ"/>
+                    </Button>
+
+                    <Button Command="{Binding UpdateProductCommand}"
+                            IsEnabled="{Binding IsUpdateButtonEnable}"
+                            Style="{StaticResource BasicButton}"
+                            Visibility="{Binding IsUpdateButtonVisible}"
                             Grid.Column="1"
-                            Margin="0">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="USUŃ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
-                        </StackPanel>
+                            Margin="12.5, 0. 25, 0">
+                        <TextBlock Text="EDYTUJ"/>
                     </Button>
 
                     <Button Command="{Binding AddNewProductCommand}"
                             IsEnabled="{Binding IsAddButtonEnable}"
                             Style="{StaticResource BasicButtonGreen}"
-                            Grid.Column="3"
-                            Margin="0">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="DODAJ" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,0" FontSize="16"/>
-                        </StackPanel>
+                            Visibility="{Binding IsAddButtonVisible}"
+                            Grid.Column="1"
+                            Margin="12.5, 0. 25, 0">
+                        <TextBlock Text="DODAJ"/>
                     </Button>
                 </Grid>
 

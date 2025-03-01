@@ -1,9 +1,8 @@
-﻿using System;
+﻿#nullable disable
+
 using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
-
-namespace POS.Migrations
+namespace DataAccess.Migrations.MigrationsHistory.DataAccess
 {
     /// <inheritdoc />
     public partial class Init : Migration

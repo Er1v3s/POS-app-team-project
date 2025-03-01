@@ -3,47 +3,44 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using DataAccess.Models;
-using Microsoft.IdentityModel.Tokens;
+using POS.Services;
 using POS.Services.SalesPanel;
+using POS.Utilities;
 using POS.Utilities.RelayCommands;
+using POS.Validators.Models;
+using POS.ViewModels.Base.WarehouseFunctions;
 
 namespace POS.ViewModels.WarehouseFunctions
 {
-    public class AddEditDeleteProductViewModel : ProductManipulationViewModelBase
+    public class AddEditDeleteProductViewModel : FormViewModelBase
     {
-        private string productName;
-        private string productCategory;
-        private string productPrice;
-        private string productDescription;
-        private string productRecipe;
+        private readonly ProductService _productService;
+        private readonly RecipeService _recipeService;
 
-        private bool isNewProduct;
+        private readonly ProductValidator _productValidator;
+        private readonly RecipeValidator _recipeValidator;
 
-        public override Product? SelectedProduct
-        {
-            get => selectedProduct;
-            set
-            {
-                if (SetField(ref selectedProduct, value))
-                {
-                    IsProductSelected = Visibility.Collapsed;
+        private string productName = string.Empty;
+        private string productCategory = string.Empty;
+        private string productPrice = string.Empty;
+        private string productDescription = string.Empty;
+        private string productRecipe = string.Empty;
 
-                    if (isNewProduct && selectedProduct != null)
-                        IsNewProduct = false;
+        private string productNameError = string.Empty;
+        private string productCategoryError = string.Empty;
+        private string productPriceError = string.Empty;
+        private string productDescriptionError = string.Empty;
+        private string productRecipeError = string.Empty;
 
-                    IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
-                    IsDeleteButtonEnable = CheckIfDeleteButtonCanBeEnabled();
-                }
-            }
-        }
+        public MyObservableCollection<Product> ProductObservableCollection => _productService.ProductCollection;
 
         public string ProductName
         {
             get => productName;
             set
             {
-                if(SetField(ref productName, value))
-                    IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
+                if (SetField(ref productName, value))
+                    ValidateProperty(_productValidator.ValidateProductName, nameof(ProductName), value, error => ProductNameError = error);
             }
         }
 
@@ -53,7 +50,7 @@ namespace POS.ViewModels.WarehouseFunctions
             set
             {
                 if (SetField(ref productCategory, value))
-                    IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
+                    ValidateProperty(_productValidator.ValidateProductCategory, nameof(ProductCategory), value, error => ProductCategoryError = error);
             }
         }
 
@@ -63,7 +60,7 @@ namespace POS.ViewModels.WarehouseFunctions
             set
             {
                 if (SetField(ref productPrice, value))
-                    IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
+                    ValidateProperty(_productValidator.ValidateProductPrice, nameof(ProductPrice), value, error => ProductPriceError = error);
             }
         }
 
@@ -73,7 +70,7 @@ namespace POS.ViewModels.WarehouseFunctions
             set
             {
                 if (SetField(ref productDescription, value))
-                    IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
+                    ValidateProperty(_productValidator.ValidateProductDescription, nameof(ProductDescription), value, error => ProductDescriptionError = error);
             }
         }
 
@@ -83,35 +80,53 @@ namespace POS.ViewModels.WarehouseFunctions
             set
             {
                 if (SetField(ref productRecipe, value))
-                    IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
+                    ValidateProperty(_recipeValidator.ValidateRecipeContent, nameof(ProductRecipe), value, error => ProductRecipeError = error);
             }
         }
 
-        public bool IsNewProduct
+        public string ProductNameError
         {
-            get => isNewProduct;
-            set
-            {
-                if (SetField(ref isNewProduct, value))
-                {
-                    if (value)
-                    {
-                        SelectedProduct = null;
-                        IsProductSelected = Visibility.Visible;
-                        IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
-                    }
-                    else
-                        ProductName = string.Empty;
-                }
-            }
+            get => productNameError;
+            set => SetField(ref productNameError, value);
+        }
+
+        public string ProductCategoryError
+        {
+            get => productCategoryError;
+            set => SetField(ref productCategoryError, value);
+        }
+
+        public string ProductPriceError
+        {
+            get => productPriceError;
+            set => SetField(ref productPriceError, value);
+        }
+
+        public string ProductDescriptionError
+        {
+            get => productDescriptionError;
+            set => SetField(ref productDescriptionError, value);
+        }
+
+        public string ProductRecipeError
+        {
+            get => productRecipeError;
+            set => SetField(ref productRecipeError, value);
         }
 
         public ICommand AddNewProductCommand { get; }
+        public ICommand UpdateProductCommand { get; }
         public ICommand DeleteProductCommand { get; }
 
-        public AddEditDeleteProductViewModel(ProductService productService) : base(productService)
+        public AddEditDeleteProductViewModel(ProductService productService, RecipeService recipeService)
         {
+            _productService = productService;
+            _recipeService = recipeService;
+            _productValidator = new ProductValidator();
+            _recipeValidator = new RecipeValidator();
+
             AddNewProductCommand = new RelayCommandAsync(AddNewProduct);
+            UpdateProductCommand = new RelayCommandAsync(UpdateProduct);
             DeleteProductCommand = new RelayCommandAsync(DeleteProduct);
         }
 
@@ -119,10 +134,31 @@ namespace POS.ViewModels.WarehouseFunctions
         {
             try
             {
-                var product = CreateProduct();
-                await _productService.AddNewProductAsync(product);
+                var newRecipe = await _recipeService.CreateRecipe(productName, productRecipe);
+                var newProduct = await _productService.CreateProduct(productName, productCategory, productDescription, productPrice, newRecipe);
+                await _productService.AddNewProductAsync(newProduct);
 
                 MessageBox.Show("Pomyślnie dodano nowy produkt", 
+                    "Informacja", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+
+                ResetForm();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Nie udało się utworzyć produktu, przyczyna problemu: {ex.Message}",
+                    "Wystąpił nieoczekiwany problem", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async Task UpdateProduct()
+        {
+            try
+            {
+                var updatedRecipe = await _recipeService.CreateRecipe(productName, productRecipe);
+                var updatedProduct = await _productService.CreateProduct(productName, productCategory, productDescription, productPrice, updatedRecipe);
+                await _productService.UpdateExistingProductAsync((SelectedItem as Product)!, updatedProduct);
+
+                MessageBox.Show("Pomyślnie zaktualizowano produkt",
                     "Informacja", MessageBoxButton.OK, MessageBoxImage.Asterisk);
 
                 ResetForm();
@@ -138,7 +174,7 @@ namespace POS.ViewModels.WarehouseFunctions
         {
             try
             {
-                await _productService.DeleteProductAsync(selectedProduct!);
+                await _productService.DeleteProductAsync((SelectedItem as Product)!);
 
                 MessageBox.Show("Pomyślnie usunięto produkt",
                     "Informacja", MessageBoxButton.OK, MessageBoxImage.Asterisk);
@@ -152,43 +188,16 @@ namespace POS.ViewModels.WarehouseFunctions
             }
         }
 
-        private void ResetForm()
+        protected override void LoadDataIntoFormFields(object obj)
         {
-            ProductName = string.Empty;
-            ProductCategory = string.Empty;
-            ProductPrice = string.Empty;
-            ProductDescription = string.Empty;
-            ProductRecipe = string.Empty;
+            var product = obj as Product;
+            if (product is null) throw new ArgumentNullException();
 
-            SelectedProduct = null;
-            IsProductSelected = Visibility.Visible;
-        }
-
-        private Product CreateProduct()
-        {
-            return new Product
-            {
-                ProductName = productName,
-                Category = productCategory,
-                Description = productDescription,
-                Price = double.Parse(productPrice),
-            };
-        }
-
-        protected override bool CheckIfAddButtonCanBeEnabled()
-        {
-            return isNewProduct &&
-                   !productName.IsNullOrEmpty() &&
-                   !productCategory.IsNullOrEmpty() &&
-                   !productPrice.IsNullOrEmpty() &&
-                   !productDescription.IsNullOrEmpty() &&
-                   !productRecipe.IsNullOrEmpty();
-
-        }
-
-        protected override bool CheckIfDeleteButtonCanBeEnabled()
-        {
-            return selectedProduct != null;
+            ProductName = product.ProductName;
+            ProductCategory = product.Category;
+            ProductDescription = product.Description;
+            ProductPrice = product.Price.ToString();
+            ProductRecipe = product.Recipe.RecipeContent;
         }
     }
 }

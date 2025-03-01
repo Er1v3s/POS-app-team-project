@@ -47,9 +47,9 @@ namespace POS.Tests.UnitTests
 
         [Theory]
         [InlineData("Test Name !@#", "Test Description", "Test Unit", "Test Package")]
-        [InlineData("Test Name", "Test Description !@#", "Test Unit", "Test Package")]
-        [InlineData("Test Name", "Test Description !@#", "Test Unit !@#", "Test Package")]
-        [InlineData("Test Name", "Test Description", "Test Unit", "Test Package !@#")]
+        [InlineData("Test Name", "Test Description ~[]+=", "Test Unit", "Test Package")]
+        [InlineData("Test Name", "Test Description", "Test Unit ~[]+=", "Test Package")]
+        [InlineData("Test Name", "Test Description", "Test Unit", "Test Package ~[]+=")]
         public async Task CreateIngredient_ForInvalidArguments_ThrowValidationException(string name, string description, string unit, string package)
         {
             // Arrange

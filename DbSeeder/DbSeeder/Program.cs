@@ -90,7 +90,7 @@ namespace DbSeeder
 
                 if (price != null)
                 {
-                    amount += price.Value * orderItem.Quantity;
+                    amount += price * orderItem.Quantity;
                 }
             }
 

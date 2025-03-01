@@ -1,7 +1,7 @@
 ﻿using Serilog;
 using System;
 
-namespace POS.Exceptions
+namespace POS.Exceptions.Logger
 {
     public class LoggerService : ILoggerService
     {

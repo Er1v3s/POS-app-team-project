@@ -3,6 +3,7 @@ using System;
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250227004840_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
@@ -85,7 +88,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("WorkSessionId");
 
-                    b.ToTable("EmployeeWorkSession", (string)null);
+                    b.ToTable("EmployeeWorkSession");
                 });
 
             modelBuilder.Entity("DataAccess.Models.Ingredient", b =>
@@ -202,6 +205,9 @@ namespace DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<bool?>("IsAvailable")
+                        .HasColumnType("INTEGER");
+
                     b.Property<double>("Price")
                         .HasColumnType("REAL");
 
@@ -281,7 +287,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("TodoTaskId");
 
-                    b.ToTable("ToDoListTasks", (string)null);
+                    b.ToTable("ToDoListTasks");
                 });
 
             modelBuilder.Entity("DataAccess.Models.Product", b =>
