@@ -163,25 +163,28 @@ namespace POS.Tests.IntegrationTests
         {
             // Arrange
             var dbContext = GetInMemoryDbContext();
-            await SeedDatabaseWithIngredients(dbContext);
 
             var recipe = new Recipe { RecipeName = "test name", RecipeContent = "test content" };
-            
-            await dbContext.RecipeIngredients.AddAsync(new RecipeIngredient { RecipeId = 1, IngredientId = 1, Quantity = 1 });
-            await dbContext.RecipeIngredients.AddAsync(new RecipeIngredient { RecipeId = 1, IngredientId = 2, Quantity = 1 });
+            var ingredient = new Ingredient { Name = "Whisky", Description = "Jack Daniel's", Unit = "szt", Package = "Szklana butelka 700ml", Stock = 10, SafetyStock = 5 };
+            var ingredient2 = new Ingredient { Name = "Wódka", Description = "Finlandia", Unit = "szt", Package = "Szklana butelka 1000ml", Stock = 7, SafetyStock = 3 };
 
-            await dbContext.Product.AddAsync(new Product { ProductId = 1, RecipeId = 1, ProductName = "test name", Category = "test category", Description = "test description", Price = 0, 
-                Recipe = recipe});
-            
+            await dbContext.Ingredients.AddRangeAsync(ingredient, ingredient2);
+            await dbContext.Recipe.AddAsync(recipe);
+            await dbContext.RecipeIngredients.AddRangeAsync(
+                new RecipeIngredient { RecipeId = recipe.RecipeId, Recipe = recipe, IngredientId = ingredient.IngredientId, Ingredient = ingredient, Quantity = 1 },
+                new RecipeIngredient { RecipeId = recipe.RecipeId, Recipe = recipe, IngredientId = ingredient2.IngredientId, Ingredient = ingredient2, Quantity = 1 });
+            var product = new Product { RecipeId = recipe.RecipeId, ProductName = "test name", Category = "test category", Description = "test description", Price = 0, Recipe = recipe};
+            await dbContext.Product.AddAsync(product);
+
             await dbContext.SaveChangesAsync();
 
             var orderDto = new OrderDto
             {
                 EmployeeId = 0,
                 OrderItemList = new List<OrderItemDto>
-                {
-                    new() { ProductId = 1 }
-                },
+            {
+                new() { ProductId = product.ProductId }
+            },
             };
 
             // Act
@@ -189,11 +192,11 @@ namespace POS.Tests.IntegrationTests
             await ingredientService.RemoveIngredientsAsync(orderDto);
 
             // Assert
-            var updatedIngredient1 = await dbContext.Ingredients.FindAsync(1);
-            var updatedIngredient2 = await dbContext.Ingredients.FindAsync(2);
+            var updatedIngredient1 = await dbContext.Ingredients.FindAsync(ingredient.IngredientId);
+            var updatedIngredient2 = await dbContext.Ingredients.FindAsync(ingredient2.IngredientId);
 
-            updatedIngredient1?.Stock.Should().Be(9); // 10 existing - 1 from order
-            updatedIngredient2?.Stock.Should().Be(6); // 7 existing - 1 from order
+            updatedIngredient1?.Stock.Should().Be(9);
+            updatedIngredient2?.Stock.Should().Be(6);
         }
 
         private AppDbContext GetInMemoryDbContext()
@@ -210,9 +213,9 @@ namespace POS.Tests.IntegrationTests
 
         private async Task SeedDatabaseWithIngredients(AppDbContext dbContext)
         {
-            await dbContext.Ingredients.AddAsync(new Ingredient() { IngredientId = 1, Name = "Whisky", Description = "Jack Daniel's", Unit = "szt", Package = "Szklana butelka 700ml", Stock = 10, SafetyStock = 5 });
-            await dbContext.Ingredients.AddAsync(new Ingredient() { IngredientId = 2, Name = "Wódka", Description = "Finlandia", Unit = "szt", Package = "Szklana butelka 1000ml", Stock = 7, SafetyStock = 3 });
-            await dbContext.Ingredients.AddAsync(new Ingredient() { IngredientId = 3, Name = "Rum", Description = "Bacardi White", Unit = "szt", Package = "Szklana butelka 700ml", Stock = 10, SafetyStock = 10 });
+            await dbContext.Ingredients.AddAsync(new Ingredient() { Name = "Whisky", Description = "Jack Daniel's", Unit = "szt", Package = "Szklana butelka 700ml", Stock = 10, SafetyStock = 5 });
+            await dbContext.Ingredients.AddAsync(new Ingredient() { Name = "Wódka", Description = "Finlandia", Unit = "szt", Package = "Szklana butelka 1000ml", Stock = 7, SafetyStock = 3 });
+            await dbContext.Ingredients.AddAsync(new Ingredient() { Name = "Rum", Description = "Bacardi White", Unit = "szt", Package = "Szklana butelka 700ml", Stock = 10, SafetyStock = 10 });
             await dbContext.SaveChangesAsync();
         }
     }
