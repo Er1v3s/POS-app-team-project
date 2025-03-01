@@ -20,7 +20,7 @@ namespace POS.Validators.Models
             RuleFor(x => x.Category)
                 .NotEmpty()
                 .WithMessage("Category cannot be empty")
-                .Must(BeValidName)
+                .Must(BeValidCategory)
                 .WithMessage("Category can only contains letters, and spaces")
                 .MaximumLength(100)
                 .WithMessage("Category should not exceed 100 characters");
@@ -37,7 +37,13 @@ namespace POS.Validators.Models
                 .NotEmpty()
                 .WithMessage("Price cannot be empty")
                 .GreaterThanOrEqualTo(0)
-                .WithMessage("Price cannot be negative");
+                .WithMessage("Price cannot be negative")
+                .LessThanOrEqualTo(10000)
+                .WithMessage("Price cannot be higher than 10000");
+
+            RuleFor(x => x.Recipe)
+                .NotNull()
+                .WithMessage("Recipe cannot be null");
         }
 
         public ValidationResult ValidateProductName(string name)
@@ -58,7 +64,7 @@ namespace POS.Validators.Models
         {
             if (string.IsNullOrWhiteSpace(category))
                 return new ValidationResult(false, "Property \"category\" cannot be empty");
-            if (!BeValidName(category))
+            if (!BeValidCategory(category))
                 return new ValidationResult(false, "Property \"category\" can only contains letters, numbers, and spaces");
             if (category.Length > 100)
                 return new ValidationResult(false, "Property \"category\" must be less than 100 characters long.");
@@ -99,6 +105,11 @@ namespace POS.Validators.Models
         private bool BeValidName(string text)
         {
             return Regex.IsMatch(text, @"^[a-za-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ0-9\s]*$");
+        }
+
+        private bool BeValidCategory(string text)
+        {
+            return Regex.IsMatch(text, @"^[a-za-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]*$");
         }
 
         private bool BeValidDescription(string text)
