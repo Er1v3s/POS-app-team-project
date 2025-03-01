@@ -172,5 +172,74 @@ namespace POS.Tests.UnitTests
 
         #endregion
 
+        #region Validate Product Description
+
+        public static IEnumerable<object[]> InvalidDescription()
+        {
+            yield return new object[] { "" };
+            yield return new object[] { "`~@#$^&*-_=+[]{};:<>|" };
+            yield return new object[] { new string('A', 1001) };
+        }
+
+        public static IEnumerable<object[]> ValidDescription()
+        {
+            yield return new object[] { "ValidDescription 123 !.,()" };
+            yield return new object[] { new string('A', 100) };
+        }
+
+        [Theory]
+        [MemberData(nameof(InvalidDescription))]
+        public void ProductDescription_ForInvalidValues_ShouldHaveValidationError(string invalidDescription)
+        {
+            // Arrange
+            product.Description = invalidDescription;
+
+            // Act
+            var result = _productValidator.TestValidate(product);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(x => x.Description);
+        }
+
+        [Theory]
+        [MemberData(nameof(ValidDescription))]
+        public void ProductDescription_ForValidValues_ShouldNotHaveValidationError(string validDescription)
+        {
+            // Arrange
+            product.Description = validDescription;
+
+            // Act
+            var result = _productValidator.TestValidate(product);
+
+            // Assert
+            result.ShouldNotHaveValidationErrorFor(x => x.Description);
+        }
+
+        [Theory]
+        [MemberData(nameof(InvalidDescription))]
+        public void DescriptionValidationMethod_ForInvalidValues_ShouldReturnValidationResultEqualsFalse(string invalidDescription)
+        {
+            // Act
+            var result = _productValidator.ValidateProductDescription(invalidDescription);
+
+            // Assert
+            result.Result.Should().BeFalse();
+            result.ErrorMessage.Should().NotBeNullOrEmpty();
+        }
+
+        [Theory]
+        [MemberData(nameof(ValidDescription))]
+        public void DescriptionValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(string validDescription)
+        {
+            // Act
+            var result = _productValidator.ValidateProductDescription(validDescription);
+
+            // Assert
+            result.Result.Should().BeTrue();
+            result.ErrorMessage.Should().BeNullOrEmpty();
+        }
+
+        #endregion
+
     }
 }
