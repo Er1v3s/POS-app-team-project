@@ -146,7 +146,8 @@ namespace POS.Tests.UnitTests
 
         [Theory]
         [MemberData(nameof(InvalidCategory))]
-        public void CategoryValidationMethod_ForInvalidValues_ShouldReturnValidationResultEqualsFalse(string invalidCategory)
+        public void CategoryValidationMethod_ForInvalidValues_ShouldReturnValidationResultEqualsFalse(
+            string invalidCategory)
         {
             // Arrange
             product.Category = invalidCategory;
@@ -218,7 +219,8 @@ namespace POS.Tests.UnitTests
 
         [Theory]
         [MemberData(nameof(InvalidDescription))]
-        public void DescriptionValidationMethod_ForInvalidValues_ShouldReturnValidationResultEqualsFalse(string invalidDescription)
+        public void DescriptionValidationMethod_ForInvalidValues_ShouldReturnValidationResultEqualsFalse(
+            string invalidDescription)
         {
             // Act
             var result = _productValidator.ValidateProductDescription(invalidDescription);
@@ -230,7 +232,8 @@ namespace POS.Tests.UnitTests
 
         [Theory]
         [MemberData(nameof(ValidDescription))]
-        public void DescriptionValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(string validDescription)
+        public void DescriptionValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(
+            string validDescription)
         {
             // Act
             var result = _productValidator.ValidateProductDescription(validDescription);
@@ -304,5 +307,17 @@ namespace POS.Tests.UnitTests
 
         #endregion
 
+        [Fact]
+        public void RecipeProperty_ForNullValue_ShouldHaveValidationError()
+        {
+            // Arrange
+            product.Recipe = null!;
+
+            // Act
+            var result = _productValidator.TestValidate(product);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(x => x.Recipe);
+        }
     }
 }
