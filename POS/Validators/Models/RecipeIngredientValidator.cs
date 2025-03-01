@@ -19,10 +19,10 @@ namespace POS.Validators.Models
         {
             if (string.IsNullOrWhiteSpace(quantity))
                 return new ValidationResult(false, "Property \"quantity\" cannot be empty");
-            if (!double.TryParse(quantity, NumberStyles.Float, CultureInfo.InvariantCulture, out double quantityAsDouble))
+            if (!double.TryParse(quantity, NumberStyles.Any, CultureInfo.InvariantCulture, out double priceAsDouble))
                 return new ValidationResult(false, "Property \"quantity\" must be a numeric value");
-            if (quantityAsDouble < 0 || quantityAsDouble > 1000)
-                return new ValidationResult(false, "Property \"quantity\" must be between 0 and 1000");
+            if (priceAsDouble < 0 || priceAsDouble > 10000)
+                return new ValidationResult(false, "Property \"quantity\" must be between 0 and 10000");
 
             string[] parts = quantity.Split('.');
             if (parts.Length == 2 && parts[1].Length > 2)

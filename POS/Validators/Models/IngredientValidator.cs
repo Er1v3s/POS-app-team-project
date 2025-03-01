@@ -72,7 +72,7 @@ namespace POS.Validators.Models
         {
             if (string.IsNullOrWhiteSpace(ingredientUnit))
                 return new ValidationResult(false, "Property \"unit\" cannot be empty");
-            if (!BeValidPackage(ingredientUnit))
+            if (!BeValidUnit(ingredientUnit))
                 return new ValidationResult(false, "Property \"unit\" can only contains letters, and spaces");
             if (ingredientUnit.Length > 100)
                 return new ValidationResult(false, "Property \"unit\" must be less than 100 characters long.");
