@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -9,54 +8,81 @@ using POS.Services;
 using POS.Services.SalesPanel;
 using POS.Utilities;
 using POS.Utilities.RelayCommands;
+using POS.Validators.Models;
+using POS.ViewModels.Base.WarehouseFunctions;
 
 namespace POS.ViewModels.WarehouseFunctions
 {
-    public class EditProductRecipeViewModel : ProductManipulationViewModelBase
+    public class EditProductRecipeViewModel : FormViewModelBase
     {
-        private readonly RecipeService _recipeService;
+        private readonly ProductService _productService;
         private readonly IngredientService _ingredientService;
+        private readonly RecipeService _recipeService;
+        private readonly RecipeIngredientService _recipeIngredientService;
 
-        private MyObservableCollection<RecipeIngredient> recipeIngredientCollection = new();
+        private readonly RecipeIngredientValidator _recipeIngredientValidator;
 
-        private Ingredient selectedIngredient;
-        private string amountOfIngredient;
+        private Product? selectedProduct;
+        private Ingredient? selectedIngredient;
         private RecipeIngredient? selectedRecipeIngredient;
 
+        private string amountOfIngredient;
+        private string amountOfIngredientError;
+
+        private Visibility isProductSelected;
         private Visibility isIngredientSelected;
 
-        public MyObservableCollection<Ingredient> IngredientObservableCollection
-        {
-            get => _ingredientService.IngredientCollection;
-        }
+        public MyObservableCollection<Product> ProductObservableCollection => _productService.ProductCollection;
+        public MyObservableCollection<Ingredient> IngredientObservableCollection => _ingredientService.IngredientCollection;
+        public MyObservableCollection<RecipeIngredient> RecipeIngredientCollection => _recipeIngredientService.RecipeIngredientCollection;
 
-        public MyObservableCollection<RecipeIngredient> RecipeIngredientCollection
-        {
-            get => recipeIngredientCollection;
-            set => SetField(ref recipeIngredientCollection, value);
-        }
-
-        public override Product? SelectedProduct
+        public Product? SelectedProduct
         {
             set
             {
                 if (SetField(ref selectedProduct, value))
                 {
                     IsProductSelected = Visibility.Collapsed;
-                    IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
                     _ = GetRecipeIngredientsAsync(value!);
                 }
             }
         }
 
-        public Ingredient SelectedIngredient
+        public Ingredient? SelectedIngredient
         {
             set
             {
                 if (SetField(ref selectedIngredient, value))
                 {
                     IsIngredientSelected = Visibility.Collapsed;
-                    IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
+
+                    if (value is not null)
+                    {
+                        IsAddButtonVisible = Visibility.Visible;
+                        IsUpdateButtonVisible = Visibility.Collapsed;
+                    }
+                }
+            }
+        }
+
+        public RecipeIngredient? SelectedRecipeIngredient
+        {
+            get => selectedRecipeIngredient;
+            set
+            {
+                if (SetField(ref selectedRecipeIngredient, value))
+                {
+                    SelectedIngredient = null;
+                    IsIngredientSelected = Visibility.Visible;
+
+                    if (value is not null)
+                    {
+                        LoadDataIntoFormFields(value!);
+                        IsUpdateButtonVisible = Visibility.Visible;
+                        IsAddButtonVisible = Visibility.Collapsed;
+                    }
+
+                    IsDeleteButtonEnable = CheckIfDeleteButtonCanBeEnabled();
                 }
             }
         }
@@ -67,18 +93,20 @@ namespace POS.ViewModels.WarehouseFunctions
             set
             {
                 if (SetField(ref amountOfIngredient, value))
-                    IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
+                    ValidateProperty(_recipeIngredientValidator.ValidateQuantity, nameof(AmountOfIngredient), value, error => AmountOfIngredientError = error);
             }
         }
-
-        public RecipeIngredient? SelectedRecipeIngredient
+        
+        public string AmountOfIngredientError
         {
-            get => selectedRecipeIngredient;
-            set
-            {
-                if (SetField(ref selectedRecipeIngredient, value))
-                    IsDeleteButtonEnable = CheckIfDeleteButtonCanBeEnabled();
-            }
+            get => amountOfIngredientError;
+            set => SetField(ref amountOfIngredientError, value);
+        }
+
+        public Visibility IsProductSelected
+        {
+            get => isProductSelected;
+            set => SetField(ref isProductSelected, value);
         }
 
         public Visibility IsIngredientSelected
@@ -88,17 +116,24 @@ namespace POS.ViewModels.WarehouseFunctions
         }
 
         public ICommand AddIngredientToRecipeCommand { get; }
+        public ICommand UpdateIngredientInRecipeCommand { get; }
         public ICommand DeleteIngredientFromRecipeCommand { get; }
 
         public EditProductRecipeViewModel(
             ProductService productService,
             RecipeService recipeService,
-            IngredientService ingredientService) : base (productService)
+            IngredientService ingredientService,
+            RecipeIngredientService recipeIngredientService)
         {
+            _productService = productService;
             _recipeService = recipeService;
             _ingredientService = ingredientService;
+            _recipeIngredientService = recipeIngredientService;
+
+            _recipeIngredientValidator = new RecipeIngredientValidator();
 
             AddIngredientToRecipeCommand = new RelayCommandAsync(AddIngredientToRecipe);
+            UpdateIngredientInRecipeCommand = new RelayCommandAsync(UpdateIngredientInRecipe);
             DeleteIngredientFromRecipeCommand = new RelayCommandAsync(DeleteIngredientFromRecipe);
         } 
 
@@ -107,10 +142,7 @@ namespace POS.ViewModels.WarehouseFunctions
             try
             {
                 var recipe = await _recipeService.GetRecipeByIdAsync(product.RecipeId);
-                var recipeIngredients = recipe.RecipeIngredients.ToList();
-
-                RecipeIngredientCollection.Clear();
-                RecipeIngredientCollection.AddRange(recipeIngredients);
+                await _recipeIngredientService.GetRecipeIngredientsAsync(recipe);
             }
             catch (Exception ex)
             {
@@ -123,7 +155,8 @@ namespace POS.ViewModels.WarehouseFunctions
         {
             try
             {
-                await _recipeService.AddIngredientToRecipeAsync(selectedProduct!.RecipeId, selectedIngredient, amountOfIngredient);
+                var recipeIngredient = await _recipeIngredientService.CreateRecipeIngredient(selectedProduct!.Recipe, selectedIngredient!, amountOfIngredient);
+                await _recipeIngredientService.AddIngredientToRecipeAsync(recipeIngredient);
                 await GetRecipeIngredientsAsync(selectedProduct);
             }
             catch (Exception ex)
@@ -133,11 +166,28 @@ namespace POS.ViewModels.WarehouseFunctions
             }
         }
 
+        private async Task UpdateIngredientInRecipe()
+        {
+            try
+            {
+                var ingredient = selectedIngredient ?? selectedRecipeIngredient!.Ingredient;
+
+                var recipeIngredient = await _recipeIngredientService.CreateRecipeIngredient(selectedProduct!.Recipe, ingredient, amountOfIngredient);
+                await _recipeIngredientService.UpdateIngredientInRecipeAsync(selectedRecipeIngredient!, recipeIngredient);
+                await GetRecipeIngredientsAsync(selectedProduct);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Nie udało się zaktualizować składnika w przepisie, przyczyna problemu: {ex.Message}",
+                    "Wystąpił nieoczekiwany problem", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private async Task DeleteIngredientFromRecipe()
         {
             try
             {
-                await _recipeService.DeleteIngredientFromRecipeAsync(selectedRecipeIngredient!);
+                await _recipeIngredientService.DeleteIngredientFromRecipeAsync(selectedRecipeIngredient!);
                 await GetRecipeIngredientsAsync(selectedProduct!);
             }
             catch (Exception ex)
@@ -147,16 +197,40 @@ namespace POS.ViewModels.WarehouseFunctions
             }
         }
 
+        protected override void LoadDataIntoFormFields(object obj)
+        {
+            var recipeIngredient = obj as RecipeIngredient;
+            if (recipeIngredient is null) throw new ArgumentNullException();
+
+            AmountOfIngredient = recipeIngredient.Quantity.ToString();
+        }
+
+        protected override void CheckWhichButtonShouldBeEnable()
+        {
+            IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
+            IsUpdateButtonEnable = CheckIfUpdateButtonCanBeEnabled();
+            IsDeleteButtonEnable = CheckIfDeleteButtonCanBeEnabled();
+        }
+
         protected override bool CheckIfAddButtonCanBeEnabled()
         {
-            return isProductSelected == Visibility.Collapsed &&
-                                isIngredientSelected == Visibility.Collapsed &&
-                                !amountOfIngredient.IsNullOrEmpty();
+            return selectedProduct is not null &&
+                   selectedIngredient is not null &&
+                   !amountOfIngredient.IsNullOrEmpty() &&
+                   !HasErrors;
+        }
+
+        protected override bool CheckIfUpdateButtonCanBeEnabled()
+        {
+            return selectedProduct is not null &&
+                   selectedRecipeIngredient is not null &&
+                   !amountOfIngredient.IsNullOrEmpty() &&
+                   !HasErrors;
         }
 
         protected override bool CheckIfDeleteButtonCanBeEnabled()
         {
-            return selectedRecipeIngredient != null;
+            return selectedRecipeIngredient is not null;
         }
     }
 }

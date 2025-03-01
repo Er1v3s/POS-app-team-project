@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using POS.Exceptions;
 using POS.Exceptions.Interfaces;
+using POS.Exceptions.Logger;
 using POS.Factories;
 using POS.Models.Reports;
 using POS.Models.Reports.ReportsPredictions;
@@ -61,7 +62,7 @@ namespace POS
                 //options.UseSqlServer(new DatabaseConfiguration().GetConnectionString());
 
                 options.UseSqlite(new DatabaseConfiguration().GetConnectionString(),
-                    builder => builder.MigrationsAssembly("DbSeeder"));
+                    builder => builder.MigrationsAssembly("DataAccess"));
             });
 
             servicesCollection.AddTransient<TimeService>();
@@ -149,12 +150,14 @@ namespace POS
 
             #region SalesPanel
 
-            servicesCollection.AddTransient<ProductService>();
+            servicesCollection.AddScoped<ProductService>();
+            servicesCollection.AddScoped<IngredientService>();
+            servicesCollection.AddScoped<RecipeService>();
+            servicesCollection.AddScoped<RecipeIngredientService>();
+
             servicesCollection.AddTransient<OrderService>();
-            servicesCollection.AddTransient<RecipeService>();
             servicesCollection.AddTransient<OrderSummaryService>();
             servicesCollection.AddTransient<FinishedOrderService>();
-            servicesCollection.AddTransient<IngredientService>();
             servicesCollection.AddTransient<InvoiceService>();
             servicesCollection.AddTransient<DiscountService>();
 

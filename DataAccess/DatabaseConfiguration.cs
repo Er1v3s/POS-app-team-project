@@ -8,7 +8,7 @@ namespace DataAccess
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                .AddJsonFile("dbsettings.json", optional: false, reloadOnChange: true);
 
             var configuration = builder.Build();
 

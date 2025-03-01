@@ -72,7 +72,7 @@ namespace POS.Validators.Models
         {
             if (string.IsNullOrWhiteSpace(ingredientUnit))
                 return new ValidationResult(false, "Property \"unit\" cannot be empty");
-            if (!BeValidPackage(ingredientUnit))
+            if (!BeValidUnit(ingredientUnit))
                 return new ValidationResult(false, "Property \"unit\" can only contains letters, and spaces");
             if (ingredientUnit.Length > 100)
                 return new ValidationResult(false, "Property \"unit\" must be less than 100 characters long.");
@@ -113,7 +113,7 @@ namespace POS.Validators.Models
 
         private bool BeValidDescription(string text)
         {
-            return Regex.IsMatch(text, @"^[a-za-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ0-9\s()',.!?%]*$");
+            return Regex.IsMatch(text, @"^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ0-9\s()'"".,!?%:@#&+\-/*]*$");
         }
 
         private bool BeValidUnit(string text)

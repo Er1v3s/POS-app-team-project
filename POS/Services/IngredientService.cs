@@ -54,43 +54,51 @@ namespace POS.Services
         {
             if (ingredient is null) throw new ArgumentNullException(nameof(ingredient), "Składnik który próbujesz dodać jest niepoprawny");
 
-            allIngredientList.Add(ingredient);
-            ReloadCollection(IngredientCollection);
-            await _dbContext.Ingredients.AddAsync(ingredient);
-            await _dbContext.SaveChangesAsync();
+            await _databaseErrorHandler.ExecuteDatabaseOperationAsync(async () =>
+            {
+                await _dbContext.Ingredients.AddAsync(ingredient);
+                await _dbContext.SaveChangesAsync();
+
+                allIngredientList.Add(ingredient);
+                ReloadCollection(IngredientCollection);
+            });
         }
 
-        public async Task UpdateExistingIngredientAsync(Ingredient oldIngredient, Ingredient newIngredient)
+        public async Task UpdateExistingIngredientAsync(Ingredient ingredient, Ingredient newIngredient)
         {
-            if (oldIngredient is null) throw new ArgumentNullException(nameof(oldIngredient), "Składnik który próbujesz zmienić jest niepoprawny");
+            if (ingredient is null) throw new ArgumentNullException(nameof(ingredient), "Składnik który próbujesz zmienić jest niepoprawny");
             if (newIngredient is null) throw new ArgumentNullException(nameof(newIngredient), "Składnik który próbujesz zmienić może otrzymać niepoprawne dane");
 
-            var ingredientFromDb = await _dbContext.Ingredients.FindAsync(oldIngredient.IngredientId);
-            if (ingredientFromDb == null) throw new NotFoundException();
+            await _databaseErrorHandler.ExecuteDatabaseOperationAsync(async () =>
+            {
+                ingredient.Name = newIngredient.Name;
+                ingredient.Unit = newIngredient.Unit;
+                ingredient.Package = newIngredient.Package;
+                ingredient.Description = newIngredient.Description;
 
-            ingredientFromDb.Name = newIngredient.Name;
-            ingredientFromDb.Unit = newIngredient.Unit;
-            ingredientFromDb.Package = newIngredient.Package;
-            ingredientFromDb.Description = newIngredient.Description;
+                _dbContext.Ingredients.Update(ingredient);
+                await _dbContext.SaveChangesAsync();
 
-            var index = allIngredientList.FindIndex(i => i.IngredientId == oldIngredient.IngredientId);
-            if(index != -1)
-                allIngredientList[index] = ingredientFromDb;
+                var index = allIngredientList.FindIndex(i => i.IngredientId == ingredient.IngredientId);
+                if (index != -1)
+                    allIngredientList[index] = ingredient;
 
-            ReloadCollection(IngredientCollection);
-            
-            await _dbContext.SaveChangesAsync();
+                ReloadCollection(IngredientCollection);
+            });
         }
 
         public async Task DeleteIngredientAsync(Ingredient ingredient)
         {
             if(ingredient is null) throw new ArgumentNullException(nameof(ingredient), "Niepoprawny produkt.");
 
-            allIngredientList.Remove(ingredient);
-            ReloadCollection(IngredientCollection);
+            await _databaseErrorHandler.ExecuteDatabaseOperationAsync(async () =>
+            {
+                _dbContext.Ingredients.Remove(ingredient);
+                await _dbContext.SaveChangesAsync();
 
-            _dbContext.Ingredients.Remove(ingredient);
-            await _dbContext.SaveChangesAsync();
+                allIngredientList.Remove(ingredient);
+                ReloadCollection(IngredientCollection);
+            });
         }
 
         public async Task<Ingredient> CreateIngredient(string ingredientName, string ingredientDescription, string ingredientUnit, string ingredientPackage)

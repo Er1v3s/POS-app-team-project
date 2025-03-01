@@ -403,10 +403,8 @@ namespace POS.ViewModels.SalesPanel
 
         private void OpenMainWindow<T>(T windowType)
         {
-            _navigationService.OpenWindow<T>(windowType);
-
-            if (Application.Current.Windows.OfType<Views.Windows.MainWindow>().Any())
-                CloseWindowBaseAction!.Invoke();
+            _navigationService.OpenNewWindow(windowType);
+            _navigationService.CloseCurrentWindow<SalesPanelWindow>();
         }
     }
 }

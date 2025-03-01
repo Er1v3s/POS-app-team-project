@@ -6,5 +6,7 @@
         public required string RecipeName { get; set; }
         public required string RecipeContent {  get; set; }
         public ICollection<RecipeIngredient> RecipeIngredients { get; set; }
+
+        public Product Product { get; set; }
     }
 }
