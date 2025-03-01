@@ -87,7 +87,8 @@ namespace POS.Services
                 RecipeId = recipe.RecipeId,
                 IngredientId = ingredient.IngredientId,
                 Ingredient = ingredient,
-                Quantity = double.Parse(amountOfIngredient)
+                Recipe = recipe,
+                Quantity = double.Parse(amountOfIngredient),
             };
 
             var validationResult = await _recipeIngredientValidator.ValidateAsync(newRecipeIngredient);
