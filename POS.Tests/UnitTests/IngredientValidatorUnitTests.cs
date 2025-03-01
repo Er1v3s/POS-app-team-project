@@ -62,8 +62,6 @@ namespace POS.Tests.UnitTests
             var isIngredientNameValid = _validator.ValidateIngredientName(invalidName);
 
             isIngredientNameValid.Result.Should().BeFalse();
-            isIngredientNameValid.ErrorMessage.Should().NotBe("");
-            isIngredientNameValid.ErrorMessage.Should().NotBeEmpty();
             isIngredientNameValid.ErrorMessage.Should().NotBeNullOrWhiteSpace();
         }
 
@@ -85,10 +83,12 @@ namespace POS.Tests.UnitTests
         [MemberData(nameof(ValidNames))]
         public void NameValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(string validName)
         {
+            // Act
             var isIngredientNameValid = _validator.ValidateIngredientName(validName);
 
+            // Assert
             isIngredientNameValid.Result.Should().BeTrue();
-            isIngredientNameValid.ErrorMessage.Should().Be(null);
+            isIngredientNameValid.ErrorMessage.Should().BeNull();
         }
 
         #endregion
@@ -126,11 +126,11 @@ namespace POS.Tests.UnitTests
         [MemberData(nameof(InvalidDescription))]
         public void IngredientDescriptionValidationMethod_ForInvalidValues_ShouldReturnValidationResultEqualsFalse(string invalidDescription)
         {
+            // Act
             var isIngredientDescriptionValid = _validator.ValidateIngredientDescription(invalidDescription);
 
+            // Assert
             isIngredientDescriptionValid.Result.Should().BeFalse();
-            isIngredientDescriptionValid.ErrorMessage.Should().NotBe("");
-            isIngredientDescriptionValid.ErrorMessage.Should().NotBeEmpty();
             isIngredientDescriptionValid.ErrorMessage.Should().NotBeNullOrWhiteSpace();
         }
 
@@ -152,10 +152,12 @@ namespace POS.Tests.UnitTests
         [MemberData(nameof(ValidDescription))]
         public void IngredientDescriptionValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(string validDescription)
         {
+            // Act
             var isIngredientDescriptionValid = _validator.ValidateIngredientDescription(validDescription);
 
+            // Assert
             isIngredientDescriptionValid.Result.Should().BeTrue();
-            isIngredientDescriptionValid.ErrorMessage.Should().Be(null);
+            isIngredientDescriptionValid.ErrorMessage.Should().BeNull();
         }
 
         #endregion
@@ -194,11 +196,11 @@ namespace POS.Tests.UnitTests
         [MemberData(nameof(InvalidValues))]
         public void IngredientUnitValidationMethod_ForInvalidValues_ShouldReturnValidationResultEqualsFalse(string invalidUnit)
         {
+            // Act
             var isIngredientUnitValid = _validator.ValidateIngredientUnit(invalidUnit);
 
+            // Assert
             isIngredientUnitValid.Result.Should().BeFalse();
-            isIngredientUnitValid.ErrorMessage.Should().NotBe("");
-            isIngredientUnitValid.ErrorMessage.Should().NotBeEmpty();
             isIngredientUnitValid.ErrorMessage.Should().NotBeNullOrWhiteSpace();
         }
 
@@ -220,10 +222,12 @@ namespace POS.Tests.UnitTests
         [MemberData(nameof(ValidValues))]
         public void IngredientUnitValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(string validUnit)
         {
+            // Act
             var isIngredientUnitValid = _validator.ValidateIngredientUnit(validUnit);
 
+            // Assert
             isIngredientUnitValid.Result.Should().BeTrue();
-            isIngredientUnitValid.ErrorMessage.Should().Be(null);
+            isIngredientUnitValid.ErrorMessage.Should().BeNull();
         }
 
         [Theory]
@@ -244,11 +248,11 @@ namespace POS.Tests.UnitTests
         [MemberData(nameof(InvalidValues))]
         public void IngredientPackageValidationMethod_ForInvalidValues_ShouldReturnValidationResultEqualsFalse(string invalidValue)
         {
+            // Act
             var isIngredientPackageValid = _validator.ValidateIngredientPackage(invalidValue);
 
+            // Assert
             isIngredientPackageValid.Result.Should().BeFalse();
-            isIngredientPackageValid.ErrorMessage.Should().NotBe("");
-            isIngredientPackageValid.ErrorMessage.Should().NotBeEmpty();
             isIngredientPackageValid.ErrorMessage.Should().NotBeNullOrWhiteSpace();
         }
 
@@ -270,10 +274,12 @@ namespace POS.Tests.UnitTests
         [MemberData(nameof(ValidValues))]
         public void IngredientPackageValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(string validValue)
         {
+            // Act
             var isIngredientPackageValid = _validator.ValidateIngredientDescription(validValue);
 
+            // Assert
             isIngredientPackageValid.Result.Should().BeTrue();
-            isIngredientPackageValid.ErrorMessage.Should().Be(null);
+            isIngredientPackageValid.ErrorMessage.Should().BeNull();
         }
 
         #endregion
