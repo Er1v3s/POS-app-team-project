@@ -68,6 +68,33 @@ namespace POS.Tests.UnitTests
             result.ShouldNotHaveValidationErrorFor(p => p.ProductName);
         }
 
+        [Theory]
+        [MemberData(nameof(InvalidNames))]
+        public void NameValidationMethod_ForInvalidValues_ShouldReturnValidationResultEqualsFalse(string invalidName)
+        {
+            // Arrange
+            product.ProductName = invalidName;
+
+            // Act
+            var result = _productValidator.ValidateProductName(invalidName);
+
+            // Assert
+            result.Result.Should().BeFalse();
+            result.ErrorMessage.Should().NotBeNullOrEmpty();
+        }
+
+        [Theory]
+        [MemberData(nameof(ValidNames))]
+        public void NameValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(string validName)
+        {
+            // Act
+            var result = _productValidator.ValidateProductName(validName);
+
+            // Assert
+            result.Result.Should().BeTrue();
+            result.ErrorMessage.Should().BeNullOrEmpty();
+        }
+
         #endregion
     }
 }
