@@ -80,7 +80,7 @@
 
                         <Border Grid.Row="0" CornerRadius="8" Background="White">
                             <Grid>
-                                <TextBox Text="{Binding AmountOfIngredient, FallbackValue='', UpdateSourceTrigger=PropertyChanged}"
+                                <TextBox Text="{Binding AmountOfIngredient, Delay=250, FallbackValue='', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          Tag="Ilość składnika" 
                                          Style="{StaticResource WarehouseFunctionsTextBoxWithPlaceholder}" >
                                 </TextBox>
