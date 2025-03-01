@@ -16,6 +16,7 @@ namespace POS.ViewModels.WarehouseFunctions
     {
         private readonly ProductService _productService;
         private readonly RecipeService _recipeService;
+
         private readonly ProductValidator _productValidator;
         private readonly RecipeValidator _recipeValidator;
 

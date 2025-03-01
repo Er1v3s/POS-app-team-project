@@ -212,11 +212,6 @@ namespace POS.ViewModels.WarehouseFunctions
             IsDeleteButtonEnable = CheckIfDeleteButtonCanBeEnabled();
         }
 
-        //protected override void CheckWhichButtonShouldBeEnable()
-        //{
-        //    IsAddButtonEnable = CheckIfAddButtonCanBeEnabled();
-        //}
-
         protected override bool CheckIfAddButtonCanBeEnabled()
         {
             return selectedProduct is not null &&

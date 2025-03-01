@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using DataAccess.Models;
 using POS.Services;
+using POS.Utilities;
 using POS.Utilities.RelayCommands;
 using POS.Validators.Models;
 using POS.ViewModels.Base.WarehouseFunctions;
@@ -26,7 +26,7 @@ namespace POS.ViewModels.WarehouseFunctions
         private string ingredientPackageError = string.Empty;
         private string ingredientDescriptionError = string.Empty;
 
-        public ObservableCollection<Ingredient> IngredientObservableCollection => _ingredientService.IngredientCollection;
+        public MyObservableCollection<Ingredient> IngredientObservableCollection => _ingredientService.IngredientCollection;
 
         public required string IngredientName
         {

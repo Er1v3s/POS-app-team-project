@@ -104,7 +104,6 @@ namespace POS.Validators.Models
         private bool BeValidDescription(string text)
         {
             return Regex.IsMatch(text, @"^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ0-9\s()'"".,!?%:@#&+\-/*]*$");
-
         }
     }
 }

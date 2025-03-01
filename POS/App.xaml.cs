@@ -150,13 +150,14 @@ namespace POS
 
             #region SalesPanel
 
-            servicesCollection.AddTransient<ProductService>();
+            servicesCollection.AddScoped<ProductService>();
+            servicesCollection.AddScoped<IngredientService>();
+            servicesCollection.AddScoped<RecipeService>();
+            servicesCollection.AddScoped<RecipeIngredientService>();
+
             servicesCollection.AddTransient<OrderService>();
-            servicesCollection.AddTransient<RecipeService>();
             servicesCollection.AddTransient<OrderSummaryService>();
             servicesCollection.AddTransient<FinishedOrderService>();
-            servicesCollection.AddTransient<IngredientService>();
-            servicesCollection.AddTransient<RecipeIngredientService>();
             servicesCollection.AddTransient<InvoiceService>();
             servicesCollection.AddTransient<DiscountService>();
 

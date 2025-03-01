@@ -17,7 +17,6 @@ namespace POS.ViewModels.Base.WarehouseFunctions
         private bool isAddButtonEnable;
         private bool isUpdateButtonEnable;
 
-
         public object? SelectedItem
         {
             get => selectedItem;
