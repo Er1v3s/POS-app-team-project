@@ -28,17 +28,17 @@ namespace POS.Tests.UnitTests
 
         public static IEnumerable<object[]> InvalidNames()
         {
-            yield return new object[] { "" };
-            yield return new object[] { "abcABC123!@#$%^&*()_-+={}|[];:'.<>/`~" };
-            yield return new object[] { new string('A', 101) };
+            yield return [""];
+            yield return ["abcABC123!@#$%^&*()_-+={}|[];:'.<>/`~"];
+            yield return [new string('A', 101)];
         }
 
         public static IEnumerable<object[]> ValidNames()
         {
-            yield return new object[] { "ValidName" };
-            yield return new object[] { "Valid Name 123" };
-            yield return new object[] { "ValidName123" };
-            yield return new object[] { new string('A', 100) };
+            yield return ["ValidName"];
+            yield return ["Valid Name 123"];
+            yield return ["ValidName123"];
+            yield return [new string('A', 100)];
         }
 
         [Theory]
@@ -59,10 +59,10 @@ namespace POS.Tests.UnitTests
         [MemberData(nameof(InvalidNames))]
         public void NameValidationMethod_ForInvalidValues_ShouldReturnValidationResultEqualsFalse(string invalidName)
         {
-            var isIngredientNameValid = _validator.ValidateIngredientName(invalidName);
+            var validationResult = _validator.ValidateIngredientName(invalidName);
 
-            isIngredientNameValid.Result.Should().BeFalse();
-            isIngredientNameValid.ErrorMessage.Should().NotBeNullOrWhiteSpace();
+            validationResult.Result.Should().BeFalse();
+            validationResult.ErrorMessage.Should().NotBeNullOrWhiteSpace();
         }
 
         [Theory]
@@ -84,11 +84,11 @@ namespace POS.Tests.UnitTests
         public void NameValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(string validName)
         {
             // Act
-            var isIngredientNameValid = _validator.ValidateIngredientName(validName);
+            var validationResult = _validator.ValidateIngredientName(validName);
 
             // Assert
-            isIngredientNameValid.Result.Should().BeTrue();
-            isIngredientNameValid.ErrorMessage.Should().BeNull();
+            validationResult.Result.Should().BeTrue();
+            validationResult.ErrorMessage.Should().BeNull();
         }
 
         #endregion
@@ -97,15 +97,15 @@ namespace POS.Tests.UnitTests
 
         public static IEnumerable<object[]> InvalidDescription()
         {
-            yield return new object[] { "" };
-            yield return new object[] { "`~@#$^&*-_=+[]{};:<>|" };
-            yield return new object[] { new string('A', 401) };
+            yield return [""];
+            yield return ["`~@#$^&*-_=+[]{};:<>|"];
+            yield return [new string('A', 401)];
         }
 
         public static IEnumerable<object[]> ValidDescription()
         {
-            yield return new object[] { "ValidDescription 123 !.,()" };
-            yield return new object[] { new string('A', 100) };
+            yield return ["ValidDescription 123 !.,()"];
+            yield return [new string('A', 100)];
         }
 
         [Theory]
@@ -127,11 +127,11 @@ namespace POS.Tests.UnitTests
         public void IngredientDescriptionValidationMethod_ForInvalidValues_ShouldReturnValidationResultEqualsFalse(string invalidDescription)
         {
             // Act
-            var isIngredientDescriptionValid = _validator.ValidateIngredientDescription(invalidDescription);
+            var validationResult = _validator.ValidateIngredientDescription(invalidDescription);
 
             // Assert
-            isIngredientDescriptionValid.Result.Should().BeFalse();
-            isIngredientDescriptionValid.ErrorMessage.Should().NotBeNullOrWhiteSpace();
+            validationResult.Result.Should().BeFalse();
+            validationResult.ErrorMessage.Should().NotBeNullOrWhiteSpace();
         }
 
         [Theory]
@@ -153,11 +153,11 @@ namespace POS.Tests.UnitTests
         public void IngredientDescriptionValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(string validDescription)
         {
             // Act
-            var isIngredientDescriptionValid = _validator.ValidateIngredientDescription(validDescription);
+            var validationResult = _validator.ValidateIngredientDescription(validDescription);
 
             // Assert
-            isIngredientDescriptionValid.Result.Should().BeTrue();
-            isIngredientDescriptionValid.ErrorMessage.Should().BeNull();
+            validationResult.Result.Should().BeTrue();
+            validationResult.ErrorMessage.Should().BeNull();
         }
 
         #endregion
@@ -166,16 +166,16 @@ namespace POS.Tests.UnitTests
 
         public static IEnumerable<object[]> InvalidValues()
         {
-            yield return new object[] { "" };
-            yield return new object[] { "InvalidValue!@#$%^&*()" };
-            yield return new object[] { new string('A', 101) };
+            yield return [""];
+            yield return ["InvalidValue!@#$%^&*()"];
+            yield return [new string('A', 101)];
         }
 
         public static IEnumerable<object[]> ValidValues()
         {
-            yield return new object[] { "ValidValue" };
-            yield return new object[] { "Valid Value" };
-            yield return new object[] { new string('A', 100) };
+            yield return ["ValidValue"];
+            yield return ["Valid Value"];
+            yield return [new string('A', 100)];
         }
 
         [Theory]
@@ -197,11 +197,11 @@ namespace POS.Tests.UnitTests
         public void IngredientUnitValidationMethod_ForInvalidValues_ShouldReturnValidationResultEqualsFalse(string invalidUnit)
         {
             // Act
-            var isIngredientUnitValid = _validator.ValidateIngredientUnit(invalidUnit);
+            var validationResult = _validator.ValidateIngredientUnit(invalidUnit);
 
             // Assert
-            isIngredientUnitValid.Result.Should().BeFalse();
-            isIngredientUnitValid.ErrorMessage.Should().NotBeNullOrWhiteSpace();
+            validationResult.Result.Should().BeFalse();
+            validationResult.ErrorMessage.Should().NotBeNullOrWhiteSpace();
         }
 
         [Theory]
@@ -223,11 +223,11 @@ namespace POS.Tests.UnitTests
         public void IngredientUnitValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(string validUnit)
         {
             // Act
-            var isIngredientUnitValid = _validator.ValidateIngredientUnit(validUnit);
+            var validationResult = _validator.ValidateIngredientUnit(validUnit);
 
             // Assert
-            isIngredientUnitValid.Result.Should().BeTrue();
-            isIngredientUnitValid.ErrorMessage.Should().BeNull();
+            validationResult.Result.Should().BeTrue();
+            validationResult.ErrorMessage.Should().BeNull();
         }
 
         [Theory]
@@ -249,11 +249,11 @@ namespace POS.Tests.UnitTests
         public void IngredientPackageValidationMethod_ForInvalidValues_ShouldReturnValidationResultEqualsFalse(string invalidValue)
         {
             // Act
-            var isIngredientPackageValid = _validator.ValidateIngredientPackage(invalidValue);
+            var validationResult = _validator.ValidateIngredientPackage(invalidValue);
 
             // Assert
-            isIngredientPackageValid.Result.Should().BeFalse();
-            isIngredientPackageValid.ErrorMessage.Should().NotBeNullOrWhiteSpace();
+            validationResult.Result.Should().BeFalse();
+            validationResult.ErrorMessage.Should().NotBeNullOrWhiteSpace();
         }
 
         [Theory]
@@ -275,11 +275,11 @@ namespace POS.Tests.UnitTests
         public void IngredientPackageValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(string validValue)
         {
             // Act
-            var isIngredientPackageValid = _validator.ValidateIngredientDescription(validValue);
+            var validationResult = _validator.ValidateIngredientDescription(validValue);
 
             // Assert
-            isIngredientPackageValid.Result.Should().BeTrue();
-            isIngredientPackageValid.ErrorMessage.Should().BeNull();
+            validationResult.Result.Should().BeTrue();
+            validationResult.ErrorMessage.Should().BeNull();
         }
 
         #endregion

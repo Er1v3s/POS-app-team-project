@@ -1,7 +1,6 @@
 ﻿using DataAccess.Models;
 using FluentValidation;
 using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace POS.Validators.Models
 {

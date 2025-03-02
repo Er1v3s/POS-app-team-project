@@ -26,17 +26,17 @@ namespace POS.Tests.UnitTests
 
         public static IEnumerable<object[]> InvalidNames()
         {
-            yield return new object[] { "" };
-            yield return new object[] { "abcABC123!@#$%^&*()_-+={}|[];:'.<>/`~" };
-            yield return new object[] { new string('A', 101) };
+            yield return [""];
+            yield return ["abcABC123!@#$%^&*()_-+={}|[];:'.<>/`~"];
+            yield return [new string('A', 101)];
         }
 
         public static IEnumerable<object[]> ValidNames()
         {
-            yield return new object[] { "ValidName" };
-            yield return new object[] { "Valid Name 123" };
-            yield return new object[] { "ValidName123" };
-            yield return new object[] { new string('A', 100) };
+            yield return ["ValidName"];
+            yield return ["Valid Name 123"];
+            yield return ["ValidName123"];
+            yield return [new string('A', 100)];
         }
 
         #region Validate Product Name
@@ -77,11 +77,11 @@ namespace POS.Tests.UnitTests
             product.ProductName = invalidName;
 
             // Act
-            var result = _productValidator.ValidateProductName(invalidName);
+            var validationResult = _productValidator.ValidateProductName(invalidName);
 
             // Assert
-            result.Result.Should().BeFalse();
-            result.ErrorMessage.Should().NotBeNullOrEmpty();
+            validationResult.Result.Should().BeFalse();
+            validationResult.ErrorMessage.Should().NotBeNullOrEmpty();
         }
 
         [Theory]
@@ -89,11 +89,11 @@ namespace POS.Tests.UnitTests
         public void NameValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(string validName)
         {
             // Act
-            var result = _productValidator.ValidateProductName(validName);
+            var validationResult = _productValidator.ValidateProductName(validName);
 
             // Assert
-            result.Result.Should().BeTrue();
-            result.ErrorMessage.Should().BeNullOrEmpty();
+            validationResult.Result.Should().BeTrue();
+            validationResult.ErrorMessage.Should().BeNullOrEmpty();
         }
 
         #endregion
@@ -102,18 +102,18 @@ namespace POS.Tests.UnitTests
 
         public static IEnumerable<object[]> InvalidCategory()
         {
-            yield return new object[] { "" };
-            yield return new object[] { "TestName123" };
-            yield return new object[] { "TestName 123" };
-            yield return new object[] { "`~@#$^&*-_=+[]{};:<>|" };
-            yield return new object[] { new string('A', 401) };
+            yield return [""];
+            yield return ["TestName123"];
+            yield return ["TestName 123"];
+            yield return ["`~@#$^&*-_=+[]{};:<>|"];
+            yield return [new string('A', 401)];
         }
 
         public static IEnumerable<object[]> ValidCategory()
         {
-            yield return new object[] { "ValidCategory" };
-            yield return new object[] { "Valid Category" };
-            yield return new object[] { new string('A', 100) };
+            yield return ["ValidCategory"];
+            yield return ["Valid Category"];
+            yield return [new string('A', 100)];
         }
 
         [Theory]
@@ -153,11 +153,11 @@ namespace POS.Tests.UnitTests
             product.Category = invalidCategory;
 
             // Act
-            var result = _productValidator.ValidateProductCategory(invalidCategory);
+            var validationResult = _productValidator.ValidateProductCategory(invalidCategory);
 
             // Assert
-            result.Result.Should().BeFalse();
-            result.ErrorMessage.Should().NotBeNullOrEmpty();
+            validationResult.Result.Should().BeFalse();
+            validationResult.ErrorMessage.Should().NotBeNullOrEmpty();
         }
 
         [Theory]
@@ -165,11 +165,11 @@ namespace POS.Tests.UnitTests
         public void CategoryValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(string validCategory)
         {
             // Act
-            var result = _productValidator.ValidateProductCategory(validCategory);
+            var validationResult = _productValidator.ValidateProductCategory(validCategory);
 
             // Assert
-            result.Result.Should().BeTrue();
-            result.ErrorMessage.Should().BeNullOrEmpty();
+            validationResult.Result.Should().BeTrue();
+            validationResult.ErrorMessage.Should().BeNullOrEmpty();
         }
 
         #endregion
@@ -178,15 +178,15 @@ namespace POS.Tests.UnitTests
 
         public static IEnumerable<object[]> InvalidDescription()
         {
-            yield return new object[] { "" };
-            yield return new object[] { "`~@#$^&*-_=+[]{};:<>|" };
-            yield return new object[] { new string('A', 1001) };
+            yield return [""];
+            yield return ["`~@#$^&*-_=+[]{};:<>|"];
+            yield return [new string('A', 1001)];
         }
 
         public static IEnumerable<object[]> ValidDescription()
         {
-            yield return new object[] { "ValidDescription 123 !.,()" };
-            yield return new object[] { new string('A', 100) };
+            yield return ["ValidDescription 123 !.,()"];
+            yield return [new string('A', 100)];
         }
 
         [Theory]
@@ -223,11 +223,11 @@ namespace POS.Tests.UnitTests
             string invalidDescription)
         {
             // Act
-            var result = _productValidator.ValidateProductDescription(invalidDescription);
+            var validationResult = _productValidator.ValidateProductDescription(invalidDescription);
 
             // Assert
-            result.Result.Should().BeFalse();
-            result.ErrorMessage.Should().NotBeNullOrEmpty();
+            validationResult.Result.Should().BeFalse();
+            validationResult.ErrorMessage.Should().NotBeNullOrEmpty();
         }
 
         [Theory]
@@ -236,11 +236,11 @@ namespace POS.Tests.UnitTests
             string validDescription)
         {
             // Act
-            var result = _productValidator.ValidateProductDescription(validDescription);
+            var validationResult = _productValidator.ValidateProductDescription(validDescription);
 
             // Assert
-            result.Result.Should().BeTrue();
-            result.ErrorMessage.Should().BeNullOrEmpty();
+            validationResult.Result.Should().BeTrue();
+            validationResult.ErrorMessage.Should().BeNullOrEmpty();
         }
 
         #endregion
@@ -284,11 +284,11 @@ namespace POS.Tests.UnitTests
         public void PriceValidationMethod_ForInvalidValues_ShouldReturnValidationResultEqualsFalse(string invalidPrice)
         {
             // Act
-            var result = _productValidator.ValidateProductPrice(invalidPrice);
+            var validationResult = _productValidator.ValidateProductPrice(invalidPrice);
 
             // Assert
-            result.Result.Should().BeFalse();
-            result.ErrorMessage.Should().NotBeNullOrEmpty();
+            validationResult.Result.Should().BeFalse();
+            validationResult.ErrorMessage.Should().NotBeNullOrEmpty();
         }
 
         [Theory]
@@ -298,11 +298,11 @@ namespace POS.Tests.UnitTests
         public void PriceValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(string validPrice)
         {
             // Act
-            var result = _productValidator.ValidateProductPrice(validPrice);
+            var validationResult = _productValidator.ValidateProductPrice(validPrice);
 
             // Assert
-            result.Result.Should().BeTrue();
-            result.ErrorMessage.Should().BeNullOrEmpty();
+            validationResult.Result.Should().BeTrue();
+            validationResult.ErrorMessage.Should().BeNullOrEmpty();
         }
 
         #endregion

@@ -1,5 +1,4 @@
 ﻿using DataAccess.Models;
-using FluentAssertions;
 using FluentValidation.TestHelper;
 using POS.Validators.Models;
 
@@ -24,17 +23,17 @@ namespace POS.Tests.UnitTests
 
         public static IEnumerable<object[]> InvalidNames()
         {
-            yield return new object[] { "" };
-            yield return new object[] { "abcABC123!@#$%^&*()_-+={}|[];:'.<>/`~" };
-            yield return new object[] { new string('A', 201) };
+            yield return [""];
+            yield return ["abcABC123!@#$%^&*()_-+={}|[];:'.<>/`~"];
+            yield return [new string('A', 201)];
         }
 
         public static IEnumerable<object[]> ValidNames()
         {
-            yield return new object[] { "ValidName" };
-            yield return new object[] { "Valid Name 123" };
-            yield return new object[] { "ValidName123" };
-            yield return new object[] { new string('A', 200) };
+            yield return ["ValidName"];
+            yield return ["Valid Name 123"];
+            yield return ["ValidName123"];
+            yield return [new string('A', 200)];
         }
 
         [Theory]
@@ -71,17 +70,17 @@ namespace POS.Tests.UnitTests
 
         public static IEnumerable<object[]> InvalidRecipeContent()
         {
-            yield return new object[] { "" };
-            yield return new object[] { "abcABC123!@#$%^&*()_-+={}|[];:'.<>/`~" };
-            yield return new object[] { new string('A', 1001) };
+            yield return [""];
+            yield return ["abcABC123!@#$%^&*()_-+={}|[];:'.<>/`~"];
+            yield return [new string('A', 1001)];
         }
 
         public static IEnumerable<object[]> ValidRecipeContent()
         {
-            yield return new object[] { "ValidContent" };
-            yield return new object[] { "Valid Content 123" };
-            yield return new object[] { "ValidContent123" };
-            yield return new object[] { new string('A', 1000) };
+            yield return ["ValidContent"];
+            yield return ["Valid Content 123"];
+            yield return ["ValidContent123"];
+            yield return [new string('A', 1000)];
         }
 
         [Theory]
