@@ -15,7 +15,7 @@ namespace POS.Tests.UnitTests
             _recipeIngredientValidator = new RecipeIngredientValidator();
         }
 
-        private RecipeIngredient recipeIngredient = new ()
+        private readonly RecipeIngredient recipeIngredient = new ()
         {
             Ingredient = new Ingredient() { Name = "Test name", Description = "Test description", Unit = "Test unit", Package = "Test package"},
             Recipe = new Recipe { RecipeName = "Test name", RecipeContent = "Test content" },
@@ -75,11 +75,11 @@ namespace POS.Tests.UnitTests
         public void QuantityValidationMethod_ForInvalidValues_ShouldReturnValidationResultEqualsFalse(string quantity)
         {
             // Act
-            var result = _recipeIngredientValidator.ValidateQuantity(quantity);
+            var validationResult = _recipeIngredientValidator.ValidateQuantity(quantity);
 
             // Assert
-            result.Result.Should().BeFalse();
-            result.ErrorMessage.Should().NotBeNull();
+            validationResult.Result.Should().BeFalse();
+            validationResult.ErrorMessage.Should().NotBeNull();
         }
 
         [Theory]
@@ -87,11 +87,11 @@ namespace POS.Tests.UnitTests
         public void QuantityValidationMethod_ForValidValues_ShouldReturnValidationResultEqualsTrue(string quantity)
         {
             // Act
-            var result = _recipeIngredientValidator.ValidateQuantity(quantity);
+            var validationResult = _recipeIngredientValidator.ValidateQuantity(quantity);
 
             // Assert
-            result.Result.Should().BeTrue();
-            result.ErrorMessage.Should().BeNull();
+            validationResult.Result.Should().BeTrue();
+            validationResult.ErrorMessage.Should().BeNull();
         }
 
         #endregion
