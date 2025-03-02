@@ -105,7 +105,7 @@ namespace POS.Services.SalesPanel
                 ProductName = productName,
                 Category = productCategory,
                 Description = productDescription,
-                Price = double.Parse(productPrice.Replace(',', '.'), CultureInfo.InvariantCulture),
+                Price = double.Parse(productPrice.Replace(',', '.'), NumberStyles.Any, CultureInfo.InvariantCulture),
                 Recipe = recipe
             };
 
