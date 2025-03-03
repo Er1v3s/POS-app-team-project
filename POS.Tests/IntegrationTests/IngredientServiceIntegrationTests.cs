@@ -16,7 +16,7 @@ namespace POS.Tests.IntegrationTests
         public async Task IngredientService_OnServiceInitialize_GetDataFromDbToIngredientCollection()
         {
             // Arrange
-            var dbContext = GetInMemoryDbContext();
+            var dbContext = GetInMemoryDbContext("TestIngredientServiceInit");
             await SeedDatabase(dbContext);
 
             // Act 
@@ -65,7 +65,7 @@ namespace POS.Tests.IntegrationTests
         public async Task AddNewIngredientAsync_OnAddNewIngredientAsync_AddNewIngredientToDb()
         {
             // Arrange
-            var dbContext = GetInMemoryDbContext();
+            var dbContext = GetInMemoryDbContext("TestAddIngredientMethod");
             var ingredientToAdd = new Ingredient() { IngredientId = 999,  Name = "Test name", Description = "Test description", Unit = "Test unit", Package = "Test package", Stock = 10, SafetyStock = 5 };
 
             // Act
@@ -83,7 +83,7 @@ namespace POS.Tests.IntegrationTests
         public async Task UpdateExistingIngredientAsync_OnUpdateExistingIngredientAsync_UpdateExistingIngredientInDb()
         {
             // Arrange
-            var dbContext = GetInMemoryDbContext();
+            var dbContext = GetInMemoryDbContext("TestUpdateIngredientMethod");
             var ingredientToUpdate = await dbContext.Ingredients.FirstOrDefaultAsync();
             if (ingredientToUpdate is null) throw new NotFoundException();
 
@@ -108,7 +108,7 @@ namespace POS.Tests.IntegrationTests
         public async Task DeleteIngredientAsync_OnDeleteIngredientAsync_DeleteIngredientFromDb()
         {
             // Arrange
-            var dbContext = GetInMemoryDbContext();
+            var dbContext = GetInMemoryDbContext("TestDeleteIngredientMethod");
             var ingredientToDelete = await dbContext.Ingredients.FirstOrDefaultAsync();
             if (ingredientToDelete is null) throw new NotFoundException();
 
@@ -125,7 +125,7 @@ namespace POS.Tests.IntegrationTests
         public async Task GetRunningOutOfIngredients_WhenStockIsLowerThanSafetyStock_ReturnsCorrectIngredients()
         {
             // Arrange
-            var dbContext = GetInMemoryDbContext();
+            var dbContext = GetInMemoryDbContext("TestRunningOutOfIngredientsMethod");
 
             _databaseErrorHandlerMock
                 .Setup(x => x.ExecuteDatabaseOperationAsync(It.IsAny<Func<Task<List<Ingredient>>>>(), It.IsAny<Action>()))
@@ -144,7 +144,7 @@ namespace POS.Tests.IntegrationTests
         public async Task RemoveIngredientsAsync_ForPassedArgument_RemovesIngredientsFromDb()
         {
             // Arrange
-            var dbContext = GetInMemoryDbContext();
+            var dbContext = GetInMemoryDbContext("TestRemoveIngredientsMethod");
 
             var recipe = new Recipe { RecipeName = "test name", RecipeContent = "test content" };
             var ingredient = await dbContext.Ingredients.FirstOrDefaultAsync();

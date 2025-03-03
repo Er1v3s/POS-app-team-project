@@ -18,13 +18,13 @@ namespace POS.Tests.IntegrationTests
                 .Setup(x => x.ExecuteDatabaseOperationAsync(It.IsAny<Func<Task>>(), It.IsAny<Action>()))
                 .Returns<Func<Task>, Action<Exception>>((operation, onFailure) => operation());
 
-            _dbContext = GetInMemoryDbContext();
+            _dbContext = GetInMemoryDbContext("TestDb");
         }
 
-        protected AppDbContext GetInMemoryDbContext()
+        protected AppDbContext GetInMemoryDbContext(string databaseName)
         {
             var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase("TestDb")
+                .UseInMemoryDatabase(databaseName)
                 .Options;
 
             var dbContext = new AppDbContext(options);

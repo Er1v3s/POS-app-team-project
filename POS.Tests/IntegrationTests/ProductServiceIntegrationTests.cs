@@ -21,7 +21,7 @@ namespace POS.Tests.IntegrationTests
         public void ProductService_OnServiceInitialize_GetDataFromDbToProductCollection()
         {
             // Arrange
-            var dbContext = GetInMemoryDbContext();
+            var dbContext = GetInMemoryDbContext("TestProductServiceInit");
 
             // Act 
             var productService = new ProductService(dbContext, _databaseErrorHandlerMock.Object);
@@ -107,7 +107,7 @@ namespace POS.Tests.IntegrationTests
         public async Task AddNewProductAsync_OnAddNewProductAsync_AddNewProductToDb()
         {
             // Arrange
-            var dbContext = GetInMemoryDbContext();
+            var dbContext = GetInMemoryDbContext("TestAddProductMethod");
             var productService = new ProductService(dbContext, _databaseErrorHandlerMock.Object);
 
             var countOfAllItems = await _dbContext.Product.CountAsync();
@@ -137,7 +137,7 @@ namespace POS.Tests.IntegrationTests
         public async Task UpdateExistingProductAsync_ForExistingProduct_UpdateProductInDb()
         {
             // Arrange
-            var dbContext = GetInMemoryDbContext();
+            var dbContext = GetInMemoryDbContext("TestUpdateProductMethod");
             var productService = new ProductService(dbContext, _databaseErrorHandlerMock.Object);
 
             var productToUpdate = await dbContext.Product.Include(product => product.Recipe).FirstOrDefaultAsync();
@@ -172,7 +172,7 @@ namespace POS.Tests.IntegrationTests
         public async Task DeleteProductAsync_ForPassedProduct_DeleteProductFromDb()
         {
             // Arrange
-            var dbContext = GetInMemoryDbContext();
+            var dbContext = GetInMemoryDbContext("TestDeleteProductMethod");
             var productService = new ProductService(dbContext, _databaseErrorHandlerMock.Object);
             var productToDelete = await dbContext.Product.Include(product => product.Recipe).FirstOrDefaultAsync();
             if (productToDelete is null) throw new NotFoundException();
