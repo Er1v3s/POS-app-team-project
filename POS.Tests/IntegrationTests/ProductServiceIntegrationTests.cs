@@ -1,5 +1,8 @@
 ﻿using DataAccess;
 using DataAccess.Models;
+using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
+using POS.Exceptions;
 using POS.Services.SalesPanel;
 
 namespace POS.Tests.IntegrationTests
@@ -11,6 +14,19 @@ namespace POS.Tests.IntegrationTests
         public ProductServiceIntegrationTests()
         {
             _productService = new ProductService(_dbContext, _databaseErrorHandlerMock.Object);
+        }
+
+        [Fact]
+        public void ProductService_OnServiceInitialize_GetDataFromDbToProductCollection()
+        {
+            // Arrange
+            var dbContext = GetInMemoryDbContext();
+
+            // Act 
+            var productService = new ProductService(dbContext, _databaseErrorHandlerMock.Object);
+
+            // Assert 
+            productService.ProductCollection.Should().NotBeEmpty();
         }
 
         
