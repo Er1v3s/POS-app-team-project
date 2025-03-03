@@ -57,7 +57,21 @@ namespace POS.Tests.IntegrationTests
             collectionOfProductContainingSearchPhrase.Should().OnlyContain(p => p.ProductName.Contains(searchPhrase, StringComparison.OrdinalIgnoreCase));
         }
 
-        
+        [Fact]
+        public void GetProductsBySearchPhrase_ForNonExistentPhrase_ReturnsEmptyCollection()
+        {
+            // Arrange
+            const string searchPhrase = "NonExistentProduct";
+
+            // Act
+            var collectionOfProducts = _productService.GetProductsBySearchPhrase(searchPhrase);
+
+            // Assert
+            collectionOfProducts.Should().BeEmpty();
+        }
+
+
+
 
         protected override async Task SeedDatabase(AppDbContext dbContext)
         {
