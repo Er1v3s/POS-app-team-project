@@ -35,7 +35,7 @@ namespace POS.Tests.IntegrationTests
             // Act
             var ingredientService = new IngredientService(_dbContext, _databaseErrorHandlerMock.Object);
             ingredientService.GetIngredientsBySearchPhrase(searchPhrase);
-                // now IngredientCollection contains only one ingredient [ingredientService.IngredientCollection.Should().HaveCount(1)]
+            // now IngredientCollection contains only one ingredient [ingredientService.IngredientCollection.Should().HaveCount(1)]
 
             ingredientService.GetAllIngredients();
 
@@ -66,16 +66,17 @@ namespace POS.Tests.IntegrationTests
         {
             // Arrange
             var dbContext = GetInMemoryDbContext();
-            var ingredient = new Ingredient() { IngredientId = 1, Name = "Test name", Description = "Test description", Unit = "Test unit", Package = "Test package", Stock = 10, SafetyStock = 5 };
+            var ingredientToAdd = new Ingredient() { IngredientId = 999,  Name = "Test name", Description = "Test description", Unit = "Test unit", Package = "Test package", Stock = 10, SafetyStock = 5 };
 
             // Act
             var ingredientService = new IngredientService(dbContext, _databaseErrorHandlerMock.Object);
-            await ingredientService.AddNewIngredientAsync(ingredient);
+            await ingredientService.AddNewIngredientAsync(ingredientToAdd);
+
+            var ingredientFromDb = await dbContext.Ingredients.FindAsync(ingredientToAdd.IngredientId);
 
             // Assert
-            var ingredientFromDb = await dbContext.Ingredients.FirstOrDefaultAsync();
             ingredientFromDb.Should().NotBeNull();
-            ingredientFromDb.Name.Should().Be(ingredient.Name);
+            ingredientFromDb.IngredientId.Should().Be(ingredientToAdd.IngredientId);
         }
 
         [Fact]
@@ -83,21 +84,20 @@ namespace POS.Tests.IntegrationTests
         {
             // Arrange
             var dbContext = GetInMemoryDbContext();
-            var ingredient = new Ingredient() { IngredientId = 1, Name = "Test name", Description = "Test description", Unit = "Test unit", Package = "Test package", Stock = 10, SafetyStock = 5 };
-            await dbContext.Ingredients.AddAsync(ingredient);
-            await dbContext.SaveChangesAsync();
+            var ingredientToUpdate = await dbContext.Ingredients.FirstOrDefaultAsync();
+            if (ingredientToUpdate is null) throw new NotFoundException();
 
-            var updatedIngredient = new Ingredient() { IngredientId = 1, Name = "Updated name", Description = "Updated description", Unit = "Updated unit", Package = "Updated package"};
+            var updatedIngredient = new Ingredient() { Name = "Updated name", Description = "Updated description", Unit = "Updated unit", Package = "Updated package"};
 
             // Act
             var ingredientService = new IngredientService(dbContext, _databaseErrorHandlerMock.Object);
-            await ingredientService.UpdateExistingIngredientAsync(ingredient, updatedIngredient);
-            //await dbContext.SaveChangesAsync();
+            await ingredientService.UpdateExistingIngredientAsync(ingredientToUpdate, updatedIngredient);
 
             // Assert
-            var ingredientFromDb = await dbContext.Ingredients.FindAsync(ingredient.IngredientId);
+            var ingredientFromDb = await dbContext.Ingredients.FindAsync(ingredientToUpdate.IngredientId);
 
             ingredientFromDb.Should().NotBeNull();
+            ingredientFromDb.IngredientId.Should().Be(ingredientToUpdate.IngredientId);
             ingredientFromDb.Name.Should().Be(updatedIngredient.Name);
             ingredientFromDb.Unit.Should().Be(updatedIngredient.Unit);
             ingredientFromDb.Package.Should().Be(updatedIngredient.Package);
@@ -109,16 +109,15 @@ namespace POS.Tests.IntegrationTests
         {
             // Arrange
             var dbContext = GetInMemoryDbContext();
-            var ingredient = new Ingredient() { IngredientId = 1, Name = "Test name", Description = "Test description", Unit = "Test unit", Package = "Test package", Stock = 10, SafetyStock = 5 };
-            await dbContext.Ingredients.AddAsync(ingredient);
-            await dbContext.SaveChangesAsync();
+            var ingredientToDelete = await dbContext.Ingredients.FirstOrDefaultAsync();
+            if (ingredientToDelete is null) throw new NotFoundException();
 
             // Act
             var ingredientService = new IngredientService(dbContext, _databaseErrorHandlerMock.Object);
-            await ingredientService.DeleteIngredientAsync(ingredient);
+            await ingredientService.DeleteIngredientAsync(ingredientToDelete);
 
             // Assert
-            var ingredientFromDb = await dbContext.Ingredients.FindAsync(ingredient.IngredientId);
+            var ingredientFromDb = await dbContext.Ingredients.FindAsync(ingredientToDelete.IngredientId);
             ingredientFromDb.Should().BeNull();
         }
 
@@ -127,7 +126,6 @@ namespace POS.Tests.IntegrationTests
         {
             // Arrange
             var dbContext = GetInMemoryDbContext();
-            await SeedDatabaseWithIngredients(dbContext);
 
             _databaseErrorHandlerMock
                 .Setup(x => x.ExecuteDatabaseOperationAsync(It.IsAny<Func<Task<List<Ingredient>>>>(), It.IsAny<Action>()))
@@ -186,7 +184,7 @@ namespace POS.Tests.IntegrationTests
         protected override async Task SeedDatabase(AppDbContext dbContext)
         {
             var ingredients = new List<Ingredient>
-        {
+            {
                 new Ingredient() { Name = "Whisky", Description = "Jack Daniel's", Unit = "szt", Package = "Szklana butelka 700ml", Stock = 10, SafetyStock = 5 },
                 new Ingredient() { Name = "Wódka", Description = "Finlandia", Unit = "szt", Package = "Szklana butelka 1000ml", Stock = 7, SafetyStock = 3 },
                 new Ingredient() { Name = "Rum", Description = "Bacardi White", Unit = "szt", Package = "Szklana butelka 700ml", Stock = 10, SafetyStock = 10 }
