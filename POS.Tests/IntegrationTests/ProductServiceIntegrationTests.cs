@@ -29,6 +29,20 @@ namespace POS.Tests.IntegrationTests
             productService.ProductCollection.Should().NotBeEmpty();
         }
 
+        [Fact]
+        public async Task GetAllProducts_ForCallingTheMethod_ReturnEntireCollectionOfProducts()
+        {
+            // Arrange
+            var countOfAllItems = await _dbContext.Product.CountAsync();
+
+            // Act
+            var collectionOfAllProducts = _productService.GetAllProducts();
+
+            // Assert 
+            collectionOfAllProducts.Should().NotBeEmpty();
+            collectionOfAllProducts.Should().HaveCount(countOfAllItems);
+        }
+
         
 
         protected override async Task SeedDatabase(AppDbContext dbContext)
