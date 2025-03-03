@@ -43,6 +43,20 @@ namespace POS.Tests.IntegrationTests
             collectionOfAllProducts.Should().HaveCount(countOfAllItems);
         }
 
+        [Fact]
+        public void GetProductsBySearchPhrase_ForPassedPhrase_ReturnsCorrectProductsCollection()
+        {
+            // Arrange
+            const string searchPhrase = "Neg";
+
+            // Act
+            var collectionOfProductContainingSearchPhrase = _productService.GetProductsBySearchPhrase(searchPhrase);
+
+            // Assert
+            collectionOfProductContainingSearchPhrase.Should().NotBeEmpty();
+            collectionOfProductContainingSearchPhrase.Should().OnlyContain(p => p.ProductName.Contains(searchPhrase, StringComparison.OrdinalIgnoreCase));
+        }
+
         
 
         protected override async Task SeedDatabase(AppDbContext dbContext)
