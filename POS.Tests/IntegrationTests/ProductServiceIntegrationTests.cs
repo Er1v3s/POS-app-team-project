@@ -4,6 +4,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using POS.Exceptions;
 using POS.Services.SalesPanel;
+using System.Globalization;
 
 namespace POS.Tests.IntegrationTests
 {
@@ -204,7 +205,7 @@ namespace POS.Tests.IntegrationTests
             newProduct.ProductName.Should().Be(productName);
             newProduct.Category.Should().Be(productCategory);
             newProduct.Description.Should().Be(productDescription);
-            newProduct.Price.Should().Be(double.Parse(productPrice));
+            newProduct.Price.Should().Be(double.Parse(productPrice, NumberStyles.Any, CultureInfo.InvariantCulture));
             newProduct.Recipe.Should().Be(recipe);
         }
 

@@ -147,10 +147,11 @@ namespace POS.Tests.IntegrationTests
             var dbContext = GetInMemoryDbContext();
 
             var recipe = new Recipe { RecipeName = "test name", RecipeContent = "test content" };
-            var ingredient = new Ingredient { Name = "Whisky", Description = "Jack Daniel's", Unit = "szt", Package = "Szklana butelka 700ml", Stock = 10, SafetyStock = 5 };
-            var ingredient2 = new Ingredient { Name = "Wódka", Description = "Finlandia", Unit = "szt", Package = "Szklana butelka 1000ml", Stock = 7, SafetyStock = 3 };
+            var ingredient = await dbContext.Ingredients.FirstOrDefaultAsync();
+            var ingredient2 = await dbContext.Ingredients.Skip(1).FirstOrDefaultAsync();
 
-            await dbContext.Ingredients.AddRangeAsync(ingredient, ingredient2);
+            if (ingredient is null || ingredient2 is null) throw new NotFoundException();
+
             await dbContext.Recipe.AddAsync(recipe);
             await dbContext.RecipeIngredients.AddRangeAsync(
                 new RecipeIngredient { RecipeId = recipe.RecipeId, Recipe = recipe, IngredientId = ingredient.IngredientId, Ingredient = ingredient, Quantity = 1 },
