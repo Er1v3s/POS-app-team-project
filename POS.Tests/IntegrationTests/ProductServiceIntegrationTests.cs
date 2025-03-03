@@ -187,6 +187,26 @@ namespace POS.Tests.IntegrationTests
             deletedProduct.Should().BeNull();
         }
 
+        [Fact]
+        public async Task CreateProduct_ForPassedArguments_ReturnNewProduct()
+        {
+            // Arrange
+            const string productName = "Test product";
+            const string productCategory = "Test category";
+            const string productDescription = "Test description";
+            const string productPrice = "19.99";
+            var recipe = new Recipe { RecipeName = "Test recipe", RecipeContent = "Test recipe content" };
+
+            // Act
+            var newProduct = await _productService.CreateProduct(productName, productCategory, productDescription, productPrice, recipe);
+
+            // Assert
+            newProduct.ProductName.Should().Be(productName);
+            newProduct.Category.Should().Be(productCategory);
+            newProduct.Description.Should().Be(productDescription);
+            newProduct.Price.Should().Be(double.Parse(productPrice));
+            newProduct.Recipe.Should().Be(recipe);
+        }
 
         protected override async Task SeedDatabase(AppDbContext dbContext)
         {
