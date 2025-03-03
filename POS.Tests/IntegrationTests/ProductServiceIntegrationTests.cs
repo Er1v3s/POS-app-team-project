@@ -99,6 +99,36 @@ namespace POS.Tests.IntegrationTests
         }
 
 
+        // In methods that modify the database,
+        // we create new database context so as not to modify the global one,
+        // because the other tests may fail.
+        [Fact]
+        public async Task AddNewProductAsync_OnAddNewProductAsync_AddNewProductToDb()
+        {
+            // Arrange
+            var dbContext = GetInMemoryDbContext();
+            var productService = new ProductService(dbContext, _databaseErrorHandlerMock.Object);
+
+            var countOfAllItems = await _dbContext.Product.CountAsync();
+            var newProduct = new Product
+            {
+                ProductName = "Unique product name to search in database",
+                Category = "Test category",
+                Description = "Test description",
+                Price = 99.99,
+                Recipe = new Recipe { RecipeName = "Test recipe", RecipeContent = "Test recipe content" }
+            };
+
+            // Act
+            await productService.AddNewProductAsync(newProduct);
+
+            var productAddedToDb = await dbContext.Product.FirstOrDefaultAsync(p => p.ProductName == newProduct.ProductName);
+
+            // Assert
+            productService.ProductCollection.Should().HaveCount(countOfAllItems + 1);
+            productAddedToDb.Should().NotBeNull();
+        }
+
 
 
         protected override async Task SeedDatabase(AppDbContext dbContext)
