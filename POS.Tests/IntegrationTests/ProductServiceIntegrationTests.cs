@@ -164,7 +164,29 @@ namespace POS.Tests.IntegrationTests
             productFromDb.Price.Should().Be(updatedProduct.Price);
         }
 
-        
+        // In methods that modify the database,
+        // we create new database context so as not to modify the global one,
+        // because the other tests may fail.
+        [Fact]
+        public async Task DeleteProductAsync_ForPassedProduct_DeleteProductFromDb()
+        {
+            // Arrange
+            var dbContext = GetInMemoryDbContext();
+            var productService = new ProductService(dbContext, _databaseErrorHandlerMock.Object);
+            var productToDelete = await dbContext.Product.Include(product => product.Recipe).FirstOrDefaultAsync();
+            if (productToDelete is null) throw new NotFoundException();
+            var countOfAllItems = await dbContext.Product.CountAsync();
+
+            // Act
+            await productService.DeleteProductAsync(productToDelete);
+
+            var deletedProduct = await dbContext.Product.FindAsync(productToDelete.ProductId);
+
+            // Assert
+            productService.ProductCollection.Should().HaveCount(countOfAllItems - 1);
+            deletedProduct.Should().BeNull();
+        }
+
 
         protected override async Task SeedDatabase(AppDbContext dbContext)
         {
