@@ -71,6 +71,34 @@ namespace POS.Tests.IntegrationTests
         }
 
 
+        [Fact]
+        public void GetProductsByCategory_ForPassedCategory_ReturnsCorrectProductCollection()
+        {
+            // Arrange
+            const string category = "Whisky";
+
+            // Act
+            var collectionOfProductsSelectedByCategory = _productService.GetProductsByCategory(category);
+
+            // Assert
+            collectionOfProductsSelectedByCategory.Should().NotBeEmpty();
+            collectionOfProductsSelectedByCategory.Should().OnlyContain(p => p.Category.Equals(category));
+        }
+
+        [Fact]
+        public void GetProductsByCategory_ForNonExistingCategory_ReturnsEmptyCollection()
+        {
+            // Arrange
+            const string category = "NonExistentCategory";
+
+            // Act
+            var products = _productService.GetProductsByCategory(category);
+
+            // Assert
+            products.Should().BeEmpty();
+        }
+
+
 
 
         protected override async Task SeedDatabase(AppDbContext dbContext)
