@@ -3,32 +3,21 @@ using DataAccess.Models;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using POS.Exceptions;
 using POS.Exceptions.Interfaces;
 using POS.Models.Orders;
 using POS.Services;
 
 namespace POS.Tests.IntegrationTests
 {
-    public class IngredientServiceIntegrationTests
+    public class IngredientServiceIntegrationTests : IntegrationTestBase
     {
-        private readonly Mock<IDatabaseErrorHandler> _databaseErrorHandlerMock;
-
-        public IngredientServiceIntegrationTests()
-        {
-            _databaseErrorHandlerMock = new Mock<IDatabaseErrorHandler>();
-
-            _databaseErrorHandlerMock
-                .Setup(x => x.ExecuteDatabaseOperationAsync(It.IsAny<Func<Task>>(), It.IsAny<Action>()))
-                .Returns<Func<Task>, Action<Exception>>((operation, onFailure) => operation());
-        }
-
-
         [Fact]
         public async Task IngredientService_OnServiceInitialize_GetDataFromDbToIngredientCollection()
         {
             // Arrange
             var dbContext = GetInMemoryDbContext();
-            await SeedDatabaseWithIngredients(dbContext);
+            await SeedDatabase(dbContext);
 
             // Act 
             var ingredientService = new IngredientService(dbContext, _databaseErrorHandlerMock.Object);
@@ -41,12 +30,10 @@ namespace POS.Tests.IntegrationTests
         public async Task GetAllIngredients_WhenAnyFiltersAreAppliedToIngredientCollection_ReturnEntireCollectionWithoutFilters()
         {
             // Arrange
-            var dbContext = GetInMemoryDbContext();
-            await SeedDatabaseWithIngredients(dbContext);
             var searchPhrase = "Whi";
 
             // Act
-            var ingredientService = new IngredientService(dbContext, _databaseErrorHandlerMock.Object);
+            var ingredientService = new IngredientService(_dbContext, _databaseErrorHandlerMock.Object);
             ingredientService.GetIngredientsBySearchPhrase(searchPhrase);
                 // now IngredientCollection contains only one ingredient [ingredientService.IngredientCollection.Should().HaveCount(1)]
 
@@ -60,13 +47,10 @@ namespace POS.Tests.IntegrationTests
         public async Task GetIngredientsBySearchPhrase_ForPassedPhrase_AddCorrectIngredientsIntoCollection()
         {
             // Arrange
-            var dbContext = GetInMemoryDbContext();
-            await SeedDatabaseWithIngredients(dbContext);
-
             var searchPhrase = "Whi";
 
             // Act
-            var ingredientService = new IngredientService(dbContext, _databaseErrorHandlerMock.Object);
+            var ingredientService = new IngredientService(_dbContext, _databaseErrorHandlerMock.Object);
             ingredientService.GetIngredientsBySearchPhrase(searchPhrase);
 
             // Assert
@@ -199,23 +183,16 @@ namespace POS.Tests.IntegrationTests
             updatedIngredient2?.Stock.Should().Be(6);
         }
 
-        private AppDbContext GetInMemoryDbContext()
+        protected override async Task SeedDatabase(AppDbContext dbContext)
         {
-            var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase("TestDb")
-                .Options;
-
-            var dbContext = new AppDbContext(options);
-            dbContext.Database.EnsureDeleted();
-            dbContext.Database.EnsureCreated();
-            return dbContext;
-        }
-
-        private async Task SeedDatabaseWithIngredients(AppDbContext dbContext)
+            var ingredients = new List<Ingredient>
         {
-            await dbContext.Ingredients.AddAsync(new Ingredient() { Name = "Whisky", Description = "Jack Daniel's", Unit = "szt", Package = "Szklana butelka 700ml", Stock = 10, SafetyStock = 5 });
-            await dbContext.Ingredients.AddAsync(new Ingredient() { Name = "Wódka", Description = "Finlandia", Unit = "szt", Package = "Szklana butelka 1000ml", Stock = 7, SafetyStock = 3 });
-            await dbContext.Ingredients.AddAsync(new Ingredient() { Name = "Rum", Description = "Bacardi White", Unit = "szt", Package = "Szklana butelka 700ml", Stock = 10, SafetyStock = 10 });
+                new Ingredient() { Name = "Whisky", Description = "Jack Daniel's", Unit = "szt", Package = "Szklana butelka 700ml", Stock = 10, SafetyStock = 5 },
+                new Ingredient() { Name = "Wódka", Description = "Finlandia", Unit = "szt", Package = "Szklana butelka 1000ml", Stock = 7, SafetyStock = 3 },
+                new Ingredient() { Name = "Rum", Description = "Bacardi White", Unit = "szt", Package = "Szklana butelka 700ml", Stock = 10, SafetyStock = 10 }
+            };
+
+            await dbContext.Ingredients.AddRangeAsync(ingredients);
             await dbContext.SaveChangesAsync();
         }
     }
