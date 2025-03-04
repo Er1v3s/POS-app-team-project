@@ -40,6 +40,22 @@ namespace POS.Tests.IntegrationTests
             recipe.RecipeIngredients.First().Ingredient.Should().NotBeNull();
         }
 
+        [Fact]
+        public async Task CreateRecipe_ForThePassedArguments_ReturnsRecipe()
+        {
+            // Arrange
+            const string productName = "Test product name";
+            const string recipeContent = "Test recipe content";
+
+            // Act
+            var recipe = await _recipeService.CreateRecipe(productName, recipeContent);
+
+            // Assert
+            recipe.Should().NotBeNull();
+            recipe.RecipeName.Should().Contain(productName);
+            recipe.RecipeContent.Should().Be(recipeContent);
+        }
+
         protected override async Task SeedDatabase(AppDbContext dbContext)
         {
             var ingredient = new Ingredient()
