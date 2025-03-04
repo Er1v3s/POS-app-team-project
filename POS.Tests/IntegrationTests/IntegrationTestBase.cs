@@ -10,7 +10,7 @@ namespace POS.Tests.IntegrationTests
         protected readonly Mock<IDatabaseErrorHandler> _databaseErrorHandlerMock;
         protected readonly AppDbContext _dbContext;
 
-        protected IntegrationTestBase()
+        protected IntegrationTestBase(string inMemoryDbName)
         {
             _databaseErrorHandlerMock = new Mock<IDatabaseErrorHandler>();
 
@@ -18,7 +18,7 @@ namespace POS.Tests.IntegrationTests
                 .Setup(x => x.ExecuteDatabaseOperationAsync(It.IsAny<Func<Task>>(), It.IsAny<Action>()))
                 .Returns<Func<Task>, Action<Exception>>((operation, onFailure) => operation());
 
-            _dbContext = GetInMemoryDbContext("TestDb");
+            _dbContext = GetInMemoryDbContext(inMemoryDbName);
         }
 
         protected AppDbContext GetInMemoryDbContext(string databaseName)
