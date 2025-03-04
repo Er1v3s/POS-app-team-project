@@ -4,7 +4,6 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using POS.Exceptions;
-using POS.Exceptions.Interfaces;
 using POS.Services;
 
 namespace POS.Tests.IntegrationTests
@@ -22,16 +21,15 @@ namespace POS.Tests.IntegrationTests
         public async Task GetRecipeByIdAsync_ForThePassedArgument_ReturnsRecipe()
         {
             // Arrange
-            var dbContext = GetInMemoryDbContext("TestRecipeServiceInit");
             _databaseErrorHandlerMock
                 .Setup(x => x.ExecuteDatabaseOperationAsync(It.IsAny<Func<Task<Recipe>>>(), It.IsAny<Action>()))
                 .Returns<Func<Task<Recipe>>, Action<Exception>>((operation, onFailure) => operation());
 
-            var existingRecipe = await dbContext.Recipe.FirstOrDefaultAsync();
+            var existingRecipe = await _dbContext.Recipe.FirstOrDefaultAsync();
             if (existingRecipe is null) throw new NotFoundException();
 
             // Act
-            var recipeService = new RecipeService(dbContext, _databaseErrorHandlerMock.Object);
+            var recipeService = new RecipeService(_dbContext, _databaseErrorHandlerMock.Object);
             var recipe = await recipeService.GetRecipeByIdAsync(existingRecipe.RecipeId);
 
             // Assert

@@ -26,10 +26,10 @@ namespace POS.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task GetAllIngredients_WhenAnyFiltersAreAppliedToIngredientCollection_ReturnEntireCollectionWithoutFilters()
+        public void GetAllIngredients_WhenAnyFiltersAreAppliedToIngredientCollection_ReturnEntireCollectionWithoutFilters()
         {
             // Arrange
-            var searchPhrase = "Whi";
+            const string searchPhrase = "Whi";
 
             // Act
             var ingredientService = new IngredientService(_dbContext, _databaseErrorHandlerMock.Object);
@@ -43,10 +43,10 @@ namespace POS.Tests.IntegrationTests
         }
 
         [Fact]
-        public async Task GetIngredientsBySearchPhrase_ForPassedPhrase_AddCorrectIngredientsIntoCollection()
+        public void GetIngredientsBySearchPhrase_ForPassedPhrase_AddCorrectIngredientsIntoCollection()
         {
             // Arrange
-            var searchPhrase = "Whi";
+            const string searchPhrase = "Whi";
 
             // Act
             var ingredientService = new IngredientService(_dbContext, _databaseErrorHandlerMock.Object);
@@ -55,11 +55,12 @@ namespace POS.Tests.IntegrationTests
             // Assert
             ingredientService.IngredientCollection.Should().HaveCount(1);
             foreach (var ingredient in ingredientService.IngredientCollection)
-            {
                 ingredient.Name.Should().Be("Whisky");
-            }
         }
 
+        // In methods that modify the database,
+        // we create new database context so as not to modify the global one,
+        // because the other tests may fail.
         [Fact]
         public async Task AddNewIngredientAsync_OnAddNewIngredientAsync_AddNewIngredientToDb()
         {
@@ -78,6 +79,9 @@ namespace POS.Tests.IntegrationTests
             ingredientFromDb.IngredientId.Should().Be(ingredientToAdd.IngredientId);
         }
 
+        // In methods that modify the database,
+        // we create new database context so as not to modify the global one,
+        // because the other tests may fail.
         [Fact]
         public async Task UpdateExistingIngredientAsync_OnUpdateExistingIngredientAsync_UpdateExistingIngredientInDb()
         {
@@ -103,6 +107,9 @@ namespace POS.Tests.IntegrationTests
             ingredientFromDb.Description.Should().Be(updatedIngredient.Description);
         }
 
+        // In methods that modify the database,
+        // we create new database context so as not to modify the global one,
+        // because the other tests may fail.
         [Fact]
         public async Task DeleteIngredientAsync_OnDeleteIngredientAsync_DeleteIngredientFromDb()
         {
@@ -120,6 +127,9 @@ namespace POS.Tests.IntegrationTests
             ingredientFromDb.Should().BeNull();
         }
 
+        // In methods that modify the database,
+        // we create new database context so as not to modify the global one,
+        // because the other tests may fail.
         [Fact]
         public async Task GetRunningOutOfIngredients_WhenStockIsLowerThanSafetyStock_ReturnsCorrectIngredients()
         {
@@ -139,6 +149,9 @@ namespace POS.Tests.IntegrationTests
                 runningOutOfIngredient.Stock.Should().BeLessThan(runningOutOfIngredient.SafetyStock);
         }
 
+        // In methods that modify the database,
+        // we create new database context so as not to modify the global one,
+        // because the other tests may fail.
         [Fact]
         public async Task RemoveIngredientsAsync_ForPassedArgument_RemovesIngredientsFromDb()
         {
