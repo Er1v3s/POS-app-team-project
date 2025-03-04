@@ -4,13 +4,12 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using POS.Exceptions;
-using POS.Exceptions.Interfaces;
 using POS.Models.Orders;
 using POS.Services;
 
 namespace POS.Tests.IntegrationTests
 {
-    public class IngredientServiceIntegrationTests : IntegrationTestBase
+    public class IngredientServiceIntegrationTests() : IntegrationTestBase(nameof(IngredientServiceIntegrationTests))
     {
         [Fact]
         public async Task IngredientService_OnServiceInitialize_GetDataFromDbToIngredientCollection()

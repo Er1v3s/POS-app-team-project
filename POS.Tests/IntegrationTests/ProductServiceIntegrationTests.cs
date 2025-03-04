@@ -12,7 +12,7 @@ namespace POS.Tests.IntegrationTests
     {
         private readonly ProductService _productService;
 
-        public ProductServiceIntegrationTests()
+        public ProductServiceIntegrationTests() : base(nameof(ProductServiceIntegrationTests))
         {
             _productService = new ProductService(_dbContext, _databaseErrorHandlerMock.Object);
         }
