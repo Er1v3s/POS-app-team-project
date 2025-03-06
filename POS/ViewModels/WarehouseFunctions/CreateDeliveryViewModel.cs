@@ -170,10 +170,9 @@ namespace POS.ViewModels.WarehouseFunctions
                 : string.Empty;
         }
 
-        private void OpenMainWindow<T>(T windowType)
+        private void OpenMainWindow<T>(T windowType) where T : Window
         {
-            _navigationService.OpenNewWindow(windowType);
-            _navigationService.CloseCurrentWindow<CreateDeliveryWindow>();
+            _navigationService.OpenNewWindowAndCloseCurrent(windowType, () => _navigationService.CloseCurrentWindow<CreateDeliveryWindow>());
         }
     }
 }

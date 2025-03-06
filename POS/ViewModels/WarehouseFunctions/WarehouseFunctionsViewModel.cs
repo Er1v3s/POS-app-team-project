@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using DataAccess.Models;
 using POS.Services;
@@ -44,10 +45,9 @@ namespace POS.ViewModels.WarehouseFunctions
             await RunningOutOfIngredientsCollection.AddRangeWithDelay(runningOutOfIngredients, 100);
         }
 
-        private void OpenWindow<T>(T windowType)
+        private void OpenWindow<T>(T windowType) where T : Window
         {
-            _navigationService.OpenNewWindow(windowType);
-            _navigationService.CloseCurrentWindow<Views.Windows.MainWindow>();
+            _navigationService.OpenNewWindowAndCloseCurrent(windowType, () => _navigationService.CloseCurrentWindow<Views.Windows.MainWindow>());
         }
     }
 }
