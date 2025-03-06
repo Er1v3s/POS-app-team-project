@@ -1,4 +1,6 @@
-﻿using System.Windows.Input;
+﻿using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Input;
 using POS.Services;
 using POS.Services.Login;
 using POS.Utilities.RelayCommands;
@@ -30,10 +32,9 @@ namespace POS.ViewModels.WarehouseFunctions
             loggedInUserName = LoginManager.Instance.GetLoggedInUserFullName();
         }
 
-        private void OpenMainWindow<T>(T windowType)
+        private void OpenMainWindow<T>(T windowType) where T : Window
         {
-            _navigationService.OpenNewWindow(windowType);
-            _navigationService.CloseCurrentWindow<StockManagementWindow>();
+            _navigationService.OpenNewWindowAndCloseCurrent(windowType, () => _navigationService.CloseCurrentWindow<StockManagementWindow>());
         }
     }
 }

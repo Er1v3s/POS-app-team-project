@@ -55,7 +55,7 @@ namespace POS
 
         private void ConfigureServices(ServiceCollection servicesCollection)
         {
-            #region Gloval services
+            #region Global services
 
             servicesCollection.AddDbContext<AppDbContext>(options =>
             {
@@ -65,26 +65,27 @@ namespace POS
                     builder => builder.MigrationsAssembly("DataAccess"));
             });
 
-            servicesCollection.AddTransient<TimeService>();
-
-            servicesCollection.AddTransient<SessionService>();
-            servicesCollection.AddTransient<LoginManager>();
-            servicesCollection.AddTransient<LoginService>();
-
-
-
-            #endregion
-
             servicesCollection.AddSingleton<ILoggerService, LoggerService>();
             servicesCollection.AddLogging(configure => configure.AddConsole());
 
             servicesCollection.AddScoped<IDatabaseErrorHandler, DatabaseErrorHandler>();
             servicesCollection.AddScoped<ApplicationStateService>();
 
+            servicesCollection.AddTransient<TimeService>();
+            servicesCollection.AddTransient<SessionService>();
+            servicesCollection.AddTransient<LoginManager>();
+            servicesCollection.AddTransient<LoginService>();
+            servicesCollection.AddTransient<ViewService>();
+            servicesCollection.AddTransient<NavigationService>();
+
+            servicesCollection.AddTransient<IViewFactory, ViewFactory>();
+            servicesCollection.AddTransient<WindowFactory>();
+            servicesCollection.AddTransient<UserControlFactory>();
+
+            #endregion
+
             #region MainWindow
 
-            servicesCollection.AddTransient<ViewFactory>();
-            servicesCollection.AddTransient<NavigationService>();
             servicesCollection.AddTransient<MainWindowViewModel>();
 
             #endregion

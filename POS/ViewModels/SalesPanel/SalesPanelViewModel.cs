@@ -14,6 +14,7 @@ using POS.Services.SalesPanel;
 using POS.Utilities.RelayCommands;
 using POS.ViewModels.Base;
 using POS.Views.Windows.SalesPanel;
+using POS.Views.Windows.WarehouseFunctions;
 
 namespace POS.ViewModels.SalesPanel
 {
@@ -401,10 +402,9 @@ namespace POS.ViewModels.SalesPanel
                 CurrentViewIndex = 2;
         }
 
-        private void OpenMainWindow<T>(T windowType)
+        private void OpenMainWindow<T>(T windowType) where T : Window
         {
-            _navigationService.OpenNewWindow(windowType);
-            _navigationService.CloseCurrentWindow<SalesPanelWindow>();
+            _navigationService.OpenNewWindowAndCloseCurrent(windowType, () => _navigationService.CloseCurrentWindow<SalesPanelWindow>());
         }
     }
 }
