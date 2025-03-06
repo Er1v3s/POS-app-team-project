@@ -3,7 +3,7 @@ using DataAccess.Models;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using POS.Exceptions;
-using POS.Services.SalesPanel;
+using POS.Services;
 using System.Globalization;
 
 namespace POS.Tests.IntegrationTests
