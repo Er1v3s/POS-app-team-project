@@ -175,7 +175,6 @@ namespace POS
 
             servicesCollection.AddTransient<StockManagementService>();
             servicesCollection.AddScoped<DeliveryService>();
-            servicesCollection.AddTransient<GenerateDeliveryService>();
 
             servicesCollection.AddTransient<WarehouseFunctionsViewModel>();
 
