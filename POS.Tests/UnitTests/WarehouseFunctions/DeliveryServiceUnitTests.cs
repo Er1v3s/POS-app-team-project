@@ -124,6 +124,20 @@ namespace POS.Tests.UnitTests.WarehouseFunctions
             deliveryService.DeliveryCollection[0].Quantity.Should().Be(1);
         }
 
-        
+        [Fact]
+        public void CancelDelivery_WhenCalled_ShouldClearDeliveryCollection()
+        {
+            // Arrange
+            var deliveryService = new DeliveryService();
+            var ingredient = new Ingredient() { IngredientId = 1, Name = "Whisky", Description = "Jack Daniel's", Unit = "szt", Package = "Szklana butelka 700ml", Stock = 10, SafetyStock = 5 };
+            var deliveryDto = new DeliveryDto { Ingredient = ingredient, Quantity = 2 };
+            deliveryService.DeliveryCollection.Add(deliveryDto);
+
+            // Act
+            deliveryService.CancelDelivery();
+
+            // Assert
+            deliveryService.DeliveryCollection.Should().BeEmpty();
+        }
     }
 }
