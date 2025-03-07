@@ -107,6 +107,23 @@ namespace POS.Tests.UnitTests.WarehouseFunctions
             deliveryService.DeliveryCollection.Should().BeEmpty();
         }
 
+        [Fact]
+        public void DeleteIngredientFromDeliveryCollection_IfQuantityIsHigherThenOne_ReduceQuantityByOne()
+        {
+            // Arrange
+            var deliveryService = new DeliveryService();
+            var ingredient = new Ingredient() { IngredientId = 1, Name = "Whisky", Description = "Jack Daniel's", Unit = "szt", Package = "Szklana butelka 700ml", Stock = 10, SafetyStock = 5 };
+            var deliveryDto = new DeliveryDto { Ingredient = ingredient, Quantity = 2 };
+            deliveryService.DeliveryCollection.Add(deliveryDto);
+
+            // Act
+            deliveryService.DeleteIngredientFromDeliveryCollection(ingredient);
+
+            // Assert
+            deliveryService.DeliveryCollection.Should().HaveCount(1);
+            deliveryService.DeliveryCollection[0].Quantity.Should().Be(1);
+        }
+
         
     }
 }
