@@ -72,6 +72,25 @@ namespace POS.Tests.UnitTests.WarehouseFunctions
             deliveryService.DeliveryCollection[0].Quantity.Should().Be(2);
         }
 
+        [Fact]
+        public void AddIngredientToDeliveryCollection_ForNotExistingIngredient_ShouldAddNewToCollection()
+        {
+            // Arrange
+            var deliveryService = new DeliveryService();
+            var ingredient = new Ingredient() { IngredientId = 1, Name = "Whisky", Description = "Jack Daniel's", Unit = "szt", Package = "Szklana butelka 700ml", Stock = 10, SafetyStock = 5 };
+            var deliveryDto = new DeliveryDto { Ingredient = ingredient, Quantity = 1 };
+            deliveryService.DeliveryCollection.Add(deliveryDto);
+
+            var differentIngredient = new Ingredient { IngredientId = 2, Name = "Wódka", Description = "Finlandia", Unit = "szt", Package = "Szklana butelka 500ml", Stock = 5, SafetyStock = 5 };
+
+            // Act
+            deliveryService.AddIngredientToDeliveryCollection(differentIngredient);
+
+            // Assert
+            deliveryService.DeliveryCollection.Should().HaveCount(2);
+            deliveryService.DeliveryCollection[0].Quantity.Should().Be(1);
+        }
+
         
     }
 }
