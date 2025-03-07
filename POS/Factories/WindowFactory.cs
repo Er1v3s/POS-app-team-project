@@ -14,8 +14,8 @@ namespace POS.Factories
             {
                 { typeof(MainWindow), () => new MainWindow() },
                 { typeof(SalesPanelWindow), () => new SalesPanelWindow()},
-                { typeof(StockManagementWindow), () => new StockManagementWindow() },
-                { typeof(CreateDeliveryWindow), () => new CreateDeliveryWindow() },
+                { typeof(ProductManagementWindow), () => new ProductManagementWindow() },
+                { typeof(StockAndDeliveryManagementWindow), () => new StockAndDeliveryManagementWindow() },
             };
         }
     }

@@ -1,27 +1,31 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using DataAccess.Models;
 using POS.Models.Warehouse;
+using POS.Utilities;
 using System.Linq;
 using System.Threading.Tasks;
-using DataAccess.Models;
-using POS.Utilities;
 using System.Windows;
-using POS.Views.Windows.WarehouseFunctions;
 
 namespace POS.Services.WarehouseFunctions
 {
     public class DeliveryService
     {
-        private readonly IngredientService _ingredientService;
         private readonly GenerateDeliveryService _generateDeliveryService;
 
         public MyObservableCollection<DeliveryDto> DeliveryCollection;
 
-        public DeliveryService(IngredientService ingredientService, GenerateDeliveryService generateDeliveryService)
+        public event Action DeliveryCollectionUpdated;
+
+        public DeliveryService(GenerateDeliveryService generateDeliveryService)
         {
-            _ingredientService = ingredientService;
             _generateDeliveryService = generateDeliveryService;
 
             DeliveryCollection = new();
+        }
+
+        public void IncreaseIngredientQuantityInDelivery(DeliveryDto deliveryItem)
+        {
+            deliveryItem.Quantity++;
         }
 
         public void AddIngredientToDeliveryCollection(Ingredient selectedIngredient)
@@ -40,20 +44,8 @@ namespace POS.Services.WarehouseFunctions
             }
             else
                 existingIngredient.Quantity++;
-        }
 
-        public void IncreaseIngredientQuantity(DeliveryDto deliveryItem)
-        {
-            deliveryItem.Quantity++;
-        }
-
-        public void EditIngredientQuantity(Ingredient ingredient)
-        {
-            var stockCorrection = new StockCorrectionWindow(ingredient);
-            var dialogResult = stockCorrection.ShowDialog();
-
-            if (dialogResult == true)
-                _ingredientService.GetAllIngredients();
+            DeliveryCollectionUpdated?.Invoke();
         }
 
         public void DeleteIngredientFromDeliveryCollection(Ingredient ingredient)
@@ -81,7 +73,7 @@ namespace POS.Services.WarehouseFunctions
 
             var result = await _generateDeliveryService.GenerateDeliveryDocument(deliveryItemList);
 
-            if(result)
+            if (result)
                 CancelDelivery();
         }
     }
