@@ -173,16 +173,19 @@ namespace POS
 
             #region WarehouseFunctions
 
-            servicesCollection.AddTransient<DeliveryService>();
+            servicesCollection.AddTransient<StockManagementService>();
+            servicesCollection.AddScoped<DeliveryService>();
             servicesCollection.AddTransient<GenerateDeliveryService>();
 
             servicesCollection.AddTransient<WarehouseFunctionsViewModel>();
 
+            servicesCollection.AddTransient<ProductManagementViewModel>();
             servicesCollection.AddTransient<EditProductRecipeViewModel>();
             servicesCollection.AddTransient<AddEditDeleteProductViewModel>();
             servicesCollection.AddTransient<AddEditDeleteIngredientViewModel>();
-            servicesCollection.AddTransient<StockManagementViewModel>();
 
+            servicesCollection.AddTransient<StockAndDeliveryManagementViewModel>();
+            servicesCollection.AddTransient<StockManagementViewModel>();
             servicesCollection.AddTransient<CreateDeliveryViewModel>();
             servicesCollection.AddTransient<StockCorrectionViewModel>();
 

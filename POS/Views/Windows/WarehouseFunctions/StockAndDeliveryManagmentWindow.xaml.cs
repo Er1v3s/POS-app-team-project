@@ -7,14 +7,14 @@ namespace POS.Views.Windows.WarehouseFunctions
     /// <summary>
     /// Logika interakcji dla klasy StockManagment.xaml
     /// </summary>
-    public partial class StockManagementWindow : Window
+    public partial class StockAndDeliveryManagementWindow : Window
     {
-        public StockManagementWindow()
+        public StockAndDeliveryManagementWindow()
         {
             InitializeComponent();
-            DataContext = App.ServiceProvider.GetRequiredService<StockManagementViewModel>();
+            DataContext = App.ServiceProvider.GetRequiredService<StockAndDeliveryManagementViewModel>();
 
-            var viewModel = (StockManagementViewModel)DataContext;
+            var viewModel = (StockAndDeliveryManagementViewModel)DataContext;
             viewModel.CloseWindowBaseAction = Close;
         }
     }

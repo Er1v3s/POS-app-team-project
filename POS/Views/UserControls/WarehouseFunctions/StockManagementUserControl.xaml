@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="POS.Views.UserControls.WarehouseFunctions.StockManagementUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:warehouseFunctions="clr-namespace:POS.ViewModels.WarehouseFunctions"
+             d:DataContext="{d:DesignInstance Type=warehouseFunctions:StockManagementViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="70"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" BorderThickness="1, 1, 1, 0" BorderBrush="Black" Background="#4baea0" CornerRadius="8,8,0,0">
+            <Grid>
+                <TextBlock Text="STAN MAGAZYNU" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="16"/>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" BorderThickness="1" BorderBrush="Black" CornerRadius="0,0,0,0" d:IsLocked="True">
+            <Grid>
+                <DataGrid ItemsSource="{Binding IngredientObservableCollection}"
+                  SelectedItem="{Binding SelectedIngredient}"
+                  Style="{DynamicResource DataGridStyle4}" 
+                  CellStyle="{DynamicResource DataGridCellStyle4}" 
+                  ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle4}"
+                  BorderThickness="0"
+                  IsReadOnly="True"
+                  SelectionMode="Single">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Składnik" Width="4*" Binding="{Binding Name}" />
+                        <DataGridTextColumn Header="Data ważności" Width="2*" Binding="{Binding ExpirationDate}"/>
+                        <DataGridTextColumn Header="Zapas Bezpieczeństwa" Width="2*" Binding="{Binding SafetyStock}" IsReadOnly="False"/>
+                        <DataGridTextColumn Header="Zapas" Width="1*" Binding="{Binding Stock}" IsReadOnly="False"/>
+                    </DataGrid.Columns>
+                    <DataGrid.RowStyle>
+                        <Style BasedOn="{StaticResource DataGridRowStyle4}" TargetType="DataGridRow">
+                            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="OnPreviewMouseLeftButtonDown"/>
+                        </Style>
+                    </DataGrid.RowStyle>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+        <Border BorderBrush="Black" BorderThickness="1, 0, 1, 1" Grid.Row="2" Background="#8ea7e9" CornerRadius="0,0,8,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+
+                <Button Command="{Binding AddIngredientToDeliveryCommand}"  Grid.Column="0" Content="Dodaj" Style="{StaticResource BasicButtonGreen}"/>
+                <Button Command="{Binding EditIngredientCommand}"  Grid.Column="1" Content="Korekta" Style="{StaticResource BasicButton}"/>
+            </Grid>
+        </Border>
+
+    </Grid>
+</UserControl>
