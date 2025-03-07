@@ -5,21 +5,18 @@ using POS.Utilities;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using POS.Handlers;
 
 namespace POS.Services.WarehouseFunctions
 {
     public class DeliveryService
     {
-        private readonly GenerateDeliveryService _generateDeliveryService;
-
         public MyObservableCollection<DeliveryDto> DeliveryCollection;
 
         public event Action DeliveryCollectionUpdated;
 
-        public DeliveryService(GenerateDeliveryService generateDeliveryService)
+        public DeliveryService()
         {
-            _generateDeliveryService = generateDeliveryService;
-
             DeliveryCollection = new();
         }
 
@@ -53,11 +50,7 @@ namespace POS.Services.WarehouseFunctions
             var existingIngredient = DeliveryCollection.FirstOrDefault(i => i.Ingredient.IngredientId == ingredient.IngredientId);
 
             if (existingIngredient!.Quantity == 1)
-            {
-                var result = MessageBox.Show("Czy usunąć składnik z listy całkowicie?", "", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (result == MessageBoxResult.Yes)
-                    DeliveryCollection.Remove(existingIngredient);
-            }
+                DeliveryCollection.Remove(existingIngredient);
             else
                 existingIngredient.Quantity--;
         }
@@ -71,10 +64,10 @@ namespace POS.Services.WarehouseFunctions
         {
             var deliveryItemList = DeliveryCollection.ToList();
 
-            var result = await _generateDeliveryService.GenerateDeliveryDocument(deliveryItemList);
+            var result = await DeliveryHandler.GenerateDeliveryDocument(deliveryItemList);
 
             if (result)
-                CancelDelivery();
+                DeliveryCollection.Clear();
         }
     }
 }
