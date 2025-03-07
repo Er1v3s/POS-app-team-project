@@ -53,11 +53,7 @@ namespace POS.Services.WarehouseFunctions
             var existingIngredient = DeliveryCollection.FirstOrDefault(i => i.Ingredient.IngredientId == ingredient.IngredientId);
 
             if (existingIngredient!.Quantity == 1)
-            {
-                var result = MessageBox.Show("Czy usunąć składnik z listy całkowicie?", "", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (result == MessageBoxResult.Yes)
                     DeliveryCollection.Remove(existingIngredient);
-            }
             else
                 existingIngredient.Quantity--;
         }
