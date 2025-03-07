@@ -5,6 +5,7 @@ using System.Windows.Input;
 using POS.Services;
 using POS.Utilities.RelayCommands;
 using POS.ViewModels.Base;
+using POS.Views.Windows;
 using POS.Views.Windows.SalesPanel;
 
 namespace POS.ViewModels.MainWindow
@@ -13,6 +14,7 @@ namespace POS.ViewModels.MainWindow
     {
         private readonly TimeService _timeService;
         private readonly NavigationService _navigationService;
+        private readonly ViewService _viewService;
         private readonly ApplicationStateService _applicationStateService;
 
         private object contentSource;
@@ -45,12 +47,14 @@ namespace POS.ViewModels.MainWindow
         public MainWindowViewModel(
             TimeService timeService,
             NavigationService navigationService,
+            ViewService viewService,
             ApplicationStateService applicationStateService)
         {
             _timeService = timeService;
             InitializeTimeService();
 
             _navigationService = navigationService;
+            _viewService = viewService;
             _applicationStateService = applicationStateService;
 
             _applicationStateService.PropertyChanged += OnApplicationStateChanged;
@@ -63,10 +67,9 @@ namespace POS.ViewModels.MainWindow
             SetDefaultContentSource(0);
         }
 
-        private void OpenSalesPanelWindow<T>(T windowType)
+        private void OpenSalesPanelWindow<T>(T windowType) where T : Window
         {
-            _navigationService.OpenNewWindow(windowType);
-            _navigationService.CloseCurrentWindow<Views.Windows.MainWindow>();
+            _navigationService.OpenNewWindowAndCloseCurrent(windowType, () => _navigationService.CloseCurrentWindow<Views.Windows.MainWindow>());
         }
 
         private void OpenLoginPanelWindow()
@@ -78,8 +81,9 @@ namespace POS.ViewModels.MainWindow
         {
             try
             {
-                ContentSource = _navigationService.GetViewSource(commandParameter);
-            } catch (Exception e)
+                ContentSource = _viewService.GetViewSource(commandParameter);
+            } 
+            catch (Exception e)
             {
                 MessageBox.Show(e.Message);
             }

@@ -4,93 +4,72 @@ using System.Windows;
 using POS.Factories;
 using POS.Services.Login;
 using POS.Views.Windows;
-using POS.Views.Windows.SalesPanel;
-using POS.Views.Windows.WarehouseFunctions;
 
 namespace POS.Services
 {
     public class NavigationService
     {
-        private readonly ViewFactory _viewFactory;
-        private object view;
-        
-        public NavigationService(ViewFactory viewFactory)
+        private readonly IViewFactory _viewFactory;
+        public NavigationService(WindowFactory windowFactory)
         {
-            _viewFactory = viewFactory;
+            _viewFactory = windowFactory;
         }
 
         public void OpenLoginPanelWindow()
         {
-            LoginManager.OpenLoginWindow();
+            var loginView = new LoginPanelWindow();
+            loginView.ShowDialog();
         }
 
-        public void OpenNewWindow<T>(T windowType)
+        public void OpenNewWindowAndCloseCurrent<TNewWindowType>(TNewWindowType newWindowType, Action closeCurrentWindowAction) where TNewWindowType : Window
         {
-            if (typeof(T) == typeof(MainWindow))
-            {
-                LoginManager.Instance.LogOut();
 
-                MainWindow mainWindow = new ();
-                mainWindow.Show();
-            }
+            OpenNewWindow(typeof(TNewWindowType));
+
+            if (Application.Current.Windows.OfType<TNewWindowType>().Any())
+                closeCurrentWindowAction.Invoke();
+        }
+
+        public void OpenNewWindow(Type viewType)
+        {
+            if (viewType != typeof(MainWindow))
+                HandleAuthenticatedNavigation(viewType);
             else
-            {
-                LoginManager.Instance.IsAuthenticationOnlyRequired = true;
-                LoginManager.OpenLoginWindow();
-
-                if (LoginManager.Instance.SuccessfullyLoggedIn && LoginManager.Instance.Employee!.IsUserLoggedIn)
-                {
-                    LoginManager.Instance.IsAuthenticationOnlyRequired = false;
-                    LoginManager.Instance.SuccessfullyLoggedIn = false;
-
-                    if (typeof(T) == typeof(SalesPanelWindow))
-                    {
-                        SalesPanelWindow salesPanelWindow = new();
-                        salesPanelWindow.Show();
-                    }
-                    else if (typeof(T) == typeof(StockManagementWindow))
-                    {
-                        StockManagementWindow stockManagementWindow = new();
-                        stockManagementWindow.Show();
-                    }
-                    else if (typeof(T) == typeof(CreateDeliveryWindow))
-                    {
-                        CreateDeliveryWindow createDeliveryWindow = new();
-                        createDeliveryWindow.Show();
-                    }
-                }
-            }
+                HandleMainWindowNavigation();
         }
 
-        public void CloseCurrentWindow<T>() where T : Window
+        public void CloseCurrentWindow<TWindowToClose>() where TWindowToClose : Window
         {
-            var window = Application.Current.Windows.OfType<T>().FirstOrDefault();
+            var window = Application.Current.Windows.OfType<TWindowToClose>().FirstOrDefault();
             window?.Close();
         }
 
-        public object GetViewSource(object commandParameter)
+        private void HandleMainWindowNavigation()
         {
-            var convertedParameter = Convert.ToInt32(commandParameter);
+            LoginManager.Instance.LogOut();
 
-            if (convertedParameter == 0)
-                 GetView(convertedParameter);
-            else
-                CheckIfUserIsLoggedInAndGetView(convertedParameter);
-
-            return view;
+            MainWindow mainWindow = new();
+            mainWindow.Show();
         }
 
-        private void GetView(int parameter)
+        private void HandleAuthenticatedNavigation(Type viewType)
         {
-            view = _viewFactory.GetView(parameter);
+            LoginManager.Instance.IsAuthenticationOnlyRequired = true;
+            OpenLoginPanelWindow();
+
+            if (!LoginManager.Instance.SuccessfullyLoggedIn || (LoginManager.Instance.Employee == null || !LoginManager.Instance.Employee.IsUserLoggedIn))
+                return;
+
+            LoginManager.Instance.IsAuthenticationOnlyRequired = false;
+            LoginManager.Instance.SuccessfullyLoggedIn = false;
+
+            GetView(viewType);
         }
 
-        private void CheckIfUserIsLoggedInAndGetView(int parameter)
-        {
-            if (LoginManager.Instance.IsAnySessionActive)
-                GetView(parameter);
-            else
-                LoginManager.OpenLoginWindow();
+        private void GetView(Type viewType)
+        { 
+            var view = _viewFactory.GetView(viewType) as Window;
+            view!.Show();
         }
     }
 }

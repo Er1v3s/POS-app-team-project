@@ -30,11 +30,5 @@ namespace POS.Services.Login
 
             return String.Empty;
         }
-
-        public static void OpenLoginWindow()
-        {
-            var loginView = new LoginPanelWindow();
-            loginView.ShowDialog();
-        }
     }
 }

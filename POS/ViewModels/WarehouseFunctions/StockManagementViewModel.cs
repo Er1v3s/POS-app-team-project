@@ -1,39 +1,56 @@
 ﻿using System.Windows.Input;
+using DataAccess.Models;
 using POS.Services;
-using POS.Services.Login;
+using POS.Services.WarehouseFunctions;
+using POS.Utilities;
 using POS.Utilities.RelayCommands;
 using POS.ViewModels.Base;
-using POS.Views.Windows.WarehouseFunctions;
 
 namespace POS.ViewModels.WarehouseFunctions
 {
     public class StockManagementViewModel : ViewModelBase
     {
-        private readonly NavigationService _navigationService;
+        private readonly IngredientService _ingredientService;
+        private readonly DeliveryService _deliveryService;
+        private readonly StockManagementService _stockManagementService;
 
-        private string loggedInUserName;
+        private Ingredient? selectedIngredient;
 
-        public string LoggedInUserName
+        public MyObservableCollection<Ingredient> IngredientObservableCollection => _ingredientService.IngredientCollection;
+
+        public Ingredient? SelectedIngredient
         {
-            get => loggedInUserName;
-            set => SetField(ref loggedInUserName, value);
+            get => selectedIngredient;
+            set => SetField(ref selectedIngredient, value);
         }
 
-        public ICommand OpenMainWindowCommand { get; }
+        public ICommand AddIngredientToDeliveryCommand { get; }
+        public ICommand EditIngredientCommand { get; }
 
-        public StockManagementViewModel(NavigationService navigationService)
+        public StockManagementViewModel(IngredientService ingeIngredientService, StockManagementService stockManagementService, DeliveryService deliveryService)
         {
-            _navigationService = navigationService;
+            _ingredientService = ingeIngredientService;
+            _stockManagementService = stockManagementService;
+            _deliveryService = deliveryService;
 
-            OpenMainWindowCommand = new RelayCommand<Views.Windows.MainWindow>(OpenMainWindow);
-
-            loggedInUserName = LoginManager.Instance.GetLoggedInUserFullName();
+            AddIngredientToDeliveryCommand = new RelayCommand(AddIngredientToDelivery);
+            EditIngredientCommand = new RelayCommand(EditIngredientQuantity);
         }
 
-        private void OpenMainWindow<T>(T windowType)
+        private void AddIngredientToDelivery()
         {
-            _navigationService.OpenNewWindow(windowType);
-            _navigationService.CloseCurrentWindow<StockManagementWindow>();
+            if (selectedIngredient == null)
+                return;
+
+            _deliveryService.AddIngredientToDeliveryCollection(selectedIngredient);
+        }
+
+        private void EditIngredientQuantity()
+        {
+            if (selectedIngredient == null)
+                return;
+
+            _stockManagementService.EditIngredientQuantity(selectedIngredient);
         }
     }
 }

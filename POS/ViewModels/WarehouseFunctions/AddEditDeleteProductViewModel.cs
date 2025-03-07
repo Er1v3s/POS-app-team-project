@@ -4,7 +4,6 @@ using System.Windows;
 using System.Windows.Input;
 using DataAccess.Models;
 using POS.Services;
-using POS.Services.SalesPanel;
 using POS.Utilities;
 using POS.Utilities.RelayCommands;
 using POS.Validators.Models;

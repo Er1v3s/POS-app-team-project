@@ -12,7 +12,7 @@ using POS.Exceptions.Interfaces;
 using POS.Utilities;
 using POS.Validators.Models;
 
-namespace POS.Services.SalesPanel
+namespace POS.Services
 {
     public class ProductService
     {

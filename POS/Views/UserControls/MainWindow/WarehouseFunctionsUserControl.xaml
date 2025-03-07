@@ -31,11 +31,11 @@
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Command="{Binding OpenStockManagementWindowCommand}" Grid.Column="0" Style="{StaticResource BasicButtonGreen}" Margin="25, 15" MaxWidth="410" MaxHeight="200">
+                <Button Command="{Binding OpenProductManagementWindowCommand}" Grid.Column="0" Style="{StaticResource BasicButtonGreen}" Margin="25, 15" MaxWidth="410" MaxHeight="200">
                     <TextBlock Text="DODAJ NOWY SKŁADNIK LUB PRODUKT" Style="{StaticResource ButtonTextBlock}" MaxWidth="300" MinWidth="200"/>
                 </Button>
 
-                <Button Command="{Binding OpenCreateDeliveryWindowCommand}" Grid.Column="1" Style="{StaticResource BasicButtonGreen}" Margin="25, 15" MaxWidth="410" MaxHeight="190">
+                <Button Command="{Binding OpenStockManagementWindowCommand}" Grid.Column="1" Style="{StaticResource BasicButtonGreen}" Margin="25, 15" MaxWidth="410" MaxHeight="190">
                     <TextBlock Text="DOSTAWA" Style="{StaticResource ButtonTextBlock}"/>
                 </Button>
             </Grid>

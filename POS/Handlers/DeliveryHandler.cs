@@ -9,23 +9,23 @@ using System.Threading.Tasks;
 using System.Windows;
 using POS.Models.Warehouse;
 
-namespace POS.Services.WarehouseFunctions
+namespace POS.Handlers
 {
-    public class GenerateDeliveryService
+    public static class DeliveryHandler
     {
-        private readonly Paragraph lineSpacer = new("")
+        private static readonly Paragraph lineSpacer = new("")
         {
             SpacingBefore = 10f,
             SpacingAfter = 10f,
         };
 
-        public async Task<bool> GenerateDeliveryDocument(List<DeliveryDto> deliveryItemList)
+        public static async Task<bool> GenerateDeliveryDocument(List<DeliveryDto> deliveryItemList)
         {
             try
             {
                 var saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Filter = "Pliki PDF (*.pdf)|*.pdf";
-                saveFileDialog.FileName = ($"Zamowienie-{DateTime.UtcNow:dd-MM-yyyy_HH-ss}.pdf");
+                saveFileDialog.FileName = $"Zamowienie-{DateTime.UtcNow:dd-MM-yyyy_HH-ss}.pdf";
 
                 bool? result = saveFileDialog.ShowDialog();
 
@@ -48,7 +48,7 @@ namespace POS.Services.WarehouseFunctions
             }
         }
 
-        private async Task CreatePdfDocument(string filePath, List<DeliveryDto> deliveryItemList)
+        private static async Task CreatePdfDocument(string filePath, List<DeliveryDto> deliveryItemList)
         {
             Document pdfDoc = new(PageSize.A4);
 
@@ -71,7 +71,7 @@ namespace POS.Services.WarehouseFunctions
             pdfDoc.Close();
         }
 
-        private Paragraph CreateDateTime()
+        private static Paragraph CreateDateTime()
         {
             Paragraph dateTime = new(DateTime.Now.ToString("G"))
             {
@@ -81,7 +81,7 @@ namespace POS.Services.WarehouseFunctions
             return dateTime;
         }
 
-        private Paragraph CreatePdfTitle()
+        private static Paragraph CreatePdfTitle()
         {
             Paragraph pdfTitle = new("Zamówienie", new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD))
             {
@@ -93,7 +93,7 @@ namespace POS.Services.WarehouseFunctions
             return pdfTitle;
         }
 
-        private PdfPTable CreatePdfTable(List<DeliveryDto> deliveryItemList)
+        private static PdfPTable CreatePdfTable(List<DeliveryDto> deliveryItemList)
         {
             PdfPTable pdfTable = new(4)
             {
@@ -121,14 +121,14 @@ namespace POS.Services.WarehouseFunctions
             return pdfTable;
         }
 
-        private void AddHeaderRow(PdfPTable pdfTable)
+        private static void AddHeaderRow(PdfPTable pdfTable)
         {
             var headers = new[]
             {
                 "Lp.", "Nazwa produktu", "Opakowanie produktu", "Ilosc"
             };
 
-            
+
             float[] columnWidths = new float[headers.Length];
 
             for (int i = 0; i < headers.Length; i++)
@@ -150,7 +150,7 @@ namespace POS.Services.WarehouseFunctions
             }
         }
 
-        private PdfPCell CreateCell(string text)
+        private static PdfPCell CreateCell(string text)
         {
             return new PdfPCell(new Phrase(text))
             {
