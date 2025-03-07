@@ -37,6 +37,24 @@ namespace POS.Tests.UnitTests.WarehouseFunctions
             deliveryService.DeliveryCollection[0].Quantity.Should().Be(2);
         }
 
+        [Fact]
+        public void IncreaseIngredientQuantityInDelivery_ForNotExistingIngredient_ShouldNotAddIngredientIntoCollection()
+        {
+            // Arrange
+            var deliveryService = new DeliveryService();
+            var deliveryItem = new DeliveryDto
+            {
+                Quantity = 1,
+                Ingredient = new Ingredient() { Name = "Whisky", Description = "Jack Daniel's", Unit = "szt", Package = "Szklana butelka 700ml", Stock = 10, SafetyStock = 5 },
+            };
+
+            // Act
+            deliveryService.IncreaseIngredientQuantityInDelivery(deliveryItem);
+
+            // Assert
+            deliveryService.DeliveryCollection.Should().HaveCount(0);
+        }
+
         
     }
 }
